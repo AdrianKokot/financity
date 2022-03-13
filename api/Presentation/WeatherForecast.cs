@@ -1,4 +1,4 @@
-namespace Presentation;
+namespace Financity.Presentation;
 
 public class WeatherForecast
 {
