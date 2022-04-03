@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo
     Title="Financity",
     Version = "v1"
 }));
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -27,5 +28,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/api/healthcheck");
 
 app.Run();
