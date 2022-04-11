@@ -1,3 +1,3 @@
 # Financity
 
-More information soon.
+Under development. More information soon.
