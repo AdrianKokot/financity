@@ -4,7 +4,7 @@ namespace Financity.Domain.Entities;
 
 public class Entry : AuditableEntity
 {
-    public DateOnly CreationDate { get; set; }
+    public DateTime CreationDate { get; set; }
     
     public decimal Amount { get; set; }
     public string? Note { get; set; }

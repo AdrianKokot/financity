@@ -1,4 +1,5 @@
 ﻿using Financity.Domain.Common;
+using Financity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Persistence;
@@ -8,6 +9,13 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
+    
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Currency> Currencies { get; set; }
+    public DbSet<Entry> Entries { get; set; }
+    public DbSet<EntryCategory> EntryCategories { get; set; }
+    public DbSet<EntryType> EntryTypes { get; set; }
+    public DbSet<Recipient> Recipients { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
