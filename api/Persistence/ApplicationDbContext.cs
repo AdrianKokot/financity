@@ -21,11 +21,7 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Currency>(c =>
-            {
-                c.HasData(new Currency() {Id = 1, Code = "PLN", CreatedAt = DateTime.Now, CreatedBy = "System"});
-            }
-        );
+        modelBuilder.SeedData();
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
