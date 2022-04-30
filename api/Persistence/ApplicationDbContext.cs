@@ -1,4 +1,5 @@
-﻿using Financity.Domain.Common;
+﻿using System.Reflection;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,9 +20,10 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.SeedData();
+        
+        base.OnModelCreating(modelBuilder);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
