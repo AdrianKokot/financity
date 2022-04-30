@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Financity.Application.Common.Interfaces;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,11 @@ namespace Financity.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    private readonly IDateTime _dateTime;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDateTime dateTime) : base(options)
     {
+        _dateTime = dateTime;
     }
 
     public DbSet<Account> Accounts { get; set; }
@@ -33,11 +37,11 @@ public class ApplicationDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                    entry.Entity.CreatedAt = _dateTime.Now;
                     entry.Entity.CreatedBy = string.Empty;
                     break;
                 case EntityState.Modified:
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    entry.Entity.UpdatedAt = _dateTime.Now;
                     entry.Entity.UpdatedBy = string.Empty;
                     break;
             }
