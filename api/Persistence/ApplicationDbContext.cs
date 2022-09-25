@@ -26,7 +26,7 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.SeedData();
-        
+
         base.OnModelCreating(modelBuilder);
     }
 

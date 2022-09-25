@@ -14,7 +14,7 @@ public static class Seed
     {
         modelBuilder.Entity<Currency>(c =>
             {
-                c.HasData(new Currency() {Id = 1, Code = "PLN", CreatedAt = DateTime.Now, CreatedBy = "System"});
+                c.HasData(new Currency() { Id = 1, Code = "PLN", CreatedAt = DateTime.Now, CreatedBy = "System" });
             }
         );
     }
