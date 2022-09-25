@@ -7,7 +7,7 @@ public class AuditableEntity : Entity
 
     public DateTime? UpdatedAt { get; set; }
     public string? UpdatedBy { get; set; }
-    
+
     public AuditableEntity(Guid id) : base(id)
     {
     }

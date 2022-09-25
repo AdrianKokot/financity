@@ -6,6 +6,6 @@ public static class DataSeeder
 {
     public static void SeedData(this ModelBuilder modelBuilder)
     {
-        
+
     }
 }
