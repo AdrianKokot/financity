@@ -1,4 +1,4 @@
-﻿using Financity.Application.Shared;
+﻿using Financity.Application.Abstractions.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

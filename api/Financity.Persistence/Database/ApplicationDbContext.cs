@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Financity.Application.Shared;
+using Financity.Application.Abstractions.Data;
 using Financity.Domain.Entities;
 using Financity.Domain.Shared;
 using Financity.Persistence.Seed;

@@ -1,4 +1,4 @@
-﻿using Financity.Application.Shared;
+﻿using Financity.Application.Abstractions.Data;
 using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

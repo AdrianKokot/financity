@@ -1,4 +1,4 @@
-﻿namespace Financity.Application.Shared;
+﻿namespace Financity.Application.Abstractions.Data;
 
 public static class AppDateTime
 {

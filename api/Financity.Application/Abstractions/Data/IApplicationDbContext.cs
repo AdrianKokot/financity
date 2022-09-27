@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Financity.Application.Shared;
+namespace Financity.Application.Abstractions.Data;
 
 public interface IApplicationDbContext
 {
