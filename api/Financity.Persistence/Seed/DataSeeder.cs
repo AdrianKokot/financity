@@ -14,7 +14,7 @@ public static class DataSeeder
     {
         modelBuilder.Entity<Currency>(c =>
             {
-                c.HasData(new Currency() {Code = "PLN", Name = "Polski Złoty"});
+                c.HasData(new Currency() { Code = "PLN", Name = "Polski Złoty" });
             }
         );
     }
