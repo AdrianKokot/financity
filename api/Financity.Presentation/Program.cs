@@ -11,10 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("WebApi", new OpenApiInfo()
+    options.SwaggerDoc("v1", new OpenApiInfo()
     {
         Title = "Financity",
-        Version = "0.0.0"
+        Version = "v1"
     });
 });
 

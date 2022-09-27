@@ -1,4 +1,5 @@
-﻿using Financity.Persistence.Database;
+﻿using Financity.Application.Shared;
+using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,8 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Financity"))
         );
+
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
         return services;
     }

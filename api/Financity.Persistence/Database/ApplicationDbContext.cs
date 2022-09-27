@@ -2,13 +2,20 @@
 using Financity.Application.Shared;
 using Financity.Domain.Entities;
 using Financity.Domain.Shared;
+using Financity.Persistence.Seed;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Persistence.Database;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public DbSet<Currency> Currencies { get; set; }
+    public DbSet<Label> Labels { get; set; }
+    public DbSet<Recipient> Recipients { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Wallet> Wallets { get; set; }
 
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
@@ -34,6 +41,8 @@ public class ApplicationDbContext : DbContext
                 case EntityState.Modified:
                     entry.Entity.UpdatedAt = AppDateTime.Now;
                     entry.Entity.UpdatedBy = string.Empty;
+                    break;
+                default:
                     break;
             }
         }
