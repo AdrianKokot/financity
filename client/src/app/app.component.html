@@ -1,5 +1,10 @@
+<!-- <tui-theme-night></tui-theme-night> -->
 <tui-root>
-  <router-outlet></router-outlet>
+  <app-navbar></app-navbar>
 
-  <button tuiButton>Button</button>
+  <div class="tui-container tui-container_adaptive mx-auto">
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-footer></app-footer>
 </tui-root>

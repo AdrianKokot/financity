@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TuiButtonModule } from '@taiga-ui/core';
+import { NgModule } from '@angular/core';
+import { TuiButtonModule, TuiLinkModule } from '@taiga-ui/core';
 
-const sharedModules = [TuiButtonModule];
+const sharedModules = [TuiButtonModule, TuiLinkModule];
 
 @NgModule({
   declarations: [],

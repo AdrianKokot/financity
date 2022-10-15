@@ -1,0 +1,30 @@
+$bgColors: (
+  "base": var(--tui-base-01),
+  "base-2": var(--tui-base-02),
+  "base-3": var(--tui-base-03),
+  "base-4": var(--tui-base-04),
+);
+
+@each $var,$color in $bgColors {
+  .bg-#{$var} {
+    background-color: $color;
+  }
+}
+
+$textColors: (
+  "1": var(--tui-text-01),
+  "2": var(--tui-text-02),
+  "3": var(--tui-text-03),
+  "link": var(--tui-link),
+  "link-hover": var(--tui-link-hover),
+  "positive": var(--tui-positive),
+  "positive-hover": var(--tui-positive-hover),
+  "negative": var(--tui-negative),
+  "negative-hover": var(--tui-negative-hover)
+);
+
+@each $var,$color in $textColors {
+  .text-#{$var} {
+    color: $color;
+  }
+}

@@ -1,0 +1,31 @@
+@use 'variables' as *;
+@use 'sass:math';
+
+@mixin spacing-class($property, $size, $property-value: null) {
+  $propShort: str-slice($property, 1, 1);
+
+  @each $dirKey,$dir in ("l": "left", "r": "right", "t": "top", "b": "bottom") {
+    .#{$propShort}#{$dirKey}-#{$size} {
+      @if $property-value == null {
+        #{$property}-#{$dir}: math.div($size * 1px, $space) * 1rem;
+      } @else {
+        #{$property}-#{$dir}: $property-value;
+      }
+    }
+  }
+
+  @each $key, $extends in ("x": ("r", "l"), "y": ("t", "b")) {
+    .#{$propShort}#{$key}-#{$size} {
+      @each $ext in $extends {
+        @extend .#{$propShort}#{$ext}-#{$size};
+      }
+    }
+  }
+}
+
+@each $prop in ("padding", "margin") {
+  @for $size from 0 to 15 {
+    @include spacing-class($prop, $size);
+  }
+}
+@include spacing-class("margin", auto, auto);

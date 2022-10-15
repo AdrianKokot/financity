@@ -1,0 +1,14 @@
+@each $value in (flex, block, inline-block, grid) {
+  .d-#{$value} {
+    display: $value;
+  }
+}
+
+@each $key,$value in (
+  justify-content: space-between,
+  align-items: center
+) {
+  .#{$key}-#{$value} {
+    #{$key}: $value;
+  }
+}
