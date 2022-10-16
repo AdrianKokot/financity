@@ -1,13 +1,17 @@
 @use 'variables' as *;
 @use 'sass:math';
 
+@function spacing($size) {
+  @return math.div($size * 1px, $space) * 1rem;
+}
+
 @mixin spacing-class($property, $size, $property-value: null) {
   $propShort: str-slice($property, 1, 1);
 
   @each $dirKey,$dir in ("l": "left", "r": "right", "t": "top", "b": "bottom") {
     .#{$propShort}#{$dirKey}-#{$size} {
       @if $property-value == null {
-        #{$property}-#{$dir}: math.div($size * 1px, $space) * 1rem;
+        #{$property}-#{$dir}: spacing($size);
       } @else {
         #{$property}-#{$dir}: $property-value;
       }
@@ -23,9 +27,17 @@
   }
 }
 
+@for $size from 0 to 16 {
 @each $prop in ("padding", "margin") {
-  @for $size from 0 to 16 {
     @include spacing-class($prop, $size);
   }
+
+  @each $gap in (gap, column-gap, row-gap) {
+
+    .#{$gap}-#{$size} {
+      #{$gap}: spacing($size);
+    }
+  }
+
 }
 @include spacing-class("margin", auto, auto);
