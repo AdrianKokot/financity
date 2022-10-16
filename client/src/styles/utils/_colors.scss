@@ -9,6 +9,9 @@ $bgColors: (
   .bg-#{$var} {
     background-color: $color;
   }
+  .border-#{$var} {
+    border: 1px solid $color;
+  }
 }
 
 $textColors: (

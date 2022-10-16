@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
-const exportedComponents = [NavbarComponent, FooterComponent];
+const exportedComponents = [NavbarComponent, FooterComponent, NotFoundComponent];
 
 @NgModule({
   declarations: [...exportedComponents],

@@ -1,0 +1,7 @@
+$sizes: (xs,s,m,l);
+
+@each $size in $sizes {
+  .border-radius-#{$size} {
+    border-radius: var(--tui-radius-#{$size});
+  }
+}
