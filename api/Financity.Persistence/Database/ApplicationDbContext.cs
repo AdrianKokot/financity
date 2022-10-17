@@ -42,8 +42,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                     entry.Entity.UpdatedAt = AppDateTime.Now;
                     entry.Entity.UpdatedBy = string.Empty;
                     break;
-                default:
-                    break;
             }
         }
 
