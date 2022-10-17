@@ -1,10 +1,3 @@
-@use 'shared' as *;
-
 app-footer {
-  @extend .d-block;
-  @extend .mt-auto;
-  @extend .py-4;
-  @extend .text-center;
-  @extend .bg-base;
   border-top: 1px solid var(--tui-base-03);
 }
