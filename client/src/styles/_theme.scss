@@ -2,10 +2,10 @@
 
 body {
   &:not(:has(tui-theme-night)) {
-    @extend .bg-base-2;
+    background-color: pallette('base-2');
   }
   &:has(tui-theme-night) {
-    @extend .bg-base;
+    background-color: pallette('base');
   }
 }
 
