@@ -7,7 +7,9 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "changeDetection": "OnPush",
+          "viewEncapsulation": "None"
         }
       },
       "root": "",
@@ -33,10 +35,15 @@
               }
             ],
             "styles": [
+              "src/styles/reset.scss",
               "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
               "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
-              "src/styles.scss"
+              "node_modules/@taiga-ui/styles/taiga-ui-global.less",
+              "src/styles/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles/shared"]
+            },
             "scripts": []
           },
           "configurations": {
@@ -50,7 +57,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumError": "10kb"
                 }
               ],
               "fileReplacements": [
@@ -98,31 +105,21 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles/styles.scss"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }

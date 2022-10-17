@@ -3,7 +3,7 @@
   "ignorePatterns": ["projects/**/*"],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": ["src/**/*.ts"],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "project": ["tsconfig.json"],
@@ -31,7 +31,37 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "@typescript-eslint/array-type": ["error", { "default": "array" }],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "default",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": ["variable"],
+            "modifiers": ["exported", "const"],
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+          },
+          {
+            "selector": ["enumMember"],
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": ["memberLike", "classProperty"],
+            "modifiers": ["private"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "require"
+          }
+        ],
+        "no-console": ["error", { "allow": ["warn", "error", "info"] }],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"]
       }
     },
     {

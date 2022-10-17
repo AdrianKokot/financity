@@ -1609,6 +1609,13 @@
   dependencies:
     tslib "^2.0.0"
 
+"@taiga-ui/addon-commerce@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@taiga-ui/addon-commerce/-/addon-commerce-3.6.0.tgz#7aaccac247ab411f3a3a4ab31dc9f96fea5bc756"
+  integrity sha512-QMDciwB8qwfflK5TZkU35tCXEaQyE9N41H9wG1qb70gltbKczRh00S3PmFHVW2FZRliLrd/dJj6dKECBj6Bbng==
+  dependencies:
+    tslib "^2.0.0"
+
 "@taiga-ui/addon-mobile@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@taiga-ui/addon-mobile/-/addon-mobile-3.6.0.tgz#7f76519aa2421c9509a0dacc62c14d7a20f3137a"
@@ -1675,6 +1682,11 @@
     "@ng-web-apis/intersection-observer" "^3.0.0"
     text-mask-core "^5.0.0"
     tslib "^2.0.0"
+
+"@taiga-ui/styles@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@taiga-ui/styles/-/styles-3.6.0.tgz#369c2a2fa890f9aa919e0992ff4c5634cf515433"
+  integrity sha512-iv4vbi7bMJLzqVdOFaX8YCXc4e4h+/vxRhub+QwVnyjOnUDn70KpQkByknPYx7tJlv1McrFUVPOBulUOV4zKJQ==
 
 "@tinkoff/ng-event-plugins@3.0.0":
   version "3.0.0"
@@ -5891,7 +5903,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.5.1:
+prettier@^2.5.1, prettier@^2.7.1:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
   integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==

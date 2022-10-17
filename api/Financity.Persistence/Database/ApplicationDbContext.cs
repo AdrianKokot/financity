@@ -20,7 +20,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -41,8 +41,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 case EntityState.Modified:
                     entry.Entity.UpdatedAt = AppDateTime.Now;
                     entry.Entity.UpdatedBy = string.Empty;
-                    break;
-                default:
                     break;
             }
         }

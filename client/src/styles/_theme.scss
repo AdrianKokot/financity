@@ -1,0 +1,16 @@
+@use 'shared/shared' as *;
+
+body {
+  &:not(:has(tui-theme-night)) {
+    @extend .bg-base-2;
+  }
+  &:has(tui-theme-night) {
+    @extend .bg-base;
+  }
+}
+
+@for $num from 1 to 7 {
+  h#{$num} {
+    font: var(--tui-font-heading-#{$num});
+  }
+}

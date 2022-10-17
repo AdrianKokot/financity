@@ -1,0 +1,54 @@
+$bgColors: (
+  "base": var(--tui-base-01),
+  "base-2": var(--tui-base-02),
+  "base-3": var(--tui-base-03),
+  "base-4": var(--tui-base-04),
+);
+
+@each $var,$color in $bgColors {
+  .bg-#{$var} {
+    background-color: $color;
+  }
+  .border-#{$var} {
+    border: 1px solid $color;
+  }
+}
+
+$textColors: (
+  "1": var(--tui-text-01),
+  "2": var(--tui-text-02),
+  "3": var(--tui-text-03),
+  "link": var(--tui-link),
+  "link-hover": var(--tui-link-hover),
+  "positive": var(--tui-positive),
+  "positive-hover": var(--tui-positive-hover),
+  "negative": var(--tui-negative),
+  "negative-hover": var(--tui-negative-hover)
+);
+
+@each $var,$color in $textColors {
+  .text-#{$var} {
+    color: $color;
+  }
+}
+
+$pallette: (
+  "base": var(--tui-base-01),
+  "base-2": var(--tui-base-02),
+  "base-3": var(--tui-base-03),
+  "base-4": var(--tui-base-04),
+  "base-5": var(--tui-base-05),
+  "primary": var(--tui-primary),
+  "primary-hover": var(--tui-primary-hover),
+  "primary-active": var(--tui-primary-active),
+  "secondary": var(--tui-secondary),
+  "secondary-hover": var(--tui-secondary-hover),
+  "secondary-active": var(--tui-secondary-active),
+  "active": var(--tui-active),
+  "active-hover": var(--tui-active-hover),
+  "active-active": var(--tui-active-active),
+);
+
+@function pallette($key) {
+  @return map-get($pallette, $key);
+}
