@@ -8,7 +8,10 @@
     size="s">
     <h3 class="tui-island__title">{{ wallet.name }}</h3>
     <p class="tui-island__paragraph">
-      <tui-money [currency]="currencies[wallet.currency]" [colored]="true" [value]="wallet.balance"></tui-money>
+      <tui-money
+        [currency]="currencies[wallet.currency]"
+        [colored]="true"
+        [value]="wallet.balance"></tui-money>
     </p>
   </a>
 </div>

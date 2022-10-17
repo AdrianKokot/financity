@@ -6,7 +6,11 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
-const exportedComponents = [NavbarComponent, FooterComponent, NotFoundComponent];
+const exportedComponents = [
+  NavbarComponent,
+  FooterComponent,
+  NotFoundComponent,
+];
 
 @NgModule({
   declarations: [...exportedComponents],
