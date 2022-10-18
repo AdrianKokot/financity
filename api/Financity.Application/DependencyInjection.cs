@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Financity.Application.Behaviors;
+using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,9 @@ public static class DependencyInjection
     {
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
 
         return services;

@@ -14,7 +14,7 @@ public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbCo
     {
         var basePath = Directory.GetCurrentDirectory() +
                        string.Format("{0}..{0}Financity.Presentation", Path.DirectorySeparatorChar);
-        return Create(basePath, Environment.GetEnvironmentVariable((AspNetCoreEnvironment)));
+        return Create(basePath, Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
     }
 
     protected abstract TContext CreateNewInstance(DbContextOptions<TContext> options);
@@ -24,8 +24,8 @@ public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbCo
         var configuration = new ConfigurationBuilder()
             .SetBasePath(basePath)
             .AddJsonFile("appsettings.json")
-            .AddJsonFile("appsettings.Local.json", optional: true)
-            .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
+            .AddJsonFile("appsettings.Local.json", true)
+            .AddJsonFile($"appsettings.{environmentName}.json", true)
             .AddEnvironmentVariables()
             .Build();
 
@@ -37,10 +37,8 @@ public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbCo
     private TContext Create(string connectionString)
     {
         if (string.IsNullOrEmpty(connectionString))
-        {
             throw new ArgumentException($"Connection string '{ConnectionStringName}' is null or empty.",
                 nameof(connectionString));
-        }
 
         var optionsBuilder = new DbContextOptionsBuilder<TContext>();
 

@@ -31,6 +31,12 @@ namespace Financity.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0d9705eb-89f0-4f15-8454-13ac013cc397")
+                        });
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
@@ -94,7 +100,7 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1c7643eb-b43f-4b31-aa74-e2ab493fcec7"),
+                            Id = new Guid("f6f7bece-aced-4279-8193-ee5717da4b4b"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         });
@@ -203,7 +209,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("WalletId")
+                    b.Property<Guid?>("WalletId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -326,19 +332,15 @@ namespace Financity.Persistence.Migrations
                         .WithMany("Transactions")
                         .HasForeignKey("RecipientId1");
 
-                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
+                    b.HasOne("Financity.Domain.Entities.Wallet", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WalletId");
 
                     b.Navigation("Category");
 
                     b.Navigation("Currency");
 
                     b.Navigation("Recipient");
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>
