@@ -1,0 +1,42 @@
+<form [formGroup]="form">
+  <div class="tui-form__row">
+    <tui-input
+      tuiTextfieldExampleText="Field placeholder"
+      formControlName="name">
+      Name
+      <span class="tui-required"></span>
+    </tui-input>
+    <tui-error
+      formControlName="name"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </div>
+
+  <div class="tui-form__row">
+    <tui-combo-box [formControl]="currency" [stringify]="getCurrencyName">
+      Currency
+      <input tuiTextfield />
+
+      <span class="tui-required"></span>
+      <tui-data-list-wrapper
+        *tuiDataList
+        [items]="currencies$ | async | tuiFilterByInputWith: getCurrencyName"
+        [itemContent]="
+          getCurrencyName | tuiStringifyContent
+        "></tui-data-list-wrapper>
+      <tui-error
+        [formControl]="currency"
+        [error]="[] | tuiFieldError | async"></tui-error>
+    </tui-combo-box>
+  </div>
+
+  <div class="tui-form__row">
+    <tui-input-number
+      formControlName="startingBalance"
+      [postfix]="(currency.valueChanges | async)?.code ?? null | tuiCurrency">
+      Starting balance
+    </tui-input-number>
+    <tui-error
+      formControlName="startingBalance"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </div>
+</form>

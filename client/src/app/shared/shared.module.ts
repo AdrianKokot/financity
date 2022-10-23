@@ -7,6 +7,7 @@ import {
   TuiScrollbarModule,
 } from '@taiga-ui/core';
 import { TuiIslandModule } from '@taiga-ui/kit';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const tuiModules = [
   TuiButtonModule,
@@ -16,9 +17,13 @@ const tuiModules = [
   TuiScrollbarModule,
 ];
 
+const otherModules = [ReactiveFormsModule];
+
+const modules = [...tuiModules, ...otherModules];
+
 @NgModule({
   declarations: [],
-  imports: [CommonModule, ...tuiModules],
-  exports: [...tuiModules],
+  imports: [CommonModule, ...modules],
+  exports: [...modules],
 })
 export class SharedModule {}

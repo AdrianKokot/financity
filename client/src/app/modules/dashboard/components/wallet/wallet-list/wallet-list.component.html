@@ -1,0 +1,22 @@
+<div class="d-flex flex-wrap gap-2">
+  <a
+    tuiIsland
+    href="/wallet/{{ wallet.id }}"
+    routerLink="/wallet/{{ wallet.id }}"
+    *ngFor="let wallet of wallets$ | async"
+    size="s">
+    <h3 class="tui-island__title" [title]="wallet.name">
+      {{ wallet.name }}
+    </h3>
+    <p class="tui-island__paragraph">
+      <tui-money
+        [currency]="wallet.currencyCode"
+        [colored]="true"
+        [value]="wallet.balance"></tui-money>
+    </p>
+  </a>
+</div>
+
+<div class="mt-8">
+  <button tuiButton (click)="showDialog()">Create new</button>
+</div>
