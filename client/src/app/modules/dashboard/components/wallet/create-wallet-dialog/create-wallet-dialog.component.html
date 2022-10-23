@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="submit()">
   <div class="tui-form__row">
     <tui-input
       tuiTextfieldExampleText="Field placeholder"
@@ -38,5 +38,15 @@
     <tui-error
       formControlName="startingBalance"
       [error]="[] | tuiFieldError | async"></tui-error>
+  </div>
+
+  <div class="tui-form__row text-right">
+    <button
+      tuiButton
+      type="submit"
+      size="m"
+      [showLoader]="(loading$ | async) ?? false">
+      Submit
+    </button>
   </div>
 </form>
