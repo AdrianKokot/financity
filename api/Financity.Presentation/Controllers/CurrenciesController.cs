@@ -8,7 +8,7 @@ namespace Financity.Presentation.Controllers;
 public sealed class CurrenciesController : BaseController
 {
     [HttpGet]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CurrencyDto>))]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CurrencyListItem>))]
     public async Task<IActionResult> GetCurrencies()
         => await HandleQuery(new GetCurrenciesQuery());
 }

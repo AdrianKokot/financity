@@ -15,7 +15,7 @@ public sealed class Transaction : AuditableEntity
     public int? RecipientId { get; set; }
     public Recipient? Recipient { get; set; }
 
-    // public Guid WalletId { get; set; }
+    public Guid WalletId { get; set; }
     // public Wallet Wallet { get; set; }
 
     public ICollection<Label> Labels { get; set; }

@@ -19,10 +19,14 @@ public sealed class GetWalletsQueryHandler : IRequestHandler<GetWalletsQuery, IE
 
     public async Task<IEnumerable<WalletDto>> Handle(GetWalletsQuery request, CancellationToken cancellationToken)
     {
-        return await _dbContext.Wallets.Select(x => new WalletDto()
+        return await _dbContext.Wallets.Include(x => x.DefaultCurrency).Select(x => new WalletDto()
         {
             Id = x.Id,
-            Name = x.Name
+            Name = x.Name,
+            CurrencyId = x.DefaultCurrency.Id,
+            CurrencyCode = x.DefaultCurrency.Code,
+            CurrencyName = x.DefaultCurrency.Name,
+            Balance = 1000
         }).Take(20).ToListAsync(cancellationToken);
     }
 }
@@ -31,4 +35,8 @@ public sealed class WalletDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
+    public Guid CurrencyId { get; set; }
+    public string CurrencyName { get; set; }
+    public string CurrencyCode { get; set; }
+    public decimal Balance { get; set; }
 }

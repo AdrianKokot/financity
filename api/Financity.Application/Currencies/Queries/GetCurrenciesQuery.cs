@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Currencies.Queries;
 
-public class GetCurrenciesQuery : IRequest<IEnumerable<CurrencyDto>>
+public class GetCurrenciesQuery : IRequest<IEnumerable<CurrencyListItem>>
 {
 }
 
-public class GetCurrenciesQueryHandler : IRequestHandler<GetCurrenciesQuery, IEnumerable<CurrencyDto>>
+public class GetCurrenciesQueryHandler : IRequestHandler<GetCurrenciesQuery, IEnumerable<CurrencyListItem>>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -17,15 +17,16 @@ public class GetCurrenciesQueryHandler : IRequestHandler<GetCurrenciesQuery, IEn
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<CurrencyDto>> Handle(GetCurrenciesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CurrencyListItem>> Handle(GetCurrenciesQuery request, CancellationToken cancellationToken)
     {
-        return await _dbContext.Currencies.Select(c => new CurrencyDto {Code = c.Code, Id = c.Id})
+        return await _dbContext.Currencies.Select(c => new CurrencyListItem {Code = c.Code, Id = c.Id, Name = c.Name})
             .ToListAsync(cancellationToken);
     }
 }
 
-public class CurrencyDto
+public class CurrencyListItem
 {
     public Guid Id { get; set; }
     public string Code { get; set; }
+    public string Name { get; set; }
 }

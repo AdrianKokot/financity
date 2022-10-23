@@ -6,12 +6,16 @@
     routerLink="/wallet/{{ wallet.id }}"
     *ngFor="let wallet of wallets$ | async"
     size="s">
-    <h3 class="tui-island__title">{{ wallet.name }}</h3>
+    <h3 class="tui-island__title" [title]="wallet.name">
+      {{ wallet.name }}
+    </h3>
     <p class="tui-island__paragraph">
       <tui-money
-        [currency]="currencies[wallet.currency]"
+        [currency]="wallet.currencyCode"
         [colored]="true"
         [value]="wallet.balance"></tui-money>
     </p>
   </a>
 </div>
+
+<div>{{ currencies$ | async | json }}</div>

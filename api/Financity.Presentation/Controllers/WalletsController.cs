@@ -12,6 +12,11 @@ public class WalletsController : BaseController
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<WalletDto>))]
     public async Task<IActionResult> GetWallets()
         => await HandleQuery(new GetWalletsQuery());
+    
+    [HttpGet("{id}")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletDetails))]
+    public async Task<IActionResult> GetWallet(string id)
+        => await HandleQuery(new GetWalletQuery(id));
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateWalletCommandResult))]
