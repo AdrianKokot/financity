@@ -13,8 +13,14 @@ public static class DataSeeder
 
     private static void SeedCurrencies(this ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Currency>(c => { c.HasData(new Currency {Code = "PLN", Name = "Polski Złoty"}); }
-        );
+        modelBuilder.Entity<Currency>(c =>
+        {
+            c.HasData(new[]
+            {
+                new Currency {Code = "PLN", Name = "Polski Złoty"},
+                new Currency {Code = "EUR", Name = "Euro"}
+            });
+        });
     }
 
     private static void SeedAccounts(this ModelBuilder modelBuilder)

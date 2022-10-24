@@ -1,6 +1,5 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Queries;
