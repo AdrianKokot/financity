@@ -1,18 +1,18 @@
 ﻿using Financity.Application.Abstractions.Data;
-using MediatR;
+using Financity.Application.Abstractions.Messaging;
 
 namespace Financity.Application.Accounts.Queries;
 
-public class GetAccountsQuery : IRequest<IEnumerable<AccountDto>>
+public class GetAccountsQuery : IQuery<IEnumerable<AccountListItem>>
 {
 }
 
-public sealed class AccountDto
+public sealed class AccountListItem
 {
     public Guid Id { get; set; }
 }
 
-public sealed class GetAccountsQueryHandler : IRequestHandler<GetAccountsQuery, IEnumerable<AccountDto>>
+public sealed class GetAccountsQueryHandler : IQueryHandler<GetAccountsQuery, IEnumerable<AccountListItem>>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -21,8 +21,9 @@ public sealed class GetAccountsQueryHandler : IRequestHandler<GetAccountsQuery, 
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<AccountDto>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<AccountListItem>> Handle(GetAccountsQuery request,
+        CancellationToken cancellationToken)
     {
-        return _dbContext.Accounts.Take(20).Select(a => new AccountDto {Id = a.Id}).ToList();
+        return _dbContext.Accounts.Take(20).Select(a => new AccountListItem {Id = a.Id}).ToList();
     }
 }

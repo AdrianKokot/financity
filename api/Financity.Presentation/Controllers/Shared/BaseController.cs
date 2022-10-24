@@ -12,7 +12,7 @@ public class BaseController : ControllerBase
 
     protected async Task<IActionResult> HandleQuery<TResponse>(IRequest<TResponse> query)
     {
-        var result = await Mediator.Send<TResponse>(query);
+        var result = await Mediator.Send(query);
         return Ok(result);
     }
 }

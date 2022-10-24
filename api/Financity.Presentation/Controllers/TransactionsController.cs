@@ -10,6 +10,7 @@ public class TransactionsController : BaseController
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<TransactionListItem>))]
     public async Task<IActionResult> GetTransactions([FromQuery] GetTransactionsQuery query)
-        => await HandleQuery(query);
-
+    {
+        return await HandleQuery(query);
+    }
 }

@@ -19,10 +19,7 @@ public static class DataSeeder
 
     private static void SeedAccounts(this ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>(c =>
-            {
-                c.HasData(new Account());
-            }
+        modelBuilder.Entity<Account>(c => { c.HasData(new Account()); }
         );
     }
 }

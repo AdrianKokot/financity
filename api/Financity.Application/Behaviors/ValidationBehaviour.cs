@@ -1,9 +1,7 @@
 ﻿using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using ValidationException = FluentValidation.ValidationException;
 
 namespace Financity.Application.Behaviors;
 
@@ -29,7 +27,7 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     private IReadOnlyList<ValidationFailure> GetValidationFailures(TRequest request)
     {
         if (!_validators.Any()) return ImmutableList<ValidationFailure>.Empty;
-        
+
         var context = new ValidationContext<TRequest>(request);
 
         var errors = _validators.Select(x => x.Validate(context))
@@ -38,6 +36,5 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
             .ToImmutableList();
 
         return errors;
-
     }
 }

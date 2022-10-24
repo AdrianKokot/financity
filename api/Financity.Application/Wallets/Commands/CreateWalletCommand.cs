@@ -1,18 +1,17 @@
 ﻿using Financity.Application.Abstractions.Data;
+using Financity.Application.Abstractions.Messaging;
 using Financity.Domain.Entities;
-using FluentValidation;
-using MediatR;
 
 namespace Financity.Application.Wallets.Commands;
 
-public sealed class CreateWalletCommand : IRequest<CreateWalletCommandResult>
+public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>
 {
     public string Name { get; set; }
     public string AccountId { get; set; }
     public string CurrencyId { get; set; }
 }
 
-public sealed class CreateWalletCommandHandler : IRequestHandler<CreateWalletCommand, CreateWalletCommandResult>
+public sealed class CreateWalletCommandHandler : ICommandHandler<CreateWalletCommand, CreateWalletCommandResult>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -36,7 +35,7 @@ public sealed class CreateWalletCommandHandler : IRequestHandler<CreateWalletCom
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new()
+        return new CreateWalletCommandResult
         {
             Id = wallet.Id
         };
@@ -46,14 +45,4 @@ public sealed class CreateWalletCommandHandler : IRequestHandler<CreateWalletCom
 public sealed class CreateWalletCommandResult
 {
     public Guid Id { get; set; }
-}
-
-public sealed class CreateWalletCommandValidator : AbstractValidator<CreateWalletCommand>
-{
-    public CreateWalletCommandValidator()
-    {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-        RuleFor(x => x.AccountId).NotEmpty();
-        RuleFor(x => x.CurrencyId).NotEmpty();
-    }
 }

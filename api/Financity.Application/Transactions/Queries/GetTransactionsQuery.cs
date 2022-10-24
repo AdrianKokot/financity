@@ -1,17 +1,16 @@
-﻿using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using Financity.Application.Abstractions.Data;
+﻿using Financity.Application.Abstractions.Data;
+using Financity.Application.Abstractions.Messaging;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Queries;
 
-public sealed class GetTransactionsQuery : IRequest<IEnumerable<TransactionListItem>>
+public sealed class GetTransactionsQuery : IQuery<IEnumerable<TransactionListItem>>
 {
     public string? WalletId { get; set; } = null;
 }
 
-public sealed class GetTransactionQueryHandler : IRequestHandler<GetTransactionsQuery, IEnumerable<TransactionListItem>>
+public sealed class GetTransactionQueryHandler : IQueryHandler<GetTransactionsQuery, IEnumerable<TransactionListItem>>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -28,14 +27,12 @@ public sealed class GetTransactionQueryHandler : IRequestHandler<GetTransactions
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(request.WalletId))
-        {
             transactionsQuery = transactionsQuery
                 .Where(x => x.WalletId.Equals(Guid.Parse(request.WalletId)))
                 .AsQueryable();
-        }
 
 
-        return await transactionsQuery.Take(20).Select(x => new TransactionListItem()
+        return await transactionsQuery.Take(20).Select(x => new TransactionListItem
             {
                 Id = x.Id,
                 CurrencyId = x.Currency.Id,

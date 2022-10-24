@@ -1,20 +1,20 @@
 ﻿using Financity.Application.Abstractions.Data;
-using MediatR;
+using Financity.Application.Abstractions.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Queries;
 
-public sealed class GetWalletQuery : IRequest<WalletDetails>
+public sealed class GetWalletQuery : IQuery<WalletDetails>
 {
-    public Guid Id { get; set; }
-
     public GetWalletQuery(string id)
     {
         Id = Guid.Parse(id);
     }
+
+    public Guid Id { get; set; }
 }
 
-public sealed class GetWalletQueryHandler : IRequestHandler<GetWalletQuery, WalletDetails>
+public sealed class GetWalletQueryHandler : IQueryHandler<GetWalletQuery, WalletDetails>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -22,12 +22,12 @@ public sealed class GetWalletQueryHandler : IRequestHandler<GetWalletQuery, Wall
     {
         _dbContext = dbContext;
     }
-    
+
     public async Task<WalletDetails> Handle(GetWalletQuery request, CancellationToken cancellationToken)
     {
         var wallet = await _dbContext.Wallets.FirstAsync(x => x.Id.Equals(request.Id), cancellationToken);
 
-        return new WalletDetails()
+        return new WalletDetails
         {
             Id = wallet.Id,
             Name = wallet.Name
