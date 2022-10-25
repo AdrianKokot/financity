@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Financity.Persistence.Migrations
 {
-    public partial class AddACcountRelatedEntities : Migration
+    public partial class AddAccountRelatedEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -140,10 +140,10 @@ namespace Financity.Persistence.Migrations
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecipientId = table.Column<int>(type: "int", nullable: true),
                     RecipientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransactionType = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -172,8 +172,7 @@ namespace Financity.Persistence.Migrations
                         name: "FK_Transactions_Wallets_WalletId",
                         column: x => x.WalletId,
                         principalTable: "Wallets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -201,9 +200,14 @@ namespace Financity.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Accounts",
+                column: "Id",
+                value: new Guid("0d9705eb-89f0-4f15-8454-13ac013cc397"));
+
+            migrationBuilder.InsertData(
                 table: "Currencies",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { new Guid("1c7643eb-b43f-4b31-aa74-e2ab493fcec7"), "PLN", "Polski Złoty" });
+                values: new object[] { new Guid("f6f7bece-aced-4279-8193-ee5717da4b4b"), "PLN", "Polski Złoty" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_AccountId",
@@ -287,7 +291,7 @@ namespace Financity.Persistence.Migrations
             migrationBuilder.DeleteData(
                 table: "Currencies",
                 keyColumn: "Id",
-                keyValue: new Guid("1c7643eb-b43f-4b31-aa74-e2ab493fcec7"));
+                keyValue: new Guid("f6f7bece-aced-4279-8193-ee5717da4b4b"));
 
             migrationBuilder.InsertData(
                 table: "Currencies",

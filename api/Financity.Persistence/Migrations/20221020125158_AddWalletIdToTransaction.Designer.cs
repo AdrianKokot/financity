@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220927180120_AddACcountRelatedEntities")]
-    partial class AddACcountRelatedEntities
+    [Migration("20221020125158_AddWalletIdToTransaction")]
+    partial class AddWalletIdToTransaction
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,12 @@ namespace Financity.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ea51175d-1ce3-42c8-b745-2d937572100a")
+                        });
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
@@ -96,7 +102,7 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1c7643eb-b43f-4b31-aa74-e2ab493fcec7"),
+                            Id = new Guid("448b1ff8-38f5-408d-8adf-1406c6d8cd1e"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         });
@@ -216,8 +222,6 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("RecipientId1");
 
-                    b.HasIndex("WalletId");
-
                     b.ToTable("Transactions");
                 });
 
@@ -328,19 +332,11 @@ namespace Financity.Persistence.Migrations
                         .WithMany("Transactions")
                         .HasForeignKey("RecipientId1");
 
-                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
-                        .WithMany("Transactions")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
 
                     b.Navigation("Currency");
 
                     b.Navigation("Recipient");
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>
@@ -394,11 +390,6 @@ namespace Financity.Persistence.Migrations
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
-                {
-                    b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>
                 {
                     b.Navigation("Transactions");
                 });
