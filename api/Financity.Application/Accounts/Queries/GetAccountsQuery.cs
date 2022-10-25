@@ -24,6 +24,6 @@ public sealed class GetAccountsQueryHandler : IQueryHandler<GetAccountsQuery, IE
     public async Task<IEnumerable<AccountListItem>> Handle(GetAccountsQuery request,
         CancellationToken cancellationToken)
     {
-        return _dbContext.Accounts.Take(20).Select(a => new AccountListItem {Id = a.Id}).ToList();
+        return _dbContext.Accounts.Take(20).Select(a => new AccountListItem { Id = a.Id }).ToList();
     }
 }

@@ -20,7 +20,7 @@ public class GetCurrenciesQueryHandler : IQueryHandler<GetCurrenciesQuery, IEnum
     public async Task<IEnumerable<CurrencyListItem>> Handle(GetCurrenciesQuery request,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Currencies.Select(c => new CurrencyListItem {Code = c.Code, Id = c.Id, Name = c.Name})
+        return await _dbContext.Currencies.Select(c => new CurrencyListItem { Code = c.Code, Id = c.Id, Name = c.Name })
             .ToListAsync(cancellationToken);
     }
 }

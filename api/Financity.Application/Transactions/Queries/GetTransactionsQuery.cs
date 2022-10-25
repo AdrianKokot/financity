@@ -32,12 +32,12 @@ public sealed class GetTransactionQueryHandler : IQueryHandler<GetTransactionsQu
 
 
         return await transactionsQuery.Take(20).Select(x => new TransactionListItem
-            {
-                Id = x.Id,
-                CurrencyId = x.Currency.Id,
-                CurrencyCode = x.Currency.Code,
-                CurrencyName = x.Currency.Name
-            })
+        {
+            Id = x.Id,
+            CurrencyId = x.Currency.Id,
+            CurrencyCode = x.Currency.Code,
+            CurrencyName = x.Currency.Name
+        })
             .ToListAsync(cancellationToken);
     }
 }
