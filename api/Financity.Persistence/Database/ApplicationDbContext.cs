@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Financity.Application.Abstractions.Data;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
-using Financity.Domain.Shared;
 using Financity.Persistence.Seed;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
     }
 
-    public DbSet<Account> Accounts { get; set; }
+    public DbSet<T> GetDbSet<T>() where T : class
+    {
+        return Set<T>();
+    }
+
     public DbSet<Category> Categories { get; set; }
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Label> Labels { get; set; }

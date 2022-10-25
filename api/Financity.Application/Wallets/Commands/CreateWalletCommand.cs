@@ -7,7 +7,6 @@ namespace Financity.Application.Wallets.Commands;
 public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>
 {
     public string Name { get; set; }
-    public string AccountId { get; set; }
     public string CurrencyId { get; set; }
 }
 
@@ -28,8 +27,7 @@ public sealed class CreateWalletCommandHandler : ICommandHandler<CreateWalletCom
             Name = request.Name
         };
 
-        wallet.AccountId = Guid.Parse(request.AccountId);
-        wallet.DefaultCurrencyId = Guid.Parse(request.CurrencyId);
+        wallet.CurrencyId = Guid.Parse(request.CurrencyId);
 
         _dbContext.Wallets.Add(wallet);
 

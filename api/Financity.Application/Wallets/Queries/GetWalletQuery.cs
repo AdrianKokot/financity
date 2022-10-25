@@ -1,42 +1,19 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Abstractions.Messaging;
-using Microsoft.EntityFrameworkCore;
+using Financity.Application.Common.DetailsQuery;
+using Financity.Domain.Entities;
 
 namespace Financity.Application.Wallets.Queries;
 
-public sealed class GetWalletQuery : IQuery<WalletDetails>
+public sealed class GetWalletQuery : EntityQuery<Wallet>
 {
-    public GetWalletQuery(string id)
+    public GetWalletQuery(string entityId) : base(entityId)
     {
-        Id = Guid.Parse(id);
-    }
-
-    public Guid Id { get; set; }
-}
-
-public sealed class GetWalletQueryHandler : IQueryHandler<GetWalletQuery, WalletDetails>
-{
-    private readonly IApplicationDbContext _dbContext;
-
-    public GetWalletQueryHandler(IApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public async Task<WalletDetails> Handle(GetWalletQuery request, CancellationToken cancellationToken)
-    {
-        var wallet = await _dbContext.Wallets.FirstAsync(x => x.Id.Equals(request.Id), cancellationToken);
-
-        return new WalletDetails
-        {
-            Id = wallet.Id,
-            Name = wallet.Name
-        };
     }
 }
 
-public sealed class WalletDetails
+public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, Wallet>
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
+    public GetWalletQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    {
+    }
 }

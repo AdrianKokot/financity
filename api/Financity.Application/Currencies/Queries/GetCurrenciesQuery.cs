@@ -1,33 +1,20 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Abstractions.Messaging;
-using Microsoft.EntityFrameworkCore;
+using Financity.Application.Common.FilteredQuery;
+using Financity.Domain.Entities;
 
 namespace Financity.Application.Currencies.Queries;
 
-public class GetCurrenciesQuery : IQuery<IEnumerable<CurrencyListItem>>
+public sealed class GetCurrenciesQuery : FilteredEntitiesQuery<Currency>
 {
-}
-
-public class GetCurrenciesQueryHandler : IQueryHandler<GetCurrenciesQuery, IEnumerable<CurrencyListItem>>
-{
-    private readonly IApplicationDbContext _dbContext;
-
-    public GetCurrenciesQueryHandler(IApplicationDbContext dbContext)
+    public GetCurrenciesQuery(QuerySpecification querySpecification) : base(querySpecification)
     {
-        _dbContext = dbContext;
-    }
-
-    public async Task<IEnumerable<CurrencyListItem>> Handle(GetCurrenciesQuery request,
-        CancellationToken cancellationToken)
-    {
-        return await _dbContext.Currencies.Select(c => new CurrencyListItem { Code = c.Code, Id = c.Id, Name = c.Name })
-            .ToListAsync(cancellationToken);
     }
 }
 
-public class CurrencyListItem
+public sealed class GetCurrenciesQueryHandler : FilteredEntitiesQueryHandler<GetCurrenciesQuery, Currency>
+
 {
-    public Guid Id { get; set; }
-    public string Code { get; set; }
-    public string Name { get; set; }
+    public GetCurrenciesQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    {
+    }
 }

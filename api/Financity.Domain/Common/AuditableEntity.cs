@@ -1,11 +1,7 @@
-﻿namespace Financity.Domain.Shared;
+﻿namespace Financity.Domain.Common;
 
 public class AuditableEntity : Entity
 {
-    public AuditableEntity(Guid id) : base(id)
-    {
-    }
-
     public DateTime? CreatedAt { get; set; }
     public string? CreatedBy { get; set; }
 

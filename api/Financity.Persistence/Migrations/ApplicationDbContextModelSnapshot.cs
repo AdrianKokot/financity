@@ -22,30 +22,10 @@ namespace Financity.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Financity.Domain.Entities.Account", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Accounts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ea51175d-1ce3-42c8-b745-2d937572100a")
-                        });
-                });
-
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -70,11 +50,14 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
-
                     b.HasIndex("ParentCategoryId");
+
+                    b.HasIndex("WalletId");
 
                     b.ToTable("Categories");
                 });
@@ -100,9 +83,21 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("448b1ff8-38f5-408d-8adf-1406c6d8cd1e"),
+                            Id = new Guid("81ade7e4-e4d0-45a0-a5c5-eb2f25417238"),
                             Code = "PLN",
                             Name = "Polski Złoty"
+                        },
+                        new
+                        {
+                            Id = new Guid("49cb9206-1c43-42e5-a202-8d747621c091"),
+                            Code = "EUR",
+                            Name = "Euro"
+                        },
+                        new
+                        {
+                            Id = new Guid("aadbb33c-4157-40fd-b4b2-546961729166"),
+                            Code = "USD",
+                            Name = "United States Dollar"
                         });
                 });
 
@@ -110,9 +105,6 @@ namespace Financity.Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -131,9 +123,12 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("WalletId");
 
                     b.ToTable("Labels");
                 });
@@ -144,9 +139,6 @@ namespace Financity.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -163,9 +155,12 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("WalletId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("WalletId");
 
                     b.ToTable("Recipients");
                 });
@@ -188,7 +183,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("CurrencyId")
+                    b.Property<Guid?>("CurrencyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Note")
@@ -209,7 +204,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("WalletId")
+                    b.Property<Guid?>("WalletId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -220,6 +215,8 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("RecipientId1");
 
+                    b.HasIndex("WalletId");
+
                     b.ToTable("Transactions");
                 });
 
@@ -229,33 +226,16 @@ namespace Financity.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("DefaultCurrencyId")
+                    b.Property<Guid>("CurrencyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("DefaultCurrencyId");
+                    b.HasIndex("CurrencyId");
 
                     b.ToTable("Wallets");
                 });
@@ -277,41 +257,41 @@ namespace Financity.Persistence.Migrations
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("Financity.Domain.Entities.Account", "Account")
-                        .WithMany("Categories")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Financity.Domain.Entities.Category", "ParentCategory")
                         .WithMany()
                         .HasForeignKey("ParentCategoryId");
 
-                    b.Navigation("Account");
+                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
+                        .WithMany("Categories")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ParentCategory");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Label", b =>
                 {
-                    b.HasOne("Financity.Domain.Entities.Account", "Account")
+                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
                         .WithMany("Labels")
-                        .HasForeignKey("AccountId")
+                        .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
                 {
-                    b.HasOne("Financity.Domain.Entities.Account", "Account")
+                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
                         .WithMany("Recipients")
-                        .HasForeignKey("AccountId")
+                        .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Transaction", b =>
@@ -322,38 +302,34 @@ namespace Financity.Persistence.Migrations
 
                     b.HasOne("Financity.Domain.Entities.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
                         .WithMany("Transactions")
                         .HasForeignKey("RecipientId1");
+
+                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
+                        .WithMany()
+                        .HasForeignKey("WalletId");
 
                     b.Navigation("Category");
 
                     b.Navigation("Currency");
 
                     b.Navigation("Recipient");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>
                 {
-                    b.HasOne("Financity.Domain.Entities.Account", "Account")
-                        .WithMany("Wallets")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Financity.Domain.Entities.Currency", "DefaultCurrency")
+                    b.HasOne("Financity.Domain.Entities.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("DefaultCurrencyId")
+                        .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
-
-                    b.Navigation("DefaultCurrency");
+                    b.Navigation("Currency");
                 });
 
             modelBuilder.Entity("LabelTransaction", b =>
@@ -371,17 +347,6 @@ namespace Financity.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Financity.Domain.Entities.Account", b =>
-                {
-                    b.Navigation("Categories");
-
-                    b.Navigation("Labels");
-
-                    b.Navigation("Recipients");
-
-                    b.Navigation("Wallets");
-                });
-
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Transactions");
@@ -390,6 +355,15 @@ namespace Financity.Persistence.Migrations
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
                 {
                     b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Labels");
+
+                    b.Navigation("Recipients");
                 });
 #pragma warning restore 612, 618
         }

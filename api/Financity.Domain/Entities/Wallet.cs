@@ -1,18 +1,15 @@
-﻿using Financity.Domain.Shared;
+﻿using Financity.Domain.Common;
 
 namespace Financity.Domain.Entities;
 
-public sealed class Wallet : AuditableEntity
+public sealed class Wallet : Entity
 {
-    public Wallet() : base(Guid.NewGuid())
-    {
-    }
-
     public string Name { get; set; }
 
-    public Guid AccountId { get; set; }
-    public Account Account { get; set; }
+    public Guid CurrencyId { get; set; }
+    public Currency Currency { get; set; }
 
-    public Guid DefaultCurrencyId { get; set; }
-    public Currency DefaultCurrency { get; set; }
+    public ICollection<Label> Labels { get; set; }
+    public ICollection<Recipient> Recipients { get; set; }
+    public ICollection<Category> Categories { get; set; }
 }

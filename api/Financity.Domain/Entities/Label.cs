@@ -1,17 +1,13 @@
-﻿using Financity.Domain.Shared;
+﻿using Financity.Domain.Common;
 
 namespace Financity.Domain.Entities;
 
 public sealed class Label : AuditableEntity
 {
-    public Label() : base(Guid.NewGuid())
-    {
-    }
-
     public string Name { get; set; }
 
-    public Guid AccountId { get; set; }
-    public Account Account { get; set; }
+    public Guid WalletId { get; set; }
+    public Wallet Wallet { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; }
 }

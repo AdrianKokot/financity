@@ -1,13 +1,9 @@
-﻿using Financity.Domain.Shared;
+﻿using Financity.Domain.Common;
 
 namespace Financity.Domain.Entities;
 
 public sealed class Currency : Entity
 {
-    public Currency() : base(Guid.NewGuid())
-    {
-    }
-
     public string Code { get; init; }
     public string Name { get; init; }
 }

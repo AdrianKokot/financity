@@ -8,7 +8,6 @@ public sealed class CreateWalletCommandValidator : AbstractValidator<CreateWalle
     public CreateWalletCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-        RuleFor(x => x.AccountId).NotEmpty();
         RuleFor(x => x.CurrencyId).NotEmpty();
     }
 }

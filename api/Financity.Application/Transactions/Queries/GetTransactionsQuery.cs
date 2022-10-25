@@ -1,51 +1,32 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Abstractions.Messaging;
-using Microsoft.EntityFrameworkCore;
+using Financity.Application.Common.FilteredQuery;
+using Financity.Domain.Entities;
 
 namespace Financity.Application.Transactions.Queries;
 
-public sealed class GetTransactionsQuery : IQuery<IEnumerable<TransactionListItem>>
+public sealed class GetTransactionsQuery : FilteredEntitiesQuery<Transaction>
 {
-    public string? WalletId { get; set; } = null;
-}
-
-public sealed class GetTransactionQueryHandler : IQueryHandler<GetTransactionsQuery, IEnumerable<TransactionListItem>>
-{
-    private readonly IApplicationDbContext _dbContext;
-
-    public GetTransactionQueryHandler(IApplicationDbContext dbContext)
+    public GetTransactionsQuery(QuerySpecification querySpecification, string? walletId) : base(querySpecification)
     {
-        _dbContext = dbContext;
+        WalletId = string.IsNullOrEmpty(walletId) ? null : Guid.Parse(walletId);
     }
 
-    public async Task<IEnumerable<TransactionListItem>> Handle(GetTransactionsQuery request,
+    public Guid? WalletId { get; set; }
+}
+
+public sealed class GetTransactionQueryHandler : FilteredEntitiesQueryHandler<GetTransactionsQuery, Transaction>
+{
+    public GetTransactionQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    {
+    }
+
+
+    public new async Task<IEnumerable<Transaction>> Handle(GetTransactionsQuery request,
         CancellationToken cancellationToken)
     {
-        var transactionsQuery = _dbContext.Transactions
-            .Include(x => x.Currency)
-            .AsQueryable();
-
-        if (!string.IsNullOrEmpty(request.WalletId))
-            transactionsQuery = transactionsQuery
-                .Where(x => x.WalletId.Equals(Guid.Parse(request.WalletId)))
-                .AsQueryable();
-
-
-        return await transactionsQuery.Take(20).Select(x => new TransactionListItem
-        {
-            Id = x.Id,
-            CurrencyId = x.Currency.Id,
-            CurrencyCode = x.Currency.Code,
-            CurrencyName = x.Currency.Name
-        })
-            .ToListAsync(cancellationToken);
+        return await AccessAsync(q =>
+                q.Where(x => x.WalletId == request.WalletId)
+                    .Paginate(request.QuerySpecification.PaginationSpecification),
+            cancellationToken);
     }
-}
-
-public sealed class TransactionListItem
-{
-    public Guid Id { get; set; }
-    public Guid CurrencyId { get; set; }
-    public string CurrencyName { get; set; }
-    public string CurrencyCode { get; set; }
 }
