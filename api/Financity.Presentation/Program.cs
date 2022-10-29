@@ -1,8 +1,13 @@
 using Financity.Application;
 using Financity.Infrastructure;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
+builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration)
@@ -38,6 +43,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseDefaultFiles();
+
+app.UseSerilogRequestLogging();
 
 app.UseStaticFiles();
 
