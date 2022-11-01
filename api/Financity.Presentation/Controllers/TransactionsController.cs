@@ -15,6 +15,6 @@ public class TransactionsController : BaseController
         CancellationToken cancellationToken
     )
     {
-        return await HandleQuery(new GetTransactionsQuery(specification), cancellationToken);
+        return await HandleQueryAsync(new GetTransactionsQuery(specification), cancellationToken);
     }
 }

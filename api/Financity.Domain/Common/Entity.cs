@@ -11,14 +11,11 @@ public abstract class Entity
         Id = id;
     }
 
-    public Guid Id { get; private init; }
+    public Guid Id { get; }
 
     public override bool Equals(object? obj)
     {
-        if (obj is null || obj.GetType() != GetType() || obj is not Entity entity)
-        {
-            return false;
-        }
+        if (obj is null || obj.GetType() != GetType() || obj is not Entity entity) return false;
 
         return entity.Id == Id;
     }
