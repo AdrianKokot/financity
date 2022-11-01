@@ -10,13 +10,12 @@ namespace Financity.Presentation.Controllers;
 public class TransactionsController : BaseController
 {
     [HttpGet]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<Transaction>))]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<TransactionListItem>))]
     public async Task<IActionResult> GetFilteredEntityListAsync(
         [FromQuery] QuerySpecification specification,
-        [FromQuery] string? walletId,
         CancellationToken cancellationToken
     )
     {
-        return await HandleQuery(new GetTransactionsQuery(specification, walletId), cancellationToken);
+        return await HandleQuery(new GetTransactionsQuery(specification), cancellationToken);
     }
 }
