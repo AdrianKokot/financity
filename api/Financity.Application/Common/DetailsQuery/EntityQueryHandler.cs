@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Exceptions;
 using Financity.Application.Common.Extensions;
 using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +21,14 @@ public class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<
 
     public async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
-        return await _dbContext.GetDbSet<TEntity>()
+        var entity = await _dbContext.GetDbSet<TEntity>()
             .Where(x => x.Id == request.EntityId)
             .Project<TEntity, TMappedEntity>()
-            .FirstAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
+
+        return entity;
     }
 }
 
@@ -41,7 +46,11 @@ public class
 
     public async Task<TEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
-        return await _dbContext.GetDbSet<TEntity>()
-            .FirstAsync(x => x.Id == request.EntityId, cancellationToken);
+        var entity = await _dbContext.GetDbSet<TEntity>()
+            .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken);
+
+        if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
+
+        return entity;
     }
 }
