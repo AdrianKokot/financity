@@ -11,7 +11,7 @@ namespace Financity.Presentation.Controllers;
 public class WalletsController : BaseController
 {
     [HttpGet]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<Wallet>))]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<WalletListItem>))]
     public async Task<IActionResult> GetFilteredEntityListAsync(
         [FromQuery] QuerySpecification querySpecification,
         CancellationToken cancellationToken

@@ -1,33 +1,28 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Common.Extensions;
 using Financity.Application.Common.FilteredQuery;
+using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Transactions.Queries;
 
-public sealed class GetTransactionsQuery : FilteredEntitiesQuery<Transaction>
+public sealed class GetTransactionsQuery : FilteredEntitiesQuery<TransactionListItem>
 {
-    public GetTransactionsQuery(QuerySpecification querySpecification, string? walletId) : base(querySpecification)
+    public GetTransactionsQuery(QuerySpecification querySpecification) : base(querySpecification)
     {
-        WalletId = string.IsNullOrEmpty(walletId) ? null : Guid.Parse(walletId);
     }
-
-    public Guid? WalletId { get; set; }
 }
 
-public sealed class GetTransactionQueryHandler : FilteredEntitiesQueryHandler<GetTransactionsQuery, Transaction>
+public sealed class GetTransactionQueryHandler : FilteredEntitiesQueryHandler<GetTransactionsQuery, Transaction, TransactionListItem>
 {
     public GetTransactionQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
     }
+}
 
-
-    public new async Task<IEnumerable<Transaction>> Handle(GetTransactionsQuery request,
-        CancellationToken cancellationToken)
-    {
-        return await AccessAsync(q =>
-                q.Where(x => x.WalletId == request.WalletId)
-                    .Paginate(request.QuerySpecification.PaginationSpecification),
-            cancellationToken);
-    }
+public sealed class TransactionListItem : IMapFrom<Transaction>
+{
+    public Guid Id { get; init; }
+    public decimal Amount { get; init; }
+    public string WalletName { get; init; }
 }

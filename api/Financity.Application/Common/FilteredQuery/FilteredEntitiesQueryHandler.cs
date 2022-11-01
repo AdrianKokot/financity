@@ -3,6 +3,7 @@ using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Extensions;
 using Financity.Application.Common.Mappings;
+using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Common.FilteredQuery;
@@ -10,7 +11,7 @@ namespace Financity.Application.Common.FilteredQuery;
 public abstract class
     FilteredEntitiesQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<TQuery,
         IEnumerable<TMappedEntity>>
-    where TEntity : class
+    where TEntity : Entity
     where TMappedEntity : class
     where TQuery : IFilteredEntitiesListQuery<TMappedEntity>
 {
@@ -45,7 +46,7 @@ public abstract class
 
 public abstract class
     FilteredEntitiesQueryHandler<TQuery, TEntity> : IQueryHandler<TQuery, IEnumerable<TEntity>>
-    where TEntity : class
+    where TEntity : Entity
     where TQuery : IFilteredEntitiesListQuery<TEntity>
 {
     private readonly IApplicationDbContext _dbContext;
