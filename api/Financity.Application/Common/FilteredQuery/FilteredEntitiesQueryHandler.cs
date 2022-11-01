@@ -1,8 +1,6 @@
-﻿using AutoMapper.QueryableExtensions;
-using Financity.Application.Abstractions.Data;
+﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Extensions;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 

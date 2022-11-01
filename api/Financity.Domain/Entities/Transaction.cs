@@ -12,15 +12,15 @@ public sealed class Transaction : AuditableEntity
     public Recipient? Recipient { get; set; }
 
     public Guid? WalletId { get; set; }
-    public Wallet Wallet { get; set; }
+    public Wallet? Wallet { get; set; }
 
-    public ICollection<Label> Labels { get; set; }
+    public ICollection<Label>? Labels { get; set; }
 
     public TransactionType TransactionType { get; set; }
 
     public Guid? CategoryId { get; set; }
-    public Category Category { get; set; }
+    public Category? Category { get; set; }
 
     public Guid? CurrencyId { get; set; }
-    public Currency Currency { get; set; }
+    public Currency? Currency { get; set; }
 }

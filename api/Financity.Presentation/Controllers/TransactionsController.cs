@@ -1,6 +1,5 @@
 ﻿using Financity.Application.Common.FilteredQuery;
 using Financity.Application.Transactions.Queries;
-using Financity.Domain.Entities;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

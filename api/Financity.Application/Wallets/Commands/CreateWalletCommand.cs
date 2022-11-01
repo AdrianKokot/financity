@@ -4,11 +4,7 @@ using Financity.Domain.Entities;
 
 namespace Financity.Application.Wallets.Commands;
 
-public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>
-{
-    public string Name { get; set; }
-    public string CurrencyId { get; set; }
-}
+public sealed record CreateWalletCommand(string Name, Guid CurrencyId) : ICommand<CreateWalletCommandResult>;
 
 public sealed class CreateWalletCommandHandler : ICommandHandler<CreateWalletCommand, CreateWalletCommandResult>
 {
@@ -24,23 +20,16 @@ public sealed class CreateWalletCommandHandler : ICommandHandler<CreateWalletCom
     {
         Wallet wallet = new()
         {
-            Name = request.Name
+            Name = request.Name,
+            CurrencyId = request.CurrencyId
         };
-
-        wallet.CurrencyId = Guid.Parse(request.CurrencyId);
 
         _dbContext.Wallets.Add(wallet);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new CreateWalletCommandResult
-        {
-            Id = wallet.Id
-        };
+        return new CreateWalletCommandResult(wallet.Id);
     }
 }
 
-public sealed class CreateWalletCommandResult
-{
-    public Guid Id { get; set; }
-}
+public sealed record CreateWalletCommandResult(Guid Id);
