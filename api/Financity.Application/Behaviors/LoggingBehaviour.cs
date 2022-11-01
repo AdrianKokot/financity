@@ -12,10 +12,11 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest>
         _logger = logger;
     }
 
-    public async Task Process(TRequest request, CancellationToken cancellationToken)
+    public Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = request.GetType().Name;
 
         _logger.LogInformation("Request: {Name} {@Request}", requestName, request);
+        return Task.CompletedTask;
     }
 }

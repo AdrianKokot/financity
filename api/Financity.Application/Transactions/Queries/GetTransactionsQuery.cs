@@ -24,5 +24,5 @@ public sealed class TransactionListItem : IMapFrom<Transaction>
 {
     public Guid Id { get; init; }
     public decimal Amount { get; init; }
-    public string WalletName { get; init; }
+    public string? WalletName { get; init; }
 }
