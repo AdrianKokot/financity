@@ -17,20 +17,23 @@ public class WalletsController : BaseController
         CancellationToken cancellationToken
     )
     {
-        return await HandleQuery(new GetWalletsQuery(querySpecification), cancellationToken);
+        return await HandleQueryAsync(new GetWalletsQuery(querySpecification), cancellationToken);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(Wallet))]
-    public async Task<IActionResult> GetEntityAsync(string id)
+    public async Task<IActionResult> GetEntityAsync(Guid id)
     {
-        return await HandleQuery(new GetWalletQuery(id));
+        return await HandleQueryAsync(new GetWalletQuery
+        {
+            EntityId = id
+        });
     }
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateWalletCommandResult))]
-    public async Task<IActionResult> CreateWallet(CreateWalletCommand command)
+    public async Task<IActionResult> CreateEntityAsync(CreateWalletCommand command)
     {
-        return await HandleQuery(command);
+        return await HandleQueryAsync(command);
     }
 }

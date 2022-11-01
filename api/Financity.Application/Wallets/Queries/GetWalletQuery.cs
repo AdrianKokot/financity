@@ -4,11 +4,9 @@ using Financity.Domain.Entities;
 
 namespace Financity.Application.Wallets.Queries;
 
-public sealed class GetWalletQuery : EntityQuery<Wallet>
+public sealed class GetWalletQuery : IEntityQuery<Wallet>
 {
-    public GetWalletQuery(string entityId) : base(entityId)
-    {
-    }
+    public Guid EntityId { get; set; }
 }
 
 public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, Wallet>

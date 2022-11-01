@@ -16,21 +16,21 @@ public class LabelsController : BaseController
         CancellationToken cancellationToken
     )
     {
-        return await HandleQuery(new GetLabelsQuery(querySpecification), cancellationToken);
+        return await HandleQueryAsync(new GetLabelsQuery(querySpecification), cancellationToken);
     }
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateLabelCommandResult))]
-    public async Task<IActionResult> CreateEntity(CreateLabelCommand command)
+    public async Task<IActionResult> CreateEntityAsync(CreateLabelCommand command)
     {
-        return await HandleQuery(command);
+        return await HandleQueryAsync(command);
     }
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateEntity(Guid id, UpdateLabelCommand command)
+    public async Task<IActionResult> UpdateEntityAsync(Guid id, UpdateLabelCommand command)
     {
         command.Id = id;
-        return await HandleQuery(command);
+        return await HandleQueryAsync(command);
     }
 }

@@ -15,6 +15,6 @@ public sealed class CurrenciesController : BaseController
         CancellationToken cancellationToken
     )
     {
-        return await HandleQuery(new GetCurrenciesQuery(querySpecification), cancellationToken);
+        return await HandleQueryAsync(new GetCurrenciesQuery(querySpecification), cancellationToken);
     }
 }
