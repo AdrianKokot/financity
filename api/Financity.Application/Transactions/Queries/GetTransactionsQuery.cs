@@ -1,5 +1,4 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.Extensions;
 using Financity.Application.Common.FilteredQuery;
 using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
@@ -13,7 +12,8 @@ public sealed class GetTransactionsQuery : FilteredEntitiesQuery<TransactionList
     }
 }
 
-public sealed class GetTransactionQueryHandler : FilteredEntitiesQueryHandler<GetTransactionsQuery, Transaction, TransactionListItem>
+public sealed class
+    GetTransactionQueryHandler : FilteredEntitiesQueryHandler<GetTransactionsQuery, Transaction, TransactionListItem>
 {
     public GetTransactionQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
