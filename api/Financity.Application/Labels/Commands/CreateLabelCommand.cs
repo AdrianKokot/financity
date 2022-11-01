@@ -4,7 +4,8 @@ using Financity.Domain.Entities;
 
 namespace Financity.Application.Labels.Commands;
 
-public sealed record CreateLabelCommand(string Name, Guid WalletId) : ICommand<CreateLabelCommandResult>;
+public sealed record CreateLabelCommand
+    (string Name, Guid WalletId, string? Color, string? IconName) : ICommand<CreateLabelCommandResult>;
 
 public sealed class CreateLabelCommandHandler : ICommandHandler<CreateLabelCommand, CreateLabelCommandResult>
 {
@@ -23,7 +24,7 @@ public sealed class CreateLabelCommandHandler : ICommandHandler<CreateLabelComma
             Name = request.Name,
             WalletId = request.WalletId
         };
-        
+
         _dbContext.Labels.Add(entity);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
