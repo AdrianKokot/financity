@@ -14,9 +14,6 @@ public class BaseController : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var result = await Mediator.Send(query, cancellationToken);
-
-        if (result == null || result.GetType().IsInstanceOfType(Unit.Value)) return NoContent();
-
         return Ok(result);
     }
 }

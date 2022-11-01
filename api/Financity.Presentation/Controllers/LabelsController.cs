@@ -11,7 +11,7 @@ public class LabelsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<LabelListItem>))]
-    public async Task<IActionResult> GetFilteredEntityListAsync(
+    public async Task<IActionResult> GetEntityListAsync(
         [FromQuery] QuerySpecification querySpecification,
         CancellationToken cancellationToken
     )
@@ -27,10 +27,17 @@ public class LabelsController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    [SwaggerResponse(StatusCodes.Status200OK)]
     public async Task<IActionResult> UpdateEntityAsync(Guid id, UpdateLabelCommand command)
     {
         command.Id = id;
         return await HandleQueryAsync(command);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [SwaggerResponse(StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteEntityAsync(Guid id)
+    {
+        return await HandleQueryAsync(new DeleteLabelCommand(id));
     }
 }

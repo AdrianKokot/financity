@@ -4,14 +4,13 @@ using Financity.Domain.Entities;
 
 namespace Financity.Application.Wallets.Queries;
 
-public sealed class GetWalletQuery : IEntityQuery<Wallet>
-{
-    public Guid EntityId { get; set; }
-}
+public sealed record GetWalletQuery(Guid EntityId) : IEntityQuery<WalletDetails>;
 
-public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, Wallet>
+public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, Wallet, WalletDetails>
 {
     public GetWalletQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
     }
 }
+
+public sealed record WalletDetails(Guid Id, string Name, Guid CurrencyId, string CurrencyName, string CurrencyCode);

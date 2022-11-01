@@ -6,12 +6,12 @@ public abstract class Entity
     {
     }
 
-    public Entity(Guid id)
+    protected Entity(Guid id)
     {
         Id = id;
     }
 
-    public Guid Id { get; }
+    public Guid Id { get; init; }
 
     public override bool Equals(object? obj)
     {

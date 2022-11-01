@@ -21,7 +21,7 @@ public sealed class MappingProfile : Profile
         foreach (var type in types)
         {
             var instance = Activator.CreateInstance(type);
-            type.GetMethod("Mapping")?.Invoke(instance, new object[] { this });
+            type.GetMethod("Mapping")?.Invoke(instance, new object[] {this});
         }
     }
 }
