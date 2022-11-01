@@ -19,9 +19,4 @@ public sealed class GetLabelsQueryHandler : FilteredEntitiesQueryHandler<GetLabe
     }
 }
 
-public sealed class LabelListItem : IMapFrom<Label>
-{
-    public Guid Id { get; init; }
-    public string Name { get; init; }
-    public Guid WalletId { get; init; }
-}
+public sealed record LabelListItem(Guid Id, string Name, Guid WalletId, string? Color, string? IconName) : IMapFrom<Label>;

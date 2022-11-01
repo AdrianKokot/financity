@@ -25,4 +25,12 @@ public class LabelsController : BaseController
     {
         return await HandleQuery(command);
     }
+
+    [HttpPut("{id:guid}")]
+    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateLabelCommand command)
+    {
+        command.Id = id;
+        return await HandleQuery(command);
+    }
 }
