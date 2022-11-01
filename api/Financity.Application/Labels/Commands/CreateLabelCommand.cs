@@ -17,7 +17,7 @@ public sealed class CreateLabelCommandHandler : ICommandHandler<CreateLabelComma
     }
 
     public async Task<CreateLabelCommandResult> Handle(CreateLabelCommand request,
-        CancellationToken cancellationToken)
+                                                       CancellationToken cancellationToken)
     {
         Label entity = new()
         {

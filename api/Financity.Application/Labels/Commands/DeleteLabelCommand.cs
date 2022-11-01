@@ -7,34 +7,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Labels.Commands;
 
-public sealed class UpdateLabelCommand : ICommand<Unit>
-{
-    public Guid Id { get; set; }
-    public string? Name { get; set; }
-    public string? Color { get; set; }
-    public string? IconName { get; set; }
-}
+public sealed record DeleteLabelCommand(Guid Id) : ICommand<Unit>;
 
-public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelCommand, Unit>
+public sealed class DeleteLabelCommandHandler : ICommandHandler<DeleteLabelCommand, Unit>
 {
     private readonly IApplicationDbContext _dbContext;
 
-    public UpdateLabelCommandHandler(IApplicationDbContext dbContext)
+    public DeleteLabelCommandHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateLabelCommand request,
+    public async Task<Unit> Handle(DeleteLabelCommand request,
                                    CancellationToken cancellationToken)
     {
         var entity = await _dbContext.Labels.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
 
-        entity.Name = request.Name;
-        entity.Color = request.Color;
-        entity.IconName = request.IconName;
-
+        _dbContext.Labels.Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

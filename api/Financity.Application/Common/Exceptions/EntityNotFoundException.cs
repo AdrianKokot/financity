@@ -2,8 +2,11 @@
 
 public sealed class EntityNotFoundException : Exception
 {
-    public EntityNotFoundException(string entityName, Guid id) : base(
-        $"{entityName} with id {id.ToString()} doesn't exist.")
+    public EntityNotFoundException(string entityName, Guid entityId) : base(
+        $"{entityName} with id {entityId.ToString()} doesn't exist.")
     {
+        EntityId = entityId;
     }
+
+    public Guid EntityId { get; }
 }

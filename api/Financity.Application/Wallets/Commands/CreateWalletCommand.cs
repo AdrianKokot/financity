@@ -16,7 +16,7 @@ public sealed class CreateWalletCommandHandler : ICommandHandler<CreateWalletCom
     }
 
     public async Task<CreateWalletCommandResult> Handle(CreateWalletCommand request,
-        CancellationToken cancellationToken)
+                                                        CancellationToken cancellationToken)
     {
         Wallet wallet = new()
         {

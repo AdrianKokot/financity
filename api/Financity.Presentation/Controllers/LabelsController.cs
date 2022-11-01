@@ -11,26 +11,37 @@ public class LabelsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<LabelListItem>))]
-    public async Task<IActionResult> GetFilteredEntityListAsync(
-        [FromQuery] QuerySpecification querySpecification,
-        CancellationToken cancellationToken
-    )
+    public Task<IActionResult> GetEntityListAsync([FromQuery] QuerySpecification querySpecification)
     {
-        return await HandleQueryAsync(new GetLabelsQuery(querySpecification), cancellationToken);
+        return HandleQueryAsync(new GetLabelsQuery(querySpecification));
     }
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateLabelCommandResult))]
-    public async Task<IActionResult> CreateEntityAsync(CreateLabelCommand command)
+    public Task<IActionResult> CreateEntityAsync(CreateLabelCommand command)
     {
-        return await HandleQueryAsync(command);
+        return HandleQueryAsync(command);
+    }
+
+    [HttpGet("{id:guid}")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(LabelDetails))]
+    public Task<IActionResult> GetEntityAsync(Guid id)
+    {
+        return HandleQueryAsync(new GetLabelQuery(id));
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateEntityAsync(Guid id, UpdateLabelCommand command)
+    [SwaggerResponse(StatusCodes.Status200OK)]
+    public Task<IActionResult> UpdateEntityAsync(Guid id, UpdateLabelCommand command)
     {
         command.Id = id;
-        return await HandleQueryAsync(command);
+        return HandleQueryAsync(command);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [SwaggerResponse(StatusCodes.Status200OK)]
+    public Task<IActionResult> DeleteEntityAsync(Guid id)
+    {
+        return HandleQueryAsync(new DeleteLabelCommand(id));
     }
 }

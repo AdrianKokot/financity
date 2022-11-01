@@ -19,12 +19,5 @@ public sealed class GetWalletsQueryHandler : FilteredEntitiesQueryHandler<GetWal
     }
 }
 
-public sealed class WalletListItem : IMapFrom<Wallet>
-{
-    public Guid Id { get; set; }
-    public string? Name { get; init; }
-
-    public Guid CurrencyId { get; init; }
-    public string? CurrencyName { get; init; }
-    public string? CurrencyCode { get; init; }
-}
+public sealed record WalletListItem
+    (Guid Id, string Name, Guid CurrencyId, string CurrencyName, string CurrencyCode) : IMapFrom<Wallet>;
