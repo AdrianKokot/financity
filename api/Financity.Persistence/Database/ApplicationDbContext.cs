@@ -38,6 +38,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                     entry.Entity.UpdatedAt = AppDateTime.Now;
                     entry.Entity.UpdatedBy = string.Empty;
                     break;
+
+                case EntityState.Detached:
+                case EntityState.Unchanged:
+                case EntityState.Deleted:
+                default:
+                    break;
             }
 
         return base.SaveChangesAsync(cancellationToken);
