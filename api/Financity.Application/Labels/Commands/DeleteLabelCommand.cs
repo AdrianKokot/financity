@@ -19,7 +19,7 @@ public sealed class DeleteLabelCommandHandler : ICommandHandler<DeleteLabelComma
     }
 
     public async Task<Unit> Handle(DeleteLabelCommand request,
-        CancellationToken cancellationToken)
+                                   CancellationToken cancellationToken)
     {
         var entity = await _dbContext.Labels.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

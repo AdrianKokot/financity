@@ -23,14 +23,18 @@ public abstract class
     private DbSet<TEntity> Set => _dbContext.GetDbSet<TEntity>();
 
     public Task<IEnumerable<TMappedEntity>> Handle(TQuery request, CancellationToken cancellationToken)
-        => FilterAndMapAsync(request, cancellationToken);
-    
+    {
+        return FilterAndMapAsync(request, cancellationToken);
+    }
+
     protected async Task<IEnumerable<TMappedEntity>> AccessAsync(
         Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
-        => await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
-    
+    {
+        return await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
+    }
+
     protected Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery request,
-        CancellationToken cancellationToken = default)
+                                                                 CancellationToken cancellationToken = default)
     {
         return AccessAsync(q =>
                 q.Paginate(request.QuerySpecification.PaginationSpecification).Project<TEntity, TMappedEntity>(),
@@ -53,10 +57,14 @@ public abstract class
     private DbSet<TEntity> Set => _dbContext.GetDbSet<TEntity>();
 
     public Task<IEnumerable<TEntity>> Handle(TQuery request, CancellationToken cancellationToken)
-        => AccessAsync(q => q.Paginate(request.QuerySpecification.PaginationSpecification),
+    {
+        return AccessAsync(q => q.Paginate(request.QuerySpecification.PaginationSpecification),
             cancellationToken);
+    }
 
     protected async Task<IEnumerable<TEntity>> AccessAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> expression,
-        CancellationToken cancellationToken = default)
-        => await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
+                                                           CancellationToken cancellationToken = default)
+    {
+        return await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
+    }
 }

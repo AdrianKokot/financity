@@ -25,7 +25,7 @@ public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelComma
     }
 
     public async Task<Unit> Handle(UpdateLabelCommand request,
-        CancellationToken cancellationToken)
+                                   CancellationToken cancellationToken)
     {
         var entity = await _dbContext.Labels.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

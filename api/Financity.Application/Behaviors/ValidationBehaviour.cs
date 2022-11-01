@@ -16,7 +16,7 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     }
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-        RequestHandlerDelegate<TResponse> next)
+                                        RequestHandlerDelegate<TResponse> next)
     {
         var errors = GetValidationFailures(request);
         if (errors.Count != 0) throw new ValidationException(errors);
@@ -31,9 +31,9 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
         var context = new ValidationContext<TRequest>(request);
 
         var errors = _validators.Select(x => x.Validate(context))
-            .SelectMany(x => x.Errors)
-            .Where(f => f is not null)
-            .ToImmutableList();
+                                .SelectMany(x => x.Errors)
+                                .Where(f => f is not null)
+                                .ToImmutableList();
 
         return errors;
     }

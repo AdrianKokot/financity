@@ -11,12 +11,12 @@ builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services.AddInfrastructure(builder.Configuration)
-    .AddApplication(builder.Configuration)
-    .AddRouting(options =>
-    {
-        options.LowercaseUrls = true;
-        options.LowercaseQueryStrings = true;
-    });
+       .AddApplication(builder.Configuration)
+       .AddRouting(options =>
+       {
+           options.LowercaseUrls = true;
+           options.LowercaseQueryStrings = true;
+       });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

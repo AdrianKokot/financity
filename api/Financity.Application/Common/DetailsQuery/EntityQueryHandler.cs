@@ -22,9 +22,9 @@ public class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<
     public async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
         var entity = await _dbContext.GetDbSet<TEntity>()
-            .Where(x => x.Id == request.EntityId)
-            .Project<TEntity, TMappedEntity>()
-            .FirstOrDefaultAsync(cancellationToken);
+                                     .Where(x => x.Id == request.EntityId)
+                                     .Project<TEntity, TMappedEntity>()
+                                     .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
 
@@ -47,7 +47,7 @@ public class
     public async Task<TEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
         var entity = await _dbContext.GetDbSet<TEntity>()
-            .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken);
+                                     .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
 

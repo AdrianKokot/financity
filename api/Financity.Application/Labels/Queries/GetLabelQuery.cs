@@ -13,4 +13,5 @@ public sealed class GetLabelQueryHandler : EntityQueryHandler<GetLabelQuery, Lab
     }
 }
 
-public sealed record LabelDetails(Guid Id, string Name, string? Color, string? IconName, Guid WalletId, string WalletName);
+public sealed record LabelDetails(Guid Id, string Name, string? Color, string? IconName, Guid WalletId,
+                                  string WalletName);
