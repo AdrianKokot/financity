@@ -20,9 +20,4 @@ public sealed class
     }
 }
 
-public sealed class TransactionListItem : IMapFrom<Transaction>
-{
-    public Guid Id { get; init; }
-    public decimal Amount { get; init; }
-    public string? WalletName { get; init; }
-}
+public sealed record TransactionListItem(Guid Id, decimal Amount, string WalletName) : IMapFrom<Transaction>;

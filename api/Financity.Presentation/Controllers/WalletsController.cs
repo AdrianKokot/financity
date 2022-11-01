@@ -11,26 +11,21 @@ public class WalletsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<WalletListItem>))]
-    public Task<IActionResult> GetFilteredEntityListAsync(
+    public Task<IActionResult> GetFilteredEntityList(
         [FromQuery] QuerySpecification querySpecification,
         CancellationToken cancellationToken
     )
-    {
-        return HandleQueryAsync(new GetWalletsQuery(querySpecification), cancellationToken);
-    }
+        => HandleQueryAsync(new GetWalletsQuery(querySpecification), cancellationToken);
+
 
     [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletDetails))]
-    public Task<IActionResult> GetEntityAsync(Guid id, CancellationToken cancellationToken)
-    {
-        return HandleQueryAsync(new GetWalletQuery(id), cancellationToken);
-    }
+    public Task<IActionResult> GetEntity(Guid id, CancellationToken cancellationToken)
+        => HandleQueryAsync(new GetWalletQuery(id), cancellationToken);
 
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateWalletCommandResult))]
-    public Task<IActionResult> CreateEntityAsync(CreateWalletCommand command, CancellationToken cancellationToken)
-    {
-        return HandleQueryAsync(command, cancellationToken);
-    }
+    public Task<IActionResult> CreateEntity(CreateWalletCommand command, CancellationToken cancellationToken)
+        => HandleQueryAsync(command, cancellationToken);
 }

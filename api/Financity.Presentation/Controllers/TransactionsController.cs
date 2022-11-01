@@ -10,11 +10,9 @@ public class TransactionsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<TransactionListItem>))]
-    public async Task<IActionResult> GetFilteredEntityListAsync(
+    public Task<IActionResult> GetFilteredEntityList(
         [FromQuery] QuerySpecification specification,
         CancellationToken cancellationToken
     )
-    {
-        return await HandleQueryAsync(new GetTransactionsQuery(specification), cancellationToken);
-    }
+        => HandleQueryAsync(new GetTransactionsQuery(specification), cancellationToken);
 }

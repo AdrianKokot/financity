@@ -11,25 +11,22 @@ public class LabelsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<LabelListItem>))]
-    public Task<IActionResult> GetEntityListAsync(
-        [FromQuery] QuerySpecification querySpecification,
-        CancellationToken cancellationToken
-    )
-        => HandleQueryAsync(new GetLabelsQuery(querySpecification), cancellationToken);
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification)
+        => HandleQueryAsync(new GetLabelsQuery(querySpecification));
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateLabelCommandResult))]
-    public Task<IActionResult> CreateEntityAsync(CreateLabelCommand command)
+    public Task<IActionResult> CreateEntity(CreateLabelCommand command)
         => HandleQueryAsync(command);
 
     [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(LabelDetails))]
-    public Task<IActionResult> GetEntityAsync(Guid id)
+    public Task<IActionResult> GetEntity(Guid id)
         => HandleQueryAsync(new GetLabelQuery(id));
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntityAsync(Guid id, UpdateLabelCommand command)
+    public Task<IActionResult> UpdateEntity(Guid id, UpdateLabelCommand command)
     {
         command.Id = id;
         return HandleQueryAsync(command);
@@ -37,6 +34,6 @@ public class LabelsController : BaseController
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> DeleteEntityAsync(Guid id)
+    public Task<IActionResult> DeleteEntity(Guid id)
         => HandleQueryAsync(new DeleteLabelCommand(id));
 }
