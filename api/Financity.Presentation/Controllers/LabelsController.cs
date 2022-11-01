@@ -1,4 +1,5 @@
 ﻿using Financity.Application.Common.FilteredQuery;
+using Financity.Application.Labels.Commands;
 using Financity.Application.Labels.Queries;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -16,5 +17,12 @@ public class LabelsController : BaseController
     )
     {
         return await HandleQuery(new GetLabelsQuery(querySpecification), cancellationToken);
+    }
+
+    [HttpPost]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateLabelCommandResult))]
+    public async Task<IActionResult> CreateEntity(CreateLabelCommand command)
+    {
+        return await HandleQuery(command);
     }
 }
