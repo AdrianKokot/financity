@@ -18,14 +18,14 @@ public class WalletsController : BaseController
     {
         return HandleQueryAsync(new GetWalletsQuery(querySpecification), cancellationToken);
     }
-    
+
     [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletDetails))]
     public Task<IActionResult> GetEntityAsync(Guid id, CancellationToken cancellationToken)
     {
         return HandleQueryAsync(new GetWalletQuery(id), cancellationToken);
     }
-    
+
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateWalletCommandResult))]
     public Task<IActionResult> CreateEntityAsync(CreateWalletCommand command, CancellationToken cancellationToken)
