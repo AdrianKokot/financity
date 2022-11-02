@@ -11,37 +11,39 @@ public class CategoriesController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CategoryListItem>))]
-    public Task<IActionResult> GetEntityListAsync([FromQuery] QuerySpecification querySpecification)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetCategoriesQuery(querySpecification));
+        return HandleQueryAsync(new GetCategoriesQuery(querySpecification), ct);
     }
 
     [HttpPost]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateCategoryCommandResult))]
-    public Task<IActionResult> CreateEntityAsync(CreateCategoryCommand command)
+    [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateCategoryCommandResult))]
+    public async Task<IActionResult> CreateEntity(CreateCategoryCommand command, CancellationToken ct)
     {
-        return HandleQueryAsync(command);
+        var result = await GetQueryResultAsync(command, ct);
+        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CategoryDetails))]
-    public Task<IActionResult> GetEntityAsync(Guid id)
+    public Task<IActionResult> GetEntity(Guid id, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetCategoryQuery(id));
+        return HandleQueryAsync(new GetCategoryQuery(id), ct);
     }
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntityAsync(Guid id, UpdateCategoryCommand command)
+    public Task<IActionResult> UpdateEntity(Guid id, UpdateCategoryCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command);
+        return HandleQueryAsync(command, ct);
     }
 
     [HttpDelete("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> DeleteEntityAsync(Guid id)
+    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        return HandleQueryAsync(new DeleteCategoryCommand(id));
+        await GetQueryResultAsync(new DeleteCategoryCommand(id), ct);
+        return NoContent();
     }
 }

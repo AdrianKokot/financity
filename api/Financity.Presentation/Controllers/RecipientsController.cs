@@ -11,39 +11,39 @@ public class RecipientsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<RecipientListItem>))]
-    public Task<IActionResult> GetEntityListAsync([FromQuery] QuerySpecification querySpecification)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetRecipientsQuery(querySpecification));
+        return HandleQueryAsync(new GetRecipientsQuery(querySpecification), ct);
     }
 
     [HttpPost]
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateRecipientCommandResult))]
-    public async Task<IActionResult> CreateEntityAsync(CreateRecipientCommand command)
+    public async Task<IActionResult> CreateEntity(CreateRecipientCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command);
-        return CreatedAtAction(nameof(GetEntityAsync), new {id = result.Id}, result);
+        var result = await GetQueryResultAsync(command, ct);
+        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(RecipientDetails))]
-    public Task<IActionResult> GetEntityAsync(Guid id)
+    public Task<IActionResult> GetEntity(Guid id, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetRecipientQuery(id));
+        return HandleQueryAsync(new GetRecipientQuery(id), ct);
     }
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntityAsync(Guid id, UpdateRecipientCommand command)
+    public Task<IActionResult> UpdateEntity(Guid id, UpdateRecipientCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command);
+        return HandleQueryAsync(command, ct);
     }
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteEntityAsync(Guid id)
+    public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteRecipientCommand(id));
+        await GetQueryResultAsync(new DeleteRecipientCommand(id), ct);
         return NoContent();
     }
 }

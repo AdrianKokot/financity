@@ -10,7 +10,8 @@ public class BaseController : ControllerBase
     private IMediator? _mediator;
     private IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>()!;
 
-    protected async Task<IActionResult> HandleQueryAsync<TResponse>(IRequest<TResponse> query, CancellationToken ct = default)
+    protected async Task<IActionResult> HandleQueryAsync<TResponse>(IRequest<TResponse> query,
+                                                                    CancellationToken ct = default)
     {
         return Ok(await GetQueryResultAsync(query, ct));
     }
@@ -18,5 +19,5 @@ public class BaseController : ControllerBase
     protected Task<TResponse> GetQueryResultAsync<TResponse>(IRequest<TResponse> query, CancellationToken ct = default)
     {
         return Mediator.Send(query, ct);
-    } 
+    }
 }

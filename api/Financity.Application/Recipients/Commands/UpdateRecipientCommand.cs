@@ -10,7 +10,7 @@ namespace Financity.Application.Recipients.Commands;
 public sealed class UpdateRecipientCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 
 public sealed class UpdateRecipientCommandHandler : ICommandHandler<UpdateRecipientCommand, Unit>
