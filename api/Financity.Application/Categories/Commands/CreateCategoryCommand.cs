@@ -10,7 +10,9 @@ namespace Financity.Application.Categories.Commands;
 
 public sealed class CreateCategoryCommand : ICommand<CreateCategoryCommandResult>, IMapTo<Category>
 {
-    public string Name { get; init; }
+    public string? Name { get; init; }
+    public string? Color { get; set; }
+    public string? IconName { get; set; }
     public Guid WalletId { get; init; }
     public Guid? ParentCategoryId { get; init; }
     public TransactionType? TransactionType { get; init; }

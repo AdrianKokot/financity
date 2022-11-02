@@ -9,7 +9,7 @@ namespace Financity.Application.Labels.Commands;
 
 public sealed class CreateLabelCommand : ICommand<CreateLabelCommandResult>, IMapTo<Label>
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public Guid WalletId { get; set; }
     public string? Color { get; set; }
     public string? IconName { get; set; }
@@ -26,4 +26,4 @@ public sealed class CreateLabelCommandHandler :
 public sealed class CreateLabelCommandResult : IMapFrom<Label>
 {
     public Guid Id { get; set; }
-};
+}

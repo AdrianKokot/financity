@@ -10,7 +10,9 @@ namespace Financity.Application.Categories.Commands;
 public sealed class UpdateCategoryCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
-    public string Name { get; set; }
+    public string? Color { get; set; }
+    public string? IconName { get; set; }
+    public string? Name { get; set; }
 }
 
 public sealed class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand, Unit>

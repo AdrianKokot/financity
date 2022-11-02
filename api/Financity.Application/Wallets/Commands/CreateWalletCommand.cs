@@ -9,7 +9,7 @@ namespace Financity.Application.Wallets.Commands;
 
 public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>, IMapTo<Wallet>
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public Guid CurrencyId { get; set; }
 }
 

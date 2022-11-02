@@ -5,7 +5,7 @@ namespace Financity.Application.Common.Mappings;
 
 public sealed class MappingProfile : Profile
 {
-    private readonly HashSet<Type> _mappingInterfaces = new() {typeof(IMapFrom<>), typeof(IMapTo<>)};
+    private readonly HashSet<Type> _mappingInterfaces = new() { typeof(IMapFrom<>), typeof(IMapTo<>) };
     private readonly string _mappingMethod;
 
     public MappingProfile()
@@ -30,7 +30,7 @@ public sealed class MappingProfile : Profile
                                                   )
                                                   .FirstOrDefault(x => x is not null);
 
-            methodInfo?.Invoke(instance, new object[] {this});
+            methodInfo?.Invoke(instance, new object[] { this });
         }
     }
 }
