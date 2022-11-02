@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.FilteredQuery;
+using Financity.Application.Common.Queries;
+using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Wallets.Queries;

@@ -1,5 +1,5 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.DetailsQuery;
+using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Categories.Queries;

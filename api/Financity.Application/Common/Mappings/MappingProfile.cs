@@ -17,7 +17,7 @@ public sealed class MappingProfile : Profile
     private void ApplyMappingsFromAssembly(Assembly assembly)
     {
         var types = assembly.GetExportedTypes()
-                            .Where(t => t.GetInterfaces().Any(i =>
+                            .Where(t => !t.IsGenericType && !t.IsInterface && t.GetInterfaces().Any(i =>
                                 i.IsGenericType && _mappingInterfaces.Contains(i.GetGenericTypeDefinition()))
                             );
 

@@ -1,6 +1,6 @@
 ﻿using Financity.Application.Categories.Commands;
 using Financity.Application.Categories.Queries;
-using Financity.Application.Common.FilteredQuery;
+using Financity.Application.Common.Queries;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

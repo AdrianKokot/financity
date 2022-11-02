@@ -21,8 +21,4 @@
         <ProjectReference Include="..\Financity.Domain\Financity.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Common\Queries" />
-    </ItemGroup>
-
 </Project>
