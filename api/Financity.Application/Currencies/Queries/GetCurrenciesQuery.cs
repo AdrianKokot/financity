@@ -1,6 +1,5 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Common.FilteredQuery;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Currencies.Queries;
@@ -21,9 +20,4 @@ public sealed class
     }
 }
 
-public sealed class CurrencyListItem : IMapFrom<Currency>
-{
-    public Guid Id { get; init; }
-    public string? Code { get; init; }
-    public string? Name { get; init; }
-}
+public sealed record CurrencyListItem(Guid Id, string? Code, string? Name);
