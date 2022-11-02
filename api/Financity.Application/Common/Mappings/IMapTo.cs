@@ -2,13 +2,13 @@
 
 namespace Financity.Application.Common.Mappings;
 
-public interface IMapFrom<TSource>
+public interface IMapTo<TDestination>
 {
     void Mapping(Profile profile)
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("CreateMap <IMapFrom>: " + GetType().Name + " -> " + typeof(TSource).Name);
+        Console.WriteLine("CreateMap <IMapTo>: " + GetType().Name + " -> " + typeof(TDestination).Name);
         Console.ForegroundColor = ConsoleColor.White;
-        profile.CreateMap(typeof(TSource), GetType());
+        profile.CreateMap(GetType(), typeof(TDestination));
     }
 }
