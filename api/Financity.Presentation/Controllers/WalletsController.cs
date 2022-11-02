@@ -11,25 +11,24 @@ public class WalletsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<WalletListItem>))]
-    public Task<IActionResult> GetFilteredEntityListAsync(
-        [FromQuery] QuerySpecification querySpecification,
-        CancellationToken cancellationToken
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct
     )
     {
-        return HandleQueryAsync(new GetWalletsQuery(querySpecification), cancellationToken);
+        return HandleQueryAsync(new GetWalletsQuery(querySpecification), ct);
     }
 
     [HttpGet("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletDetails))]
-    public Task<IActionResult> GetEntityAsync(Guid id, CancellationToken cancellationToken)
+    public Task<IActionResult> GetEntity(Guid id, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetWalletQuery(id), cancellationToken);
+        return HandleQueryAsync(new GetWalletQuery(id), ct);
     }
 
     [HttpPost]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CreateWalletCommandResult))]
-    public Task<IActionResult> CreateEntityAsync(CreateWalletCommand command, CancellationToken cancellationToken)
+    [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateWalletCommandResult))]
+    public async Task<IActionResult> CreateEntity(CreateWalletCommand command, CancellationToken ct)
     {
-        return HandleQueryAsync(command, cancellationToken);
+        var result = await GetQueryResultAsync(command, ct);
+        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 }

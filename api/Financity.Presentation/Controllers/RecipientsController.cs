@@ -1,39 +1,39 @@
 ﻿using Financity.Application.Common.Queries;
-using Financity.Application.Labels.Commands;
-using Financity.Application.Labels.Queries;
+using Financity.Application.Recipients.Commands;
+using Financity.Application.Recipients.Queries;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Financity.Presentation.Controllers;
 
-public class LabelsController : BaseController
+public class RecipientsController : BaseController
 {
     [HttpGet]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<LabelListItem>))]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<RecipientListItem>))]
     public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetLabelsQuery(querySpecification), ct);
+        return HandleQueryAsync(new GetRecipientsQuery(querySpecification), ct);
     }
 
     [HttpPost]
-    [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateLabelCommandResult))]
-    public async Task<IActionResult> CreateEntity(CreateLabelCommand command, CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateRecipientCommandResult))]
+    public async Task<IActionResult> CreateEntity(CreateRecipientCommand command, CancellationToken ct)
     {
         var result = await GetQueryResultAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(LabelDetails))]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(RecipientDetails))]
     public Task<IActionResult> GetEntity(Guid id, CancellationToken ct)
     {
-        return HandleQueryAsync(new GetLabelQuery(id), ct);
+        return HandleQueryAsync(new GetRecipientQuery(id), ct);
     }
 
     [HttpPut("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntity(Guid id, UpdateLabelCommand command, CancellationToken ct)
+    public Task<IActionResult> UpdateEntity(Guid id, UpdateRecipientCommand command, CancellationToken ct)
     {
         command.Id = id;
         return HandleQueryAsync(command, ct);
@@ -43,7 +43,7 @@ public class LabelsController : BaseController
     [SwaggerResponse(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteLabelCommand(id), ct);
+        await GetQueryResultAsync(new DeleteRecipientCommand(id), ct);
         return NoContent();
     }
 }
