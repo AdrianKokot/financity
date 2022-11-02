@@ -7,6 +7,9 @@ public sealed class Category : AuditableEntity
 {
     public string? Name { get; set; }
 
+    public string? Color { get; set; }
+    public string? IconName { get; set; }
+
     public Guid? ParentCategoryId { get; set; }
     public Category? ParentCategory { get; set; }
 

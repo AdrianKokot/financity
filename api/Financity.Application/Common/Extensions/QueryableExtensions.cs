@@ -1,6 +1,6 @@
 ﻿using AutoMapper.QueryableExtensions;
-using Financity.Application.Common.FilteredQuery;
 using Financity.Application.Common.Mappings;
+using Financity.Application.Common.Queries;
 using Financity.Domain.Common;
 
 namespace Financity.Application.Common.Extensions;

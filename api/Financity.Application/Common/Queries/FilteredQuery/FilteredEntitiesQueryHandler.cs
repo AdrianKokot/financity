@@ -4,7 +4,7 @@ using Financity.Application.Common.Extensions;
 using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Financity.Application.Common.FilteredQuery;
+namespace Financity.Application.Common.Queries.FilteredQuery;
 
 public abstract class
     FilteredEntitiesQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<TQuery,

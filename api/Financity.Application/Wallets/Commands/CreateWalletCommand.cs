@@ -1,35 +1,27 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
+using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Wallets.Commands;
 
-public sealed record CreateWalletCommand(string Name, Guid CurrencyId) : ICommand<CreateWalletCommandResult>;
-
-public sealed class CreateWalletCommandHandler : ICommandHandler<CreateWalletCommand, CreateWalletCommandResult>
+public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>, IMapTo<Wallet>
 {
-    private readonly IApplicationDbContext _dbContext;
+    public string? Name { get; set; }
+    public Guid CurrencyId { get; set; }
+}
 
-    public CreateWalletCommandHandler(IApplicationDbContext dbContext)
+public sealed class
+    CreateWalletCommandHandler : CreateEntityCommandHandler<CreateWalletCommand, CreateWalletCommandResult, Wallet>
+{
+    public CreateWalletCommandHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-        _dbContext = dbContext;
-    }
-
-    public async Task<CreateWalletCommandResult> Handle(CreateWalletCommand request,
-                                                        CancellationToken cancellationToken)
-    {
-        Wallet wallet = new()
-        {
-            Name = request.Name,
-            CurrencyId = request.CurrencyId
-        };
-
-        _dbContext.Wallets.Add(wallet);
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return new CreateWalletCommandResult(wallet.Id);
     }
 }
 
-public sealed record CreateWalletCommandResult(Guid Id);
+public sealed class CreateWalletCommandResult : IMapFrom<Wallet>
+{
+    public Guid Id { get; set; }
+}

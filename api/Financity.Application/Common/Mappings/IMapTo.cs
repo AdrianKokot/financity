@@ -2,10 +2,10 @@
 
 namespace Financity.Application.Common.Mappings;
 
-public interface IMapFrom<TSource>
+public interface IMapTo<TDestination>
 {
     void Mapping(Profile profile)
     {
-        profile.CreateMap(typeof(TSource), GetType());
+        profile.CreateMap(GetType(), typeof(TDestination));
     }
 }

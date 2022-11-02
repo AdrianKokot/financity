@@ -5,9 +5,9 @@ using Financity.Application.Common.Extensions;
 using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Financity.Application.Common.DetailsQuery;
+namespace Financity.Application.Common.Queries.DetailsQuery;
 
-public class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<TQuery, TMappedEntity>
+public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<TQuery, TMappedEntity>
     where TEntity : Entity
     where TMappedEntity : class
     where TQuery : IEntityQuery<TMappedEntity>
@@ -32,7 +32,7 @@ public class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<
     }
 }
 
-public class
+public abstract class
     EntityQueryHandler<TQuery, TEntity> : IQueryHandler<TQuery, TEntity>
     where TEntity : Entity
     where TQuery : IEntityQuery<TEntity>

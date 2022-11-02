@@ -1,6 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.FilteredQuery;
-using Financity.Application.Common.Mappings;
+using Financity.Application.Common.Queries;
+using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Transactions.Queries;
@@ -20,4 +20,4 @@ public sealed class
     }
 }
 
-public sealed record TransactionListItem(Guid Id, decimal Amount, string WalletName) : IMapFrom<Transaction>;
+public sealed record TransactionListItem(Guid Id, decimal Amount, string WalletName);

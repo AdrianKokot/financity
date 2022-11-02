@@ -1,4 +1,4 @@
-﻿using Financity.Application.Common.FilteredQuery;
+﻿using Financity.Application.Common.Queries;
 using Financity.Application.Wallets.Commands;
 using Financity.Application.Wallets.Queries;
 using Financity.Presentation.Controllers.Shared;

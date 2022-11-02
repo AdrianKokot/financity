@@ -1,4 +1,4 @@
-﻿using Financity.Application.Common.FilteredQuery;
+﻿using Financity.Application.Common.Queries;
 using Financity.Application.Transactions.Queries;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Mvc;

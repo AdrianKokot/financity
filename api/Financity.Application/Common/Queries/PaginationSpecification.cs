@@ -1,4 +1,4 @@
-﻿namespace Financity.Application.Common.FilteredQuery;
+﻿namespace Financity.Application.Common.Queries;
 
 public sealed class PaginationSpecification
 {
