@@ -86,19 +86,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9bb1f329-0bdc-4b36-bbef-a31a57f74909"),
+                            Id = new Guid("48e6ddbe-7dcc-4a85-8a92-d02faee3c24c"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("acdf8f27-c536-42d8-bec0-ba1750b63b52"),
+                            Id = new Guid("0fbed214-e0c1-42bb-86cf-fd29ac7c6a4a"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("02383a6a-3a5e-4e93-81c8-10a60f56bedc"),
+                            Id = new Guid("a28e22da-b42d-48ce-9a6b-b1520396a34a"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -196,10 +196,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RecipientId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("RecipientId1")
+                    b.Property<Guid?>("RecipientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TransactionType")
@@ -220,7 +217,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("RecipientId1");
+                    b.HasIndex("RecipientId");
 
                     b.HasIndex("WalletId");
 
@@ -312,7 +309,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
                         .WithMany("Transactions")
-                        .HasForeignKey("RecipientId1");
+                        .HasForeignKey("RecipientId");
 
                     b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
                         .WithMany()
