@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221101172919_AddColorAndIconToLabel")]
-    partial class AddColorAndIconToLabel
+    [Migration("20221103091438_CreateMigration")]
+    partial class CreateMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,14 +30,19 @@ namespace Financity.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IconName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentCategoryId")
@@ -71,11 +76,9 @@ namespace Financity.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -85,19 +88,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bf1fad19-4c31-4226-b886-2a4ba53d4d19"),
+                            Id = new Guid("48e6ddbe-7dcc-4a85-8a92-d02faee3c24c"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("9fe44097-b5a2-4a17-88b5-7940ec81b5d5"),
+                            Id = new Guid("0fbed214-e0c1-42bb-86cf-fd29ac7c6a4a"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("cb95bed3-bd67-4046-8a58-c248e9ed70db"),
+                            Id = new Guid("a28e22da-b42d-48ce-9a6b-b1520396a34a"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -122,7 +125,6 @@ namespace Financity.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -154,7 +156,6 @@ namespace Financity.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -197,10 +198,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RecipientId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("RecipientId1")
+                    b.Property<Guid?>("RecipientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TransactionType")
@@ -221,7 +219,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("RecipientId1");
+                    b.HasIndex("RecipientId");
 
                     b.HasIndex("WalletId");
 
@@ -238,7 +236,6 @@ namespace Financity.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -314,7 +311,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
                         .WithMany("Transactions")
-                        .HasForeignKey("RecipientId1");
+                        .HasForeignKey("RecipientId");
 
                     b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
                         .WithMany()

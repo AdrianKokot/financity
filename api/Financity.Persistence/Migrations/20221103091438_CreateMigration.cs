@@ -14,8 +14,8 @@ namespace Financity.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,7 +27,7 @@ namespace Financity.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CurrencyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -46,7 +46,9 @@ namespace Financity.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IconName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ParentCategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransactionType = table.Column<int>(type: "int", nullable: true),
@@ -76,7 +78,9 @@ namespace Financity.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IconName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -99,7 +103,7 @@ namespace Financity.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -124,8 +128,7 @@ namespace Financity.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RecipientId = table.Column<int>(type: "int", nullable: true),
-                    RecipientId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RecipientId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     WalletId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     TransactionType = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -149,8 +152,8 @@ namespace Financity.Persistence.Migrations
                         principalTable: "Currencies",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Transactions_Recipients_RecipientId1",
-                        column: x => x.RecipientId1,
+                        name: "FK_Transactions_Recipients_RecipientId",
+                        column: x => x.RecipientId,
                         principalTable: "Recipients",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -187,17 +190,17 @@ namespace Financity.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "Currencies",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { new Guid("49cb9206-1c43-42e5-a202-8d747621c091"), "EUR", "Euro" });
+                values: new object[] { new Guid("0fbed214-e0c1-42bb-86cf-fd29ac7c6a4a"), "EUR", "Euro" });
 
             migrationBuilder.InsertData(
                 table: "Currencies",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { new Guid("81ade7e4-e4d0-45a0-a5c5-eb2f25417238"), "PLN", "Polski Złoty" });
+                values: new object[] { new Guid("48e6ddbe-7dcc-4a85-8a92-d02faee3c24c"), "PLN", "Polski Złoty" });
 
             migrationBuilder.InsertData(
                 table: "Currencies",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { new Guid("aadbb33c-4157-40fd-b4b2-546961729166"), "USD", "United States Dollar" });
+                values: new object[] { new Guid("a28e22da-b42d-48ce-9a6b-b1520396a34a"), "USD", "United States Dollar" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_ParentCategoryId",
@@ -235,9 +238,9 @@ namespace Financity.Persistence.Migrations
                 column: "CurrencyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_RecipientId1",
+                name: "IX_Transactions_RecipientId",
                 table: "Transactions",
-                column: "RecipientId1");
+                column: "RecipientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_WalletId",

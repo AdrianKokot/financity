@@ -1,4 +1,6 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Domain.Entities;
@@ -15,9 +17,9 @@ public sealed class GetRecipientsQuery : FilteredEntitiesQuery<RecipientListItem
 public sealed class
     GetRecipientsQueryHandler : FilteredEntitiesQueryHandler<GetRecipientsQuery, Recipient, RecipientListItem>
 {
-    public GetRecipientsQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    public GetRecipientsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }
 
-public sealed record RecipientListItem(Guid Id, string Name, Guid WalletId);
+public sealed record RecipientListItem(Guid Id, string Name, Guid WalletId) : IMapFrom<Recipient>;

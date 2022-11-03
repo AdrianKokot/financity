@@ -23,7 +23,4 @@ public sealed class CreateLabelCommandHandler :
     }
 }
 
-public sealed class CreateLabelCommandResult : IMapFrom<Label>
-{
-    public Guid Id { get; set; }
-}
+public sealed record CreateLabelCommandResult(Guid Id) : IMapFrom<Label>;

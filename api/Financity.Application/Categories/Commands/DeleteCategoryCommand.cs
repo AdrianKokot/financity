@@ -23,7 +23,7 @@ public sealed class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategor
     {
         var entity = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Category), request.Id);
 
         _dbContext.Categories.Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);

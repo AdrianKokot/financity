@@ -1,4 +1,6 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Domain.Entities;
@@ -15,9 +17,9 @@ public sealed class GetCategoriesQuery : FilteredEntitiesQuery<CategoryListItem>
 public sealed class
     GetCategoriesQueryHandler : FilteredEntitiesQueryHandler<GetCategoriesQuery, Category, CategoryListItem>
 {
-    public GetCategoriesQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    public GetCategoriesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }
 
-public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId);
+public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId) : IMapFrom<Category>;

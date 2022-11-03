@@ -26,7 +26,4 @@ public sealed class CreateCategoryCommandHandler :
     }
 }
 
-public sealed class CreateCategoryCommandResult : IMapFrom<Category>
-{
-    public Guid Id { get; set; }
-}
+public sealed record CreateCategoryCommandResult(Guid Id) : IMapFrom<Category>;

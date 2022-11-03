@@ -1,4 +1,6 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Domain.Entities;
 
@@ -8,9 +10,9 @@ public sealed record GetRecipientQuery(Guid EntityId) : IEntityQuery<RecipientDe
 
 public sealed class GetRecipientQueryHandler : EntityQueryHandler<GetRecipientQuery, Recipient, RecipientDetails>
 {
-    public GetRecipientQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    public GetRecipientQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }
 
-public sealed record RecipientDetails(Guid Id, string Name, Guid WalletId, string WalletName);
+public sealed record RecipientDetails(Guid Id, string Name, Guid WalletId, string WalletName) : IMapFrom<Recipient>;

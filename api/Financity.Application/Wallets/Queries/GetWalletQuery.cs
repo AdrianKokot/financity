@@ -1,4 +1,6 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Domain.Entities;
 
@@ -8,9 +10,10 @@ public sealed record GetWalletQuery(Guid EntityId) : IEntityQuery<WalletDetails>
 
 public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, Wallet, WalletDetails>
 {
-    public GetWalletQueryHandler(IApplicationDbContext dbContext) : base(dbContext)
+    public GetWalletQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 }
 
-public sealed record WalletDetails(Guid Id, string Name, Guid CurrencyId, string CurrencyName, string CurrencyCode);
+public sealed record WalletDetails
+    (Guid Id, string Name, Guid CurrencyId, string CurrencyName, string CurrencyCode) : IMapFrom<Wallet>;

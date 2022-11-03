@@ -1,4 +1,6 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Extensions;
 using Financity.Domain.Common;
@@ -14,10 +16,12 @@ public abstract class
     where TQuery : IFilteredEntitiesListQuery<TMappedEntity>
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    protected FilteredEntitiesQueryHandler(IApplicationDbContext dbContext)
+    protected FilteredEntitiesQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
     private DbSet<TEntity> Set => _dbContext.GetDbSet<TEntity>();
@@ -37,7 +41,8 @@ public abstract class
                                                                  CancellationToken cancellationToken = default)
     {
         return AccessAsync(q =>
-                q.Paginate(request.QuerySpecification.PaginationSpecification).Project<TEntity, TMappedEntity>(),
+                q.Paginate(request.QuerySpecification.PaginationSpecification)
+                 .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider),
             cancellationToken);
     }
 }

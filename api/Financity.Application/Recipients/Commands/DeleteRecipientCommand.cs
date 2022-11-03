@@ -23,7 +23,7 @@ public sealed class DeleteRecipientCommandHandler : ICommandHandler<DeleteRecipi
     {
         var entity = await _dbContext.Recipients.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Recipient), request.Id);
 
         _dbContext.Recipients.Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
