@@ -20,7 +20,7 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
     public Guid CategoryId { get; set; }
     public Guid CurrencyId { get; set; }
 
-    public HashSet<Guid> LabelIds { get; set; }
+    public HashSet<Guid>? LabelIds { get; set; }
 
     public static void CreateMap(Profile profile)
     {

@@ -21,7 +21,7 @@ public class RecipientsController : BaseController
     public async Task<IActionResult> CreateEntity(CreateRecipientCommand command, CancellationToken ct)
     {
         var result = await GetQueryResultAsync(command, ct);
-        return CreatedAtAction(nameof(GetEntity), new {id = result.Id}, result);
+        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]

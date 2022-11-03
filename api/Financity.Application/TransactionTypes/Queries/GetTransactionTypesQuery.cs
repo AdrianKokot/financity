@@ -10,11 +10,13 @@ public sealed class GetTransactionTypesQuery : IQuery<IEnumerable<TransactionTyp
 public sealed class
     GetTransactionTypesQueryHandler : IQueryHandler<GetTransactionTypesQuery, IEnumerable<TransactionTypeListItem>>
 {
-    public async Task<IEnumerable<TransactionTypeListItem>> Handle(GetTransactionTypesQuery request,
-                                                                   CancellationToken cancellationToken)
+    public Task<IEnumerable<TransactionTypeListItem>> Handle(GetTransactionTypesQuery request,
+                                                             CancellationToken cancellationToken)
     {
-        return Enum.GetValues<TransactionType>().Select(x => new TransactionTypeListItem((int) x, x.ToString()))
-                   .ToList();
+        var enumValueList = Enum.GetValues<TransactionType>()
+                                .Select(x => new TransactionTypeListItem((int)x, x.ToString()));
+
+        return Task.FromResult(enumValueList);
     }
 }
 

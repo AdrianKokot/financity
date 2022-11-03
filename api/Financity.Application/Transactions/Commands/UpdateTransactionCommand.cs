@@ -16,7 +16,7 @@ public sealed class UpdateTransactionCommand : ICommand<Unit>
     public string? Note { get; set; }
     public Guid? RecipientId { get; set; }
     public Guid CategoryId { get; set; }
-    public HashSet<Guid> LabelIds { get; set; }
+    public HashSet<Guid>? LabelIds { get; set; }
 
     public static void CreateMap(Profile profile)
     {
