@@ -21,7 +21,4 @@ public sealed class CreateRecipientCommandHandler :
     }
 }
 
-public sealed class CreateRecipientCommandResult : IMapFrom<Recipient>
-{
-    public Guid Id { get; set; }
-}
+public sealed record CreateRecipientCommandResult(Guid Id) : IMapFrom<Recipient>;

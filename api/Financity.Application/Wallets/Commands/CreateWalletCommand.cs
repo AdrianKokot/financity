@@ -21,7 +21,4 @@ public sealed class
     }
 }
 
-public sealed class CreateWalletCommandResult : IMapFrom<Wallet>
-{
-    public Guid Id { get; set; }
-}
+public sealed record CreateWalletCommandResult(Guid Id) : IMapFrom<Wallet>;

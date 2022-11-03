@@ -1,7 +1,8 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
-using Financity.Application.Common.Extensions;
 using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,17 +14,19 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
     where TQuery : IEntityQuery<TMappedEntity>
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    protected EntityQueryHandler(IApplicationDbContext dbContext)
+    protected EntityQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
     public async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
         var entity = await _dbContext.GetDbSet<TEntity>()
                                      .Where(x => x.Id == request.EntityId)
-                                     .Project<TEntity, TMappedEntity>()
+                                     .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider)
                                      .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);

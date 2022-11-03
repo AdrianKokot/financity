@@ -4,8 +4,8 @@ namespace Financity.Application.Common.Mappings;
 
 public interface IMapFrom<TSource>
 {
-    void Mapping(Profile profile)
+    static void CreateMap(Profile profile)
     {
-        profile.CreateMap(typeof(TSource), GetType());
+        throw new NotImplementedException();
     }
 }
