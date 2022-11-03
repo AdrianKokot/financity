@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
@@ -12,17 +13,17 @@ namespace Financity.Application.Transactions.Commands;
 public sealed class UpdateTransactionCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
-
     public decimal Amount { get; set; }
     public string? Note { get; set; }
-
     public Guid? RecipientId { get; set; }
-    public Guid WalletId { get; set; }
-    public TransactionType TransactionType { get; set; }
-    public Guid? CategoryId { get; set; }
-    public Guid? CurrencyId { get; set; }
-
-    public ICollection<Guid>? LabelIds { get; set; }
+    public Guid CategoryId { get; set; }
+    public HashSet<Guid> LabelIds { get; set; }
+    
+    public static void CreateMap(Profile profile)
+    {
+        profile.CreateMap<CreateTransactionCommand, Transaction>()
+               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate());
+    }
 }
 
 public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTransactionCommand, Unit>
@@ -38,16 +39,16 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
     {
         var entity = await _dbContext.GetDbSet<Transaction>().FirstOrDefaultAsync(x => x.Id == request.Id, ct);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Transaction), request.Id);
 
         entity.Amount = request.Amount;
         entity.Note = request.Note;
         entity.RecipientId = request.RecipientId;
-        entity.WalletId = request.WalletId;
-        entity.TransactionType = request.TransactionType;
         entity.CategoryId = request.CategoryId;
-        entity.CurrencyId = request.CurrencyId;
-        entity.Labels = request.LabelIds.Select(id => new Label { Id = id }).ToImmutableArray();
+        
+        entity.Labels = _dbContext.GetDbSet<Label>()
+                                  .Where(x => request.LabelIds.Contains(x.Id))
+                                  .ToImmutableArray();
 
         await _dbContext.SaveChangesAsync(ct);
 

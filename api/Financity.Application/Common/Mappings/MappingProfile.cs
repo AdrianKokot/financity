@@ -22,8 +22,6 @@ public sealed class MappingProfile : Profile
                             .Where(t => !t.IsGenericType && !t.IsInterface && t.GetInterfaces().Any(i =>
                                 i.IsGenericType && _mappingInterfaces.Contains(i.GetGenericTypeDefinition()))
                             );
-
-        Console.WriteLine(_mappingMethod);
         
         foreach (var type in types)
         {

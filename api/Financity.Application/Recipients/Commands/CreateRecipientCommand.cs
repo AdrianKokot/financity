@@ -13,8 +13,7 @@ public sealed class CreateRecipientCommand : ICommand<CreateRecipientCommandResu
     public Guid WalletId { get; init; }
 }
 
-public sealed class CreateRecipientCommandHandler :
-    CreateEntityCommandHandler<CreateRecipientCommand, CreateRecipientCommandResult, Recipient>
+public sealed class CreateRecipientCommandHandler : CreateEntityCommandHandler<CreateRecipientCommand, CreateRecipientCommandResult, Recipient>
 {
     public CreateRecipientCommandHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

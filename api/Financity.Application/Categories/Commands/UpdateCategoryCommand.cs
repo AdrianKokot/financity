@@ -29,7 +29,7 @@ public sealed class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategor
     {
         var entity = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Category), request.Id);
 
         entity.Name = request.Name;
 

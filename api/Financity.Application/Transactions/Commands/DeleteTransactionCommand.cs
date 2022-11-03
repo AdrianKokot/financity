@@ -24,7 +24,7 @@ public sealed class DeleteTransactionCommandHandler : ICommandHandler<DeleteTran
         var entity = await _dbContext.GetDbSet<Transaction>()
                                      .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Transaction), request.Id);
 
         _dbContext.GetDbSet<Transaction>().Remove(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);

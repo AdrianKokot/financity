@@ -27,7 +27,7 @@ public sealed class UpdateRecipientCommandHandler : ICommandHandler<UpdateRecipi
     {
         var entity = await _dbContext.Recipients.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Recipient), request.Id);
 
         entity.Name = request.Name;
 

@@ -11,23 +11,23 @@ public abstract class CreateEntityCommandHandler<TCommand, TResult, TEntity> : I
     where TEntity : Entity
     where TResult : IMapFrom<TEntity>
 {
-    private readonly IApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
+    protected readonly IApplicationDbContext DbContext;
+    protected readonly IMapper Mapper;
 
     protected CreateEntityCommandHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
+        DbContext = dbContext;
+        Mapper = mapper;
     }
 
-    public async Task<TResult> Handle(TCommand command, CancellationToken cancellationToken)
+    public virtual async Task<TResult> Handle(TCommand command, CancellationToken cancellationToken)
     {
-        var entity = _mapper.Map<TEntity>(command);
+        var entity = Mapper.Map<TEntity>(command);
 
-        _dbContext.GetDbSet<TEntity>().Add(entity);
+        DbContext.GetDbSet<TEntity>().Add(entity);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<TResult>(entity);
+        return Mapper.Map<TResult>(entity);
     }
 }
