@@ -1,5 +1,4 @@
 ﻿using Financity.Application.Transactions.Commands;
-using Financity.Domain.Enums;
 using FluentValidation;
 
 namespace Financity.Application.Transactions.Validators;

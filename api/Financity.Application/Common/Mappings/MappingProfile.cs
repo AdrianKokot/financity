@@ -22,13 +22,13 @@ public sealed class MappingProfile : Profile
                             .Where(t => !t.IsGenericType && !t.IsInterface && t.GetInterfaces().Any(i =>
                                 i.IsGenericType && _mappingInterfaces.Contains(i.GetGenericTypeDefinition()))
                             );
-        
+
         foreach (var type in types)
         {
             var customMappingMethod = type.GetMethod(_mappingMethod, BindingFlags.Public | BindingFlags.Static);
             if (customMappingMethod is not null)
             {
-                customMappingMethod.Invoke(null, new [] {this});
+                customMappingMethod.Invoke(null, new[] {this});
             }
             else
             {

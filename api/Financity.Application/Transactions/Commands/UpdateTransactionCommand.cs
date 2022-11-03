@@ -4,7 +4,6 @@ using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +17,7 @@ public sealed class UpdateTransactionCommand : ICommand<Unit>
     public Guid? RecipientId { get; set; }
     public Guid CategoryId { get; set; }
     public HashSet<Guid> LabelIds { get; set; }
-    
+
     public static void CreateMap(Profile profile)
     {
         profile.CreateMap<CreateTransactionCommand, Transaction>()
@@ -45,7 +44,7 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
         entity.Note = request.Note;
         entity.RecipientId = request.RecipientId;
         entity.CategoryId = request.CategoryId;
-        
+
         entity.Labels = _dbContext.GetDbSet<Label>()
                                   .Where(x => request.LabelIds.Contains(x.Id))
                                   .ToImmutableArray();

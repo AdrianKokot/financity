@@ -21,7 +21,7 @@ public class LabelsController : BaseController
     public async Task<IActionResult> CreateEntity(CreateLabelCommand command, CancellationToken ct)
     {
         var result = await GetQueryResultAsync(command, ct);
-        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetEntity), new {id = result.Id}, result);
     }
 
     [HttpGet("{id:guid}")]

@@ -6,7 +6,6 @@ using Financity.Application.Common.Commands;
 using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace Financity.Application.Transactions.Commands;
 
@@ -38,10 +37,10 @@ public sealed class CreateTransactionCommandHandler :
     }
 
     public override async Task<CreateTransactionCommandResult> Handle(CreateTransactionCommand command,
-                                                                 CancellationToken cancellationToken)
+                                                                      CancellationToken cancellationToken)
     {
         var entity = Mapper.Map<Transaction>(command);
-        
+
         entity.Labels = DbContext.GetDbSet<Label>()
                                  .Where(x => command.LabelIds.Contains(x.Id))
                                  .ToImmutableArray();
