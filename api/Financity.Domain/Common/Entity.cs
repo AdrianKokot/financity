@@ -1,6 +1,10 @@
 ﻿namespace Financity.Domain.Common;
 
-public abstract class Entity
+public interface IEntity
+{
+    public Guid Id { get; }
+}
+public abstract class Entity : IEntity
 {
     protected Entity() : this(Guid.NewGuid())
     {

@@ -1,5 +1,10 @@
+using System.Text;
 using Financity.Application;
+using Financity.Domain.Entities;
 using Financity.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -16,7 +21,33 @@ builder.Services.AddInfrastructure(builder.Configuration)
        {
            options.LowercaseUrls = true;
            options.LowercaseQueryStrings = true;
-       });
+       })
+       .AddAuthentication(options =>
+       {
+           options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+           options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+           options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+       })
+       .AddJwtBearer(
+           options =>
+           {
+               var key = new SymmetricSecurityKey(
+                   Encoding.UTF8.GetBytes(
+                       builder.Configuration["JwtSettings:TokenValidationParameters:IssuerSigningKey"]));
+
+               options.TokenValidationParameters = new TokenValidationParameters()
+               {
+                   ValidateIssuer = false,
+                   ValidateAudience = false,
+                   ValidateLifetime = false,
+                   ValidateIssuerSigningKey = false,
+                   ValidIssuer = builder.Configuration["JwtSettings:TokenValidationParameters:ValidIssuer"],
+                   ValidAudience = builder.Configuration["JwtSettings:TokenValidationParameters:ValidAudience"],
+                   IssuerSigningKey = key
+               };
+
+           });
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -42,13 +73,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseDefaultFiles();
 
 app.UseSerilogRequestLogging();
 
 app.UseStaticFiles();
 
-app.UseAuthorization();
+
 
 app.MapControllers();
 app.MapHealthChecks("/api/healthcheck");
