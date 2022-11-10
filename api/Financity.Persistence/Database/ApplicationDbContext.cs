@@ -55,6 +55,26 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.SeedData();
+
         base.OnModelCreating(modelBuilder);
+
+        CustomizeIdentity(modelBuilder);
+    }
+
+    private void CustomizeIdentity(ModelBuilder builder)
+    {
+        builder.Entity<User>(b =>
+        {
+            b.ToTable("Users");
+            b.Ignore(u => u.PhoneNumber);
+            b.Ignore(u => u.PhoneNumberConfirmed);
+        });
+
+        builder.Ignore<IdentityRole<Guid>>();
+        builder.Ignore<IdentityRoleClaim<Guid>>();
+        builder.Ignore<IdentityUserClaim<Guid>>();
+        builder.Ignore<IdentityUserToken<Guid>>();
+        builder.Ignore<IdentityUserLogin<Guid>>();
+        builder.Ignore<IdentityUserRole<Guid>>();
     }
 }
