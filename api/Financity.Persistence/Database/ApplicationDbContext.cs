@@ -11,8 +11,12 @@ namespace Financity.Persistence.Database;
 
 public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    private readonly ICurrentUserService? _userService;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService userService)
+        : base(options)
     {
+        _userService = userService;
     }
 
     public DbSet<T> GetDbSet<T>() where T : class
@@ -34,11 +38,11 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
             {
                 case EntityState.Added:
                     entry.Entity.CreatedAt = AppDateTime.Now;
-                    entry.Entity.CreatedBy = string.Empty;
+                    entry.Entity.CreatedBy = _userService?.UserId;
                     break;
                 case EntityState.Modified:
                     entry.Entity.UpdatedAt = AppDateTime.Now;
-                    entry.Entity.UpdatedBy = string.Empty;
+                    entry.Entity.UpdatedBy = _userService?.UserId;
                     break;
 
                 case EntityState.Detached:

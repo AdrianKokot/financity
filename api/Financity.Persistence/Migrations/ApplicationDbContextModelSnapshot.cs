@@ -34,8 +34,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("IconName")
                         .HasColumnType("nvarchar(max)");
@@ -52,8 +52,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uniqueidentifier");
@@ -64,7 +64,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Currency", b =>
@@ -81,24 +81,24 @@ namespace Financity.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4d668984-1740-4952-a99e-b0c4b5e3bc4b"),
+                            Id = new Guid("2901578c-3cfd-4d44-b6ac-1c40a38b00f7"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("3565f717-3d34-4cfa-8077-fb824088c914"),
+                            Id = new Guid("77839e20-eb95-4517-b3ab-32e62cce2bdb"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("a32168e1-df33-471a-8737-7dd7a9e98918"),
+                            Id = new Guid("f403d026-7ef0-41c4-a948-435ac76aabe3"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -116,8 +116,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("IconName")
                         .HasColumnType("nvarchar(max)");
@@ -128,8 +128,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uniqueidentifier");
@@ -138,7 +138,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Labels");
+                    b.ToTable("Labels", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
@@ -150,8 +150,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -159,8 +159,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uniqueidentifier");
@@ -169,7 +169,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Recipients");
+                    b.ToTable("Recipients", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Transaction", b =>
@@ -187,8 +187,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CurrencyId")
                         .HasColumnType("uniqueidentifier");
@@ -205,8 +205,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("WalletId")
                         .HasColumnType("uniqueidentifier");
@@ -221,7 +221,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.User", b =>
@@ -300,7 +300,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.ToTable("Wallets");
+                    b.ToTable("Wallets", (string)null);
                 });
 
             modelBuilder.Entity("LabelTransaction", b =>
@@ -315,7 +315,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("TransactionsId");
 
-                    b.ToTable("LabelTransaction");
+                    b.ToTable("LabelTransaction", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>

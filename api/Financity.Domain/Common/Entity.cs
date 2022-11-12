@@ -4,6 +4,7 @@ public interface IEntity
 {
     public Guid Id { get; }
 }
+
 public abstract class Entity : IEntity
 {
     protected Entity() : this(Guid.NewGuid())
