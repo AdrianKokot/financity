@@ -1,6 +1,4 @@
-﻿using Financity.Domain.Entities;
-
-namespace Financity.Application.Abstractions.Data;
+﻿namespace Financity.Application.Abstractions.Data;
 
 public interface ICurrentUserService
 {

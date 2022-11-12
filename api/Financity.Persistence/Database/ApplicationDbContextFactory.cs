@@ -1,5 +1,4 @@
-﻿using Financity.Application.Abstractions.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Persistence.Database;
 

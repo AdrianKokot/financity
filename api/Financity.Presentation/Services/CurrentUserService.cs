@@ -1,13 +1,10 @@
 ﻿using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
-using Financity.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Financity.Presentation.Services;
 
 public class CurrentUserService : ICurrentUserService
 {
-
     public CurrentUserService(IHttpContextAccessor httpContext)
     {
         var userId = httpContext.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);

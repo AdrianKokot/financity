@@ -1,7 +1,9 @@
-using System.Text;
 using Financity.Application;
 using Financity.Application.Abstractions.Data;
 using Financity.Infrastructure;
+using Financity.Presentation.Abstractions;
+using Financity.Presentation.Auth;
+using Financity.Presentation.Configuration;
 using Financity.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -16,8 +18,9 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Host.UseSerilog();
 
 // Add services to the container.
-builder.Services.AddInfrastructure(builder.Configuration)
+builder.Services
        .AddApplication(builder.Configuration)
+       .AddInfrastructure(builder.Configuration)
        .AddRouting(options =>
        {
            options.LowercaseUrls = true;
@@ -27,6 +30,12 @@ builder.Services.AddInfrastructure(builder.Configuration)
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+
+var jwtConfiguration = new JwtConfiguration();
+
+builder.Configuration.Bind("JwtSettings", jwtConfiguration);
+builder.Services.AddSingleton<IJwtConfiguration>(jwtConfiguration);
 
 builder.Services
        .AddAuthentication(options =>
@@ -38,21 +47,19 @@ builder.Services
        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
            options =>
            {
-               var key = new SymmetricSecurityKey(
-                   Encoding.UTF8.GetBytes(
-                       builder.Configuration["JwtSettings:TokenValidationParameters:IssuerSigningKey"]));
-
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                   ValidateIssuer = false,
-                   ValidateAudience = false,
-                   ValidateLifetime = false,
-                   ValidateIssuerSigningKey = false,
-                   ValidIssuer = builder.Configuration["JwtSettings:TokenValidationParameters:ValidIssuer"],
-                   ValidAudience = builder.Configuration["JwtSettings:TokenValidationParameters:ValidAudience"],
-                   IssuerSigningKey = key
+                   ValidAlgorithms = new[] { jwtConfiguration.Algorithm },
+                   ValidateIssuer = jwtConfiguration.ValidateIssuer,
+                   ValidateAudience = jwtConfiguration.ValidateAudience,
+                   ValidateLifetime = jwtConfiguration.ValidateLifetime,
+                   ValidateIssuerSigningKey = jwtConfiguration.ValidateIssuerSigningKey,
+                   ValidIssuer = jwtConfiguration.ValidIssuer,
+                   ValidAudience = jwtConfiguration.ValidAudience,
+                   IssuerSigningKey = jwtConfiguration.IssuerSigningKey
                };
-           });
+           })
+       .AddTokenConfiguration();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -69,6 +76,22 @@ builder.Services.AddSwaggerGen(options =>
         Title = "Financity",
         Version = "v1"
     });
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
 });
 
 builder.Services.AddHealthChecks();
@@ -83,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

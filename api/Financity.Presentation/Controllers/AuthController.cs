@@ -1,30 +1,22 @@
-﻿using System.Security.Claims;
-using System.Text;
-using Financity.Application.Abstractions.Data;
-using Financity.Domain.Entities;
+﻿using Financity.Domain.Entities;
+using Financity.Presentation.Abstractions;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Financity.Presentation.Controllers;
 
 public class AuthController : BaseController
 {
-    private readonly IConfiguration _configuration;
     private readonly UserManager<User> _manager;
-    private readonly SignInManager<User> _signInManager;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(UserManager<User> manager, SignInManager<User> signInManager,
-                          IConfiguration configuration)
+    public AuthController(UserManager<User> manager,
+                          ITokenService tokenService)
     {
-        _signInManager = signInManager;
-        _configuration = configuration;
+        _tokenService = tokenService;
         _manager = manager;
-        // use that:
-        // https://kags.me.ke/post/asp-net-core-identity-authentication/   
     }
 
     [HttpPost("register")]
@@ -40,9 +32,6 @@ public class AuthController : BaseController
         var result = await _manager.CreateAsync(user, password);
 
         return Ok(result.Succeeded);
-        if (result.Succeeded)
-        {
-        }
     }
 
     [HttpGet("user")]
@@ -62,45 +51,11 @@ public class AuthController : BaseController
         var user = await _manager.FindByEmailAsync(userName);
 
         if (user == null || !await _manager.CheckPasswordAsync(user, password)) return Unauthorized();
-        var token = GetToken(new List<Claim>
-        {
-            // new Claim(JwtRegisteredClaimNames.Sub)
-            // new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            // new Claim(JwtRegisteredClaimNames.Email, user.UserName),
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.UserName)
-        });
+        var token = _tokenService.GetTokenForUser(user);
 
         return Ok(new
         {
             token
         });
-
-        var result = await _signInManager.PasswordSignInAsync(userName, password, false, false);
-
-        return Ok(result.Succeeded);
-        // await _manager.
-        // _manager.CheckPasswordAsync()
-        // await HttpContext.SignInAsync(new ClaimsPrincipal(new[] {new ClaimsIdentity()}));
-        return Ok();
-    }
-
-    private string GetToken(List<Claim> authClaims)
-    {
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["JwtSettings:TokenValidationParameters:IssuerSigningKey"]));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var handler = new JsonWebTokenHandler();
-        var token = handler.CreateToken(new SecurityTokenDescriptor
-        {
-            Issuer = _configuration["JwtSettings:TokenValidationParameters:ValidIssuer"],
-            Audience = _configuration["JwtSettings:TokenValidationParameters:ValidAudience"],
-            Expires = AppDateTime.Now.AddHours(3),
-            Subject = new ClaimsIdentity(authClaims),
-            SigningCredentials = credentials
-        });
-
-        return token;
     }
 }
