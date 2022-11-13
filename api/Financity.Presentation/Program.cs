@@ -47,7 +47,7 @@ builder.Services
 
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                   ValidAlgorithms = new[] {jwtConfiguration.Algorithm},
+                   ValidAlgorithms = new[] { jwtConfiguration.Algorithm },
                    ValidateIssuer = jwtConfiguration.ValidateIssuer,
                    ValidateAudience = jwtConfiguration.ValidateAudience,
                    ValidateLifetime = jwtConfiguration.ValidateLifetime,
@@ -89,7 +89,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {{securityScheme, Array.Empty<string>()}});
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
 });
 
 builder.Services.AddHealthChecks();

@@ -10,7 +10,7 @@ public sealed class Wallet : Entity
     public Currency? Currency { get; set; }
 
     public Guid UserId { get; set; }
-    public User User { get; set; }
+    public User? User { get; set; }
 
     public ICollection<Label>? Labels { get; set; }
     public ICollection<Recipient>? Recipients { get; set; }
