@@ -19,6 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         _userService = userService;
     }
 
+    public DbSet<Budget> Budgets { get; set; }
+
     public DbSet<T> GetDbSet<T>() where T : class
     {
         return Set<T>();

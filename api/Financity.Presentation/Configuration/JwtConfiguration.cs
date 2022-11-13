@@ -15,13 +15,16 @@ public sealed class JwtConfiguration : IJwtConfiguration
     {
     }
 
-    public string Key
+    public string? Key
     {
         get => _key;
         set
         {
             _key = value;
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(value));
+
+            if (string.IsNullOrEmpty(_key)) return;
+
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
             Credentials = new SigningCredentials(IssuerSigningKey, Algorithm);
         }
     }
@@ -32,12 +35,12 @@ public sealed class JwtConfiguration : IJwtConfiguration
     public bool ValidateAudience { get; set; }
     public bool ValidateLifetime { get; set; }
     public bool ValidateIssuerSigningKey { get; set; }
-    public string? ValidIssuer { get; set; }
-    public string? ValidAudience { get; set; }
+    public string ValidIssuer { get; set; }
+    public string ValidAudience { get; set; }
     public double ExpireAfterHours { get; set; }
 
-    public SymmetricSecurityKey? IssuerSigningKey { get; private set; }
-    public SigningCredentials? Credentials { get; private set; }
+    public SymmetricSecurityKey IssuerSigningKey { get; private set; }
+    public SigningCredentials Credentials { get; private set; }
     public string Algorithm => SecurityAlgorithms.HmacSha512;
 
     public static void Register(IServiceCollection services, IConfiguration configuration)
