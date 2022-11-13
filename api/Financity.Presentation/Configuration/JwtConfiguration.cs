@@ -3,6 +3,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Financity.Presentation.Configuration;
 
+public sealed class JwtConfigurationRegisterNotCalledException : Exception
+{
+}
+
 public sealed class JwtConfiguration : IJwtConfiguration
 {
     private string? _key;
@@ -45,7 +49,7 @@ public sealed class JwtConfiguration : IJwtConfiguration
 
     public static JwtConfiguration GetInstance()
     {
-        if (Instance is null) throw new Exception("You should call Register method first!");
+        if (Instance is null) throw new JwtConfigurationRegisterNotCalledException();
 
         return Instance;
     }
