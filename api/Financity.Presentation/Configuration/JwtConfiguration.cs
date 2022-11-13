@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Financity.Presentation.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Financity.Presentation.Configuration;
@@ -7,6 +6,10 @@ namespace Financity.Presentation.Configuration;
 public sealed class JwtConfiguration : IJwtConfiguration
 {
     private string? _key;
+
+    private JwtConfiguration()
+    {
+    }
 
     public string Key
     {
@@ -19,6 +22,8 @@ public sealed class JwtConfiguration : IJwtConfiguration
         }
     }
 
+    private static JwtConfiguration? Instance { get; set; }
+
     public bool ValidateIssuer { get; set; }
     public bool ValidateAudience { get; set; }
     public bool ValidateLifetime { get; set; }
@@ -30,4 +35,18 @@ public sealed class JwtConfiguration : IJwtConfiguration
     public SymmetricSecurityKey? IssuerSigningKey { get; private set; }
     public SigningCredentials? Credentials { get; private set; }
     public string Algorithm => SecurityAlgorithms.HmacSha512;
+
+    public static void Register(IServiceCollection services, IConfiguration configuration)
+    {
+        Instance = new JwtConfiguration();
+        configuration.Bind("JwtSettings", Instance);
+        services.AddSingleton<IJwtConfiguration>(Instance);
+    }
+
+    public static JwtConfiguration GetInstance()
+    {
+        if (Instance is null) throw new Exception("You should call Register method first!");
+
+        return Instance;
+    }
 }

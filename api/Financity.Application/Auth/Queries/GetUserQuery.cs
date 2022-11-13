@@ -5,7 +5,7 @@ using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Financity.Application.Users.Queries;
+namespace Financity.Application.Auth.Queries;
 
 public sealed record GetUserQuery(ClaimsPrincipal ClaimsPrincipal) : IQuery<UserDetails>;
 

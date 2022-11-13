@@ -1,7 +1,6 @@
 using Financity.Application;
 using Financity.Application.Abstractions.Data;
 using Financity.Infrastructure;
-using Financity.Presentation.Abstractions;
 using Financity.Presentation.Auth;
 using Financity.Presentation.Configuration;
 using Financity.Presentation.Services;
@@ -32,10 +31,7 @@ builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 
-var jwtConfiguration = new JwtConfiguration();
-
-builder.Configuration.Bind("JwtSettings", jwtConfiguration);
-builder.Services.AddSingleton<IJwtConfiguration>(jwtConfiguration);
+JwtConfiguration.Register(builder.Services, builder.Configuration);
 
 builder.Services
        .AddAuthentication(options =>
@@ -47,6 +43,8 @@ builder.Services
        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
            options =>
            {
+               var jwtConfiguration = JwtConfiguration.GetInstance();
+
                options.TokenValidationParameters = new TokenValidationParameters
                {
                    ValidAlgorithms = new[] {jwtConfiguration.Algorithm},
@@ -59,7 +57,7 @@ builder.Services
                    IssuerSigningKey = jwtConfiguration.IssuerSigningKey
                };
            })
-       .AddTokenConfiguration();
+       .AddAuthConfiguration();
 
 builder.Services.AddAuthorization(options =>
 {

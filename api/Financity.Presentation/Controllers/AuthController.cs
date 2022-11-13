@@ -1,5 +1,5 @@
-﻿using Financity.Application.Users.Commands;
-using Financity.Application.Users.Queries;
+﻿using Financity.Application.Auth.Commands;
+using Financity.Application.Auth.Queries;
 using Financity.Presentation.Controllers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

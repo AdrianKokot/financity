@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace Financity.Presentation.Abstractions;
+namespace Financity.Presentation.Configuration;
 
 public interface IJwtConfiguration
 {

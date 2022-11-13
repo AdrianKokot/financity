@@ -1,13 +1,13 @@
 ﻿using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Entities;
-using Financity.Presentation.Abstractions;
+using Financity.Presentation.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Financity.Presentation.Auth;
+namespace Financity.Presentation.Services;
 
 public sealed class TokenService : ITokenService
 {

@@ -1,10 +1,10 @@
-﻿using Financity.Application.Common.Extensions;
-using Financity.Application.Users.Commands;
+﻿using Financity.Application.Auth.Commands;
+using Financity.Application.Common.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace Financity.Application.Users.Validators;
+namespace Financity.Application.Auth.Validators;
 
 public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {

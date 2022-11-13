@@ -6,7 +6,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 
-namespace Financity.Application.Users.Commands;
+namespace Financity.Application.Auth.Commands;
 
 public sealed record RegisterCommand(string Email, string Password) : ICommand<RegisterCommandResult>;
 

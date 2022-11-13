@@ -4,7 +4,7 @@ using Financity.Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
-namespace Financity.Application.Users.Commands;
+namespace Financity.Application.Auth.Commands;
 
 public sealed record LoginCommand(string Email, string Password) : ICommand<LoginCommandResult>;
 
