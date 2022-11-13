@@ -25,6 +25,7 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
     public async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
         var entity = await _dbContext.GetDbSet<TEntity>()
+                                     .AsNoTracking()
                                      .Where(x => x.Id == request.EntityId)
                                      .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider)
                                      .FirstOrDefaultAsync(cancellationToken);

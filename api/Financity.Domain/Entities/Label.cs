@@ -4,10 +4,8 @@ namespace Financity.Domain.Entities;
 
 public sealed class Label : AuditableEntity
 {
-    public string? Name { get; set; }
-    public string? Color { get; set; }
-    public string? IconName { get; set; }
-
+    public string Name { get; set; } = string.Empty;
+    public Appearance Appearance { get; set; } = new();
     public Guid WalletId { get; set; }
     public Wallet? Wallet { get; set; }
 

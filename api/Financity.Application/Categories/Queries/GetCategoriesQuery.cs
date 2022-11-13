@@ -3,6 +3,7 @@ using Financity.Application.Abstractions.Data;
 using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Categories.Queries;
@@ -22,4 +23,4 @@ public sealed class
     }
 }
 
-public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId) : IMapFrom<Category>;
+public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance) : IMapFrom<Category>;
