@@ -3,7 +3,6 @@ using AutoMapper;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Financity.Application.Users.Queries;

@@ -2,6 +2,8 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Entities;
 using Financity.Presentation.Abstractions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -10,10 +12,12 @@ namespace Financity.Presentation.Auth;
 public sealed class TokenService : ITokenService
 {
     private readonly IJwtConfiguration _configuration;
+    private readonly ClaimsIdentityOptions _options;
 
-    public TokenService(IJwtConfiguration configuration)
+    public TokenService(IJwtConfiguration configuration, IOptions<IdentityOptions> options)
     {
         _configuration = configuration;
+        _options = options.Value.ClaimsIdentity;
     }
 
     public string GetTokenForUser(User user)
@@ -38,8 +42,9 @@ public sealed class TokenService : ITokenService
     {
         return new Claim[]
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Email, user.Email)
+            new(_options.UserIdClaimType, user.Id.ToString()),
+            new(_options.EmailClaimType, user.Email),
+            new(_options.UserNameClaimType, user.UserName)
         };
     }
 }
