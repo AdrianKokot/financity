@@ -1,4 +1,4 @@
-﻿using Financity.Presentation.Abstractions;
+﻿using Financity.Application.Abstractions.Data;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Financity.Presentation.Auth;

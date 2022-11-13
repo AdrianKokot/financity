@@ -1,6 +1,6 @@
 ﻿using Financity.Domain.Entities;
 
-namespace Financity.Presentation.Abstractions;
+namespace Financity.Application.Abstractions.Data;
 
 public interface ITokenService
 {

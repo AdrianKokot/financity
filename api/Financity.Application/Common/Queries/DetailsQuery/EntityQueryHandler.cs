@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Financity.Application.Common.Queries.DetailsQuery;
 
 public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<TQuery, TMappedEntity>
-    where TEntity : Entity
+    where TEntity : class, IEntity
     where TMappedEntity : class
     where TQuery : IEntityQuery<TMappedEntity>
 {

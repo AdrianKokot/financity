@@ -16,10 +16,13 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("Financity"))
         );
 
-        services.AddIdentity<User, IdentityRole<Guid>>(options => options.SignIn.RequireConfirmedAccount = false)
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    // options.Password.RequireDigit = true;
+                    // options.Password.RequireNonAlphanumeric = true;
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        services.Configure<IdentityOptions>(options => { });
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 

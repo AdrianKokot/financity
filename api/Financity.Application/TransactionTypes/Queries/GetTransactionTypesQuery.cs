@@ -14,7 +14,7 @@ public sealed class
                                                              CancellationToken cancellationToken)
     {
         var enumValueList = Enum.GetValues<TransactionType>()
-                                .Select(x => new TransactionTypeListItem((int)x, x.ToString()));
+                                .Select(x => new TransactionTypeListItem((int) x, x.ToString()));
 
         return Task.FromResult(enumValueList);
     }

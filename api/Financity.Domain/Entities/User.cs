@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Financity.Domain.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace Financity.Domain.Entities;
 
-public sealed class User : IdentityUser<Guid>
+public sealed class User : IdentityUser<Guid>, IEntity
 {
 }

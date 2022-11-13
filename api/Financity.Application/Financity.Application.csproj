@@ -21,4 +21,8 @@
         <ProjectReference Include="..\Financity.Domain\Financity.Domain.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Abstractions\Configuration"/>
+    </ItemGroup>
+
 </Project>
