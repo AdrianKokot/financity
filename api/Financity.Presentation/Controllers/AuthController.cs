@@ -16,8 +16,7 @@ public class AuthController : BaseController
     {
         return await HandleQueryAsync(command);
     }
-
-
+    
     [HttpGet("user")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(UserDetails))]
     public async Task<IActionResult> GetUser()
