@@ -57,14 +57,17 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         return base.SaveChangesAsync(cancellationToken);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        modelBuilder.SeedData();
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.SeedData();
 
-        base.OnModelCreating(modelBuilder);
+        builder.Entity<Category>(entity => entity.OwnsOne(x => x.Appearance));
+        builder.Entity<Label>(entity => entity.OwnsOne(x => x.Appearance));
 
-        CustomizeIdentity(modelBuilder);
+        base.OnModelCreating(builder);
+
+        CustomizeIdentity(builder);
     }
 
     private void CustomizeIdentity(ModelBuilder builder)

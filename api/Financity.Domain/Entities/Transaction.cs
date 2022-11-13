@@ -6,7 +6,7 @@ namespace Financity.Domain.Entities;
 public sealed class Transaction : AuditableEntity
 {
     public decimal Amount { get; set; }
-    public string? Note { get; set; }
+    public string Note { get; set; } = string.Empty;
 
     public Guid? RecipientId { get; set; }
     public Recipient? Recipient { get; set; }

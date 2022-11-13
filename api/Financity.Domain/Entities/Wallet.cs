@@ -4,7 +4,7 @@ namespace Financity.Domain.Entities;
 
 public sealed class Wallet : Entity
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public Guid CurrencyId { get; set; }
     public Currency? Currency { get; set; }

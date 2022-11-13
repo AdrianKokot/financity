@@ -5,10 +5,9 @@ namespace Financity.Domain.Entities;
 
 public sealed class Category : AuditableEntity
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public string? Color { get; set; }
-    public string? IconName { get; set; }
+    public Appearance Appearance { get; set; } = new();
 
     public Guid? ParentCategoryId { get; set; }
     public Category? ParentCategory { get; set; }

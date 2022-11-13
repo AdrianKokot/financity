@@ -1,6 +1,7 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,7 @@ public sealed class UpdateLabelCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
-    public string? Color { get; set; }
-    public string? IconName { get; set; }
+    public Appearance? Appearance { get; set; }
 }
 
 public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelCommand, Unit>
@@ -32,8 +32,7 @@ public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelComma
         if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
 
         entity.Name = request.Name;
-        entity.Color = request.Color;
-        entity.IconName = request.IconName;
+        entity.Appearance = request.Appearance ?? new Appearance();
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

@@ -3,6 +3,7 @@ using Financity.Application.Abstractions.Data;
 using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Labels.Queries;
@@ -22,4 +23,4 @@ public sealed class GetLabelsQueryHandler : FilteredEntitiesQueryHandler<GetLabe
 }
 
 public sealed record LabelListItem
-    (Guid Id, string Name, Guid WalletId, string? Color, string? IconName) : IMapFrom<Label>;
+    (Guid Id, string Name, Guid WalletId, Appearance Appearance) : IMapFrom<Label>;

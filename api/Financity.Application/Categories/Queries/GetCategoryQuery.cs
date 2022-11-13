@@ -2,6 +2,7 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Common.Mappings;
 using Financity.Application.Common.Queries.DetailsQuery;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Categories.Queries;
@@ -15,4 +16,5 @@ public sealed class GetCategoryQueryHandler : EntityQueryHandler<GetCategoryQuer
     }
 }
 
-public sealed record CategoryDetails(Guid Id, string Name, Guid WalletId, string WalletName) : IMapFrom<Category>;
+public sealed record CategoryDetails
+    (Guid Id, string Name, Guid WalletId, string WalletName, Appearance Appearance) : IMapFrom<Category>;
