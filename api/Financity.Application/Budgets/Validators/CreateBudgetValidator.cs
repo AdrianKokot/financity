@@ -1,5 +1,4 @@
 ﻿using Financity.Application.Budgets.Commands;
-using Financity.Domain.Entities;
 using FluentValidation;
 
 namespace Financity.Application.Budgets.Validators;

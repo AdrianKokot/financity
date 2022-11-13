@@ -19,6 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         _userService = userService;
     }
 
+    public DbSet<Budget> Budgets { get; set; }
+
     public DbSet<T> GetDbSet<T>() where T : class
     {
         return Set<T>();
@@ -30,7 +32,6 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Recipient> Recipients { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<Budget> Budgets { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {

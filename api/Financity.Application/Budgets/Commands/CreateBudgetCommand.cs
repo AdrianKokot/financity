@@ -4,19 +4,18 @@ using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
 using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Budgets.Commands;
 
 public sealed class CreateBudgetCommand : ICommand<CreateBudgetCommandResult>, IMapTo<Budget>
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public decimal Amount { get; set; }
-    
+
     public Guid UserId { get; set; }
-    
-    public HashSet<Guid> TrackedCategoriesId { get; set; }
+
+    public HashSet<Guid>? TrackedCategoriesId { get; set; }
 }
 
 public sealed class CreateBudgetCommandHandler :
@@ -24,12 +23,14 @@ public sealed class CreateBudgetCommandHandler :
 {
     private readonly ICurrentUserService _userService;
 
-    public CreateBudgetCommandHandler(IApplicationDbContext dbContext, IMapper mapper, ICurrentUserService userService) : base(dbContext, mapper)
+    public CreateBudgetCommandHandler(IApplicationDbContext dbContext, IMapper mapper, ICurrentUserService userService)
+        : base(dbContext, mapper)
     {
         _userService = userService;
     }
 
-    public override async Task<CreateBudgetCommandResult> Handle(CreateBudgetCommand command, CancellationToken cancellationToken)
+    public override async Task<CreateBudgetCommandResult> Handle(CreateBudgetCommand command,
+                                                                 CancellationToken cancellationToken)
     {
         var entity = Mapper.Map<Budget>(command);
 
