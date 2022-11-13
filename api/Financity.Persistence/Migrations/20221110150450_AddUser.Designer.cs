@@ -4,6 +4,7 @@ using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221110150450_AddUser")]
+    partial class AddUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,19 +88,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("aaff60a7-7c3c-4b0e-b1d4-7ef1b1c81716"),
+                            Id = new Guid("2901578c-3cfd-4d44-b6ac-1c40a38b00f7"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("a028716d-f665-4a1a-bcc6-22578f7824f8"),
+                            Id = new Guid("77839e20-eb95-4517-b3ab-32e62cce2bdb"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("190b3801-c4f6-4b51-9ed3-e67ddc576484"),
+                            Id = new Guid("f403d026-7ef0-41c4-a948-435ac76aabe3"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -296,14 +298,9 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Wallets");
                 });
@@ -397,15 +394,7 @@ namespace Financity.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Financity.Domain.Entities.User", "User")
-                        .WithMany("Wallets")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Currency");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LabelTransaction", b =>
@@ -431,11 +420,6 @@ namespace Financity.Persistence.Migrations
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
                 {
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("Financity.Domain.Entities.User", b =>
-                {
-                    b.Navigation("Wallets");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>

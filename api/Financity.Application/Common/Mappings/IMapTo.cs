@@ -6,6 +6,5 @@ public interface IMapTo<TDestination>
 {
     public static void CreateMap(Profile profile)
     {
-        throw new NotImplementedException();
     }
 }

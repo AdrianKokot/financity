@@ -39,9 +39,9 @@ public sealed class MappingProfile : Profile
                                                      i => i.GetGenericArguments().FirstOrDefault()
                                                  );
 
-                if (mappings.ContainsKey(_mapFromInterface)) CreateMap(mappings[_mapFromInterface], type);
+                if (mappings.TryGetValue(_mapFromInterface, out var mapFromType)) CreateMap(mapFromType, type);
 
-                if (mappings.ContainsKey(_mapToInterface)) CreateMap(type, mappings[_mapToInterface]);
+                if (mappings.TryGetValue(_mapToInterface, out var mapToType)) CreateMap(type, mapToType);
             }
         }
     }

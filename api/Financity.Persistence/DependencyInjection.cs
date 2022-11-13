@@ -1,5 +1,7 @@
 ﻿using Financity.Application.Abstractions.Data;
+using Financity.Domain.Entities;
 using Financity.Persistence.Database;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,14 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Financity"))
         );
+
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    // options.Password.RequireDigit = true;
+                    // options.Password.RequireNonAlphanumeric = true;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 

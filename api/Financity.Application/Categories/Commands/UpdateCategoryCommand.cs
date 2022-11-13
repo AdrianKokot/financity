@@ -32,6 +32,8 @@ public sealed class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategor
         if (entity is null) throw new EntityNotFoundException(nameof(Category), request.Id);
 
         entity.Name = request.Name;
+        entity.Color = request.Color;
+        entity.IconName = request.IconName;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
