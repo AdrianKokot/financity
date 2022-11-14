@@ -2,11 +2,9 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Helpers;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,10 +46,8 @@ public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWal
         var walletAccess = wallet.UsersWithAccess.FirstOrDefault(x => x.UserId == user.Id);
 
         if (walletAccess is null)
-        {
             throw ValidationExceptionFactory.For(nameof(command.UserEmail),
                 "User with given email doesn't have access to the given wallet.");
-        }
 
         if (walletAccess.WalletAccessLevel == WalletAccessLevel.Owner)
             throw ValidationExceptionFactory.For(nameof(command.UserEmail),

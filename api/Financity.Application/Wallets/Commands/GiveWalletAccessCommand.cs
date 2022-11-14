@@ -7,8 +7,6 @@ using Financity.Application.Common.Mappings;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
-using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Commands;
@@ -58,7 +56,7 @@ public sealed class
         if (wallet.UsersWithAccess.All(x => x.UserId != _userService.UserId))
             throw new AccessDeniedException();
 
-        var walletAccess = new WalletAccess()
+        var walletAccess = new WalletAccess
         {
             UserId = user.Id,
             WalletId = wallet.Id,

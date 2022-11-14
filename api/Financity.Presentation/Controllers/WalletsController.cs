@@ -58,7 +58,7 @@ public class WalletsController : BaseController
         var result = await HandleCommandAsync(command, ct);
         return Ok(result);
     }
-    
+
     [HttpDelete("{id:guid}/share")]
     [SwaggerResponse(StatusCodes.Status204NoContent, Type = typeof(Unit))]
     public async Task<IActionResult> RevokeAccess(RevokeWalletAccessCommand command, Guid id, CancellationToken ct)
