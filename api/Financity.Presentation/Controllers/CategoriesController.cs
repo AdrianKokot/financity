@@ -20,7 +20,7 @@ public class CategoriesController : BaseController
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateCategoryCommandResult))]
     public async Task<IActionResult> CreateEntity(CreateCategoryCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command, ct);
+        var result = await HandleCommandAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
@@ -32,18 +32,19 @@ public class CategoriesController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntity(Guid id, UpdateCategoryCommand command, CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(CategoryDetails))]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateCategoryCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command, ct);
+        await HandleQueryAsync(command, ct);
+        return await HandleQueryAsync(new GetCategoryQuery(id), ct);
     }
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteCategoryCommand(id), ct);
+        await HandleCommandAsync(new DeleteCategoryCommand(id), ct);
         return NoContent();
     }
 }

@@ -20,7 +20,7 @@ public class LabelsController : BaseController
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateLabelCommandResult))]
     public async Task<IActionResult> CreateEntity(CreateLabelCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command, ct);
+        var result = await HandleCommandAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
@@ -32,18 +32,19 @@ public class LabelsController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntity(Guid id, UpdateLabelCommand command, CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(LabelDetails))]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateLabelCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command, ct);
+        await HandleCommandAsync(command, ct);
+        return await HandleQueryAsync(new GetLabelQuery(id), ct);
     }
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteLabelCommand(id), ct);
+        await HandleCommandAsync(new DeleteLabelCommand(id), ct);
         return NoContent();
     }
 }

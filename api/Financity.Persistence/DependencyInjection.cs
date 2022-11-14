@@ -19,8 +19,6 @@ public static class DependencyInjection
         services.AddIdentity<User, IdentityRole<Guid>>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = false;
-                    // options.Password.RequireDigit = true;
-                    // options.Password.RequireNonAlphanumeric = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

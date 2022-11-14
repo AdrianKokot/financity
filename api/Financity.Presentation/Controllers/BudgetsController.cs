@@ -20,7 +20,7 @@ public class BudgetsController : BaseController
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateBudgetCommandResult))]
     public async Task<IActionResult> CreateEntity(CreateBudgetCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command, ct);
+        var result = await HandleCommandAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
@@ -32,18 +32,19 @@ public class BudgetsController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntity(Guid id, UpdateBudgetCommand command, CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(BudgetDetails))]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateBudgetCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command, ct);
+        await HandleQueryAsync(command, ct);
+        return await HandleQueryAsync(new GetBudgetQuery(id), ct);
     }
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteBudgetCommand(id), ct);
+        await HandleCommandAsync(new DeleteBudgetCommand(id), ct);
         return NoContent();
     }
 }

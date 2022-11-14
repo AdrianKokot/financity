@@ -3,6 +3,7 @@ using Financity.Application.Abstractions.Data;
 using Financity.Infrastructure;
 using Financity.Presentation.Auth;
 using Financity.Presentation.Configuration;
+using Financity.Presentation.Middleware;
 using Financity.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -18,6 +19,7 @@ builder.Host.UseSerilog();
 
 // Add services to the container.
 builder.Services
+       .AddTransient<ExceptionHandlingMiddleware>()
        .AddApplication(builder.Configuration)
        .AddInfrastructure(builder.Configuration)
        .AddRouting(options =>
@@ -102,6 +104,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
