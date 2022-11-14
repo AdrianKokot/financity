@@ -1,8 +1,10 @@
 ﻿using System.Collections.Immutable;
+using System.Net.Mime;
 using System.Text.Json;
 using Financity.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Financity.Presentation.Middleware;
 
@@ -31,25 +33,42 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
     private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
-        var response = new ValidationProblemDetails(GetErrors(exception))
+        object response;
+
+        switch (statusCode)
         {
-            Status = statusCode,
-            Title = GetTitle(exception),
-            Type = GetExceptionType(exception)
-        };
+            case StatusCodes.Status400BadRequest:
+            case StatusCodes.Status422UnprocessableEntity:
+                response = new ValidationProblemDetails(GetErrors(exception))
+                {
+                    Status = statusCode,
+                    Title = GetTitle(exception),
+                    Type = GetExceptionType(exception)
+                };
+                break;
+            default:
+                response = new
+                {
+                    Title = GetTitle(exception),
+                    Type = GetExceptionType(exception),
+                    Status = statusCode,
+                    Message = exception.ToString()
+                };
+                break;
+        }
 
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+        await httpContext.Response.WriteAsJsonAsync(response);
     }
 
     private static int GetStatusCode(Exception exception)
     {
         return exception switch
         {
-            BadHttpRequestException => StatusCodes.Status400BadRequest,
             EntityNotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status422UnprocessableEntity,
+            NotImplementedException => StatusCodes.Status501NotImplemented,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -59,6 +78,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         return exception switch
         {
             ValidationException => "One or more validation errors occurred.",
+            NotImplementedException => "Not Implemented",
             _ => "Internal server error."
         };
     }
@@ -68,7 +88,8 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         return exception switch
         {
             ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
-            _ => string.Empty
+            NotImplementedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.2",
+            _ => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.1"
         };
     }
 
@@ -86,17 +107,6 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
                                                 Values = errorMessages.Distinct().ToArray()
                                             })
                                         .ToDictionary(x => x.Key, x => x.Values);
-        else
-            errors = new Dictionary<string, string[]>
-            {
-                {
-                    "Message",
-                    new[]
-                    {
-                        exception.Message
-                    }
-                }
-            };
 
         return errors;
     }
