@@ -12,11 +12,11 @@ namespace Financity.Application.Transactions.Commands;
 public sealed class UpdateTransactionCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
-    public decimal Amount { get; set; }
-    public string? Note { get; set; }
-    public Guid? RecipientId { get; set; }
-    public Guid CategoryId { get; set; }
-    public HashSet<Guid>? LabelIds { get; set; }
+    public decimal Amount { get; set; } = 0;
+    public string Note { get; set; } = string.Empty;
+    public Guid? RecipientId { get; set; } = null;
+    public Guid? CategoryId { get; set; } = null;
+    public HashSet<Guid> LabelIds { get; set; } = new();
 
     public static void CreateMap(Profile profile)
     {

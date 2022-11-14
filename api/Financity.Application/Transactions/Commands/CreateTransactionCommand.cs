@@ -11,16 +11,16 @@ namespace Financity.Application.Transactions.Commands;
 
 public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommandResult>, IMapTo<Transaction>
 {
-    public decimal Amount { get; set; }
-    public string? Note { get; set; }
+    public decimal Amount { get; set; } = 0;
+    public string Note { get; set; } = string.Empty;
 
-    public Guid? RecipientId { get; set; }
-    public Guid WalletId { get; set; }
-    public TransactionType TransactionType { get; set; }
-    public Guid CategoryId { get; set; }
-    public Guid CurrencyId { get; set; }
+    public Guid? RecipientId { get; set; } = null;
+    public Guid WalletId { get; set; } = Guid.Empty;
+    public TransactionType TransactionType { get; set; } = TransactionType.Income;
+    public Guid? CategoryId { get; set; } = null;
+    public Guid CurrencyId { get; set; } = Guid.Empty;
 
-    public HashSet<Guid>? LabelIds { get; set; }
+    public HashSet<Guid> LabelIds { get; set; } = new();
 
     public static void CreateMap(Profile profile)
     {
