@@ -20,7 +20,7 @@ public static class DependencyInjection
 
         ValidatorOptions.Global.LanguageManager.Enabled = false;
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en");
-        
+
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Text.Json;
-using System.Xml;
 using Financity.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,11 @@ namespace Financity.Presentation.Middleware;
 public sealed class ExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger) => _logger = logger;
+
+    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
+    {
+        _logger = logger;
+    }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -40,32 +43,40 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 
-    private static int GetStatusCode(Exception exception) => exception switch
+    private static int GetStatusCode(Exception exception)
     {
-        BadHttpRequestException => StatusCodes.Status400BadRequest,
-        EntityNotFoundException => StatusCodes.Status404NotFound,
-        ValidationException => StatusCodes.Status422UnprocessableEntity,
-        _ => StatusCodes.Status500InternalServerError
-    };
+        return exception switch
+        {
+            BadHttpRequestException => StatusCodes.Status400BadRequest,
+            EntityNotFoundException => StatusCodes.Status404NotFound,
+            ValidationException => StatusCodes.Status422UnprocessableEntity,
+            _ => StatusCodes.Status500InternalServerError
+        };
+    }
 
-    private static string GetTitle(Exception exception) => exception switch
+    private static string GetTitle(Exception exception)
     {
-        ValidationException => "One or more validation errors occurred.",
-        _ => "Internal server error."
-    };
+        return exception switch
+        {
+            ValidationException => "One or more validation errors occurred.",
+            _ => "Internal server error."
+        };
+    }
 
-    private static string GetExceptionType(Exception exception) => exception switch
+    private static string GetExceptionType(Exception exception)
     {
-        ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
-        _ => string.Empty
-    };
+        return exception switch
+        {
+            ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
+            _ => string.Empty
+        };
+    }
 
     private static IDictionary<string, string[]> GetErrors(Exception exception)
     {
         IDictionary<string, string[]> errors = ImmutableDictionary<string, string[]>.Empty;
 
         if (exception is ValidationException validationException)
-        {
             errors = validationException.Errors.GroupBy(
                                             x => x.PropertyName,
                                             x => x.ErrorMessage,
@@ -75,7 +86,6 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
                                                 Values = errorMessages.Distinct().ToArray()
                                             })
                                         .ToDictionary(x => x.Key, x => x.Values);
-        }
 
         return errors;
     }
