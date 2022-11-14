@@ -2,13 +2,13 @@
 
 namespace Financity.Application.Enums.Queries.Abstract;
 
-public abstract class GetEnumQuery<TEnum> : IQuery<IEnumerable<EnumListItem>> where TEnum : Enum
+public interface IGetEnumQuery<TEnum> : IQuery<IEnumerable<EnumListItem>> where TEnum : Enum
 {
 }
 
 public abstract class
     GetEnumQueryHandler<TQuery, TEnum> : IQueryHandler<TQuery, IEnumerable<EnumListItem>>
-    where TEnum : Enum where TQuery : GetEnumQuery<TEnum>
+    where TEnum : Enum where TQuery : IGetEnumQuery<TEnum>
 {
     public virtual Task<IEnumerable<EnumListItem>> Handle(TQuery request,
                                                           CancellationToken cancellationToken)

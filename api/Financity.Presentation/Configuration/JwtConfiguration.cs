@@ -39,8 +39,8 @@ public sealed class JwtConfiguration : IJwtConfiguration
     public string ValidAudience { get; set; } = string.Empty;
     public double ExpireAfterHours { get; set; } = 3;
 
-    public SymmetricSecurityKey? IssuerSigningKey { get; private set; } = null;
-    public SigningCredentials? Credentials { get; private set; } = null;
+    public SymmetricSecurityKey? IssuerSigningKey { get; private set; }
+    public SigningCredentials? Credentials { get; private set; }
     public string Algorithm => SecurityAlgorithms.HmacSha512;
 
     public static void Register(IServiceCollection services, IConfiguration configuration)

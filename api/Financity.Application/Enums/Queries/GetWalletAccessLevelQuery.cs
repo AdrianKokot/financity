@@ -3,7 +3,7 @@ using Financity.Domain.Enums;
 
 namespace Financity.Application.Enums.Queries;
 
-public sealed class GetWalletAccessLevelQuery : GetEnumQuery<WalletAccessLevel>
+public sealed class GetWalletAccessLevelQuery : IGetEnumQuery<WalletAccessLevel>
 {
 }
 
