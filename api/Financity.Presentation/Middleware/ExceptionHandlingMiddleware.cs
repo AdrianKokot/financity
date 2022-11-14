@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text.Json;
+using System.Xml;
 using Financity.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,13 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
     private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
-        var response = new ValidationProblemDetails(GetErrors(exception));
+        var response = new ValidationProblemDetails(GetErrors(exception))
+        {
+            Status = statusCode,
+            Title = GetTitle(exception),
+            Type = GetExceptionType(exception)
+        };
+
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
@@ -41,10 +48,22 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         _ => StatusCodes.Status500InternalServerError
     };
 
+    private static string GetTitle(Exception exception) => exception switch
+    {
+        ValidationException => "One or more validation errors occurred.",
+        _ => "Internal server error."
+    };
+
+    private static string GetExceptionType(Exception exception) => exception switch
+    {
+        ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
+        _ => string.Empty
+    };
+
     private static IDictionary<string, string[]> GetErrors(Exception exception)
     {
         IDictionary<string, string[]> errors = ImmutableDictionary<string, string[]>.Empty;
-        
+
         if (exception is ValidationException validationException)
         {
             errors = validationException.Errors.GroupBy(
