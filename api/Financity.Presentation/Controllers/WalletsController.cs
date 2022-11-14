@@ -29,6 +29,23 @@ public class WalletsController : BaseController
     public async Task<IActionResult> CreateEntity(CreateWalletCommand command, CancellationToken ct)
     {
         var result = await HandleCommandAsync(command, ct);
-        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetEntity), new {id = result.Id}, result);
+    }
+
+    [HttpPut("{id:guid}")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletDetails))]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateWalletCommand command, CancellationToken ct)
+    {
+        command.Id = id;
+        await HandleCommandAsync(command, ct);
+        return await HandleQueryAsync(new GetWalletQuery(id), ct);
+    }
+
+    [HttpDelete("{id:guid}")]
+    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
+    {
+        await HandleCommandAsync(new DeleteWalletCommand(id), ct);
+        return NoContent();
     }
 }
