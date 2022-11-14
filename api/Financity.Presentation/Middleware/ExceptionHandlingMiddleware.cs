@@ -86,6 +86,17 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
                                                 Values = errorMessages.Distinct().ToArray()
                                             })
                                         .ToDictionary(x => x.Key, x => x.Values);
+        else
+            errors = new Dictionary<string, string[]>
+            {
+                {
+                    "Message",
+                    new[]
+                    {
+                        exception.Message
+                    }
+                }
+            };
 
         return errors;
     }
