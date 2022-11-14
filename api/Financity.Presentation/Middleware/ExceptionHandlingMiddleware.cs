@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Text.Json;
 using Financity.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,6 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception e)
         {
-            _logger.LogError(e, e.Message);
             await HandleExceptionAsync(context, e);
         }
     }
@@ -31,25 +29,44 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
     private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
-        var response = new ValidationProblemDetails(GetErrors(exception))
-        {
-            Status = statusCode,
-            Title = GetTitle(exception),
-            Type = GetExceptionType(exception)
-        };
+        var response = GetErrorResponseFromException(exception);
 
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
+        await httpContext.Response.WriteAsJsonAsync(response);
+    }
+
+    private static object GetErrorResponseFromException(Exception exception)
+    {
+        var statusCode = GetStatusCode(exception);
+        return statusCode switch
+        {
+            StatusCodes.Status400BadRequest or StatusCodes.Status422UnprocessableEntity =>
+                new ValidationProblemDetails(GetErrors(exception))
+                {
+                    Status = statusCode,
+                    Title = GetTitle(exception),
+                    Type = GetExceptionType(exception)
+                },
+            _ =>
+                new
+                {
+                    Title = GetTitle(exception),
+                    Type = GetExceptionType(exception),
+                    Status = statusCode,
+                    Message = exception.ToString()
+                }
+        };
     }
 
     private static int GetStatusCode(Exception exception)
     {
         return exception switch
         {
-            BadHttpRequestException => StatusCodes.Status400BadRequest,
             EntityNotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status422UnprocessableEntity,
+            NotImplementedException => StatusCodes.Status501NotImplemented,
+            AccessDeniedException => StatusCodes.Status403Forbidden,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -59,6 +76,8 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         return exception switch
         {
             ValidationException => "One or more validation errors occurred.",
+            NotImplementedException => "Not Implemented.",
+            AccessDeniedException => "Forbidden.",
             _ => "Internal server error."
         };
     }
@@ -68,7 +87,9 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         return exception switch
         {
             ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
-            _ => string.Empty
+            NotImplementedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.2",
+            AccessDeniedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.3",
+            _ => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.1"
         };
     }
 

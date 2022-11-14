@@ -31,16 +31,16 @@ public sealed class JwtConfiguration : IJwtConfiguration
 
     private static JwtConfiguration? Instance { get; set; }
 
-    public bool ValidateIssuer { get; set; }
-    public bool ValidateAudience { get; set; }
-    public bool ValidateLifetime { get; set; }
-    public bool ValidateIssuerSigningKey { get; set; }
-    public string ValidIssuer { get; set; }
-    public string ValidAudience { get; set; }
-    public double ExpireAfterHours { get; set; }
+    public bool ValidateIssuer { get; set; } = true;
+    public bool ValidateAudience { get; set; } = true;
+    public bool ValidateLifetime { get; set; } = true;
+    public bool ValidateIssuerSigningKey { get; set; } = true;
+    public string ValidIssuer { get; set; } = string.Empty;
+    public string ValidAudience { get; set; } = string.Empty;
+    public double ExpireAfterHours { get; set; } = 3;
 
-    public SymmetricSecurityKey IssuerSigningKey { get; private set; }
-    public SigningCredentials Credentials { get; private set; }
+    public SymmetricSecurityKey? IssuerSigningKey { get; private set; } = null;
+    public SigningCredentials? Credentials { get; private set; } = null;
     public string Algorithm => SecurityAlgorithms.HmacSha512;
 
     public static void Register(IServiceCollection services, IConfiguration configuration)

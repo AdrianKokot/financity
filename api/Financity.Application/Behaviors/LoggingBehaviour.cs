@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Financity.Application.Behaviors;
 
-public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest>
+public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger<LoggingBehaviour<TRequest>> _logger;
 
-    public LoggingBehaviour(ILogger<TRequest> logger)
+    public LoggingBehaviour(ILogger<LoggingBehaviour<TRequest>> logger)
     {
         _logger = logger;
     }
