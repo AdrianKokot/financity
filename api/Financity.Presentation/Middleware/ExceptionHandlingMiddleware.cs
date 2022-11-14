@@ -1,10 +1,7 @@
 ﻿using System.Collections.Immutable;
-using System.Net.Mime;
-using System.Text.Json;
 using Financity.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Financity.Presentation.Middleware;
 
@@ -69,6 +66,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             EntityNotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status422UnprocessableEntity,
             NotImplementedException => StatusCodes.Status501NotImplemented,
+            AccessDeniedException => StatusCodes.Status403Forbidden,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -78,7 +76,8 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         return exception switch
         {
             ValidationException => "One or more validation errors occurred.",
-            NotImplementedException => "Not Implemented",
+            NotImplementedException => "Not Implemented.",
+            AccessDeniedException => "Forbidden.",
             _ => "Internal server error."
         };
     }
@@ -89,6 +88,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         {
             ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
             NotImplementedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.2",
+            AccessDeniedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.3",
             _ => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.1"
         };
     }

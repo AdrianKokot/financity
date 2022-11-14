@@ -20,6 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     }
 
     public DbSet<Budget> Budgets { get; set; }
+    public DbSet<WalletAccess> WalletAccesses { get; set; }
 
     public DbSet<T> GetDbSet<T>() where T : class
     {
@@ -32,7 +33,6 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Recipient> Recipients { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<WalletAccess> WalletAccesses { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
@@ -66,7 +66,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.Entity<Category>(entity => entity.OwnsOne(x => x.Appearance));
         builder.Entity<Label>(entity => entity.OwnsOne(x => x.Appearance));
 
-        builder.Entity<WalletAccess>().HasKey(x => new {x.UserId, x.WalletId});
+        builder.Entity<WalletAccess>().HasKey(x => new { x.UserId, x.WalletId });
 
         base.OnModelCreating(builder);
 

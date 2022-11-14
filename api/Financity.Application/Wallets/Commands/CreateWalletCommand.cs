@@ -35,7 +35,7 @@ public sealed class
         var entity = Mapper.Map<Wallet>(command);
 
         entity.UsersWithAccess ??= new List<WalletAccess>();
-        entity.UsersWithAccess.Add(new WalletAccess()
+        entity.UsersWithAccess.Add(new WalletAccess
         {
             WalletId = entity.Id,
             WalletAccessLevel = WalletAccessLevel.Owner,
