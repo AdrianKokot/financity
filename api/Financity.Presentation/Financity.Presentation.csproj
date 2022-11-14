@@ -20,8 +20,4 @@
         <ProjectReference Include="..\Financity.Infrastructure\Financity.Infrastructure.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Abstractions"/>
-    </ItemGroup>
-
 </Project>

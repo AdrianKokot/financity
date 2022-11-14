@@ -28,7 +28,7 @@ public class WalletsController : BaseController
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateWalletCommandResult))]
     public async Task<IActionResult> CreateEntity(CreateWalletCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command, ct);
+        var result = await HandleCommandAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 }

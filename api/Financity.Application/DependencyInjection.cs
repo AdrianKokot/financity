@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using Financity.Application.Behaviors;
 using FluentValidation;
 using MediatR;
@@ -16,6 +17,9 @@ public static class DependencyInjection
         services.AddMediatR(Assembly.GetExecutingAssembly());
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        ValidatorOptions.Global.LanguageManager.Enabled = false;
+        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en");
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));

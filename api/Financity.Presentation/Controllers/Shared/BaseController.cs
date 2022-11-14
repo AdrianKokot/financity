@@ -13,10 +13,10 @@ public class BaseController : ControllerBase
     protected async Task<IActionResult> HandleQueryAsync<TResponse>(IRequest<TResponse> query,
                                                                     CancellationToken ct = default)
     {
-        return Ok(await GetQueryResultAsync(query, ct));
+        return Ok(await HandleCommandAsync(query, ct));
     }
 
-    protected Task<TResponse> GetQueryResultAsync<TResponse>(IRequest<TResponse> query, CancellationToken ct = default)
+    protected Task<TResponse> HandleCommandAsync<TResponse>(IRequest<TResponse> query, CancellationToken ct = default)
     {
         return Mediator.Send(query, ct);
     }

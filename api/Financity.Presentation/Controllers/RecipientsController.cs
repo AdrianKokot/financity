@@ -20,7 +20,7 @@ public class RecipientsController : BaseController
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateRecipientCommandResult))]
     public async Task<IActionResult> CreateEntity(CreateRecipientCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command, ct);
+        var result = await HandleCommandAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
@@ -32,18 +32,19 @@ public class RecipientsController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntity(Guid id, UpdateRecipientCommand command, CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(RecipientDetails))]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateRecipientCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command, ct);
+        await HandleCommandAsync(command, ct);
+        return await HandleQueryAsync(new GetRecipientQuery(id), ct);
     }
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteRecipientCommand(id), ct);
+        await HandleCommandAsync(new DeleteRecipientCommand(id), ct);
         return NoContent();
     }
 }

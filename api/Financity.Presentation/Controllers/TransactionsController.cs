@@ -20,7 +20,7 @@ public class TransactionsController : BaseController
     [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(CreateTransactionCommandResult))]
     public async Task<IActionResult> CreateEntity(CreateTransactionCommand command, CancellationToken ct)
     {
-        var result = await GetQueryResultAsync(command, ct);
+        var result = await HandleCommandAsync(command, ct);
         return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
@@ -32,18 +32,19 @@ public class TransactionsController : BaseController
     }
 
     [HttpPut("{id:guid}")]
-    [SwaggerResponse(StatusCodes.Status200OK)]
-    public Task<IActionResult> UpdateEntity(Guid id, UpdateTransactionCommand command, CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(TransactionDetails))]
+    public async Task<IActionResult> UpdateEntity(Guid id, UpdateTransactionCommand command, CancellationToken ct)
     {
         command.Id = id;
-        return HandleQueryAsync(command, ct);
+        await HandleCommandAsync(command, ct);
+        return await HandleQueryAsync(new GetTransactionQuery(id), ct);
     }
 
     [HttpDelete("{id:guid}")]
     [SwaggerResponse(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteEntity(Guid id, CancellationToken ct)
     {
-        await GetQueryResultAsync(new DeleteTransactionCommand(id), ct);
+        await HandleCommandAsync(new DeleteTransactionCommand(id), ct);
         return NoContent();
     }
 }
