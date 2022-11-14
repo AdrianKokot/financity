@@ -30,33 +30,34 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
     private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
-        object response;
+        var response = GetErrorResponseFromException(exception);
 
-        switch (statusCode)
+        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.StatusCode = statusCode;
+        await httpContext.Response.WriteAsJsonAsync(response);
+    }
+
+    private static object GetErrorResponseFromException(Exception exception)
+    {
+        var statusCode = GetStatusCode(exception);
+        return statusCode switch
         {
-            case StatusCodes.Status400BadRequest:
-            case StatusCodes.Status422UnprocessableEntity:
-                response = new ValidationProblemDetails(GetErrors(exception))
+            StatusCodes.Status400BadRequest or StatusCodes.Status422UnprocessableEntity =>
+                new ValidationProblemDetails(GetErrors(exception))
                 {
                     Status = statusCode,
                     Title = GetTitle(exception),
                     Type = GetExceptionType(exception)
-                };
-                break;
-            default:
-                response = new
+                },
+            _ =>
+                new
                 {
                     Title = GetTitle(exception),
                     Type = GetExceptionType(exception),
                     Status = statusCode,
                     Message = exception.ToString()
-                };
-                break;
-        }
-
-        httpContext.Response.ContentType = "application/json";
-        httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsJsonAsync(response);
+                }
+        };
     }
 
     private static int GetStatusCode(Exception exception)

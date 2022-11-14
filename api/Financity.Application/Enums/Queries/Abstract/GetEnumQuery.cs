@@ -10,12 +10,12 @@ public abstract class
     GetEnumQueryHandler<TQuery, TEnum> : IQueryHandler<TQuery, IEnumerable<EnumListItem>>
     where TEnum : Enum where TQuery : GetEnumQuery<TEnum>
 {
-    public Task<IEnumerable<EnumListItem>> Handle(TQuery request,
-                                                  CancellationToken cancellationToken)
+    public virtual Task<IEnumerable<EnumListItem>> Handle(TQuery request,
+                                                          CancellationToken cancellationToken)
     {
         var enumValueList = Enum.GetValues(typeof(TEnum))
                                 .OfType<object>()
-                                .Select(x => new EnumListItem((int)x, x.ToString()));
+                                .Select(x => new EnumListItem((int) x, x.ToString()));
 
         return Task.FromResult(enumValueList);
     }
