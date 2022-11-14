@@ -10,8 +10,8 @@ public interface IJwtConfiguration
     public bool ValidateIssuerSigningKey { get; }
     public string ValidIssuer { get; }
     public string ValidAudience { get; }
-    public SymmetricSecurityKey IssuerSigningKey { get; }
-    public SigningCredentials Credentials { get; }
+    public SymmetricSecurityKey? IssuerSigningKey { get; }
+    public SigningCredentials? Credentials { get; }
     public double ExpireAfterHours { get; }
     public string Algorithm { get; }
 }

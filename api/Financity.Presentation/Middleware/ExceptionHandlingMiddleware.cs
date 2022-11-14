@@ -22,7 +22,6 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception e)
         {
-            _logger.LogError(e, e.Message);
             await HandleExceptionAsync(context, e);
         }
     }
