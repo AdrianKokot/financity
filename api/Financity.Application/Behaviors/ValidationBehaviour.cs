@@ -15,8 +15,8 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
         _validators = validators;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-                                        RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+                                        CancellationToken cancellationToken)
     {
         var errors = GetValidationFailures(request);
         if (errors.Count != 0) throw new ValidationException(errors);
