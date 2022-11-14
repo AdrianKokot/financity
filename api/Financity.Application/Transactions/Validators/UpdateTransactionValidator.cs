@@ -9,7 +9,6 @@ public sealed class UpdateTransactionValidator : AbstractValidator<UpdateTransac
     {
         RuleFor(x => x.Amount).NotEmpty();
         RuleFor(x => x.Note).MaximumLength(255);
-        RuleFor(x => x.CategoryId).NotEmpty();
         RuleFor(x => x.LabelIds).NotNull();
     }
 }
