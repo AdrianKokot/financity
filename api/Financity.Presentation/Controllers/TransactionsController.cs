@@ -21,7 +21,7 @@ public class TransactionsController : BaseController
     public async Task<IActionResult> CreateEntity(CreateTransactionCommand command, CancellationToken ct)
     {
         var result = await HandleCommandAsync(command, ct);
-        return CreatedAtAction(nameof(GetEntity), new {id = result.Id}, result);
+        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
     }
 
     [HttpGet("{id:guid}")]

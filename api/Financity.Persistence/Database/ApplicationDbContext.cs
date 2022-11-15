@@ -71,7 +71,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.Entity<Category>(entity => entity.OwnsOne(x => x.Appearance));
         builder.Entity<Label>(entity => entity.OwnsOne(x => x.Appearance));
 
-        builder.Entity<WalletAccess>().HasKey(x => new {x.UserId, x.WalletId});
+        builder.Entity<WalletAccess>().HasKey(x => new { x.UserId, x.WalletId });
 
         base.OnModelCreating(builder);
 
