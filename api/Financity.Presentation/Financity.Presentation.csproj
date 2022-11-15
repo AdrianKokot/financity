@@ -5,8 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-      <UserSecretsId>60e11780-f14c-4260-bf3d-3e130286d053</UserSecretsId>
-  </PropertyGroup>
+        <UserSecretsId>60e11780-f14c-4260-bf3d-3e130286d053</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MediatR.Contracts" Version="1.0.1" />
