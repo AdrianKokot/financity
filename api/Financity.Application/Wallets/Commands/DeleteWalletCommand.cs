@@ -3,7 +3,6 @@ using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Commands;
 
@@ -21,13 +20,9 @@ public sealed class DeleteWalletCommandHandler : ICommandHandler<DeleteWalletCom
     public async Task<Unit> Handle(DeleteWalletCommand request,
                                    CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<Wallet>()
-                                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var deletedCount = await _dbContext.DeleteFromSetAsync<Wallet>(request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Wallet), request.Id);
-
-        _dbContext.GetDbSet<Wallet>().Remove(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        if (deletedCount == 0) throw new EntityNotFoundException(nameof(Wallet), request.Id);
 
         return Unit.Value;
     }

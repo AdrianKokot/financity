@@ -27,7 +27,7 @@ public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelComma
     public async Task<Unit> Handle(UpdateLabelCommand request,
                                    CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Labels.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await _dbContext.GetDbSet<Label>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
 

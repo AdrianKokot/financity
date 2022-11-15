@@ -1,17 +1,12 @@
-﻿using Financity.Domain.Entities;
+﻿using Financity.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Abstractions.Data;
 
 public interface IApplicationDbContext
 {
-    DbSet<Currency> Currencies { get; set; }
-    DbSet<Wallet> Wallets { get; set; }
-    DbSet<Label> Labels { get; set; }
-    DbSet<Recipient> Recipients { get; set; }
-    DbSet<Transaction> Transactions { get; set; }
-    DbSet<Category> Categories { get; set; }
     public DbSet<T> GetDbSet<T>() where T : class;
+    public Task<int> DeleteFromSetAsync<T>(Guid id, CancellationToken ct) where T : class, IEntity;
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

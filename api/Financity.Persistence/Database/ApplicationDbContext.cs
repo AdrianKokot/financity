@@ -22,17 +22,22 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Budget> Budgets { get; set; }
     public DbSet<WalletAccess> WalletAccesses { get; set; }
 
-    public DbSet<T> GetDbSet<T>() where T : class
-    {
-        return Set<T>();
-    }
-
     public DbSet<Category> Categories { get; set; }
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Label> Labels { get; set; }
     public DbSet<Recipient> Recipients { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
+
+    public DbSet<T> GetDbSet<T>() where T : class
+    {
+        return Set<T>();
+    }
+
+    public Task<int> DeleteFromSetAsync<T>(Guid entityId, CancellationToken ct) where T : class, IEntity
+    {
+        return Set<T>().Where(x => x.Id == entityId).ExecuteDeleteAsync(ct);
+    }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {

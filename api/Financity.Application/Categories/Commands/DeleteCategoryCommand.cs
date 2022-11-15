@@ -3,7 +3,6 @@ using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Categories.Commands;
 
@@ -21,12 +20,9 @@ public sealed class DeleteCategoryCommandHandler : ICommandHandler<DeleteCategor
     public async Task<Unit> Handle(DeleteCategoryCommand request,
                                    CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var deletedCount = await _dbContext.DeleteFromSetAsync<Category>(request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Category), request.Id);
-
-        _dbContext.Categories.Remove(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        if (deletedCount == 0) throw new EntityNotFoundException(nameof(Category), request.Id);
 
         return Unit.Value;
     }

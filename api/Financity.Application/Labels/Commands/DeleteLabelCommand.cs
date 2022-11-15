@@ -3,7 +3,6 @@ using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Labels.Commands;
 
@@ -21,12 +20,9 @@ public sealed class DeleteLabelCommandHandler : ICommandHandler<DeleteLabelComma
     public async Task<Unit> Handle(DeleteLabelCommand request,
                                    CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Labels.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var deletedCount = await _dbContext.DeleteFromSetAsync<Label>(request.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
-
-        _dbContext.Labels.Remove(entity);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        if (deletedCount == 0) throw new EntityNotFoundException(nameof(Label), request.Id);
 
         return Unit.Value;
     }
