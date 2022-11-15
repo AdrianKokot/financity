@@ -8,7 +8,7 @@ public sealed class Budget : Entity
     public decimal Amount { get; set; }
 
     public Guid UserId { get; set; }
-    public Guid? User { get; set; }
+    public Guid User { get; set; }
 
-    public ICollection<Category>? TrackedCategories { get; set; }
+    public ICollection<Category> TrackedCategories { get; set; } = new List<Category>();
 }
