@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Financity.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddPostgresqlMigration : Migration
+    public partial class AddEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace Financity.Persistence.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    User = table.Column<Guid>(type: "uuid", nullable: true)
+                    User = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,10 +202,10 @@ namespace Financity.Persistence.Migrations
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: false),
                     RecipientId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: true),
+                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
                     TransactionType = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -223,7 +223,8 @@ namespace Financity.Persistence.Migrations
                         name: "FK_Transactions_Currencies_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currencies",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Transactions_Recipients_RecipientId",
                         column: x => x.RecipientId,
@@ -233,7 +234,8 @@ namespace Financity.Persistence.Migrations
                         name: "FK_Transactions_Wallets_WalletId",
                         column: x => x.WalletId,
                         principalTable: "Wallets",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,9 +267,9 @@ namespace Financity.Persistence.Migrations
                 columns: new[] { "Id", "Code", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("5793a7da-3553-425f-a1e7-76239bea00c1"), "USD", "United States Dollar" },
-                    { new Guid("bc2bb97c-d6c9-4626-92c8-78cf61c812ee"), "PLN", "Polski Złoty" },
-                    { new Guid("e1c29f4f-dbab-401c-9547-7ce777df0acc"), "EUR", "Euro" }
+                    { new Guid("bffe6bb2-317c-4b92-a55d-378c60aa74ca"), "USD", "United States Dollar" },
+                    { new Guid("e16ce930-e4d7-468f-ae3b-e8b5b0b087d9"), "PLN", "Polski Złoty" },
+                    { new Guid("e3736808-d0e0-43bd-af6b-68bcb7728e84"), "EUR", "Euro" }
                 });
 
             migrationBuilder.CreateIndex(

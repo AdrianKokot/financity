@@ -5,5 +5,5 @@ namespace Financity.Domain.Entities;
 
 public sealed class User : IdentityUser<Guid>, IEntity
 {
-    public ICollection<WalletAccess>? AvailableWallets { get; set; }
+    public ICollection<WalletAccess> AvailableWallets { get; set; } = new List<WalletAccess>();
 }

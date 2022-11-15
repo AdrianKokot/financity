@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221115140159_AddPostgresqlMigration")]
-    partial class AddPostgresqlMigration
+    [Migration("20221115150134_AddEntities")]
+    partial class AddEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace Financity.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("User")
+                    b.Property<Guid>("User")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
@@ -133,19 +133,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bc2bb97c-d6c9-4626-92c8-78cf61c812ee"),
+                            Id = new Guid("e16ce930-e4d7-468f-ae3b-e8b5b0b087d9"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("e1c29f4f-dbab-401c-9547-7ce777df0acc"),
+                            Id = new Guid("e3736808-d0e0-43bd-af6b-68bcb7728e84"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("5793a7da-3553-425f-a1e7-76239bea00c1"),
+                            Id = new Guid("bffe6bb2-317c-4b92-a55d-378c60aa74ca"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -233,7 +233,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CurrencyId")
+                    b.Property<Guid>("CurrencyId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Note")
@@ -252,7 +252,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("WalletId")
+                    b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -480,7 +480,9 @@ namespace Financity.Persistence.Migrations
 
                     b.HasOne("Financity.Domain.Entities.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId");
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
                         .WithMany("Transactions")
@@ -488,7 +490,9 @@ namespace Financity.Persistence.Migrations
 
                     b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
                         .WithMany()
-                        .HasForeignKey("WalletId");
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 

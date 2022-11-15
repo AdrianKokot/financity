@@ -13,9 +13,9 @@ public sealed class Category : AuditableEntity
     public Category? ParentCategory { get; set; }
 
     public Guid WalletId { get; set; }
-    public Wallet? Wallet { get; set; }
+    public Wallet Wallet { get; set; }
 
     public TransactionType? TransactionType { get; set; }
 
-    public ICollection<Transaction>? Transactions { get; set; }
+    public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
