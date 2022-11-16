@@ -2,7 +2,7 @@
 
 namespace Financity.Domain.Entities;
 
-public sealed class Recipient : AuditableEntity
+public sealed class Recipient : Entity
 {
     public string Name { get; set; } = string.Empty;
 

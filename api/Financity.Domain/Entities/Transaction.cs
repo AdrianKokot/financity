@@ -3,7 +3,7 @@ using Financity.Domain.Enums;
 
 namespace Financity.Domain.Entities;
 
-public sealed class Transaction : AuditableEntity
+public sealed class Transaction : Entity
 {
     public decimal Amount { get; set; }
     public string Note { get; set; } = string.Empty;

@@ -2,7 +2,7 @@
 
 namespace Financity.Domain.Entities;
 
-public sealed class Label : AuditableEntity
+public sealed class Label : Entity
 {
     public string Name { get; set; } = string.Empty;
     public Appearance Appearance { get; set; } = new();

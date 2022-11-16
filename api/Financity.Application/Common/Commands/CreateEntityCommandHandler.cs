@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Common;
 
 namespace Financity.Application.Common.Commands;

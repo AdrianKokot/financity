@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;

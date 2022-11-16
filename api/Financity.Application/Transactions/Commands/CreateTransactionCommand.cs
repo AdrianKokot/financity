@@ -1,9 +1,9 @@
 ﻿using System.Collections.Immutable;
 using AutoMapper;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
 

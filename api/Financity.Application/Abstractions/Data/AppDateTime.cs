@@ -2,5 +2,5 @@
 
 public static class AppDateTime
 {
-    public static DateTime Now => DateTime.UtcNow;
+    public static DateTime Now => DateTime.UtcNow.ToUniversalTime();
 }

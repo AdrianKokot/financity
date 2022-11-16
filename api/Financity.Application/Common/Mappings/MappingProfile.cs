@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using AutoMapper;
+using Financity.Application.Abstractions.Mappings;
 
 namespace Financity.Application.Common.Mappings;
 

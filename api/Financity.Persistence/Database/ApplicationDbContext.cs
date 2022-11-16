@@ -11,12 +11,9 @@ namespace Financity.Persistence.Database;
 
 public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IApplicationDbContext
 {
-    private readonly ICurrentUserService? _userService;
-
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService userService)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
-        _userService = userService;
     }
 
     public DbSet<Budget> Budgets { get; set; }
@@ -44,39 +41,10 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         return Set<T>().Where(x => x.Id == entityId).ExecuteDeleteAsync(ct);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-    {
-        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    entry.Entity.CreatedAt = AppDateTime.Now;
-                    entry.Entity.CreatedBy = _userService?.UserId;
-                    break;
-                case EntityState.Modified:
-                    entry.Entity.UpdatedAt = AppDateTime.Now;
-                    entry.Entity.UpdatedBy = _userService?.UserId;
-                    break;
-
-                case EntityState.Detached:
-                case EntityState.Unchanged:
-                case EntityState.Deleted:
-                default:
-                    break;
-            }
-
-        return base.SaveChangesAsync(cancellationToken);
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.SeedData();
-
-        builder.Entity<Category>(entity => entity.OwnsOne(x => x.Appearance));
-        builder.Entity<Label>(entity => entity.OwnsOne(x => x.Appearance));
-
-        builder.Entity<WalletAccess>().HasKey(x => new { x.UserId, x.WalletId });
 
         builder.HasDbFunction(
             GetType().GetMethod(nameof(SearchUserTransactions), new[] { typeof(Guid), typeof(string), typeof(Guid?) })!
@@ -87,7 +55,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         CustomizeIdentity(builder);
     }
 
-    private void CustomizeIdentity(ModelBuilder builder)
+    private static void CustomizeIdentity(ModelBuilder builder)
     {
         builder.Entity<User>(b =>
         {
