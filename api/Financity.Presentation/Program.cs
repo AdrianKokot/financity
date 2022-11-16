@@ -1,5 +1,7 @@
 using Financity.Application;
+using Financity.Application.Abstractions.Configuration;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Exceptions;
 using Financity.Infrastructure;
 using Financity.Presentation.Auth;
 using Financity.Presentation.Configuration;
@@ -17,6 +19,16 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 
 builder.Host.UseSerilog();
 
+// Configurations
+var emailConfig = builder.Configuration.GetSection(EmailConfiguration.ConfigurationKey).Get<EmailConfiguration>()
+                  ?? throw new MissingConfigurationException(EmailConfiguration.ConfigurationKey);
+builder.Services.AddSingleton<IEmailConfiguration>(emailConfig);
+
+var jwtConfig = builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey)
+                       .Get<JwtConfiguration>()
+                ?? throw new MissingConfigurationException(JwtConfiguration.ConfigurationKey);
+builder.Services.AddSingleton<IJwtConfiguration>(jwtConfig);
+
 // Add services to the container.
 builder.Services
        .AddTransient<ExceptionHandlingMiddleware>()
@@ -32,11 +44,6 @@ builder.Services
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-var jwtConfig = builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey)
-                       .Get<JwtConfiguration>()
-                ?? throw new JwtConfigurationRegisterNotCalledException();
-builder.Services.AddSingleton<IJwtConfiguration>(jwtConfig);
-
 builder.Services
        .AddAuthentication(options =>
        {
@@ -49,7 +56,7 @@ builder.Services
            {
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                   ValidAlgorithms = new[] {jwtConfig.Algorithm},
+                   ValidAlgorithms = new[] { jwtConfig.Algorithm },
                    ValidateIssuer = jwtConfig.ValidateIssuer,
                    ValidateAudience = jwtConfig.ValidateAudience,
                    ValidateLifetime = jwtConfig.ValidateLifetime,
@@ -91,7 +98,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {{securityScheme, Array.Empty<string>()}});
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
 });
 
 builder.Services.AddHealthChecks();

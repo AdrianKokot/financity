@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Financity.Application.Common.Mappings;
+namespace Financity.Application.Abstractions.Mappings;
 
 public interface IMapFrom<TSource>
 {

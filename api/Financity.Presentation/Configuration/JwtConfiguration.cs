@@ -14,9 +14,8 @@ public sealed class JwtConfigurationRegisterNotCalledException : Exception
 
 public sealed class JwtConfiguration : IJwtConfiguration
 {
-    public static string ConfigurationKey => "Jwt";
-
     private string? _key;
+    public static string ConfigurationKey => "Jwt";
 
     public string? Key
     {

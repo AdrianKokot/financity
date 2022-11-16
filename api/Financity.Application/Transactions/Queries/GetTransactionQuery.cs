@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.Mappings;
+using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Application.Labels.Queries;
 using Financity.Domain.Entities;

@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Abstractions\Configuration"/>
         <Folder Include="Users"/>
     </ItemGroup>
 

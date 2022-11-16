@@ -3,7 +3,7 @@ using Financity.Domain.Enums;
 
 namespace Financity.Domain.Entities;
 
-public sealed class Category : AuditableEntity
+public sealed class Category : Entity
 {
     public string Name { get; set; } = string.Empty;
 

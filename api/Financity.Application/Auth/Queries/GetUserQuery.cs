@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
+using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
-using Financity.Application.Common.Mappings;
 using Financity.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
