@@ -29,8 +29,10 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
 
-    public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null) =>
-        FromExpression(() => SearchUserTransactions(userId, searchTerm, walletId));
+    public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null)
+    {
+        return FromExpression(() => SearchUserTransactions(userId, searchTerm, walletId));
+    }
 
     public DbSet<T> GetDbSet<T>() where T : class
     {
@@ -74,10 +76,10 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.Entity<Category>(entity => entity.OwnsOne(x => x.Appearance));
         builder.Entity<Label>(entity => entity.OwnsOne(x => x.Appearance));
 
-        builder.Entity<WalletAccess>().HasKey(x => new {x.UserId, x.WalletId});
+        builder.Entity<WalletAccess>().HasKey(x => new { x.UserId, x.WalletId });
 
         builder.HasDbFunction(
-            GetType().GetMethod(nameof(SearchUserTransactions), new[] {typeof(Guid), typeof(string), typeof(Guid?)})!
+            GetType().GetMethod(nameof(SearchUserTransactions), new[] { typeof(Guid), typeof(string), typeof(Guid?) })!
         );
 
         base.OnModelCreating(builder);

@@ -11,6 +11,7 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
         RuleFor(x => x.Note).MaximumLength(255);
         RuleFor(x => x.WalletId).NotEmpty();
         RuleFor(x => x.TransactionType).NotNull().IsInEnum();
+        RuleFor(x => x.TransactionDate).NotEmpty();
         RuleFor(x => x.CurrencyId).NotEmpty();
         RuleFor(x => x.LabelIds).NotEmpty();
     }
