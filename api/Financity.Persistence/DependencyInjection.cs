@@ -17,7 +17,8 @@ public static class DependencyInjection
         );
 
         services.AddIdentity<User, IdentityRole<Guid>>(options => { options.SignIn.RequireConfirmedAccount = false; })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 

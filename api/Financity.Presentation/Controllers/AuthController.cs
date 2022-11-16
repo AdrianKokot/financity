@@ -31,4 +31,22 @@ public class AuthController : BaseController
     {
         return await HandleQueryAsync(command);
     }
+
+    [HttpPost("request-reset-password")]
+    [AllowAnonymous]
+    [SwaggerResponse(StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> RequestResetPassword(RequestResetPasswordCommand command)
+    {
+        await HandleCommandAsync(command);
+        return NoContent();
+    }
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
+    {
+        await HandleCommandAsync(command);
+        return NoContent();
+    }
 }

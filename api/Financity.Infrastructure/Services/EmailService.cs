@@ -1,37 +1,39 @@
-﻿using Financity.Application.Abstractions.Configuration;
+﻿using System.Net;
+using System.Net.Mail;
+using Financity.Application.Abstractions.Configuration;
 using Financity.Application.Abstractions.Data;
-using Microsoft.Extensions.Logging;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 
 namespace Financity.Infrastructure.Services;
 
 public sealed class EmailService : IEmailService
 {
-    private readonly SendGridClient _client;
-    private readonly ILogger<EmailService> _logger;
-    private readonly EmailAddress _sender;
+    private readonly IEmailConfiguration _configuration;
 
-    public EmailService(IEmailConfiguration configuration, ILogger<EmailService> logger)
+    public EmailService(IEmailConfiguration configuration)
     {
-        _logger = logger;
-        _client = new SendGridClient(configuration.Password);
-        _sender = new EmailAddress(configuration.From, configuration.Username);
+        _configuration = configuration;
     }
 
-    public async Task SendEmailAsync(string recipientEmailAddress, string subject, string plainTextContent,
-                                     string? htmlContent,
+    public async Task SendEmailAsync(string recipientEmailAddress, string subject, string content,
                                      CancellationToken ct)
     {
-        var to = new EmailAddress(recipientEmailAddress);
+        var client = new SmtpClient
+        {
+            Host = _configuration.SmtpServer,
+            Port = _configuration.Port,
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(_configuration.From, _configuration.Password)
+        };
 
-        var msg = MailHelper.CreateSingleEmail(_sender, to, subject, plainTextContent, htmlContent ?? plainTextContent);
-        var response = await _client.SendEmailAsync(msg, ct);
+        var message = new MailMessage(new MailAddress(_configuration.From, _configuration.Username), new MailAddress(recipientEmailAddress))
+        {
+            Subject = subject,
+            Body = content,
+            IsBodyHtml = true
+        };
 
-        if (response.IsSuccessStatusCode)
-            _logger.LogError(
-                "EmailService: Failed to send email. SendGrid response: {Response}",
-                await response.Body.ReadAsStringAsync(ct)
-            );
+        await client.SendMailAsync(message, ct);
     }
 }
