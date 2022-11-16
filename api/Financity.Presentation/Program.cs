@@ -97,15 +97,12 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
@@ -116,9 +113,11 @@ app.UseAuthorization();
 
 app.UseDefaultFiles();
 
+app.UseStaticFiles();
+
 app.UseSerilogRequestLogging();
 
-app.UseStaticFiles();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers().RequireAuthorization("Api");
 app.MapHealthChecks("/api/healthcheck");

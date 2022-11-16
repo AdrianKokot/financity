@@ -1,17 +1,23 @@
-﻿using System.Collections.Immutable;
-using Financity.Application.Common.Exceptions;
+﻿using Financity.Application.Common.Exceptions;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Financity.Presentation.Middleware;
 
 public sealed class ExceptionHandlingMiddleware : IMiddleware
 {
+    private readonly ProblemDetailsFactory _detailsFactory;
+    private readonly IWebHostEnvironment _environment;
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
+    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger,
+                                       IHttpContextAccessor contextAccessor, IWebHostEnvironment environment)
     {
+        _detailsFactory = contextAccessor.HttpContext?.RequestServices.GetService<ProblemDetailsFactory>() ??
+                          throw new ArgumentNullException(nameof(contextAccessor));
         _logger = logger;
+        _environment = environment;
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -26,36 +32,30 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+    private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
-        var statusCode = GetStatusCode(exception);
-        var response = GetErrorResponseFromException(exception);
+        var response = CreateProblemDetails(httpContext, exception);
 
-        httpContext.Response.ContentType = "application/json";
-        httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.ContentType = "application/problem+json";
+        httpContext.Response.StatusCode = GetStatusCode(exception);
+
+        if (httpContext.Response.StatusCode >= StatusCodes.Status500InternalServerError)
+            _logger.LogError("Server Exception: {message}\n{stackTrace}", exception.Message, exception.StackTrace);
+
         await httpContext.Response.WriteAsJsonAsync(response);
     }
 
-    private static object GetErrorResponseFromException(Exception exception)
+    private object CreateProblemDetails(HttpContext httpContext, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
+
         return statusCode switch
         {
             StatusCodes.Status400BadRequest or StatusCodes.Status422UnprocessableEntity =>
-                new ValidationProblemDetails(GetErrors(exception))
-                {
-                    Status = statusCode,
-                    Title = GetTitle(exception),
-                    Type = GetExceptionType(exception)
-                },
+                _detailsFactory.CreateValidationProblemDetails(httpContext, GetModelState(exception), statusCode),
             _ =>
-                new
-                {
-                    Title = GetTitle(exception),
-                    Type = GetExceptionType(exception),
-                    Status = statusCode,
-                    Message = exception.ToString()
-                }
+                _detailsFactory.CreateProblemDetails(httpContext, statusCode,
+                    detail: _environment.IsDevelopment() ? exception.ToString() : exception.Message)
         };
     }
 
@@ -71,43 +71,14 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         };
     }
 
-    private static string GetTitle(Exception exception)
+    private static ModelStateDictionary GetModelState(Exception exception)
     {
-        return exception switch
-        {
-            ValidationException => "One or more validation errors occurred.",
-            NotImplementedException => "Not Implemented.",
-            AccessDeniedException => "Forbidden.",
-            _ => "Internal server error."
-        };
-    }
-
-    private static string GetExceptionType(Exception exception)
-    {
-        return exception switch
-        {
-            ValidationException => "https://httpwg.org/specs/rfc9110.html#status.422",
-            NotImplementedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.2",
-            AccessDeniedException => "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.3",
-            _ => "https://www.rfc-editor.org/rfc/rfc7231#section-6.6.1"
-        };
-    }
-
-    private static IDictionary<string, string[]> GetErrors(Exception exception)
-    {
-        IDictionary<string, string[]> errors = ImmutableDictionary<string, string[]>.Empty;
+        var model = new ModelStateDictionary();
 
         if (exception is ValidationException validationException)
-            errors = validationException.Errors.GroupBy(
-                                            x => x.PropertyName,
-                                            x => x.ErrorMessage,
-                                            (propertyName, errorMessages) => new
-                                            {
-                                                Key = propertyName,
-                                                Values = errorMessages.Distinct().ToArray()
-                                            })
-                                        .ToDictionary(x => x.Key, x => x.Values);
+            foreach (var error in validationException.Errors)
+                model.AddModelError(error.PropertyName, error.ErrorMessage);
 
-        return errors;
+        return model;
     }
 }
