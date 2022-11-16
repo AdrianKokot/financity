@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Immutable;
+using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Entities;
 using Financity.Presentation.Configuration;
@@ -40,6 +41,8 @@ public sealed class TokenService : ITokenService
 
     private IEnumerable<Claim> GetUserClaims(User user)
     {
+        if (user.Email is null || user.UserName is null) return ImmutableArray<Claim>.Empty;
+
         return new Claim[]
         {
             new(_options.UserIdClaimType, user.Id.ToString()),
