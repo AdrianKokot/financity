@@ -20,5 +20,6 @@ public sealed class
 
 public sealed record TransactionDetails(Guid Id, decimal Amount, string Note, Guid? RecipientId, string? RecipientName,
                                         Guid WalletId, string WalletName, TransactionType TransactionType,
+                                        DateTime TransactionDate,
                                         Guid? CategoryId, string? CategoryName,
                                         IEnumerable<LabelListItem> Labels) : IMapFrom<Transaction>;

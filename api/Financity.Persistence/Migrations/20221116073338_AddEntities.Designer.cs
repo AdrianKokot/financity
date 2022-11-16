@@ -3,6 +3,7 @@ using System;
 using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221116073338_AddEntities")]
+    partial class AddEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,19 +132,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c5f2ba40-716e-4792-873e-1ac788242ebf"),
+                            Id = new Guid("ed1c273f-d57a-41c3-94e8-f465ae02cf4c"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("4851b010-1c81-4825-b72e-fb44641069dd"),
+                            Id = new Guid("ff648f1d-191e-45c8-8d0e-2545b303664d"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("ee13b663-0bc4-477d-93ca-545bcc960b34"),
+                            Id = new Guid("80c3d1bd-0ae2-4594-a96b-bb600b6d2c7f"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });

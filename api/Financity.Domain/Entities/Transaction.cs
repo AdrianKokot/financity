@@ -7,6 +7,7 @@ public sealed class Transaction : AuditableEntity
 {
     public decimal Amount { get; set; }
     public string Note { get; set; } = string.Empty;
+    public DateTime TransactionDate { get; set; } = DateTime.Now;
 
     public Guid? RecipientId { get; set; }
     public Recipient? Recipient { get; set; }

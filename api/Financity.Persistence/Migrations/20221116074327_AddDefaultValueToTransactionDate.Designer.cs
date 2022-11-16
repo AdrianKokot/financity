@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221115150134_AddEntities")]
-    partial class AddEntities
+    [Migration("20221116074327_AddDefaultValueToTransactionDate")]
+    partial class AddDefaultValueToTransactionDate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,13 +56,12 @@ namespace Financity.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("User")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Budgets");
                 });
@@ -133,19 +132,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e16ce930-e4d7-468f-ae3b-e8b5b0b087d9"),
+                            Id = new Guid("c5f2ba40-716e-4792-873e-1ac788242ebf"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("e3736808-d0e0-43bd-af6b-68bcb7728e84"),
+                            Id = new Guid("4851b010-1c81-4825-b72e-fb44641069dd"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("bffe6bb2-317c-4b92-a55d-378c60aa74ca"),
+                            Id = new Guid("ee13b663-0bc4-477d-93ca-545bcc960b34"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -242,6 +241,9 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<Guid?>("RecipientId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TransactionType")
                         .HasColumnType("integer");
@@ -379,6 +381,17 @@ namespace Financity.Persistence.Migrations
                     b.Navigation("User");
 
                     b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("Financity.Domain.Entities.Budget", b =>
+                {
+                    b.HasOne("Financity.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>

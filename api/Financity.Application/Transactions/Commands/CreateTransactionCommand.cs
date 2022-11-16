@@ -19,6 +19,7 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
     public TransactionType TransactionType { get; set; } = TransactionType.Income;
     public Guid? CategoryId { get; set; } = null;
     public Guid CurrencyId { get; set; } = Guid.Empty;
+    public DateTime TransactionDate { get; set; } = AppDateTime.Now;
 
     public HashSet<Guid> LabelIds { get; set; } = new();
 
@@ -39,6 +40,7 @@ public sealed class CreateTransactionCommandHandler :
     public override async Task<CreateTransactionCommandResult> Handle(CreateTransactionCommand command,
                                                                       CancellationToken cancellationToken)
     {
+        command.TransactionDate = command.TransactionDate.ToUniversalTime();
         var entity = Mapper.Map<Transaction>(command);
 
         entity.Labels = DbContext.GetDbSet<Label>()

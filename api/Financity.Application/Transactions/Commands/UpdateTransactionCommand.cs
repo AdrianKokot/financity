@@ -17,6 +17,7 @@ public sealed class UpdateTransactionCommand : ICommand<Unit>
     public Guid? RecipientId { get; set; } = null;
     public Guid? CategoryId { get; set; } = null;
     public HashSet<Guid> LabelIds { get; set; } = new();
+    public DateTime? TransactionDate { get; set; } = null;
 
     public static void CreateMap(Profile profile)
     {
@@ -34,19 +35,21 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateTransactionCommand request, CancellationToken ct)
+    public async Task<Unit> Handle(UpdateTransactionCommand command, CancellationToken ct)
     {
-        var entity = await _dbContext.GetDbSet<Transaction>().FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+        var entity = await _dbContext.GetDbSet<Transaction>().FirstOrDefaultAsync(x => x.Id == command.Id, ct);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Transaction), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Transaction), command.Id);
 
-        entity.Amount = request.Amount;
-        entity.Note = request.Note;
-        entity.RecipientId = request.RecipientId;
-        entity.CategoryId = request.CategoryId;
+        entity.Amount = command.Amount;
+        entity.Note = command.Note;
+        entity.RecipientId = command.RecipientId;
+        entity.CategoryId = command.CategoryId;
+        if (command.TransactionDate is not null)
+            entity.TransactionDate = ((DateTime)command.TransactionDate).ToUniversalTime();
 
         entity.Labels = _dbContext.GetDbSet<Label>()
-                                  .Where(x => request.LabelIds.Contains(x.Id))
+                                  .Where(x => command.LabelIds.Contains(x.Id))
                                   .ToImmutableArray();
 
         await _dbContext.SaveChangesAsync(ct);
