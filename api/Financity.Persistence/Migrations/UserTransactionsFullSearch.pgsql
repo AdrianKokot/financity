@@ -10,12 +10,13 @@ SELECT T."Id",
        CR."Code"    "CurrencyCode",
        CR."Name"    "CurrencyName",
        T."WalletId" "WalletId",
+       to_char(T."TransactionDate", 'DD.MM.YYYY HH24:MI:SS') "TransactionDate",
        L."Labels"
 FROM "Transactions" T
          LEFT JOIN "Categories" C on T."CategoryId" = C."Id"
          LEFT JOIN "Recipients" R on T."RecipientId" = R."Id"
          LEFT JOIN "Currencies" CR on T."CurrencyId" = CR."Id"
-         LEFT JOIN (SELECT XLT."TransactionsId" "TransactionId", string_agg(XL."Name", ' ') "Labels"
+         LEFT JOIN (SELECT XLT."TransactionsId" "TransactionId", string_agg(XL."Name", ', ') "Labels"
                     FROM "Labels" XL
                              LEFT JOIN "LabelTransaction" XLT on XL."Id" = XLT."LabelsId"
                     GROUP BY XLT."TransactionsId") L on L."TransactionId" = T."Id";
@@ -44,25 +45,27 @@ BEGIN
 --                                                                 coalesce(FST."Labels", '')) tsv,
 --                                                     to_tsquery(searchTerm) tsq,
 --                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."Note", '')), tsq), 0) rank_note,
+--                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."TransactionDate", '')), tsq), 0) rank_date,
 --                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."Labels", '')), tsq), 0) rank_labels,
 --                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."RecipientName", '')), tsq), 0) rank_recipient,
 --                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."CategoryName", '')), tsq), 0) rank_category,
                                                     SIMILARITY(searchTerm,
                                                                coalesce(FST."Note", '') ||
                                                                coalesce(cast(FST."Amount" as varchar), '') ||
+                                                               coalesce(FST."TransactionDate", '') ||
                                                                coalesce(FST."RecipientName", '') ||
                                                                coalesce(FST."CategoryName", '') ||
                                                                coalesce(FST."CurrencyName", '') ||
                                                                coalesce(FST."CurrencyCode", '') ||
                                                                coalesce(FST."Labels", '')) similarity
-                                               WHERE 
+                                               WHERE
 --                                                    tsq @@ tsv or
                                                    similarity > 0
-                                               ORDER BY 
---                                                    rank_note, rank_labels, rank_recipient, rank_category,
+                                               ORDER BY
+--                                                    rank_note, rank_date, rank_labels, rank_recipient, rank_category,
                                                    similarity DESC NULLS LAST);
 END
 $$;
 
 SELECT *
-FROM "SearchUserTransactions"((SELECT "Id" FROM "Users"), 'włoszech', 'e085298d-e6af-4e23-9154-748ffcb39d0f'::uuid);
+FROM "SearchUserTransactions"((SELECT "Id" FROM "Users"), 'postman');

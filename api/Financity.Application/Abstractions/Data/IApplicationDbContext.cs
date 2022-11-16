@@ -10,5 +10,5 @@ public interface IApplicationDbContext
     public Task<int> DeleteFromSetAsync<T>(Guid id, CancellationToken ct) where T : class, IEntity;
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    public IQueryable<Transaction> UserTransactionsFullSearch(Guid userId, string searchTerm);
+    public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null);
 }
