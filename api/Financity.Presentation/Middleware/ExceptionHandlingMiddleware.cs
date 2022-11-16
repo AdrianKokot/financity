@@ -70,7 +70,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             _ => StatusCodes.Status500InternalServerError
         };
     }
-    
+
     private static ModelStateDictionary GetModelState(Exception exception)
     {
         var model = new ModelStateDictionary();
