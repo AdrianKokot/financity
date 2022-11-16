@@ -29,8 +29,8 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
 
-    public IQueryable<Transaction> UserTransactionsFullSearch(Guid userId, string searchTerm) =>
-        FromExpression(() => UserTransactionsFullSearch(userId, searchTerm));
+    public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null) =>
+        FromExpression(() => SearchUserTransactions(userId, searchTerm, walletId));
 
     public DbSet<T> GetDbSet<T>() where T : class
     {
@@ -77,7 +77,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.Entity<WalletAccess>().HasKey(x => new {x.UserId, x.WalletId});
 
         builder.HasDbFunction(
-            GetType().GetMethod(nameof(UserTransactionsFullSearch), new[] {typeof(Guid), typeof(string)})!
+            GetType().GetMethod(nameof(SearchUserTransactions), new[] {typeof(Guid), typeof(string), typeof(Guid?)})!
         );
 
         base.OnModelCreating(builder);

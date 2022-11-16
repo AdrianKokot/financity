@@ -53,13 +53,12 @@ namespace Financity.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("User")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Budgets");
                 });
@@ -130,19 +129,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e16ce930-e4d7-468f-ae3b-e8b5b0b087d9"),
+                            Id = new Guid("ed1c273f-d57a-41c3-94e8-f465ae02cf4c"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("e3736808-d0e0-43bd-af6b-68bcb7728e84"),
+                            Id = new Guid("ff648f1d-191e-45c8-8d0e-2545b303664d"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("bffe6bb2-317c-4b92-a55d-378c60aa74ca"),
+                            Id = new Guid("80c3d1bd-0ae2-4594-a96b-bb600b6d2c7f"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -239,6 +238,9 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<Guid?>("RecipientId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TransactionType")
                         .HasColumnType("integer");
@@ -376,6 +378,17 @@ namespace Financity.Persistence.Migrations
                     b.Navigation("User");
 
                     b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("Financity.Domain.Entities.Budget", b =>
+                {
+                    b.HasOne("Financity.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>

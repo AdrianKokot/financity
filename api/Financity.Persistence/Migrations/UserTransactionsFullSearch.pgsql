@@ -5,10 +5,10 @@ CREATE VIEW "FullSearchTransactions" AS
 SELECT T."Id",
        T."Note",
        T."Amount",
-       C."Name"  "CategoryName",
-       R."Name"  "RecipientName",
-       CR."Code" "CurrencyCode",
-       CR."Name" "CurrencyName",
+       C."Name"     "CategoryName",
+       R."Name"     "RecipientName",
+       CR."Code"    "CurrencyCode",
+       CR."Name"    "CurrencyName",
        T."WalletId" "WalletId",
        L."Labels"
 FROM "Transactions" T
@@ -20,44 +20,49 @@ FROM "Transactions" T
                              LEFT JOIN "LabelTransaction" XLT on XL."Id" = XLT."LabelsId"
                     GROUP BY XLT."TransactionsId") L on L."TransactionId" = T."Id";
 
-CREATE OR REPLACE FUNCTION "UserTransactionsFullSearch"(userId uuid, searchTerm VARCHAR)
-    RETURNS TABLE
-            (
-                "Id"              uuid,
-                "Amount"          numeric,
-                "Note"            text,
-                "RecipientId"     uuid,
-                "WalletId"        uuid,
-                "TransactionType" integer,
-                "CategoryId"      uuid,
-                "CurrencyId"      uuid,
-                "CreatedAt"       timestamp with time zone,
-                "CreatedBy"       uuid,
-                "UpdatedAt"       timestamp with time zone,
-                "UpdateBy"        uuid
-            )
-AS
+CREATE OR REPLACE FUNCTION "SearchUserTransactions"(userId uuid, searchTerm VARCHAR, walletId uuid DEFAULT null)
+    RETURNS SETOF "Transactions"
+    LANGUAGE plpgsql AS
 $$
 BEGIN
     RETURN QUERY SELECT *
                  FROM "Transactions"
                  WHERE "Transactions"."Id" IN (SELECT FST."Id"
-                                FROM (SELECT *
-                                      FROM "FullSearchTransactions"
-                                      WHERE "FullSearchTransactions"."WalletId" IN (SELECT "WalletAccesses"."WalletId"
-                                                                                    FROM "WalletAccesses"
-                                                                                    WHERE "WalletAccesses"."UserId" = userId)) FST,
-                                     to_tsvector(FST."Note" || FST."Amount" || FST."RecipientName" ||
-                                                 FST."CategoryName" || FST."CurrencyName" || FST."CurrencyCode" ||
-                                                 FST."Labels") tsv,
-                                     to_tsquery(searchTerm) tsq,
-                                     SIMILARITY(searchTerm, FST."Note" || FST."Amount" || FST."RecipientName" ||
-                                                 FST."CategoryName" || FST."CurrencyName" || FST."CurrencyCode" ||
-                                                 FST."Labels") similarity
-                                WHERE tsq @@ tsv or similarity > 0);
-END;
-$$
-    LANGUAGE 'plpgsql';
+                                               FROM (SELECT *
+                                                     FROM "FullSearchTransactions"
+                                                     WHERE "FullSearchTransactions"."WalletId" IN
+                                                           (SELECT "WalletAccesses"."WalletId"
+                                                            FROM "WalletAccesses"
+                                                            WHERE "WalletAccesses"."UserId" = userId
+                                                              and (walletId is null or "WalletAccesses"."WalletId" = walletId))) FST,
+--                                                     to_tsvector(coalesce(FST."Note", '') ||
+--                                                                 coalesce(cast(FST."Amount" as varchar), '') ||
+--                                                                 coalesce(FST."RecipientName", '') ||
+--                                                                 coalesce(FST."CategoryName", '') ||
+--                                                                 coalesce(FST."CurrencyName", '') ||
+--                                                                 coalesce(FST."CurrencyCode", '') ||
+--                                                                 coalesce(FST."Labels", '')) tsv,
+--                                                     to_tsquery(searchTerm) tsq,
+--                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."Note", '')), tsq), 0) rank_note,
+--                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."Labels", '')), tsq), 0) rank_labels,
+--                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."RecipientName", '')), tsq), 0) rank_recipient,
+--                                                     NULLIF(ts_rank(to_tsvector(coalesce(FST."CategoryName", '')), tsq), 0) rank_category,
+                                                    SIMILARITY(searchTerm,
+                                                               coalesce(FST."Note", '') ||
+                                                               coalesce(cast(FST."Amount" as varchar), '') ||
+                                                               coalesce(FST."RecipientName", '') ||
+                                                               coalesce(FST."CategoryName", '') ||
+                                                               coalesce(FST."CurrencyName", '') ||
+                                                               coalesce(FST."CurrencyCode", '') ||
+                                                               coalesce(FST."Labels", '')) similarity
+                                               WHERE 
+--                                                    tsq @@ tsv or
+                                                   similarity > 0
+                                               ORDER BY 
+--                                                    rank_note, rank_labels, rank_recipient, rank_category,
+                                                   similarity DESC NULLS LAST);
+END
+$$;
 
 SELECT *
-FROM "UserTransactionsFullSearch"((SELECT "Id" FROM "Users"), 'testlabel');
+FROM "SearchUserTransactions"((SELECT "Id" FROM "Users"), 'włoszech', 'e085298d-e6af-4e23-9154-748ffcb39d0f'::uuid);
