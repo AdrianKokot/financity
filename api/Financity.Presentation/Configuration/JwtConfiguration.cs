@@ -5,15 +5,18 @@ namespace Financity.Presentation.Configuration;
 
 public sealed class JwtConfigurationRegisterNotCalledException : Exception
 {
+    public JwtConfigurationRegisterNotCalledException() : base(
+        $"Configuration key: {JwtConfiguration.ConfigurationKey} is required to bind JwtConfiguration class")
+
+    {
+    }
 }
 
 public sealed class JwtConfiguration : IJwtConfiguration
 {
-    private string? _key;
+    public static string ConfigurationKey => "Jwt";
 
-    private JwtConfiguration()
-    {
-    }
+    private string? _key;
 
     public string? Key
     {
@@ -29,8 +32,6 @@ public sealed class JwtConfiguration : IJwtConfiguration
         }
     }
 
-    private static JwtConfiguration? Instance { get; set; }
-
     public bool ValidateIssuer { get; set; } = true;
     public bool ValidateAudience { get; set; } = true;
     public bool ValidateLifetime { get; set; } = true;
@@ -42,18 +43,4 @@ public sealed class JwtConfiguration : IJwtConfiguration
     public SymmetricSecurityKey? IssuerSigningKey { get; private set; }
     public SigningCredentials? Credentials { get; private set; }
     public string Algorithm => SecurityAlgorithms.HmacSha512;
-
-    public static void Register(IServiceCollection services, IConfiguration configuration)
-    {
-        Instance = new JwtConfiguration();
-        configuration.Bind("JwtSettings", Instance);
-        services.AddSingleton<IJwtConfiguration>(Instance);
-    }
-
-    public static JwtConfiguration GetInstance()
-    {
-        if (Instance is null) throw new JwtConfigurationRegisterNotCalledException();
-
-        return Instance;
-    }
 }

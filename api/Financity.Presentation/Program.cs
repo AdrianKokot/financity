@@ -32,8 +32,10 @@ builder.Services
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-
-JwtConfiguration.Register(builder.Services, builder.Configuration);
+var jwtConfig = builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey)
+                       .Get<JwtConfiguration>()
+                ?? throw new JwtConfigurationRegisterNotCalledException();
+builder.Services.AddSingleton<IJwtConfiguration>(jwtConfig);
 
 builder.Services
        .AddAuthentication(options =>
@@ -45,18 +47,16 @@ builder.Services
        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
            options =>
            {
-               var jwtConfiguration = JwtConfiguration.GetInstance();
-
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                   ValidAlgorithms = new[] { jwtConfiguration.Algorithm },
-                   ValidateIssuer = jwtConfiguration.ValidateIssuer,
-                   ValidateAudience = jwtConfiguration.ValidateAudience,
-                   ValidateLifetime = jwtConfiguration.ValidateLifetime,
-                   ValidateIssuerSigningKey = jwtConfiguration.ValidateIssuerSigningKey,
-                   ValidIssuer = jwtConfiguration.ValidIssuer,
-                   ValidAudience = jwtConfiguration.ValidAudience,
-                   IssuerSigningKey = jwtConfiguration.IssuerSigningKey
+                   ValidAlgorithms = new[] {jwtConfig.Algorithm},
+                   ValidateIssuer = jwtConfig.ValidateIssuer,
+                   ValidateAudience = jwtConfig.ValidateAudience,
+                   ValidateLifetime = jwtConfig.ValidateLifetime,
+                   ValidateIssuerSigningKey = jwtConfig.ValidateIssuerSigningKey,
+                   ValidIssuer = jwtConfig.ValidIssuer,
+                   ValidAudience = jwtConfig.ValidAudience,
+                   IssuerSigningKey = jwtConfig.IssuerSigningKey
                };
            })
        .AddAuthConfiguration();
@@ -91,7 +91,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {{securityScheme, Array.Empty<string>()}});
 });
 
 builder.Services.AddHealthChecks();
