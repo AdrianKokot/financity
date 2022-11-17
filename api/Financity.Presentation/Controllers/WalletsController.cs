@@ -30,7 +30,7 @@ public class WalletsController : BaseController
     public async Task<IActionResult> CreateEntity(CreateWalletCommand command, CancellationToken ct)
     {
         var result = await HandleCommandAsync(command, ct);
-        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetEntity), new {id = result.Id}, result);
     }
 
     [HttpPut("{id:guid}")]

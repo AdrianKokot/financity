@@ -1,17 +1,13 @@
-﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.Extensions;
-using Financity.Application.Recipients.Commands;
+﻿using Financity.Application.Recipients.Commands;
 using FluentValidation;
 
 namespace Financity.Application.Recipients.Validators;
 
 public sealed class CreateRecipientValidator : AbstractValidator<CreateRecipientCommand>
 {
-    public CreateRecipientValidator(IApplicationDbContext dbContext, ICurrentUserService userService)
+    public CreateRecipientValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-        RuleFor(x => x.WalletId)
-            .NotEmpty()
-            .HasAccessToWallet(dbContext, userService);
+        RuleFor(x => x.WalletId).NotEmpty();
     }
 }

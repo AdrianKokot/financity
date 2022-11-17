@@ -3,13 +3,9 @@ using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
-using Financity.Application.Behaviors;
 using Financity.Application.Common.Commands;
-using Financity.Application.Common.Helpers;
-using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Commands;
 
@@ -46,7 +42,6 @@ public sealed class CreateTransactionCommandHandler :
         var entity = Mapper.Map<Transaction>(command);
 
         entity.Labels = DbContext.GetDbSet<Label>()
-                                 .AsNoTracking()
                                  .Where(x => command.LabelIds.Contains(x.Id))
                                  .ToImmutableArray();
 

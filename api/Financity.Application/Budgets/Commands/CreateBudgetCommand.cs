@@ -15,7 +15,7 @@ public sealed class CreateBudgetCommand : ICommand<CreateBudgetCommandResult>, I
 
     public Guid UserId { get; set; }
 
-    public HashSet<Guid> TrackedCategoriesId { get; set; } = new HashSet<Guid>();
+    public HashSet<Guid> TrackedCategoriesId { get; set; } = new();
 }
 
 public sealed class CreateBudgetCommandHandler :
@@ -37,7 +37,8 @@ public sealed class CreateBudgetCommandHandler :
         entity.UserId = _userService.UserId;
         entity.TrackedCategories = await DbContext.GetDbSet<Category>()
                                                   .Where(x => command.TrackedCategoriesId.Contains(x.Id))
-                                                  .Where(x => x.Wallet.UsersWithAccess.Any(y => y.UserId == _userService.UserId))
+                                                  .Where(x => x.Wallet.UsersWithAccess.Any(y =>
+                                                      y.UserId == _userService.UserId))
                                                   .ToListAsync(cancellationToken);
 
         DbContext.GetDbSet<Budget>().Add(entity);

@@ -7,9 +7,9 @@ namespace Financity.Application.Wallets.Validators;
 
 public sealed class RevokeWalletAccessValidator : AbstractValidator<RevokeWalletAccessCommand>
 {
-    public RevokeWalletAccessValidator(IApplicationDbContext dbContext, ICurrentUserService userService)
+    public RevokeWalletAccessValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.UserEmail).EmailAddress().NotEmpty();
-        RuleFor(x => x.WalletId).NotEmpty().HasAccessToWallet(dbContext, userService);
+        RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
     }
 }

@@ -7,10 +7,10 @@ namespace Financity.Application.Categories.Validators;
 
 public sealed class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 {
-    public CreateCategoryValidator(IApplicationDbContext dbContext, ICurrentUserService userService)
+    public CreateCategoryValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-        RuleFor(x => x.WalletId).NotEmpty().HasAccessToWallet(dbContext, userService);
+        RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
         RuleFor(x => x.Appearance).ChildRules(x =>
         {
             x.RuleFor(y => y.Color).MaximumLength(64);

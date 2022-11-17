@@ -3,7 +3,7 @@ using Financity.Domain.Enums;
 
 namespace Financity.Domain.Entities;
 
-public sealed class Transaction : Entity
+public sealed class Transaction : Entity, IBelongsToWallet
 {
     public decimal Amount { get; set; }
     public string Note { get; set; } = string.Empty;
@@ -11,9 +11,6 @@ public sealed class Transaction : Entity
 
     public Guid? RecipientId { get; set; }
     public Recipient? Recipient { get; set; }
-
-    public Guid WalletId { get; set; }
-    public Wallet Wallet { get; set; }
 
     public ICollection<Label> Labels { get; set; } = new List<Label>();
 
@@ -24,4 +21,7 @@ public sealed class Transaction : Entity
 
     public Guid CurrencyId { get; set; }
     public Currency Currency { get; set; }
+
+    public Guid WalletId { get; set; }
+    public Wallet Wallet { get; set; }
 }

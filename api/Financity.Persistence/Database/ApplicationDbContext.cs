@@ -1,6 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Immutable;
+using System.Linq.Expressions;
 using System.Reflection;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Exceptions;
+using Financity.Application.Common.Helpers;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Persistence.Seed;
@@ -12,9 +15,15 @@ namespace Financity.Persistence.Database;
 
 public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    private readonly ICurrentUserService? _userService;
+
+    public ICurrentUserService UserService =>
+        _userService ?? throw new ArgumentNullException(nameof(ICurrentUserService));
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService userService)
         : base(options)
     {
+        _userService = userService;
     }
 
     public DbSet<Budget> Budgets { get; set; }
@@ -54,7 +63,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.SeedData();
 
         builder.HasDbFunction(
-            GetType().GetMethod(nameof(SearchUserTransactions), new[] { typeof(Guid), typeof(string), typeof(Guid?) })!
+            GetType().GetMethod(nameof(SearchUserTransactions), new[] {typeof(Guid), typeof(string), typeof(Guid?)})!
         );
 
         base.OnModelCreating(builder);

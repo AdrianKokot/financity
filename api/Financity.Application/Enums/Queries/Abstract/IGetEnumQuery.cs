@@ -15,7 +15,7 @@ public abstract class
     {
         var enumValueList = Enum.GetValues(typeof(TEnum))
                                 .OfType<object>()
-                                .Select(x => new EnumListItem((int)x, x.ToString()));
+                                .Select(x => new EnumListItem((int) x, x.ToString()));
 
         return Task.FromResult(enumValueList);
     }

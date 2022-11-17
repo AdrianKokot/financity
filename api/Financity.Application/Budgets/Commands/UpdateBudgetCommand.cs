@@ -13,7 +13,7 @@ public sealed class UpdateBudgetCommand : ICommand<Unit>
     public string? Name { get; set; }
     public decimal Amount { get; set; }
 
-    public HashSet<Guid> TrackedCategoriesId { get; set; } = new HashSet<Guid>();
+    public HashSet<Guid> TrackedCategoriesId { get; set; } = new();
 }
 
 public sealed class UpdateBudgetCommandHandler : ICommandHandler<UpdateBudgetCommand, Unit>

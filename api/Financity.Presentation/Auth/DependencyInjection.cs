@@ -22,7 +22,7 @@ public static class DependencyInjection
                    {
                        options.TokenValidationParameters = new TokenValidationParameters
                        {
-                           ValidAlgorithms = new[] { jwtConfig.Algorithm },
+                           ValidAlgorithms = new[] {jwtConfig.Algorithm},
                            ValidateIssuer = jwtConfig.ValidateIssuer,
                            ValidateAudience = jwtConfig.ValidateAudience,
                            ValidateLifetime = jwtConfig.ValidateLifetime,
