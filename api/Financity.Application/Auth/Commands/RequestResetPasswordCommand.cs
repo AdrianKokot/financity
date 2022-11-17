@@ -47,6 +47,7 @@ internal class ResetPasswordEmailTemplate
 {
     private static readonly string FileContent = File.ReadAllText(Path.Combine(Environment.CurrentDirectory,
         "Resources/EmailTemplates/password-reset.template.html"));
+
     private readonly string _token;
 
     public ResetPasswordEmailTemplate(string token)
@@ -57,6 +58,6 @@ internal class ResetPasswordEmailTemplate
     public override string ToString()
     {
         return FileContent.Replace("{{expiration-time}}", "2 hours")
-                           .Replace("{{action_url}}", $"https://localhost:7025/?token={_token}");
+                          .Replace("{{action_url}}", $"https://localhost:7025/?token={_token}");
     }
 }

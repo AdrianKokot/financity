@@ -12,10 +12,9 @@ public sealed class JwtConfigurationRegisterNotCalledException : Exception
     }
 }
 
-public sealed class JwtConfiguration : IJwtConfiguration
+public sealed class JwtConfiguration : IJwtConfiguration, IBindableConfiguration
 {
     private string? _key;
-    public static string ConfigurationKey => "Jwt";
 
     public string? Key
     {
@@ -30,6 +29,8 @@ public sealed class JwtConfiguration : IJwtConfiguration
             Credentials = new SigningCredentials(IssuerSigningKey, Algorithm);
         }
     }
+
+    public static string ConfigurationKey => "Jwt";
 
     public bool ValidateIssuer { get; set; } = true;
     public bool ValidateAudience { get; set; } = true;
