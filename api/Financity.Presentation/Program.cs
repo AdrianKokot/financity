@@ -1,7 +1,6 @@
 using Financity.Application;
 using Financity.Application.Abstractions.Configuration;
 using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.Exceptions;
 using Financity.Infrastructure;
 using Financity.Presentation.Auth;
 using Financity.Presentation.Configuration;
@@ -9,7 +8,6 @@ using Financity.Presentation.Middleware;
 using Financity.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -20,14 +18,8 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Host.UseSerilog();
 
 // Configurations
-var emailConfig = builder.Configuration.GetSection(EmailConfiguration.ConfigurationKey).Get<EmailConfiguration>()
-                  ?? throw new MissingConfigurationException(EmailConfiguration.ConfigurationKey);
-builder.Services.AddSingleton<IEmailConfiguration>(emailConfig);
-
-var jwtConfig = builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey)
-                       .Get<JwtConfiguration>()
-                ?? throw new MissingConfigurationException(JwtConfiguration.ConfigurationKey);
-builder.Services.AddSingleton<IJwtConfiguration>(jwtConfig);
+builder.BindSingletonConfiguration<IEmailConfiguration, EmailConfiguration>();
+var jwtConfig = builder.BindSingletonConfiguration<IJwtConfiguration, JwtConfiguration>();
 
 // Add services to the container.
 builder.Services
@@ -44,34 +36,7 @@ builder.Services
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-builder.Services
-       .AddAuthentication(options =>
-       {
-           options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-           options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-           options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-       })
-       .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
-           options =>
-           {
-               options.TokenValidationParameters = new TokenValidationParameters
-               {
-                   ValidAlgorithms = new[] { jwtConfig.Algorithm },
-                   ValidateIssuer = jwtConfig.ValidateIssuer,
-                   ValidateAudience = jwtConfig.ValidateAudience,
-                   ValidateLifetime = jwtConfig.ValidateLifetime,
-                   ValidateIssuerSigningKey = jwtConfig.ValidateIssuerSigningKey,
-                   ValidIssuer = jwtConfig.ValidIssuer,
-                   ValidAudience = jwtConfig.ValidAudience,
-                   IssuerSigningKey = jwtConfig.IssuerSigningKey
-               };
-           })
-       .AddAuthConfiguration();
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Api", policy => { policy.RequireAuthenticatedUser(); });
-});
+builder.Services.AddAuthConfiguration(jwtConfig);
 
 builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -126,7 +91,7 @@ app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.MapControllers().RequireAuthorization("Api");
+app.MapControllers().RequireAuthorization(AuthPolicy.Api);
 app.MapHealthChecks("/api/healthcheck");
 
 app.Run();

@@ -27,7 +27,8 @@ public sealed class EmailService : IEmailService
             Credentials = new NetworkCredential(_configuration.From, _configuration.Password)
         };
 
-        var message = new MailMessage(new MailAddress(_configuration.From, _configuration.Username), new MailAddress(recipientEmailAddress))
+        var message = new MailMessage(new MailAddress(_configuration.From, _configuration.Username),
+            new MailAddress(recipientEmailAddress))
         {
             Subject = subject,
             Body = content,

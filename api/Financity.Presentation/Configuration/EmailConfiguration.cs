@@ -2,7 +2,12 @@
 
 namespace Financity.Presentation.Configuration;
 
-public sealed class EmailConfiguration : IEmailConfiguration
+public interface IBindableConfiguration
+{
+    public static string ConfigurationKey => throw new NotImplementedException();
+}
+
+public sealed class EmailConfiguration : IEmailConfiguration, IBindableConfiguration
 {
     public static string ConfigurationKey => "Email";
     public string From { get; set; } = string.Empty;
