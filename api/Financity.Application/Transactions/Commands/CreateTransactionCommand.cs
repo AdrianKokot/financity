@@ -3,9 +3,13 @@ using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Behaviors;
 using Financity.Application.Common.Commands;
+using Financity.Application.Common.Helpers;
+using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Commands;
 
@@ -13,14 +17,12 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
 {
     public decimal Amount { get; set; } = 0;
     public string Note { get; set; } = string.Empty;
-
     public Guid? RecipientId { get; set; } = null;
     public Guid WalletId { get; set; } = Guid.Empty;
     public TransactionType TransactionType { get; set; } = TransactionType.Income;
     public Guid? CategoryId { get; set; } = null;
     public Guid CurrencyId { get; set; } = Guid.Empty;
     public DateTime TransactionDate { get; set; } = AppDateTime.Now;
-
     public HashSet<Guid> LabelIds { get; set; } = new();
 
     public static void CreateMap(Profile profile)
@@ -44,6 +46,7 @@ public sealed class CreateTransactionCommandHandler :
         var entity = Mapper.Map<Transaction>(command);
 
         entity.Labels = DbContext.GetDbSet<Label>()
+                                 .AsNoTracking()
                                  .Where(x => command.LabelIds.Contains(x.Id))
                                  .ToImmutableArray();
 

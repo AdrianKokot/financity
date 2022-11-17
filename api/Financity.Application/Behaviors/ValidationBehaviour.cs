@@ -18,23 +18,22 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
                                         CancellationToken cancellationToken)
     {
-        var errors = GetValidationFailures(request);
+        var errors = await GetValidationFailuresAsync(request, cancellationToken);
         if (errors.Count != 0) throw new ValidationException(errors);
 
         return await next();
     }
 
-    private IReadOnlyList<ValidationFailure> GetValidationFailures(TRequest request)
+    private async Task<IReadOnlyList<ValidationFailure>> GetValidationFailuresAsync(
+        TRequest request, CancellationToken ct)
     {
         if (!_validators.Any()) return ImmutableList<ValidationFailure>.Empty;
 
         var context = new ValidationContext<TRequest>(request);
 
-        var errors = _validators.Select(x => x.Validate(context))
-                                .SelectMany(x => x.Errors)
-                                .Where(f => f is not null)
-                                .ToImmutableList();
-
-        return errors;
+        return _validators.Select(async x => await x.ValidateAsync(context, ct))
+                          .SelectMany(x => x.Result.Errors)
+                          .Where(f => f is not null)
+                          .ToImmutableList();
     }
 }

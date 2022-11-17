@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq.Expressions;
+using System.Reflection;
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
@@ -38,7 +39,13 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
 
     public Task<int> DeleteFromSetAsync<T>(Guid entityId, CancellationToken ct) where T : class, IEntity
     {
-        return Set<T>().Where(x => x.Id == entityId).ExecuteDeleteAsync(ct);
+        return DeleteFromSetAsync(Set<T>().Where(x => x.Id == entityId), ct);
+    }
+
+    public Task<int> DeleteFromSetAsync<T>(IQueryable<T> query, CancellationToken ct)
+        where T : class, IEntity
+    {
+        return query.ExecuteDeleteAsync(ct);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
