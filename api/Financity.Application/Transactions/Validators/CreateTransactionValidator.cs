@@ -3,6 +3,7 @@ using Financity.Application.Common.Extensions;
 using Financity.Application.Transactions.Commands;
 using Financity.Domain.Entities;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Validators;
 
@@ -21,5 +22,25 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
         RuleFor(x => x.LabelIds)
             .ForEach(y => y.NotEmpty())
             .HasUserAccess<CreateTransactionCommand, Label>(dbContext);
+
+        WhenAsync(async (command, ct) => command.CurrencyId != await dbContext.GetDbSet<Wallet>()
+                                                                              .AsNoTracking()
+                                                                              .Where(x => x.Id == command.WalletId)
+                                                                              .Select(x => x.CurrencyId)
+                                                                              .FirstOrDefaultAsync(ct),
+            () =>
+            {
+                RuleFor(x => x.ExchangeRate)
+                    .NotEmpty()
+                    .WithMessage(
+                        $"{nameof(CreateTransactionCommand.ExchangeRate)} should be specified when using other currency than wallet's default.")
+                    .GreaterThan(0);
+            }).Otherwise(() =>
+        {
+            RuleFor(x => x.ExchangeRate)
+                .Null()
+                .WithMessage(
+                    $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified when using the same currency as the wallet.");
+        });
     }
 }

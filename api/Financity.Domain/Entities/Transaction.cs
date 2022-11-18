@@ -8,6 +8,7 @@ public sealed class Transaction : Entity, IBelongsToWallet
     public decimal Amount { get; set; }
     public string Note { get; set; } = string.Empty;
     public DateTime TransactionDate { get; set; } = DateTime.Now;
+    public float ExchangeRate { get; set; } = 1;
 
     public Guid? RecipientId { get; set; }
     public Recipient? Recipient { get; set; }

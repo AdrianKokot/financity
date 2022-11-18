@@ -13,6 +13,7 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
 {
     public decimal Amount { get; set; } = 0;
     public string Note { get; set; } = string.Empty;
+    public float? ExchangeRate { get; set; } = null;
     public Guid? RecipientId { get; set; } = null;
     public Guid WalletId { get; set; } = Guid.Empty;
     public TransactionType TransactionType { get; set; } = TransactionType.Income;
@@ -40,6 +41,11 @@ public sealed class CreateTransactionCommandHandler :
     {
         command.TransactionDate = command.TransactionDate.ToUniversalTime();
         var entity = Mapper.Map<Transaction>(command);
+
+        if (command.ExchangeRate is null)
+        {
+            entity.ExchangeRate = 1;
+        }
 
         entity.Labels = DbContext.GetDbSet<Label>()
                                  .Where(x => command.LabelIds.Contains(x.Id))
