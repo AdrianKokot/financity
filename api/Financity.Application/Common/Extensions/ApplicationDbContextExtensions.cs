@@ -23,7 +23,7 @@ public static class ApplicationDbContextExtensions
         return ctx.GetDbSet<TEntity>()
                   .AsNoTracking()
                   .Where(x => ids.Contains(x.Id))
-                  .AllAsync(x => ctx.UserService.UserWallets.Contains(x.WalletId), ct);
+                  .AllAsync(x => ctx.UserService.UserWallets.ContainsKey(x.WalletId), ct);
     }
 
     public static Task<bool> ExistsForCurrentUser<TEntity>(this IApplicationDbContext ctx,
@@ -33,6 +33,6 @@ public static class ApplicationDbContextExtensions
     {
         return ctx.GetDbSet<TEntity>()
                   .AsNoTracking()
-                  .AnyAsync(x => x.Id == id && ctx.UserService.UserWallets.Contains(x.WalletId), ct);
+                  .AnyAsync(x => x.Id == id && ctx.UserService.UserWallets.ContainsKey(x.WalletId), ct);
     }
 }

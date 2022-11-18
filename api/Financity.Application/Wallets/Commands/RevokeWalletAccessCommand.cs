@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Financity.Application.Abstractions.Data;
+﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Helpers;
-using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
 using MediatR;
@@ -19,12 +17,10 @@ public sealed class RevokeWalletAccessCommand : ICommand<Unit>
 public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWalletAccessCommand, Unit>
 {
     private readonly IApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
 
-    public RevokeWalletAccessCommandHandler(IApplicationDbContext dbContext, IMapper mapper)
+    public RevokeWalletAccessCommandHandler(IApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
     }
 
     public async Task<Unit> Handle(RevokeWalletAccessCommand command, CancellationToken ct)
@@ -40,8 +36,6 @@ public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWal
 
         if (user is null)
             throw ValidationExceptionFactory.For(nameof(command.UserEmail), "User with given email doesn't exist");
-
-        wallet.UsersWithAccess ??= new List<WalletAccess>();
 
         var walletAccess = wallet.UsersWithAccess.FirstOrDefault(x => x.UserId == user.Id);
 

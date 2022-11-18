@@ -2,6 +2,7 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
+using Financity.Domain.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
@@ -63,8 +64,16 @@ public static class RuleBuilderExtensions
     public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> builder,
                                                                  IApplicationDbContext db)
     {
-        return builder.Must(id => db.UserService.UserWallets.Contains(id))
+        return builder.Must(id => db.UserService.UserWallets.ContainsKey(id))
                       .WithMessage($"{nameof(Wallet)} with given id doesn't exist.");
+    }
+
+    public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> builder,
+                                                                 IApplicationDbContext db,
+                                                                 WalletAccessLevel accessLevel)
+    {
+        return builder.Must(id => db.UserService.UserWallets.TryGetValue(id, out var value) && value == accessLevel)
+                      .WithMessage($"You cannot perform this operation on {nameof(Wallet)} with given id.");
     }
 
     public static IRuleBuilder<T, Guid?> ExistsIfNotNull<T, TEntity>(this IRuleBuilder<T, Guid?> builder,
