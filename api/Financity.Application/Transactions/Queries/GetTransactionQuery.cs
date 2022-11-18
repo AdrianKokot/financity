@@ -22,4 +22,5 @@ public sealed record TransactionDetails(Guid Id, decimal Amount, string Note, Gu
                                         Guid WalletId, string WalletName, TransactionType TransactionType,
                                         DateTime TransactionDate,
                                         Guid? CategoryId, string? CategoryName,
-                                        IEnumerable<LabelListItem> Labels) : IMapFrom<Transaction>;
+                                        IEnumerable<LabelListItem> Labels, string CurrencyCode, string CurrencyName,
+                                        Guid CurrencyId, float ExchangeRate) : IMapFrom<Transaction>;
