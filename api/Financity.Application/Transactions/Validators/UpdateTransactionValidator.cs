@@ -15,8 +15,7 @@ public sealed class UpdateTransactionValidator : AbstractValidator<UpdateTransac
         RuleFor(x => x.LabelIds)
             .ForEach(y => y.NotEmpty())
             .HasUserAccess<UpdateTransactionCommand, Label>(dbContext);
-
-
+        
         RuleFor(x => x.Id).HasUserAccess<UpdateTransactionCommand, Transaction>(dbContext);
     }
 }

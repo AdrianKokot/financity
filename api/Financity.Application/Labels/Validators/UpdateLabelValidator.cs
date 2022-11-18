@@ -16,8 +16,7 @@ public sealed class UpdateLabelValidator : AbstractValidator<UpdateLabelCommand>
             x.RuleFor(y => y.Color).MaximumLength(64);
             x.RuleFor(y => y.IconName).MaximumLength(64);
         });
-
-
+        
         RuleFor(x => x.Id).HasUserAccess<UpdateLabelCommand, Label>(dbContext);
     }
 }
