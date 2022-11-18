@@ -1,9 +1,5 @@
-﻿using System.Collections.Immutable;
-using System.Linq.Expressions;
-using System.Reflection;
+﻿using System.Reflection;
 using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.Exceptions;
-using Financity.Application.Common.Helpers;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using Financity.Persistence.Seed;
@@ -16,9 +12,6 @@ namespace Financity.Persistence.Database;
 public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IApplicationDbContext
 {
     private readonly ICurrentUserService? _userService;
-
-    public ICurrentUserService UserService =>
-        _userService ?? throw new ArgumentNullException(nameof(ICurrentUserService));
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService userService)
         : base(options)
@@ -35,6 +28,9 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<Recipient> Recipients { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
+
+    public ICurrentUserService UserService =>
+        _userService ?? throw new ArgumentNullException(nameof(ICurrentUserService));
 
     public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null)
     {

@@ -18,13 +18,13 @@ public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
                                         CancellationToken cancellationToken)
     {
-        var errors = await GetValidationFailuresAsync(request, cancellationToken);
+        var errors = GetValidationFailuresAsync(request, cancellationToken);
         if (errors.Count != 0) throw new ValidationException(errors);
 
         return await next();
     }
 
-    private async Task<IReadOnlyList<ValidationFailure>> GetValidationFailuresAsync(
+    private IReadOnlyList<ValidationFailure> GetValidationFailuresAsync(
         TRequest request, CancellationToken ct)
     {
         if (!_validators.Any()) return ImmutableList<ValidationFailure>.Empty;

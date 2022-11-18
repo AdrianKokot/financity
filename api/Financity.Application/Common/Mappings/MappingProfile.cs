@@ -20,7 +20,7 @@ public sealed class MappingProfile : Profile
     private void ApplyMappingsFromAssembly(Assembly assembly)
     {
         var types = assembly.GetExportedTypes()
-                            .Where(t => !t.IsGenericType && !t.IsInterface && t.GetInterfaces().Any(i =>
+                            .Where(t => t is { IsGenericType: false, IsInterface: false } && t.GetInterfaces().Any(i =>
                                 i.IsGenericType && _mappingInterfaces.Contains(i.GetGenericTypeDefinition()))
                             );
 
@@ -29,15 +29,15 @@ public sealed class MappingProfile : Profile
             var customMappingMethod = type.GetMethod(_mappingMethod, BindingFlags.Public | BindingFlags.Static);
             if (customMappingMethod is not null)
             {
-                customMappingMethod.Invoke(null, new[] { this });
+                customMappingMethod.Invoke(null, new object[] { this });
             }
             else
             {
                 var mappings = _mappingInterfaces.Select(i => type.GetInterface(i.Name))
                                                  .Where(t => t is not null)
                                                  .ToDictionary(
-                                                     i => i.Name,
-                                                     i => i.GetGenericArguments().FirstOrDefault()
+                                                     i => i!.Name,
+                                                     i => i!.GetGenericArguments().FirstOrDefault()
                                                  );
 
                 if (mappings.TryGetValue(_mapFromInterface, out var mapFromType)) CreateMap(mapFromType, type);

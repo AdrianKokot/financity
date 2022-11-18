@@ -4,7 +4,6 @@ using Financity.Domain.Common;
 using Financity.Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Common.Extensions;
 
@@ -35,17 +34,10 @@ public static class RuleBuilderExtensions
                                                            IApplicationDbContext dbContext)
         where TEntity : class, IEntity
     {
-        ruleBuilder.MustAsync(dbContext.Exists<TEntity>)
-                   .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
-
-        return ruleBuilder;
+        return ruleBuilder.MustAsync(dbContext.Exists<TEntity>)
+                          .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
-    private static Task<bool> Exists<TEntity>(this IApplicationDbContext ctx, Guid id, CancellationToken ct)
-        where TEntity : class, IEntity
-    {
-        return ctx.GetDbSet<TEntity>().AsNoTracking().AnyAsync(x => x.Id == id, ct);
-    }
 
     public static IRuleBuilder<T, Guid> ExistsForCurrentUser<T, TEntity>(this IRuleBuilder<T, Guid> ruleBuilder,
                                                                          IApplicationDbContext dbContext)
@@ -56,73 +48,39 @@ public static class RuleBuilderExtensions
                .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
-    private static Task<bool> ExistsForCurrentUser<TEntity>(this IApplicationDbContext dbContext,
-                                                            ImmutableHashSet<Guid> ids,
-                                                            CancellationToken cancellation)
-        where TEntity : class, IEntity, IBelongsToWallet
-    {
-        return dbContext.GetDbSet<TEntity>().AsNoTracking()
-                        .Where(x => ids.Contains(x.Id))
-                        .AllAsync(x => dbContext.UserService.UserWallets.Contains(x.WalletId), cancellation);
-    }
-
-    private static Task<bool> ExistsForCurrentUser<TEntity>(this IApplicationDbContext dbContext, Guid id,
-                                                            CancellationToken cancellation)
-        where TEntity : class, IEntity, IBelongsToWallet
-    {
-        return dbContext.GetDbSet<TEntity>().AsNoTracking()
-                        .AnyAsync(
-                            x => x.Id == id && dbContext.UserService.UserWallets.Contains(x.WalletId),
-                            cancellation);
-    }
-
     public static IRuleBuilder<T, IEnumerable<Guid>> ExistsForCurrentUser<T, TEntity>(
         this IRuleBuilder<T, IEnumerable<Guid>> ruleBuilder,
         IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
     {
-        ruleBuilder.MustAsync(async (enumerable, cancellation) =>
-        {
-            var ids = enumerable.ToImmutableHashSet();
-            return await dbContext.GetDbSet<TEntity>().AsNoTracking()
-                                  .Where(x => ids.Contains(x.Id))
-                                  .AllAsync(x => dbContext.UserService.UserWallets.Contains(x.WalletId), cancellation);
-        }).WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
+        ruleBuilder.MustAsync(async (ids, ct) =>
+                       await dbContext.ExistForCurrentUser<TEntity>(ids.ToImmutableHashSet(), ct))
+                   .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
 
         return ruleBuilder;
     }
 
-    public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> ruleBuilder,
-                                                                 IApplicationDbContext dbContext)
+    public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> builder,
+                                                                 IApplicationDbContext db)
     {
-        return ruleBuilder.Must(id => dbContext.UserService.UserWallets.Contains(id))
-                          .WithMessage($"{nameof(Wallet)} with given id doesn't exist.");
+        return builder.Must(id => db.UserService.UserWallets.Contains(id))
+                      .WithMessage($"{nameof(Wallet)} with given id doesn't exist.");
     }
 
-    public static IRuleBuilder<T, Guid?> ExistsIfNotNull<T, TEntity>(this IRuleBuilder<T, Guid?> ruleBuilder,
-                                                                     IApplicationDbContext dbContext)
+    public static IRuleBuilder<T, Guid?> ExistsIfNotNull<T, TEntity>(this IRuleBuilder<T, Guid?> builder,
+                                                                     IApplicationDbContext db)
         where TEntity : class, IEntity
     {
-        ruleBuilder.MustAsync(async (entityId, cancellation) =>
-        {
-            return entityId is null || await dbContext.GetDbSet<TEntity>().AsNoTracking()
-                                                      .AnyAsync(x => x.Id == entityId, cancellation);
-        }).WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
-
-        return ruleBuilder;
+        return builder.MustAsync(async (id, ct) =>
+                          id is null || await db.Exists<TEntity>((Guid)id, ct))
+                      .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
     public static IRuleBuilder<T, Guid?> ExistsIfNotNullForCurrentUser<T, TEntity>(
-        this IRuleBuilder<T, Guid?> ruleBuilder,
-        IApplicationDbContext dbContext)
+        this IRuleBuilder<T, Guid?> builder, IApplicationDbContext db)
         where TEntity : class, IEntity, IBelongsToWallet
     {
-        ruleBuilder.MustAsync(async (entityId, cancellation) =>
-        {
-            return entityId is null || await dbContext.GetDbSet<TEntity>().AsNoTracking()
-                                                      .AnyAsync(x => x.Id == entityId, cancellation);
-        }).WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
-
-        return ruleBuilder;
+        return builder.MustAsync(async (id, ct) => id is null || await db.ExistsForCurrentUser<TEntity>((Guid)id, ct))
+                      .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 }

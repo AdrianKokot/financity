@@ -1,12 +1,16 @@
-﻿using Financity.Application.Wallets.Commands;
+﻿using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Extensions;
+using Financity.Application.Wallets.Commands;
 using FluentValidation;
 
 namespace Financity.Application.Wallets.Validators;
 
 public sealed class UpdateWalletValidator : AbstractValidator<UpdateWalletCommand>
 {
-    public UpdateWalletValidator()
+    public UpdateWalletValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
+
+        RuleFor(x => x.Id).HasUserAccessToWallet(dbContext);
     }
 }
