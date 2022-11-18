@@ -29,18 +29,16 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
                                                                               .Select(x => x.CurrencyId)
                                                                               .FirstOrDefaultAsync(ct),
             () =>
-            {
                 RuleFor(x => x.ExchangeRate)
                     .NotEmpty()
                     .WithMessage(
                         $"{nameof(CreateTransactionCommand.ExchangeRate)} should be specified when using other currency than wallet's default.")
-                    .GreaterThan(0);
-            }).Otherwise(() =>
-        {
+                    .GreaterThan(0)
+        ).Otherwise(() =>
             RuleFor(x => x.ExchangeRate)
                 .Null()
                 .WithMessage(
-                    $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified when using the same currency as the wallet.");
-        });
+                    $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified when using the same currency as the wallet.")
+        );
     }
 }

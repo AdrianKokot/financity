@@ -46,7 +46,7 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
         entity.RecipientId = command.RecipientId;
         entity.CategoryId = command.CategoryId;
         if (command.TransactionDate is not null)
-            entity.TransactionDate = ((DateTime)command.TransactionDate).ToUniversalTime();
+            entity.TransactionDate = ((DateTime) command.TransactionDate).ToUniversalTime();
 
         entity.Labels = _dbContext.GetDbSet<Label>()
                                   .Where(x => command.LabelIds.Contains(x.Id))

@@ -42,10 +42,7 @@ public sealed class CreateTransactionCommandHandler :
         command.TransactionDate = command.TransactionDate.ToUniversalTime();
         var entity = Mapper.Map<Transaction>(command);
 
-        if (command.ExchangeRate is null)
-        {
-            entity.ExchangeRate = 1;
-        }
+        if (command.ExchangeRate is null) entity.ExchangeRate = 1;
 
         entity.Labels = DbContext.GetDbSet<Label>()
                                  .Where(x => command.LabelIds.Contains(x.Id))
