@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Financity.Application.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
@@ -14,7 +15,7 @@ public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbCo
     {
         var basePath = Directory.GetCurrentDirectory() +
                        string.Format("{0}..{0}Financity.Presentation", Path.DirectorySeparatorChar);
-        return Create(basePath, Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
+        return Create(basePath, Environment.GetEnvironmentVariable(AspNetCoreEnvironment) ?? "Development");
     }
 
     protected abstract TContext CreateNewInstance(DbContextOptions<TContext> options);
@@ -29,7 +30,8 @@ public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbCo
                             .AddEnvironmentVariables()
                             .Build();
 
-        var connectionString = configuration.GetConnectionString(ConnectionStringName);
+        var connectionString = configuration.GetConnectionString(ConnectionStringName)
+                               ?? throw new MissingConfigurationException(ConnectionStringName);
 
         return Create(connectionString);
     }
