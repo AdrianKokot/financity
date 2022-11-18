@@ -13,6 +13,7 @@ public class CurrentUserService : ICurrentUserService
     private readonly IHttpContextAccessor _httpContext;
 
     private IImmutableDictionary<Guid, WalletAccessLevel>? _userWallets;
+    private ImmutableHashSet<Guid>? _userWalletIds;
 
     public CurrentUserService(IHttpContextAccessor httpContext, IOptions<IdentityOptions> identityOptions)
     {
@@ -41,4 +42,6 @@ public class CurrentUserService : ICurrentUserService
                                    .Where(x => x.UserId == UserId)
                                    .ToImmutableDictionary(x => x.WalletId, x => x.WalletAccessLevel)) ??
         ImmutableDictionary<Guid, WalletAccessLevel>.Empty;
+
+    public ImmutableHashSet<Guid> UserWalletIds => _userWalletIds ??= UserWallets.Keys.ToImmutableHashSet();
 }

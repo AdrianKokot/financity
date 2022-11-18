@@ -10,6 +10,6 @@ public sealed class DeleteTransactionValidator : AbstractValidator<DeleteTransac
 {
     public DeleteTransactionValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Id).ExistsForCurrentUser<DeleteTransactionCommand, Transaction>(dbContext);
+        RuleFor(x => x.Id).HasUserAccess<DeleteTransactionCommand, Transaction>(dbContext);
     }
 }

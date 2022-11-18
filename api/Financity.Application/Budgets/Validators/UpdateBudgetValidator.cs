@@ -14,6 +14,8 @@ public sealed class UpdateBudgetValidator : AbstractValidator<UpdateBudgetComman
         RuleFor(x => x.Name).NotEmpty().MaximumLength(255);
         RuleFor(x => x.TrackedCategoriesId)
             .ForEach(x => x.NotEmpty())
-            .ExistsForCurrentUser<UpdateBudgetCommand, Category>(dbContext);
+            .HasUserAccess<UpdateBudgetCommand, Category>(dbContext);
+
+        RuleFor(x => x.Id).UserOwns<UpdateBudgetCommand, Budget>(dbContext);
     }
 }

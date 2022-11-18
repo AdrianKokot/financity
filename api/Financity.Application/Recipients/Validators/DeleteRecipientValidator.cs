@@ -10,6 +10,6 @@ public sealed class DeleteRecipientValidator : AbstractValidator<DeleteRecipient
 {
     public DeleteRecipientValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Id).ExistsForCurrentUser<DeleteRecipientCommand, Recipient>(dbContext);
+        RuleFor(x => x.Id).HasUserAccess<DeleteRecipientCommand, Recipient>(dbContext);
     }
 }

@@ -17,6 +17,6 @@ public sealed class UpdateCategoryValidator : AbstractValidator<UpdateCategoryCo
             x.RuleFor(y => y.IconName).MaximumLength(64);
         });
 
-        RuleFor(x => x.Id).ExistsForCurrentUser<UpdateCategoryCommand, Category>(dbContext);
+        RuleFor(x => x.Id).HasUserAccess<UpdateCategoryCommand, Category>(dbContext);
     }
 }

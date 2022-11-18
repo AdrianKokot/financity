@@ -10,6 +10,6 @@ public sealed class DeleteLabelValidator : AbstractValidator<DeleteLabelCommand>
 {
     public DeleteLabelValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Id).ExistsForCurrentUser<DeleteLabelCommand, Label>(dbContext);
+        RuleFor(x => x.Id).HasUserAccess<DeleteLabelCommand, Label>(dbContext);
     }
 }

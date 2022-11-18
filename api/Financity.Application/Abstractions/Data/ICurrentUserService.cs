@@ -9,4 +9,5 @@ public interface ICurrentUserService
     public Guid UserId { get; }
     public string NormalizedUserEmail { get; }
     public IImmutableDictionary<Guid, WalletAccessLevel> UserWallets { get; }
+    public ImmutableHashSet<Guid> UserWalletIds { get; }
 }

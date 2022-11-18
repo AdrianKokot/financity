@@ -10,6 +10,6 @@ public sealed class DeleteCategoryValidator : AbstractValidator<DeleteCategoryCo
 {
     public DeleteCategoryValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Id).ExistsForCurrentUser<DeleteCategoryCommand, Category>(dbContext);
+        RuleFor(x => x.Id).HasUserAccess<DeleteCategoryCommand, Category>(dbContext);
     }
 }

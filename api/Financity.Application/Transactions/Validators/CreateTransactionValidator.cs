@@ -15,11 +15,11 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
         RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
         RuleFor(x => x.TransactionType).NotNull().IsInEnum();
         RuleFor(x => x.TransactionDate).NotEmpty();
-        RuleFor(x => x.RecipientId).ExistsIfNotNullForCurrentUser<CreateTransactionCommand, Recipient>(dbContext);
-        RuleFor(x => x.CategoryId).ExistsIfNotNullForCurrentUser<CreateTransactionCommand, Category>(dbContext);
+        RuleFor(x => x.RecipientId).HasUserAccessOrNull<CreateTransactionCommand, Recipient>(dbContext);
+        RuleFor(x => x.CategoryId).HasUserAccessOrNull<CreateTransactionCommand, Category>(dbContext);
         RuleFor(x => x.CurrencyId).NotEmpty().Exists<CreateTransactionCommand, Currency>(dbContext);
         RuleFor(x => x.LabelIds)
             .ForEach(y => y.NotEmpty())
-            .ExistsForCurrentUser<CreateTransactionCommand, Label>(dbContext);
+            .HasUserAccess<CreateTransactionCommand, Label>(dbContext);
     }
 }

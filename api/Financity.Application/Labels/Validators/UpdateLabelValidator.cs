@@ -18,6 +18,6 @@ public sealed class UpdateLabelValidator : AbstractValidator<UpdateLabelCommand>
         });
 
 
-        RuleFor(x => x.Id).ExistsForCurrentUser<UpdateLabelCommand, Label>(dbContext);
+        RuleFor(x => x.Id).HasUserAccess<UpdateLabelCommand, Label>(dbContext);
     }
 }

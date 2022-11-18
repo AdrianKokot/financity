@@ -5,6 +5,7 @@ using Financity.Domain.Entities;
 using Financity.Domain.Enums;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Common.Extensions;
 
@@ -40,56 +41,70 @@ public static class RuleBuilderExtensions
     }
 
 
-    public static IRuleBuilder<T, Guid> ExistsForCurrentUser<T, TEntity>(this IRuleBuilder<T, Guid> ruleBuilder,
-                                                                         IApplicationDbContext dbContext)
+    public static IRuleBuilder<T, Guid> HasUserAccess<T, TEntity>(this IRuleBuilder<T, Guid> ruleBuilder,
+                                                                  IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
     {
         return ruleBuilder
-               .MustAsync(dbContext.ExistsForCurrentUser<TEntity>)
+               .MustAsync(dbContext.HasUserAccess<TEntity>)
                .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
-    public static IRuleBuilder<T, IEnumerable<Guid>> ExistsForCurrentUser<T, TEntity>(
+    public static IRuleBuilder<T, Guid> UserOwns<T, TEntity>(this IRuleBuilder<T, Guid> ruleBuilder,
+                                                             IApplicationDbContext dbContext)
+        where TEntity : class, IEntity, IBelongsToUser
+    {
+        return ruleBuilder
+               .MustAsync(async (id, ct) => await dbContext.GetDbSet<TEntity>()
+                                                           .AsNoTracking()
+                                                           .AnyAsync(
+                                                               x => x.Id == id &&
+                                                                    x.UserId == dbContext.UserService.UserId, ct))
+               .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
+    }
+
+    public static IRuleBuilder<T, IEnumerable<Guid>> HasUserAccess<T, TEntity>(
         this IRuleBuilder<T, IEnumerable<Guid>> ruleBuilder,
         IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
     {
         ruleBuilder.MustAsync(async (ids, ct) =>
-                       await dbContext.ExistForCurrentUser<TEntity>(ids.ToImmutableHashSet(), ct))
+                       await dbContext.HasUserAccess<TEntity>(ids.ToImmutableHashSet(), ct))
                    .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
 
         return ruleBuilder;
     }
 
     public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> builder,
-                                                                 IApplicationDbContext db)
+                                                                 IApplicationDbContext dbContext)
     {
-        return builder.Must(id => db.UserService.UserWallets.ContainsKey(id))
+        return builder.Must(id => dbContext.UserService.UserWallets.ContainsKey(id))
                       .WithMessage($"{nameof(Wallet)} with given id doesn't exist.");
     }
 
     public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> builder,
-                                                                 IApplicationDbContext db,
+                                                                 IApplicationDbContext dbContext,
                                                                  WalletAccessLevel accessLevel)
     {
-        return builder.Must(id => db.UserService.UserWallets.TryGetValue(id, out var value) && value == accessLevel)
-                      .WithMessage($"You cannot perform this operation on {nameof(Wallet)} with given id.");
+        return builder
+               .Must(id => dbContext.UserService.UserWallets.TryGetValue(id, out var value) && value == accessLevel)
+               .WithMessage($"You cannot perform this operation on {nameof(Wallet)} with given id.");
     }
 
-    public static IRuleBuilder<T, Guid?> ExistsIfNotNull<T, TEntity>(this IRuleBuilder<T, Guid?> builder,
+    public static IRuleBuilder<T, Guid?> ExistsOrNull<T, TEntity>(this IRuleBuilder<T, Guid?> builder,
                                                                      IApplicationDbContext db)
         where TEntity : class, IEntity
     {
         return builder.MustAsync(async (id, ct) =>
-                          id is null || await db.Exists<TEntity>((Guid)id, ct))
+                          id is null || await db.Exists<TEntity>((Guid) id, ct))
                       .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
-    public static IRuleBuilder<T, Guid?> ExistsIfNotNullForCurrentUser<T, TEntity>(
-        this IRuleBuilder<T, Guid?> builder, IApplicationDbContext db)
+    public static IRuleBuilder<T, Guid?> HasUserAccessOrNull<T, TEntity>(
+        this IRuleBuilder<T, Guid?> builder, IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
     {
-        return builder.MustAsync(async (id, ct) => id is null || await db.ExistsForCurrentUser<TEntity>((Guid)id, ct))
+        return builder.MustAsync(async (id, ct) => id is null || await dbContext.HasUserAccess<TEntity>((Guid) id, ct))
                       .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 }

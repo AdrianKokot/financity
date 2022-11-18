@@ -15,7 +15,7 @@ public static class ApplicationDbContextExtensions
                   .AnyAsync(x => x.Id == id, ct);
     }
 
-    public static Task<bool> ExistForCurrentUser<TEntity>(this IApplicationDbContext ctx,
+    public static Task<bool> HasUserAccess<TEntity>(this IApplicationDbContext ctx,
                                                           ImmutableHashSet<Guid> ids,
                                                           CancellationToken ct)
         where TEntity : class, IEntity, IBelongsToWallet
@@ -23,16 +23,16 @@ public static class ApplicationDbContextExtensions
         return ctx.GetDbSet<TEntity>()
                   .AsNoTracking()
                   .Where(x => ids.Contains(x.Id))
-                  .AllAsync(x => ctx.UserService.UserWallets.ContainsKey(x.WalletId), ct);
+                  .AllAsync(x => ctx.UserService.UserWalletIds.Contains(x.WalletId), ct);
     }
 
-    public static Task<bool> ExistsForCurrentUser<TEntity>(this IApplicationDbContext ctx,
+    public static Task<bool> HasUserAccess<TEntity>(this IApplicationDbContext ctx,
                                                            Guid id,
                                                            CancellationToken ct)
         where TEntity : class, IEntity, IBelongsToWallet
     {
         return ctx.GetDbSet<TEntity>()
                   .AsNoTracking()
-                  .AnyAsync(x => x.Id == id && ctx.UserService.UserWallets.ContainsKey(x.WalletId), ct);
+                  .AnyAsync(x => x.Id == id && ctx.UserService.UserWalletIds.Contains(x.WalletId), ct);
     }
 }
