@@ -10,9 +10,9 @@ namespace Financity.Application.Labels.Commands;
 
 public sealed class CreateLabelCommand : ICommand<CreateLabelCommandResult>, IMapTo<Label>
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public Guid WalletId { get; set; }
-    public Appearance? Appearance { get; set; }
+    public Appearance Appearance { get; set; } = new();
 }
 
 public sealed class CreateLabelCommandHandler :
@@ -20,14 +20,6 @@ public sealed class CreateLabelCommandHandler :
 {
     public CreateLabelCommandHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-    }
-
-    public override Task<CreateLabelCommandResult> Handle(CreateLabelCommand command,
-                                                          CancellationToken cancellationToken)
-    {
-        command.Appearance ??= new Appearance();
-
-        return base.Handle(command, cancellationToken);
     }
 }
 

@@ -3,7 +3,7 @@ using Financity.Domain.Enums;
 
 namespace Financity.Domain.Entities;
 
-public sealed class Category : Entity
+public sealed class Category : Entity, IBelongsToWallet
 {
     public string Name { get; set; } = string.Empty;
 
@@ -12,10 +12,10 @@ public sealed class Category : Entity
     public Guid? ParentCategoryId { get; set; }
     public Category? ParentCategory { get; set; }
 
-    public Guid WalletId { get; set; }
-    public Wallet Wallet { get; set; }
-
     public TransactionType? TransactionType { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
+    public Guid WalletId { get; set; }
+    public Wallet Wallet { get; set; }
 }

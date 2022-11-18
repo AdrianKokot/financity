@@ -12,7 +12,7 @@ public sealed class UpdateCategoryCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public Appearance? Appearance { get; set; }
+    public Appearance Appearance { get; set; } = new();
 }
 
 public sealed class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand, Unit>
@@ -33,7 +33,7 @@ public sealed class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategor
         if (entity is null) throw new EntityNotFoundException(nameof(Category), request.Id);
 
         entity.Name = request.Name;
-        entity.Appearance = request.Appearance ?? new Appearance();
+        entity.Appearance = request.Appearance;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

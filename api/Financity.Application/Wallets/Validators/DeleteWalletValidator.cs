@@ -6,12 +6,10 @@ using FluentValidation;
 
 namespace Financity.Application.Wallets.Validators;
 
-public sealed class UpdateWalletValidator : AbstractValidator<UpdateWalletCommand>
+public sealed class DeleteWalletValidator : AbstractValidator<DeleteWalletCommand>
 {
-    public UpdateWalletValidator(IApplicationDbContext dbContext)
+    public DeleteWalletValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-
         RuleFor(x => x.Id).HasUserAccessToWallet(dbContext, WalletAccessLevel.Owner);
     }
 }

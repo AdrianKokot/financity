@@ -13,14 +13,12 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
 {
     public decimal Amount { get; set; } = 0;
     public string Note { get; set; } = string.Empty;
-
     public Guid? RecipientId { get; set; } = null;
     public Guid WalletId { get; set; } = Guid.Empty;
     public TransactionType TransactionType { get; set; } = TransactionType.Income;
     public Guid? CategoryId { get; set; } = null;
     public Guid CurrencyId { get; set; } = Guid.Empty;
     public DateTime TransactionDate { get; set; } = AppDateTime.Now;
-
     public HashSet<Guid> LabelIds { get; set; } = new();
 
     public static void CreateMap(Profile profile)

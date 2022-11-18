@@ -2,13 +2,13 @@
 
 namespace Financity.Domain.Entities;
 
-public sealed class Budget : Entity
+public sealed class Budget : Entity, IBelongsToUser
 {
     public string Name { get; set; } = string.Empty;
     public decimal Amount { get; set; }
 
+    public ICollection<Category> TrackedCategories { get; set; } = new List<Category>();
+
     public Guid UserId { get; set; }
     public User User { get; set; }
-
-    public ICollection<Category> TrackedCategories { get; set; } = new List<Category>();
 }

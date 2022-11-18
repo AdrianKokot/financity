@@ -11,8 +11,8 @@ namespace Financity.Application.Labels.Commands;
 public sealed class UpdateLabelCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; }
-    public Appearance? Appearance { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public Appearance Appearance { get; set; } = new();
 }
 
 public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelCommand, Unit>
@@ -32,7 +32,7 @@ public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelComma
         if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
 
         entity.Name = request.Name;
-        entity.Appearance = request.Appearance ?? new Appearance();
+        entity.Appearance = request.Appearance;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

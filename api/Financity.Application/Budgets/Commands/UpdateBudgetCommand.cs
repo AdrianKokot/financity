@@ -10,10 +10,10 @@ namespace Financity.Application.Budgets.Commands;
 public sealed class UpdateBudgetCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public decimal Amount { get; set; }
 
-    public HashSet<Guid>? TrackedCategoriesId { get; set; }
+    public HashSet<Guid> TrackedCategoriesId { get; set; } = new();
 }
 
 public sealed class UpdateBudgetCommandHandler : ICommandHandler<UpdateBudgetCommand, Unit>
