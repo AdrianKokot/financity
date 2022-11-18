@@ -16,8 +16,8 @@ public static class ApplicationDbContextExtensions
     }
 
     public static Task<bool> HasUserAccess<TEntity>(this IApplicationDbContext ctx,
-                                                          ImmutableHashSet<Guid> ids,
-                                                          CancellationToken ct)
+                                                    ImmutableHashSet<Guid> ids,
+                                                    CancellationToken ct)
         where TEntity : class, IEntity, IBelongsToWallet
     {
         return ctx.GetDbSet<TEntity>()
@@ -27,8 +27,8 @@ public static class ApplicationDbContextExtensions
     }
 
     public static Task<bool> HasUserAccess<TEntity>(this IApplicationDbContext ctx,
-                                                           Guid id,
-                                                           CancellationToken ct)
+                                                    Guid id,
+                                                    CancellationToken ct)
         where TEntity : class, IEntity, IBelongsToWallet
     {
         return ctx.GetDbSet<TEntity>()

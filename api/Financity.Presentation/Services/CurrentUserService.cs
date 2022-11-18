@@ -11,9 +11,9 @@ namespace Financity.Presentation.Services;
 public class CurrentUserService : ICurrentUserService
 {
     private readonly IHttpContextAccessor _httpContext;
+    private ImmutableHashSet<Guid>? _userWalletIds;
 
     private IImmutableDictionary<Guid, WalletAccessLevel>? _userWallets;
-    private ImmutableHashSet<Guid>? _userWalletIds;
 
     public CurrentUserService(IHttpContextAccessor httpContext, IOptions<IdentityOptions> identityOptions)
     {

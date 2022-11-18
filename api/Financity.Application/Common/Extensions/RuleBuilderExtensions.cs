@@ -92,11 +92,11 @@ public static class RuleBuilderExtensions
     }
 
     public static IRuleBuilder<T, Guid?> ExistsOrNull<T, TEntity>(this IRuleBuilder<T, Guid?> builder,
-                                                                     IApplicationDbContext db)
+                                                                  IApplicationDbContext db)
         where TEntity : class, IEntity
     {
         return builder.MustAsync(async (id, ct) =>
-                          id is null || await db.Exists<TEntity>((Guid) id, ct))
+                          id is null || await db.Exists<TEntity>((Guid)id, ct))
                       .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
@@ -104,7 +104,7 @@ public static class RuleBuilderExtensions
         this IRuleBuilder<T, Guid?> builder, IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
     {
-        return builder.MustAsync(async (id, ct) => id is null || await dbContext.HasUserAccess<TEntity>((Guid) id, ct))
+        return builder.MustAsync(async (id, ct) => id is null || await dbContext.HasUserAccess<TEntity>((Guid)id, ct))
                       .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 }
