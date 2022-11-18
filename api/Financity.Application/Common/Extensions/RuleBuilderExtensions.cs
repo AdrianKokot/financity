@@ -39,7 +39,7 @@ public static class RuleBuilderExtensions
         return ruleBuilder.MustAsync(dbContext.Exists<TEntity>)
                           .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
-    
+
     public static IRuleBuilder<T, Guid> HasUserAccess<T, TEntity>(this IRuleBuilder<T, Guid> ruleBuilder,
                                                                   IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
@@ -77,7 +77,7 @@ public static class RuleBuilderExtensions
     public static IRuleBuilder<T, Guid> HasUserAccessToWallet<T>(this IRuleBuilder<T, Guid> builder,
                                                                  IApplicationDbContext dbContext)
     {
-        return builder.Must(id => dbContext.UserService.UserWallets.ContainsKey(id))
+        return builder.Must(dbContext.UserService.UserWallets.ContainsKey)
                       .WithMessage($"{nameof(Wallet)} with given id doesn't exist.");
     }
 
@@ -95,7 +95,7 @@ public static class RuleBuilderExtensions
         where TEntity : class, IEntity
     {
         return builder.MustAsync(async (id, ct) =>
-                          id is null || await db.Exists<TEntity>((Guid)id, ct))
+                          id is null || await db.Exists<TEntity>((Guid) id, ct))
                       .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
@@ -103,7 +103,7 @@ public static class RuleBuilderExtensions
         this IRuleBuilder<T, Guid?> builder, IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet
     {
-        return builder.MustAsync(async (id, ct) => id is null || await dbContext.HasUserAccess<TEntity>((Guid)id, ct))
+        return builder.MustAsync(async (id, ct) => id is null || await dbContext.HasUserAccess<TEntity>((Guid) id, ct))
                       .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 }

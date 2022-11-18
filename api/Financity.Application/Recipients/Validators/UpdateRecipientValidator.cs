@@ -11,7 +11,7 @@ public sealed class UpdateRecipientValidator : AbstractValidator<UpdateRecipient
     public UpdateRecipientValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-        
+
         RuleFor(x => x.Id).HasUserAccess<UpdateRecipientCommand, Recipient>(dbContext);
     }
 }
