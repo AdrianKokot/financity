@@ -26,7 +26,7 @@ public abstract class
 
     private DbSet<TEntity> Set => _dbContext.GetDbSet<TEntity>();
 
-    public Task<IEnumerable<TMappedEntity>> Handle(TQuery request, CancellationToken cancellationToken)
+    public virtual Task<IEnumerable<TMappedEntity>> Handle(TQuery request, CancellationToken cancellationToken)
     {
         return FilterAndMapAsync(request, cancellationToken);
     }
@@ -43,6 +43,17 @@ public abstract class
         return AccessAsync(q =>
                 q.Paginate(request.QuerySpecification.PaginationSpecification)
                  .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider),
+            cancellationToken);
+    }
+
+    protected Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery request,
+                                                                 Func<IQueryable<TEntity>, IQueryable<TEntity>>
+                                                                     expression,
+                                                                 CancellationToken cancellationToken = default)
+    {
+        return AccessAsync(q =>
+                expression.Invoke(q).Paginate(request.QuerySpecification.PaginationSpecification)
+                          .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider),
             cancellationToken);
     }
 }

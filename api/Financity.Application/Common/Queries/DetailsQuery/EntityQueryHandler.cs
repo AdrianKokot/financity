@@ -22,7 +22,7 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
         _mapper = mapper;
     }
 
-    public async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
+    public virtual async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
     {
         var entity = await _dbContext.GetDbSet<TEntity>()
                                      .AsNoTracking()
