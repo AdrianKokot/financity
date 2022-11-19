@@ -7,12 +7,12 @@ public sealed class Budget : Entity, IBelongsToUser
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Budget figure
+    ///     Budget figure
     /// </summary>
     public decimal Amount { get; set; }
 
     /// <summary>
-    /// The sum of transactions in current period (this month) for tracked categories
+    ///     The sum of transactions in current period (this month) for tracked categories
     /// </summary>
     public decimal CurrentPeriodExpenses =>
         TrackedCategories.SelectMany(x => x.Transactions)
