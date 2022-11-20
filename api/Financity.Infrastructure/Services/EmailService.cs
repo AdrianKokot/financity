@@ -1,17 +1,18 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using Financity.Application.Abstractions.Configuration;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Financity.Infrastructure.Services;
 
 public sealed class EmailService : IEmailService
 {
-    private readonly IEmailConfiguration _configuration;
+    private readonly EmailConfiguration _options;
 
-    public EmailService(IEmailConfiguration configuration)
+    public EmailService(IOptions<EmailConfiguration> emailOptions)
     {
-        _configuration = configuration;
+        _options = emailOptions.Value;
     }
 
     public async Task SendEmailAsync(string recipientEmailAddress, string subject, string content,
@@ -19,15 +20,15 @@ public sealed class EmailService : IEmailService
     {
         var client = new SmtpClient
         {
-            Host = _configuration.SmtpServer,
-            Port = _configuration.Port,
+            Host = _options.SmtpServer,
+            Port = _options.Port,
             EnableSsl = true,
             DeliveryMethod = SmtpDeliveryMethod.Network,
             UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(_configuration.From, _configuration.Password)
+            Credentials = new NetworkCredential(_options.From, _options.Password)
         };
 
-        var message = new MailMessage(new MailAddress(_configuration.From, _configuration.Username),
+        var message = new MailMessage(new MailAddress(_options.From, _options.Username),
             new MailAddress(recipientEmailAddress))
         {
             Subject = subject,

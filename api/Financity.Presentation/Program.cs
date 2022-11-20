@@ -1,9 +1,9 @@
 using Financity.Application;
-using Financity.Application.Abstractions.Configuration;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Configuration;
 using Financity.Infrastructure;
 using Financity.Presentation.Auth;
-using Financity.Presentation.Configuration;
+using Financity.Presentation.Auth.Configuration;
 using Financity.Presentation.Middleware;
 using Financity.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,8 +18,8 @@ Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Host.UseSerilog();
 
 // Configurations
-builder.BindSingletonConfiguration<IEmailConfiguration, EmailConfiguration>();
-var jwtConfig = builder.BindSingletonConfiguration<IJwtConfiguration, JwtConfiguration>();
+builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection(JwtConfiguration.ConfigurationKey));
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection(EmailConfiguration.ConfigurationKey));
 
 // Add services to the container.
 builder.Services
@@ -36,7 +36,23 @@ builder.Services
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-builder.Services.AddAuthConfiguration(jwtConfig);
+builder.Services.AddAuthentication(options =>
+       {
+           options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+           options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+           options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+       })
+       .AddJwtBearer();
+
+builder.Services.ConfigureOptions<ConfigureJwtBearerOptions>();
+builder.Services.ConfigureOptions<ConfigureDataProtectionTokenProviderOptions>();
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthPolicy.Api, policy => { policy.RequireAuthenticatedUser(); });
+});
 
 builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
