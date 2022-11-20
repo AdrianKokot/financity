@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
-using Financity.Application.Common.Configuration;
 using Financity.Domain.Entities;
 using Financity.Presentation.Auth.Configuration;
 using Microsoft.AspNetCore.Identity;
