@@ -15,7 +15,7 @@ public sealed class GetRecipientsQuery : FilteredEntitiesQuery<RecipientListItem
 }
 
 public sealed class
-    GetRecipientsQueryHandler : FilteredEntitiesQueryHandler<GetRecipientsQuery, Recipient, RecipientListItem>
+    GetRecipientsQueryHandler : FilteredUserWalletEntitiesQueryHandler<GetRecipientsQuery, Recipient, RecipientListItem>
 {
     public GetRecipientsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

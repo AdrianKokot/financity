@@ -16,7 +16,7 @@ public sealed class GetCategoriesQuery : FilteredEntitiesQuery<CategoryListItem>
 }
 
 public sealed class
-    GetCategoriesQueryHandler : FilteredEntitiesQueryHandler<GetCategoriesQuery, Category, CategoryListItem>
+    GetCategoriesQueryHandler : FilteredUserWalletEntitiesQueryHandler<GetCategoriesQuery, Category, CategoryListItem>
 {
     public GetCategoriesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

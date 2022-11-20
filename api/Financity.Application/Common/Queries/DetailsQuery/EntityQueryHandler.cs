@@ -13,48 +13,37 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
     where TMappedEntity : class
     where TQuery : IEntityQuery<TMappedEntity>
 {
-    private readonly IApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
+    protected readonly IApplicationDbContext DbContext;
+    protected readonly IMapper Mapper;
 
     protected EntityQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
+        DbContext = dbContext;
+        Mapper = mapper;
     }
 
-    public virtual async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
+    protected DbSet<TEntity> Set => DbContext.GetDbSet<TEntity>();
+
+    public virtual async Task<TMappedEntity> Handle(TQuery query, CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<TEntity>()
-                                     .AsNoTracking()
-                                     .Where(x => x.Id == request.EntityId)
-                                     .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider)
-                                     .FirstOrDefaultAsync(cancellationToken);
-
-        if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
-
-        return entity;
-    }
-}
-
-public abstract class
-    EntityQueryHandler<TQuery, TEntity> : IQueryHandler<TQuery, TEntity>
-    where TEntity : Entity
-    where TQuery : IEntityQuery<TEntity>
-{
-    private readonly IApplicationDbContext _dbContext;
-
-    protected EntityQueryHandler(IApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
+        return await FilterAndMapAsync(query, q => q.Where(x => x.Id == query.EntityId), cancellationToken)
+               ?? throw new EntityNotFoundException(nameof(TEntity), query.EntityId);
     }
 
-    public async Task<TEntity> Handle(TQuery request, CancellationToken cancellationToken)
+    protected virtual async Task<TMappedEntity?> AccessAsync(
+        Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
-        var entity = await _dbContext.GetDbSet<TEntity>()
-                                     .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken);
+        return await expression.Invoke(Set.AsNoTracking()).FirstOrDefaultAsync(cancellationToken);
+    }
 
-        if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
-
-        return entity;
+    protected virtual Task<TMappedEntity?> FilterAndMapAsync(TQuery query,
+                                                             Func<IQueryable<TEntity>, IQueryable<TEntity>>
+                                                                 expression,
+                                                             CancellationToken cancellationToken = default)
+    {
+        return AccessAsync(
+            q => expression.Invoke(q).ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider),
+            cancellationToken
+        );
     }
 }

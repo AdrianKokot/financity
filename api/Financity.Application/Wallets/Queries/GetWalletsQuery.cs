@@ -19,6 +19,15 @@ public sealed class GetWalletsQueryHandler : FilteredEntitiesQueryHandler<GetWal
     public GetWalletsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
+
+    public override Task<IEnumerable<WalletListItem>> Handle(GetWalletsQuery query, CancellationToken cancellationToken)
+    {
+        return FilterAndMapAsync(
+            query,
+            q => q.Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id)),
+            cancellationToken
+        );
+    }
 }
 
 public sealed record WalletListItem
