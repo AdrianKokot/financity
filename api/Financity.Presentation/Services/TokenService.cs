@@ -1,8 +1,9 @@
 ﻿using System.Collections.Immutable;
 using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
+using Financity.Application.Common.Configuration;
 using Financity.Domain.Entities;
-using Financity.Presentation.Configuration;
+using Financity.Presentation.Auth.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -12,13 +13,13 @@ namespace Financity.Presentation.Services;
 
 public sealed class TokenService : ITokenService
 {
-    private readonly IJwtConfiguration _configuration;
+    private readonly JwtConfiguration _configuration;
     private readonly ClaimsIdentityOptions _options;
 
-    public TokenService(IJwtConfiguration configuration, IOptions<IdentityOptions> options)
+    public TokenService(IOptions<JwtConfiguration> jwtOptions, IOptions<IdentityOptions> identityOptions)
     {
-        _configuration = configuration;
-        _options = options.Value.ClaimsIdentity;
+        _configuration = jwtOptions.Value;
+        _options = identityOptions.Value.ClaimsIdentity;
     }
 
     public string GetTokenForUser(User user)

@@ -1,18 +1,9 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Financity.Presentation.Configuration;
+namespace Financity.Presentation.Auth.Configuration;
 
-public sealed class JwtConfigurationRegisterNotCalledException : Exception
-{
-    public JwtConfigurationRegisterNotCalledException() : base(
-        $"Configuration key: {JwtConfiguration.ConfigurationKey} is required to bind JwtConfiguration class")
-
-    {
-    }
-}
-
-public sealed class JwtConfiguration : IJwtConfiguration, IBindableConfiguration
+public sealed class JwtConfiguration
 {
     private string? _key;
 
