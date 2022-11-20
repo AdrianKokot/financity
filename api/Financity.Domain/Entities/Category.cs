@@ -12,9 +12,10 @@ public sealed class Category : Entity, IBelongsToWallet
     public Guid? ParentCategoryId { get; set; }
     public Category? ParentCategory { get; set; }
 
-    public TransactionType? TransactionType { get; set; }
+    public TransactionType TransactionType { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public ICollection<Budget> Budgets { get; set; } = new List<Budget>();
 
     public Guid WalletId { get; set; }
     public Wallet Wallet { get; set; }

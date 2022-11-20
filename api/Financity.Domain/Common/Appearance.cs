@@ -2,6 +2,6 @@
 
 public sealed class Appearance
 {
-    public string Color { get; set; } = string.Empty;
-    public string IconName { get; set; } = string.Empty;
+    public string? Color { get; set; }
+    public string? IconName { get; set; }
 }
