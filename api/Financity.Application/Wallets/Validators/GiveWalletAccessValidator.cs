@@ -10,10 +10,14 @@ public sealed class GiveWalletAccessValidator : AbstractValidator<GiveWalletAcce
 {
     public GiveWalletAccessValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.UserEmail).EmailAddress().NotEmpty()
-                                 .Must(x => x.ToUpper() != dbContext.UserService.NormalizedUserEmail)
-                                 .WithMessage("You cannot share wallet to yourself.");
+        RuleFor(x => x.UserEmail)
+            .EmailAddress()
+            .NotEmpty()
+            .Must(x => x.ToUpper() != dbContext.UserService.NormalizedUserEmail)
+            .WithMessage("You cannot share wallet to yourself.");
 
-        RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext, WalletAccessLevel.Owner);
+        RuleFor(x => x.WalletId)
+            .NotEmpty()
+            .HasUserAccessToWallet(dbContext, WalletAccessLevel.Owner);
     }
 }

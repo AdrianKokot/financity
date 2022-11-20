@@ -8,7 +8,8 @@ namespace Financity.Application.Recipients.Queries;
 
 public sealed record GetRecipientQuery(Guid EntityId) : IEntityQuery<RecipientDetails>;
 
-public sealed class GetRecipientQueryHandler : EntityQueryHandler<GetRecipientQuery, Recipient, RecipientDetails>
+public sealed class
+    GetRecipientQueryHandler : UserWalletEntityQueryHandler<GetRecipientQuery, Recipient, RecipientDetails>
 {
     public GetRecipientQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

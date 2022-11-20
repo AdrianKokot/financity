@@ -17,7 +17,8 @@ public sealed class GetTransactionsQuery : FilteredEntitiesQuery<TransactionList
 }
 
 public sealed class
-    GetTransactionsQueryHandler : FilteredEntitiesQueryHandler<GetTransactionsQuery, Transaction, TransactionListItem>
+    GetTransactionsQueryHandler : FilteredUserWalletEntitiesQueryHandler<GetTransactionsQuery, Transaction,
+        TransactionListItem>
 {
     public GetTransactionsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

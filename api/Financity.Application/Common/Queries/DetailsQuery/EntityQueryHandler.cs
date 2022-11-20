@@ -13,48 +13,81 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
     where TMappedEntity : class
     where TQuery : IEntityQuery<TMappedEntity>
 {
-    private readonly IApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
+    protected readonly IApplicationDbContext DbContext;
+    protected readonly IMapper Mapper;
 
     protected EntityQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
+        DbContext = dbContext;
+        Mapper = mapper;
     }
 
-    public virtual async Task<TMappedEntity> Handle(TQuery request, CancellationToken cancellationToken)
+    protected DbSet<TEntity> Set => DbContext.GetDbSet<TEntity>();
+
+    public virtual async Task<TMappedEntity> Handle(TQuery query, CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<TEntity>()
-                                     .AsNoTracking()
-                                     .Where(x => x.Id == request.EntityId)
-                                     .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider)
-                                     .FirstOrDefaultAsync(cancellationToken);
+        return await FilterAndMapAsync(query, q => q, cancellationToken);
+    }
 
-        if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
+    protected virtual async Task<TMappedEntity?> AccessAsync(
+        Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
+    {
+        return await expression.Invoke(Set.AsNoTracking()).FirstOrDefaultAsync(cancellationToken);
+    }
 
-        return entity;
+    protected virtual async Task<TMappedEntity> FilterAndMapAsync(TQuery query,
+                                                                  Func<IQueryable<TEntity>, IQueryable<TEntity>>
+                                                                      expression,
+                                                                  CancellationToken cancellationToken = default)
+    {
+        return await AccessAsync(
+            q => expression.Invoke(q).Where(x => x.Id == query.EntityId)
+                           .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider),
+            cancellationToken
+        ) ?? throw new EntityNotFoundException(nameof(TEntity), query.EntityId);
     }
 }
 
 public abstract class
-    EntityQueryHandler<TQuery, TEntity> : IQueryHandler<TQuery, TEntity>
-    where TEntity : Entity
-    where TQuery : IEntityQuery<TEntity>
+    UserWalletEntityQueryHandler<TQuery, TEntity, TMappedEntity> : EntityQueryHandler<TQuery, TEntity, TMappedEntity>
+    where TEntity : class, IEntity, IBelongsToWallet
+    where TMappedEntity : class
+    where TQuery : IEntityQuery<TMappedEntity>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    protected EntityQueryHandler(IApplicationDbContext dbContext)
+    protected UserWalletEntityQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<TEntity> Handle(TQuery request, CancellationToken cancellationToken)
+    protected override async Task<TMappedEntity?> AccessAsync(
+        Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
-        var entity = await _dbContext.GetDbSet<TEntity>()
-                                     .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken);
+        return await expression
+                     .Invoke(Set
+                             .AsNoTracking()
+                             .Where(x => DbContext.UserService.UserWalletIds.Contains(x.WalletId))
+                     )
+                     .FirstOrDefaultAsync(cancellationToken);
+    }
+}
 
-        if (entity is null) throw new EntityNotFoundException(nameof(TEntity), request.EntityId);
+public abstract class
+    UserEntityQueryHandler<TQuery, TEntity, TMappedEntity> : EntityQueryHandler<TQuery, TEntity, TMappedEntity>
+    where TEntity : class, IEntity, IBelongsToUser
+    where TMappedEntity : class
+    where TQuery : IEntityQuery<TMappedEntity>
+{
+    protected UserEntityQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    {
+    }
 
-        return entity;
+    protected override async Task<TMappedEntity?> AccessAsync(
+        Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
+    {
+        return await expression
+                     .Invoke(Set
+                             .AsNoTracking()
+                             .Where(x => x.UserId == DbContext.UserService.UserId)
+                     )
+                     .FirstOrDefaultAsync(cancellationToken);
     }
 }

@@ -56,9 +56,8 @@ public class TransactionsController : BaseController
                                              [FromQuery] string query,
                                              [FromQuery] Guid? walletId = null)
     {
-        return await HandleQueryAsync(new SearchTransactionsQuery
+        return await HandleQueryAsync(new SearchTransactionsQuery(querySpecification)
         {
-            QuerySpecification = querySpecification,
             WalletId = walletId,
             SearchTerm = query
         });

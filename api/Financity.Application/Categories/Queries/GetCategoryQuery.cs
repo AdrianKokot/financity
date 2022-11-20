@@ -9,7 +9,7 @@ namespace Financity.Application.Categories.Queries;
 
 public sealed record GetCategoryQuery(Guid EntityId) : IEntityQuery<CategoryDetails>;
 
-public sealed class GetCategoryQueryHandler : EntityQueryHandler<GetCategoryQuery, Category, CategoryDetails>
+public sealed class GetCategoryQueryHandler : UserWalletEntityQueryHandler<GetCategoryQuery, Category, CategoryDetails>
 {
     public GetCategoryQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

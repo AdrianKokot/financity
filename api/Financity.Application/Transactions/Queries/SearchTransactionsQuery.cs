@@ -1,44 +1,40 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Financity.Application.Abstractions.Data;
-using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Extensions;
 using Financity.Application.Common.Queries;
+using Financity.Application.Common.Queries.FilteredQuery;
+using Financity.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Queries;
 
-public sealed class SearchTransactionsQuery : IQuery<IEnumerable<TransactionListItem>>
+public sealed class SearchTransactionsQuery : FilteredEntitiesQuery<TransactionListItem>
 {
-    public QuerySpecification QuerySpecification { get; set; } = new();
-    public Guid UserId { get; set; }
+    public SearchTransactionsQuery(QuerySpecification querySpecification) : base(querySpecification)
+    {
+    }
+
     public Guid? WalletId { get; set; } = null;
     public string SearchTerm { get; set; } = string.Empty;
 }
 
 public sealed class
-    SearchTransactionsQueryHandler : IQueryHandler<SearchTransactionsQuery, IEnumerable<TransactionListItem>>
+    SearchTransactionsQueryHandler : FilteredEntitiesQueryHandler<SearchTransactionsQuery, Transaction,
+        TransactionListItem>
 {
-    private readonly IApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
-    private readonly ICurrentUserService _userService;
-
-    public SearchTransactionsQueryHandler(IApplicationDbContext dbContext, ICurrentUserService userService,
-                                          IMapper mapper)
+    public SearchTransactionsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
-        _dbContext = dbContext;
-        _userService = userService;
-        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TransactionListItem>> Handle(SearchTransactionsQuery request, CancellationToken ct)
+    public override async Task<IEnumerable<TransactionListItem>> Handle(SearchTransactionsQuery query,
+                                                                        CancellationToken cancellationToken)
     {
-        request.UserId = _userService.UserId;
-
-        return await _dbContext.SearchUserTransactions(request.UserId, request.SearchTerm, request.WalletId)
-                               .AsNoTracking()
-                               .Paginate(request.QuerySpecification.PaginationSpecification)
-                               .ProjectTo<TransactionListItem>(_mapper.ConfigurationProvider)
-                               .ToListAsync(ct);
+        return await DbContext.SearchUserTransactions(DbContext.UserService.UserId, query.SearchTerm, query.WalletId)
+                              .AsNoTracking()
+                              .Where(x => DbContext.UserService.UserWalletIds.Contains(x.WalletId))
+                              .Paginate(query.QuerySpecification.PaginationSpecification)
+                              .ProjectTo<TransactionListItem>(Mapper.ConfigurationProvider)
+                              .ToListAsync(cancellationToken);
     }
 }

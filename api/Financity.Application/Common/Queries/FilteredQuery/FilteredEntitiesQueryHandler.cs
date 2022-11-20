@@ -15,72 +15,89 @@ public abstract class
     where TMappedEntity : class
     where TQuery : IFilteredEntitiesListQuery<TMappedEntity>
 {
-    private readonly IApplicationDbContext _dbContext;
-    private readonly IMapper _mapper;
+    protected readonly IApplicationDbContext DbContext;
+    protected readonly IMapper Mapper;
 
     protected FilteredEntitiesQueryHandler(IApplicationDbContext dbContext, IMapper mapper)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
+        DbContext = dbContext;
+        Mapper = mapper;
     }
 
-    private DbSet<TEntity> Set => _dbContext.GetDbSet<TEntity>();
+    protected DbSet<TEntity> Set => DbContext.GetDbSet<TEntity>();
 
-    public virtual Task<IEnumerable<TMappedEntity>> Handle(TQuery request, CancellationToken cancellationToken)
+    public virtual Task<IEnumerable<TMappedEntity>> Handle(TQuery query, CancellationToken cancellationToken)
     {
-        return FilterAndMapAsync(request, cancellationToken);
+        return FilterAndMapAsync(query, cancellationToken);
     }
 
-    protected async Task<IEnumerable<TMappedEntity>> AccessAsync(
+    protected virtual async Task<IEnumerable<TMappedEntity>> AccessAsync(
         Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
         return await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
     }
 
-    protected Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery request,
-                                                                 CancellationToken cancellationToken = default)
+    protected virtual Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery query,
+                                                                         CancellationToken cancellationToken = default)
     {
-        return AccessAsync(q =>
-                q.Paginate(request.QuerySpecification.PaginationSpecification)
-                 .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider),
-            cancellationToken);
+        return FilterAndMapAsync(query, q => q, cancellationToken);
     }
 
-    protected Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery request,
-                                                                 Func<IQueryable<TEntity>, IQueryable<TEntity>>
-                                                                     expression,
-                                                                 CancellationToken cancellationToken = default)
+    protected virtual Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery query,
+                                                                         Func<IQueryable<TEntity>, IQueryable<TEntity>>
+                                                                             expression,
+                                                                         CancellationToken cancellationToken = default)
     {
         return AccessAsync(q =>
-                expression.Invoke(q).Paginate(request.QuerySpecification.PaginationSpecification)
-                          .ProjectTo<TMappedEntity>(_mapper.ConfigurationProvider),
-            cancellationToken);
+            expression.Invoke(q)
+                      .Paginate(query.QuerySpecification.PaginationSpecification)
+                      .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider), cancellationToken);
     }
 }
 
 public abstract class
-    FilteredEntitiesQueryHandler<TQuery, TEntity> : IQueryHandler<TQuery, IEnumerable<TEntity>>
-    where TEntity : Entity
-    where TQuery : IFilteredEntitiesListQuery<TEntity>
+    FilteredUserEntitiesQueryHandler<TQuery, TEntity, TMappedEntity> : FilteredEntitiesQueryHandler<TQuery, TEntity,
+        TMappedEntity>
+    where TEntity : Entity, IBelongsToUser
+    where TMappedEntity : class
+    where TQuery : IFilteredEntitiesListQuery<TMappedEntity>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    protected FilteredEntitiesQueryHandler(IApplicationDbContext dbContext)
+    protected FilteredUserEntitiesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext,
+        mapper)
     {
-        _dbContext = dbContext;
     }
 
-    private DbSet<TEntity> Set => _dbContext.GetDbSet<TEntity>();
-
-    public Task<IEnumerable<TEntity>> Handle(TQuery request, CancellationToken cancellationToken)
+    protected override async Task<IEnumerable<TMappedEntity>> AccessAsync(
+        Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
-        return AccessAsync(q => q.Paginate(request.QuerySpecification.PaginationSpecification),
-            cancellationToken);
+        return await expression.Invoke(Set
+                                       .AsNoTracking()
+                                       .Where(x => x.UserId == DbContext.UserService.UserId)
+                               )
+                               .ToListAsync(cancellationToken);
+    }
+}
+
+public abstract class
+    FilteredUserWalletEntitiesQueryHandler<TQuery, TEntity, TMappedEntity> : FilteredEntitiesQueryHandler<TQuery,
+        TEntity,
+        TMappedEntity>
+    where TEntity : Entity, IBelongsToWallet
+    where TMappedEntity : class
+    where TQuery : IFilteredEntitiesListQuery<TMappedEntity>
+{
+    protected FilteredUserWalletEntitiesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext,
+        mapper)
+    {
     }
 
-    protected async Task<IEnumerable<TEntity>> AccessAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> expression,
-                                                           CancellationToken cancellationToken = default)
+    protected override async Task<IEnumerable<TMappedEntity>> AccessAsync(
+        Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
-        return await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
+        return await expression.Invoke(Set
+                                       .AsNoTracking()
+                                       .Where(x => DbContext.UserService.UserWalletIds.Contains(x.WalletId))
+                               )
+                               .ToListAsync(cancellationToken);
     }
 }

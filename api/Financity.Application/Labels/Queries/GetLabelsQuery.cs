@@ -15,7 +15,7 @@ public sealed class GetLabelsQuery : FilteredEntitiesQuery<LabelListItem>
     }
 }
 
-public sealed class GetLabelsQueryHandler : FilteredEntitiesQueryHandler<GetLabelsQuery, Label, LabelListItem>
+public sealed class GetLabelsQueryHandler : FilteredUserWalletEntitiesQueryHandler<GetLabelsQuery, Label, LabelListItem>
 {
     public GetLabelsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
