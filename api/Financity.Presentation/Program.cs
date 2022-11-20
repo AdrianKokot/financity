@@ -5,6 +5,7 @@ using Financity.Infrastructure;
 using Financity.Presentation.Auth;
 using Financity.Presentation.Auth.Configuration;
 using Financity.Presentation.Middleware;
+using Financity.Presentation.QueryParams;
 using Financity.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -59,6 +60,8 @@ builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInAction
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.OperationFilter<QuerySpecificationFilter>();
+    
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Financity",
