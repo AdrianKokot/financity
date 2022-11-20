@@ -2,7 +2,6 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 using Financity.Persistence.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -60,7 +59,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.SeedData();
 
         builder.HasDbFunction(
-            GetType().GetMethod(nameof(SearchUserTransactions), new[] { typeof(Guid), typeof(string), typeof(Guid?) })!
+            GetType().GetMethod(nameof(SearchUserTransactions), new[] {typeof(Guid), typeof(string), typeof(Guid?)})!
         );
 
         base.OnModelCreating(builder);
