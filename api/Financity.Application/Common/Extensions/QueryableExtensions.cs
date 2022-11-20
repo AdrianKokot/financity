@@ -8,6 +8,9 @@ public static class QueryableExtensions
     public static IQueryable<T> Paginate<T>(this IQueryable<T> query, PaginationSpecification specification)
         where T : Entity
     {
-        return query.Take(specification.Take).Skip(specification.Skip).OrderBy(x => x.Id);
+        return query
+               .Skip(specification.Skip)
+               .Take(specification.Take)
+               .OrderBy(x => x.Id);
     }
 }
