@@ -9,7 +9,7 @@ namespace Financity.Application.Labels.Queries;
 
 public sealed record GetLabelQuery(Guid EntityId) : IEntityQuery<LabelDetails>;
 
-public sealed class GetLabelQueryHandler : EntityQueryHandler<GetLabelQuery, Label, LabelDetails>
+public sealed class GetLabelQueryHandler : UserWalletEntityQueryHandler<GetLabelQuery, Label, LabelDetails>
 {
     public GetLabelQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {

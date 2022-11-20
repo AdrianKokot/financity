@@ -10,10 +10,14 @@ public sealed class RevokeWalletAccessValidator : AbstractValidator<RevokeWallet
 {
     public RevokeWalletAccessValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.UserEmail).EmailAddress().NotEmpty()
-                                 .Must(x => x.ToUpper() != dbContext.UserService.NormalizedUserEmail)
-                                 .WithMessage("You cannot revoke wallet access from yourself.");
+        RuleFor(x => x.UserEmail)
+            .EmailAddress()
+            .NotEmpty()
+            .Must(x => x.ToUpper() != dbContext.UserService.NormalizedUserEmail)
+            .WithMessage("You cannot revoke wallet access from yourself.");
 
-        RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext, WalletAccessLevel.Owner);
+        RuleFor(x => x.WalletId)
+            .NotEmpty()
+            .HasUserAccessToWallet(dbContext, WalletAccessLevel.Owner);
     }
 }

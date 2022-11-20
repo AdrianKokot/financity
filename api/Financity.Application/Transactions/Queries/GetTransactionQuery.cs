@@ -11,7 +11,7 @@ namespace Financity.Application.Transactions.Queries;
 public sealed record GetTransactionQuery(Guid EntityId) : IEntityQuery<TransactionDetails>;
 
 public sealed class
-    GetTransactionQueryHandler : EntityQueryHandler<GetTransactionQuery, Transaction, TransactionDetails>
+    GetTransactionQueryHandler : UserWalletEntityQueryHandler<GetTransactionQuery, Transaction, TransactionDetails>
 {
     public GetTransactionQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
