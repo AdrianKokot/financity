@@ -2,6 +2,7 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
+using Financity.Domain.Enums;
 using Financity.Persistence.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
