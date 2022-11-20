@@ -3,6 +3,7 @@ using System;
 using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221119121917_FixBudgetCategoriesRelationship")]
+    partial class FixBudgetCategoriesRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +94,7 @@ namespace Financity.Persistence.Migrations
                     b.Property<Guid?>("ParentCategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("TransactionType")
+                    b.Property<int?>("TransactionType")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("WalletId")
@@ -127,19 +130,19 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fe72159d-8edc-4e04-a4de-561ac953b592"),
+                            Id = new Guid("4773a5ae-eb68-469f-8afc-d6cda74b50a1"),
                             Code = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("222a9676-2366-4a63-85c1-f892af3635bc"),
+                            Id = new Guid("66f001bf-6ef5-4f2e-894a-d0f56c830368"),
                             Code = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("34fa9244-3524-46c2-bb75-794a6ac5f82d"),
+                            Id = new Guid("ee9f493b-cf8e-45d1-b48e-d4e2905c7d2f"),
                             Code = "USD",
                             Name = "United States Dollar"
                         });
@@ -303,9 +306,6 @@ namespace Financity.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<decimal>("StartingAmount")
-                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -474,7 +474,7 @@ namespace Financity.Persistence.Migrations
                         .HasForeignKey("RecipientId");
 
                     b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
-                        .WithMany("Transactions")
+                        .WithMany()
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -536,8 +536,6 @@ namespace Financity.Persistence.Migrations
                     b.Navigation("Labels");
 
                     b.Navigation("Recipients");
-
-                    b.Navigation("Transactions");
 
                     b.Navigation("UsersWithAccess");
                 });
