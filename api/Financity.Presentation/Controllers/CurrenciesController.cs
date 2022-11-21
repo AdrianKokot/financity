@@ -10,7 +10,8 @@ public sealed class CurrenciesController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CurrencyListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CurrencyListItem> querySpecification, CancellationToken ct)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CurrencyListItem> querySpecification,
+                                             CancellationToken ct)
     {
         return HandleQueryAsync(new GetCurrenciesQuery(querySpecification), ct);
     }

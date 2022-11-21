@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Financity.Application.Common.Queries;
+﻿namespace Financity.Application.Common.Queries;
 
 public sealed class PaginationSpecification
 {

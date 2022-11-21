@@ -11,7 +11,8 @@ namespace Financity.Application.Transactions.Queries;
 
 public sealed class SearchTransactionsQuery : FilteredEntitiesQuery<TransactionListItem>
 {
-    public SearchTransactionsQuery(QuerySpecification<TransactionListItem> querySpecification) : base(querySpecification)
+    public SearchTransactionsQuery(QuerySpecification<TransactionListItem> querySpecification) : base(
+        querySpecification)
     {
     }
 

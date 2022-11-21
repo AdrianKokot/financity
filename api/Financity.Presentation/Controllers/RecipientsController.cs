@@ -11,7 +11,8 @@ public class RecipientsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<RecipientListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<RecipientListItem> querySpecification, CancellationToken ct)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<RecipientListItem> querySpecification,
+                                             CancellationToken ct)
     {
         return HandleQueryAsync(new GetRecipientsQuery(querySpecification), ct);
     }

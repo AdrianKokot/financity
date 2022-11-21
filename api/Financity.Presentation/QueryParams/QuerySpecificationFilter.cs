@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Financity.Application.Common.Queries;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -8,12 +7,12 @@ namespace Financity.Presentation.QueryParams;
 
 public sealed class QuerySpecificationFilter : IOperationFilter
 {
-    private static readonly IDictionary<Type, OpenApiSchema> ApiSchemas = new Dictionary<Type, OpenApiSchema>()
+    private static readonly IDictionary<Type, OpenApiSchema> ApiSchemas = new Dictionary<Type, OpenApiSchema>
     {
-        {typeof(int), new OpenApiSchema() {Type = "integer", Format = nameof(Int32).ToLower()}},
-        {typeof(string), new OpenApiSchema() {Type = nameof(String).ToLower()}},
-        {typeof(Guid), new OpenApiSchema() {Type = nameof(String).ToLower(), Format = "uuid"}},
-        {typeof(DateTime), new OpenApiSchema() {Type = nameof(String).ToLower(), Format = "date-time"}}
+        {typeof(int), new OpenApiSchema {Type = "integer", Format = nameof(Int32).ToLower()}},
+        {typeof(string), new OpenApiSchema {Type = nameof(String).ToLower()}},
+        {typeof(Guid), new OpenApiSchema {Type = nameof(String).ToLower(), Format = "uuid"}},
+        {typeof(DateTime), new OpenApiSchema {Type = nameof(String).ToLower(), Format = "date-time"}}
     };
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
@@ -25,10 +24,7 @@ public sealed class QuerySpecificationFilter : IOperationFilter
                                                               typeof(QuerySpecification<>)
                                          );
 
-        if (parameterDescriptor is null)
-        {
-            return;
-        }
+        if (parameterDescriptor is null) return;
 
         var entityType = parameterDescriptor.ParameterType.GetGenericArguments().FirstOrDefault();
 
@@ -41,12 +37,12 @@ public sealed class QuerySpecificationFilter : IOperationFilter
                                         .Where(x => !querySpecificationProperties.Contains(x.Name.Split(".").First()))
                                         .ToList();
 
-        var bindings = new List<KeyValuePair<Type, string>>()
+        var bindings = new List<KeyValuePair<Type, string>>
         {
             new(typeof(int), QueryKeys.PageQueryParamKey),
             new(typeof(int), QueryKeys.PageSizeQueryParamKey),
             new(typeof(string), QueryKeys.OrderByQueryParamKey),
-            new(typeof(string), QueryKeys.OrderByDirectionQueryParamKey),
+            new(typeof(string), QueryKeys.OrderByDirectionQueryParamKey)
         };
 
         if (entityType is not null)
@@ -63,14 +59,12 @@ public sealed class QuerySpecificationFilter : IOperationFilter
         }
 
         foreach (var binding in bindings)
-        {
-            operation.Parameters.Add(new OpenApiParameter()
+            operation.Parameters.Add(new OpenApiParameter
             {
                 Name = binding.Value,
                 In = ParameterLocation.Query,
                 Required = false,
                 Schema = ApiSchemas[binding.Key]
             });
-        }
     }
 }

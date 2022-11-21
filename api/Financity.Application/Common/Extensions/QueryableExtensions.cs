@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
-using Financity.Application.Common.Queries;
-using Financity.Domain.Common;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Financity.Application.Common.Queries;
+using Financity.Domain.Common;
 
 namespace Financity.Application.Common.Extensions;
 
@@ -51,7 +50,7 @@ public static class QueryableExtensions
                                         var property = Expression.Property(parameter, x.Key);
                                         var propertyInfo = entityProperties[x.Key];
 
-                                        return (Expression) Expression.Call(
+                                        return (Expression)Expression.Call(
                                             propertyInfo.PropertyType != typeof(string)
                                                 ? Expression.Call(property,
                                                     ToStringMethod(propertyInfo))
@@ -77,9 +76,9 @@ public static class QueryableExtensions
     {
         return op switch
         {
-            "eq" => typeof(string).GetMethod("Equals", new[] {typeof(string)}),
+            "eq" => typeof(string).GetMethod("Equals", new[] { typeof(string) }),
             "ct" =>
-                typeof(string).GetMethod("Contains", new[] {typeof(string)}),
+                typeof(string).GetMethod("Contains", new[] { typeof(string) }),
             _ => throw new ArgumentException($"Operator '{op}' is not supported by {property.PropertyType.Name} type")
         };
     }

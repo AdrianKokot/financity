@@ -2,12 +2,9 @@
 using System.ComponentModel;
 using System.Reflection;
 using Financity.Application.Common.Queries;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Financity.Presentation.QueryParams;
 
@@ -18,20 +15,20 @@ public static class QueryKeys
     public const string OrderByQueryParamKey = "orderBy";
     public const string OrderByDirectionQueryParamKey = "direction";
 
-    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() {typeof(Guid), typeof(string), typeof(DateTime)};
+    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() { typeof(Guid), typeof(string), typeof(DateTime) };
 }
 
 public static class QueryParamFilters
 {
     public static readonly IDictionary<Type, IEnumerable<string>> TypeOperators =
-        new Dictionary<Type, IEnumerable<string>>()
+        new Dictionary<Type, IEnumerable<string>>
         {
             {typeof(Guid), new[] {"eq"}},
             {typeof(string), new[] {"eq", "ct"}},
-            {typeof(DateTime), new[] {"gte", "lte"}},
+            {typeof(DateTime), new[] {"gte", "lte"}}
         };
 
-    public static readonly IDictionary<string, string> OperatorFunctions = new Dictionary<string, string>()
+    public static readonly IDictionary<string, string> OperatorFunctions = new Dictionary<string, string>
     {
         {"eq", "Equals"},
         {"ct", "Contains"}
@@ -45,8 +42,8 @@ public static class QueryParamFilters
 
 public sealed class QuerySpecificationBinder<T> : IModelBinder
 {
-    private readonly IObjectModelValidator _validator;
     private readonly IDictionary<string, PropertyInfo> _entityProperties;
+    private readonly IObjectModelValidator _validator;
 
     public QuerySpecificationBinder(IObjectModelValidator validator)
     {
@@ -57,22 +54,32 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
                             .ToDictionary(x => x.Name.ToLower(), x => x);
     }
 
+    public async Task BindModelAsync(ModelBindingContext bindingContext)
+    {
+        var model = new QuerySpecification<T>
+        {
+            Pagination = ParsePagination(bindingContext.ValueProvider),
+            Sort = ParseSort(bindingContext.ValueProvider),
+            Filters = ParseFilters(bindingContext)
+        };
+
+        bindingContext.Result = ModelBindingResult.Success(model);
+        _validator.Validate(bindingContext.ActionContext, bindingContext.ValidationState, string.Empty, model);
+
+        await Task.CompletedTask;
+    }
+
     private static PaginationSpecification ParsePagination(IValueProvider valueProvider)
     {
         var specification = new PaginationSpecification();
 
         var pageSizeString = valueProvider.GetValue(QueryKeys.PageSizeQueryParamKey).FirstValue;
 
-        if (pageSizeString is not null)
-        {
-            specification.Take = int.Parse(pageSizeString);
-        }
+        if (pageSizeString is not null) specification.Take = int.Parse(pageSizeString);
 
         var pageString = valueProvider.GetValue(QueryKeys.PageQueryParamKey).FirstValue;
         if (pageString is not null)
-        {
             specification.Skip = specification.Take * Math.Clamp(int.Parse(pageString) - 1, 0, int.MaxValue);
-        }
 
         return specification;
     }
@@ -112,7 +119,7 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
                                                        .Contains(operatorString))
                                      return null;
 
-                                 return new Filter()
+                                 return new Filter
                                  {
                                      Key = property.Name,
                                      Operator = operatorString,
@@ -122,31 +129,13 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
                              .Where(x => x is not null)
                              .ToImmutableList()!;
     }
-
-    public async Task BindModelAsync(ModelBindingContext bindingContext)
-    {
-        var model = new QuerySpecification<T>()
-        {
-            Pagination = ParsePagination(bindingContext.ValueProvider),
-            Sort = ParseSort(bindingContext.ValueProvider),
-            Filters = ParseFilters(bindingContext)
-        };
-
-        bindingContext.Result = ModelBindingResult.Success(model);
-        _validator.Validate(bindingContext.ActionContext, bindingContext.ValidationState, string.Empty, model);
-
-        await Task.CompletedTask;
-    }
 }
 
 public sealed class QuerySpecificationBinderProvider : IModelBinderProvider
 {
     public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context));
-        }
+        if (context == null) throw new ArgumentNullException(nameof(context));
 
         if (!(context.Metadata.ModelType.IsGenericType &&
               context.Metadata.ModelType.GetGenericTypeDefinition() == typeof(QuerySpecification<>)))
@@ -156,7 +145,7 @@ public sealed class QuerySpecificationBinderProvider : IModelBinderProvider
 
         if (generic is null) return null;
 
-        var binderType = typeof(QuerySpecificationBinder<>).MakeGenericType(new[] {generic});
+        var binderType = typeof(QuerySpecificationBinder<>).MakeGenericType(generic);
 
         return new BinderTypeModelBinder(binderType);
     }

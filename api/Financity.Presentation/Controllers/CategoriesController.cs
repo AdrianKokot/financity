@@ -2,7 +2,6 @@
 using Financity.Application.Categories.Queries;
 using Financity.Application.Common.Queries;
 using Financity.Presentation.Controllers.Shared;
-using Financity.Presentation.QueryParams;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,7 +11,8 @@ public class CategoriesController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CategoryListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CategoryListItem> querySpecification, CancellationToken ct)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CategoryListItem> querySpecification,
+                                             CancellationToken ct)
     {
         return HandleQueryAsync(new GetCategoriesQuery(querySpecification), ct);
     }
