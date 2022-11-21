@@ -9,7 +9,7 @@ namespace Financity.Application.Wallets.Queries;
 
 public class GetWalletsQuery : FilteredEntitiesQuery<WalletListItem>
 {
-    public GetWalletsQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public GetWalletsQuery(QuerySpecification<WalletListItem> querySpecification) : base(querySpecification)
     {
     }
 }

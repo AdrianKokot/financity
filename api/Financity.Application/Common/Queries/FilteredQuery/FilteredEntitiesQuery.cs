@@ -2,17 +2,17 @@
 
 namespace Financity.Application.Common.Queries.FilteredQuery;
 
-public interface IFilteredEntitiesListQuery<out TEntity> : IQuery<IEnumerable<TEntity>> where TEntity : class
+public interface IFilteredEntitiesListQuery<TEntity> : IQuery<IEnumerable<TEntity>> where TEntity : class
 {
-    public QuerySpecification QuerySpecification { get; set; }
+    public QuerySpecification<TEntity> QuerySpecification { get; set; }
 }
 
 public abstract class FilteredEntitiesQuery<TEntity> : IFilteredEntitiesListQuery<TEntity> where TEntity : class
 {
-    protected FilteredEntitiesQuery(QuerySpecification querySpecification)
+    protected FilteredEntitiesQuery(QuerySpecification<TEntity> querySpecification)
     {
         QuerySpecification = querySpecification;
     }
 
-    public QuerySpecification QuerySpecification { get; set; }
+    public QuerySpecification<TEntity> QuerySpecification { get; set; }
 }

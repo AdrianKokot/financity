@@ -11,7 +11,7 @@ namespace Financity.Application.Transactions.Queries;
 
 public sealed class SearchTransactionsQuery : FilteredEntitiesQuery<TransactionListItem>
 {
-    public SearchTransactionsQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public SearchTransactionsQuery(QuerySpecification<TransactionListItem> querySpecification) : base(querySpecification)
     {
     }
 
@@ -33,7 +33,7 @@ public sealed class
         return await DbContext.SearchUserTransactions(DbContext.UserService.UserId, query.SearchTerm, query.WalletId)
                               .AsNoTracking()
                               .Where(x => DbContext.UserService.UserWalletIds.Contains(x.WalletId))
-                              .Paginate(query.QuerySpecification.PaginationSpecification)
+                              .ApplyQuerySpecification(query.QuerySpecification)
                               .ProjectTo<TransactionListItem>(Mapper.ConfigurationProvider)
                               .ToListAsync(cancellationToken);
     }

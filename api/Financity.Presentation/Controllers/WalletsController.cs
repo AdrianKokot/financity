@@ -12,7 +12,7 @@ public class WalletsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<WalletListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<WalletListItem> querySpecification, CancellationToken ct
     )
     {
         return HandleQueryAsync(new GetWalletsQuery(querySpecification), ct);

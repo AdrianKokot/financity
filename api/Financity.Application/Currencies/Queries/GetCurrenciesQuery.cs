@@ -9,7 +9,7 @@ namespace Financity.Application.Currencies.Queries;
 
 public sealed class GetCurrenciesQuery : FilteredEntitiesQuery<CurrencyListItem>
 {
-    public GetCurrenciesQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public GetCurrenciesQuery(QuerySpecification<CurrencyListItem> querySpecification) : base(querySpecification)
     {
     }
 }

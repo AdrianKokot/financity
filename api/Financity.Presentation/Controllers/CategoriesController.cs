@@ -12,9 +12,8 @@ public class CategoriesController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CategoryListItem>))]
-    public Task<IActionResult> GetEntityList([QuerySpecification] QuerySpecification querySpecification, CancellationToken ct)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CategoryListItem> querySpecification, CancellationToken ct)
     {
-        Console.WriteLine(querySpecification);
         return HandleQueryAsync(new GetCategoriesQuery(querySpecification), ct);
     }
 

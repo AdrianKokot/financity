@@ -10,7 +10,7 @@ namespace Financity.Application.Labels.Queries;
 
 public sealed class GetLabelsQuery : FilteredEntitiesQuery<LabelListItem>
 {
-    public GetLabelsQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public GetLabelsQuery(QuerySpecification<LabelListItem> querySpecification) : base(querySpecification)
     {
     }
 }

@@ -55,13 +55,17 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(AuthPolicy.Api, policy => { policy.RequireAuthenticatedUser(); });
 });
 
-builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
+builder.Services.AddControllers(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
+    options.ModelBinderProviders.Insert(0, new QuerySpecificationBinderProvider());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.OperationFilter<QuerySpecificationFilter>();
-    
+
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Financity",
@@ -82,7 +86,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement { { securityScheme, Array.Empty<string>() } });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement {{securityScheme, Array.Empty<string>()}});
 });
 
 builder.Services.AddHealthChecks();
