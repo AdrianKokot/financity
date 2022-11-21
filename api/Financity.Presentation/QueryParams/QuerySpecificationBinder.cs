@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Reflection;
 using Financity.Application.Common.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -95,14 +96,14 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
         return specification;
     }
 
-    private IEnumerable<Filter> ParseFilters(ModelBindingContext bindingContext)
+    private IReadOnlyCollection<Filter> ParseFilters(ModelBindingContext bindingContext)
     {
         return bindingContext.HttpContext.Request.Query.Keys
                              .Where(x => x.Contains('_'))
                              .Select(x =>
                              {
-                                 var operatorString = x[..x.IndexOf('_')].ToLower();
-                                 var propertyNameString = x[(operatorString.Length + 1)..].ToLower();
+                                 var propertyNameString = x[..x.IndexOf('_')].ToLower();
+                                 var operatorString = x[(propertyNameString.Length + 1)..].ToLower();
 
                                  if (!_entityProperties.TryGetValue(propertyNameString, out var property))
                                      return null;
@@ -119,7 +120,7 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
                                  };
                              })
                              .Where(x => x is not null)
-                             .ToList()!;
+                             .ToImmutableList()!;
     }
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
