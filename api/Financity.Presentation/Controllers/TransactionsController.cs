@@ -11,7 +11,7 @@ public class TransactionsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<TransactionListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification,
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<TransactionListItem> querySpecification,
                                              [FromQuery] string? query, [FromQuery] Guid? walletId,
                                              CancellationToken ct)
     {
@@ -52,7 +52,7 @@ public class TransactionsController : BaseController
         return NoContent();
     }
 
-    private async Task<IActionResult> Search([FromQuery] QuerySpecification querySpecification,
+    private async Task<IActionResult> Search([FromQuery] QuerySpecification<TransactionListItem> querySpecification,
                                              [FromQuery] string query,
                                              [FromQuery] Guid? walletId = null)
     {

@@ -50,7 +50,7 @@ public abstract class
     {
         return AccessAsync(q =>
             expression.Invoke(q)
-                      .Paginate(query.QuerySpecification.PaginationSpecification)
+                      .ApplyQuerySpecification(query.QuerySpecification)
                       .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider), cancellationToken);
     }
 }

@@ -67,6 +67,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             ValidationException => StatusCodes.Status422UnprocessableEntity,
             NotImplementedException => StatusCodes.Status501NotImplemented,
             AccessDeniedException => StatusCodes.Status403Forbidden,
+            FormatException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -78,6 +79,9 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
         if (exception is ValidationException validationException)
             foreach (var error in validationException.Errors)
                 model.AddModelError(error.PropertyName, error.ErrorMessage);
+
+        if (exception is FormatException formatException)
+            model.AddModelError(string.Empty, formatException.Message);
 
         return model;
     }

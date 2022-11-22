@@ -11,7 +11,8 @@ public class BudgetsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<BudgetListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<BudgetListItem> querySpecification,
+                                             CancellationToken ct)
     {
         return HandleQueryAsync(new GetBudgetsQuery(querySpecification), ct);
     }

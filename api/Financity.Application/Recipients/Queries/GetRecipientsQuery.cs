@@ -9,7 +9,7 @@ namespace Financity.Application.Recipients.Queries;
 
 public sealed class GetRecipientsQuery : FilteredEntitiesQuery<RecipientListItem>
 {
-    public GetRecipientsQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public GetRecipientsQuery(QuerySpecification<RecipientListItem> querySpecification) : base(querySpecification)
     {
     }
 }

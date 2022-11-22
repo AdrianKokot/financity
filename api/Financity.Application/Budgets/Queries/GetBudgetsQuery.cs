@@ -11,7 +11,7 @@ namespace Financity.Application.Budgets.Queries;
 
 public sealed class GetBudgetsQuery : FilteredEntitiesQuery<BudgetListItem>
 {
-    public GetBudgetsQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public GetBudgetsQuery(QuerySpecification<BudgetListItem> querySpecification) : base(querySpecification)
     {
     }
 }

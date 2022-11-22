@@ -2,12 +2,13 @@
 
 public sealed class PaginationSpecification
 {
-    public PaginationSpecification(int take = 20, int skip = 0)
+    private int _take = 20;
+
+    public int Take
     {
-        Take = take;
-        Skip = skip;
+        get => _take;
+        set => _take = Math.Clamp(value, 1, 50);
     }
 
-    public int Take { get; set; }
-    public int Skip { get; set; }
+    public int Skip { get; set; } = 0;
 }

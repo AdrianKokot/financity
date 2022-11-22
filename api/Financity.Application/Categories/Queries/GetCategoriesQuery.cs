@@ -10,7 +10,7 @@ namespace Financity.Application.Categories.Queries;
 
 public sealed class GetCategoriesQuery : FilteredEntitiesQuery<CategoryListItem>
 {
-    public GetCategoriesQuery(QuerySpecification querySpecification) : base(querySpecification)
+    public GetCategoriesQuery(QuerySpecification<CategoryListItem> querySpecification) : base(querySpecification)
     {
     }
 }

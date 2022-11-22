@@ -11,7 +11,8 @@ public class LabelsController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<LabelListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification querySpecification, CancellationToken ct)
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<LabelListItem> querySpecification,
+                                             CancellationToken ct)
     {
         return HandleQueryAsync(new GetLabelsQuery(querySpecification), ct);
     }
