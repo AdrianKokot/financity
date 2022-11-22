@@ -1,19 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RegisterPageAdapter } from './register-page.adapter';
 
 @Component({
   selector: 'app-register-page',
   templateUrl: './register-page.component.html',
-  styleUrls: ['./register-page.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RegisterPageAdapter],
 })
-export class RegisterPageComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+export class RegisterPageComponent {
+  constructor(public ui: RegisterPageAdapter) {}
 }

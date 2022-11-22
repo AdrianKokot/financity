@@ -17,6 +17,6 @@ export class AuthApiService {
   }
 
   register(payload: { email: string; password: string }) {
-    return this.http.post(`${this._basePath}/register`, payload);
+    return this.http.post<void>(`${this._basePath}/register`, payload);
   }
 }

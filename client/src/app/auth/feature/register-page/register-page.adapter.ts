@@ -16,12 +16,12 @@ import { handleValidationApiError } from '@shared/utils/api/api-error-handler';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class LoginPageAdapter implements OnDestroy {
+export class RegisterPageAdapter implements OnDestroy {
   private _destroyed = new Subject<boolean>();
 
   form = this._fb.nonNullable.group({
     email: ['', [Validators.email, Validators.required]],
-    password: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
   submitButtonLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   submit$ = new Subject<void>();
@@ -42,7 +42,7 @@ export class LoginPageAdapter implements OnDestroy {
           this.submitButtonLoading$.next(true);
         }),
         switchMap(() =>
-          this._auth.login(this.form.getRawValue()).pipe(
+          this._auth.register(this.form.getRawValue()).pipe(
             catchError(err => {
               if (err instanceof HttpErrorResponse) {
                 handleValidationApiError(this.form, err);
@@ -51,15 +51,16 @@ export class LoginPageAdapter implements OnDestroy {
             })
           )
         ),
-        tap(() => {
+        tap(res => {
           this.submitButtonLoading$.next(false);
+
+          if (res !== null) {
+            _router.navigate(['../login']);
+          }
         }),
-        filter((res): res is { token: string } => res !== null)
+        filter(res => res !== null)
       )
-      .subscribe(({ token }) => {
-        _router.navigate(['/dashboard']);
-        console.log(token);
-      });
+      .subscribe();
   }
 
   ngOnDestroy(): void {

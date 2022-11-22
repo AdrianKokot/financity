@@ -12,7 +12,7 @@ export const handleValidationApiError = (
 
   for (const key in errors) {
     form.get(key)?.setErrors({
-      apiError: new TuiValidationError(errors[key][0]),
+      apiError: new TuiValidationError(errors[key].join('. ')),
     });
   }
 };
