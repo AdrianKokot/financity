@@ -1,4 +1,5 @@
-﻿using Financity.Application.Common.Exceptions;
+﻿using System.Text.Json;
+using Financity.Application.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -78,7 +79,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
 
         if (exception is ValidationException validationException)
             foreach (var error in validationException.Errors)
-                model.AddModelError(error.PropertyName, error.ErrorMessage);
+                model.AddModelError(JsonNamingPolicy.CamelCase.ConvertName(error.PropertyName), error.ErrorMessage);
 
         if (exception is FormatException formatException)
             model.AddModelError(string.Empty, formatException.Message);
