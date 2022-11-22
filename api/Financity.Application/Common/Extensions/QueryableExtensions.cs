@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using Financity.Application.Common.Queries;
@@ -46,19 +47,11 @@ public static class QueryableExtensions
 
         var expression = filters.Where(x => entityProperties.ContainsKey(x.Key))
                                 .Select(x =>
-                                    {
-                                        var property = Expression.Property(parameter, x.Key);
-                                        var propertyInfo = entityProperties[x.Key];
-
-                                        return (Expression)Expression.Call(
-                                            propertyInfo.PropertyType != typeof(string)
-                                                ? Expression.Call(property,
-                                                    ToStringMethod(propertyInfo))
-                                                : property,
-                                            GetMethodForOperator(propertyInfo, x.Operator),
-                                            Expression.Constant(x.Value)
-                                        );
-                                    }
+                                    GenerateFilterExpression(
+                                        x,
+                                        Expression.Property(parameter, x.Key),
+                                        GetProperType(entityProperties[x.Key], x.Value)
+                                    )
                                 )
                                 .Aggregate(Expression.And);
 
@@ -67,19 +60,36 @@ public static class QueryableExtensions
         return query.Where(lambda);
     }
 
-    private static MethodInfo ToStringMethod(PropertyInfo property)
+    private static Expression GenerateFilterExpression(Filter filter, Expression left, Expression right)
     {
-        return property.PropertyType.GetMethods().First(x => x.Name == "ToString" && x.GetParameters().Length == 0);
+        return filter.Operator switch
+        {
+            FilterOperators.Equal => Expression.Equal(left, right),
+            FilterOperators.NotEqual => Expression.NotEqual(left, right),
+            FilterOperators.LessOrEqual => Expression.LessThanOrEqual(left, right),
+            FilterOperators.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
+            _ => Expression.Call(left, GetMethodForOperator(filter.Operator), right)
+        };
     }
 
-    private static MethodInfo? GetMethodForOperator(PropertyInfo property, string op)
+    private static ConstantExpression GetProperType(PropertyInfo info, string value)
+    {
+        if (info.PropertyType == typeof(DateTime))
+            return Expression.Constant(DateTime.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo,
+                DateTimeStyles.AssumeUniversal).ToUniversalTime());
+
+        if (info.PropertyType == typeof(Guid))
+            return Expression.Constant(Guid.Parse(value));
+
+        return Expression.Constant(value);
+    }
+
+    private static MethodInfo? GetMethodForOperator(string op)
     {
         return op switch
         {
-            "eq" => typeof(string).GetMethod("Equals", new[] { typeof(string) }),
-            "ct" =>
-                typeof(string).GetMethod("Contains", new[] { typeof(string) }),
-            _ => throw new ArgumentException($"Operator '{op}' is not supported by {property.PropertyType.Name} type")
+            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] { typeof(string) }),
+            _ => throw new ArgumentException($"Operator '{op}' is not supported")
         };
     }
 

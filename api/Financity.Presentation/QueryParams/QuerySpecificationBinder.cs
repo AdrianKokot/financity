@@ -15,7 +15,7 @@ public static class QueryKeys
     public const string OrderByQueryParamKey = "orderBy";
     public const string OrderByDirectionQueryParamKey = "direction";
 
-    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() { typeof(Guid), typeof(string), typeof(DateTime) };
+    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() {typeof(Guid), typeof(string), typeof(DateTime)};
 }
 
 public static class QueryParamFilters
@@ -23,21 +23,17 @@ public static class QueryParamFilters
     public static readonly IDictionary<Type, IEnumerable<string>> TypeOperators =
         new Dictionary<Type, IEnumerable<string>>
         {
-            {typeof(Guid), new[] {"eq"}},
-            {typeof(string), new[] {"eq", "ct"}},
-            {typeof(DateTime), new[] {"gte", "lte"}}
+            {typeof(Guid), new[] {FilterOperators.Equal, FilterOperators.NotEqual}},
+            {typeof(string), new[] {FilterOperators.Equal, FilterOperators.NotEqual, FilterOperators.Contain}},
+            {
+                typeof(DateTime),
+                new[]
+                {
+                    FilterOperators.Equal, FilterOperators.NotEqual, FilterOperators.GreaterOrEqual,
+                    FilterOperators.LessOrEqual
+                }
+            }
         };
-
-    public static readonly IDictionary<string, string> OperatorFunctions = new Dictionary<string, string>
-    {
-        {"eq", "Equals"},
-        {"ct", "Contains"}
-    };
-
-    public static readonly HashSet<string> Operators = new()
-    {
-        "eq", "ct", "gte", "lte"
-    };
 }
 
 public sealed class QuerySpecificationBinder<T> : IModelBinder
