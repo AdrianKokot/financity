@@ -8,7 +8,7 @@
 @mixin spacing-class($property, $size, $property-value: null) {
   $propShort: str-slice($property, 1, 1);
 
-  @each $dirKey,$dir in ("l": "left", "r": "right", "t": "top", "b": "bottom") {
+  @each $dirKey, $dir in ("l": "left", "r": "right", "t": "top", "b": "bottom") {
     .#{$propShort}#{$dirKey}-#{$size} {
       @if $property-value == null {
         #{$property}-#{$dir}: spacing($size);
@@ -28,7 +28,7 @@
 }
 
 @for $size from 0 to 16 {
-@each $prop in ("padding", "margin") {
+  @each $prop in ("padding", "margin") {
     @include spacing-class($prop, $size);
   }
 
@@ -40,4 +40,14 @@
   }
 
 }
+
 @include spacing-class("margin", auto, auto);
+
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-xs {
+  max-width: 22rem;
+}

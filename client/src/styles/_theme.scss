@@ -4,6 +4,7 @@ body {
   &:not(:has(tui-theme-night)) {
     background-color: pallette('base-2');
   }
+
   &:has(tui-theme-night) {
     background-color: pallette('base');
   }

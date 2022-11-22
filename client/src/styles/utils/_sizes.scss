@@ -1,4 +1,4 @@
-$sizes: (xs,s,m,l);
+$sizes: (xs, s, m, l);
 
 @each $size in $sizes {
   .border-radius-#{$size} {
