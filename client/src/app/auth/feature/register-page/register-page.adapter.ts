@@ -58,7 +58,7 @@ export class RegisterPageAdapter implements OnDestroy {
         filter(res => !!res)
       )
       .subscribe(() => {
-        _router.navigate(['../login']);
+        _router.navigateByUrl('/auth/dashboard');
       });
   }
 

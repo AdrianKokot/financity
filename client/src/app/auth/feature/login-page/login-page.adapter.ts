@@ -57,7 +57,7 @@ export class LoginPageAdapter implements OnDestroy {
         filter(res => !!res)
       )
       .subscribe(() => {
-        _router.navigate(['/dashboard']);
+        _router.navigateByUrl('/dashboard');
       });
   }
 

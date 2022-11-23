@@ -22,7 +22,7 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginCom
     public async Task<LoginCommandResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
-        
+
         if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
             throw ValidationExceptionFactory.For(nameof(request.Password), "User with given credentials doesn't exist");
 

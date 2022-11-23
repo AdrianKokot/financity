@@ -30,7 +30,7 @@ public sealed class
 
         if (user is null)
             return new RequestResetPasswordCommandResult();
-        
+
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 

@@ -80,7 +80,7 @@ export class ResetPasswordAdapter implements OnDestroy {
       )
       .subscribe(succeeded => {
         if (succeeded) {
-          this._router.navigate(['../login']);
+          _router.navigateByUrl('/auth/login');
         } else {
           this.resultBanner$.next({
             message: 'Something went wrong.',
