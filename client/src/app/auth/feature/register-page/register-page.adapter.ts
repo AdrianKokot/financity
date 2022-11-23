@@ -54,14 +54,12 @@ export class RegisterPageAdapter implements OnDestroy {
         ),
         tap(res => {
           this.submitButtonLoading$.next(false);
-
-          if (res !== null) {
-            _router.navigate(['../login']);
-          }
         }),
-        filter(res => res !== null)
+        filter(res => !!res)
       )
-      .subscribe();
+      .subscribe(() => {
+        _router.navigate(['../login']);
+      });
   }
 
   ngOnDestroy(): void {

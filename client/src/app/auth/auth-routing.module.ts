@@ -4,6 +4,7 @@ import { LoginPageComponent } from './feature/login-page/login-page.component';
 import { RegisterPageComponent } from './feature/register-page/register-page.component';
 import { GuestGuard } from './data-access/guards/guest.guard';
 import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-password-page.component';
+import { AuthShellComponent } from './feature/auth-shell/auth-shell.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
   },
   {
     path: '',
+    component: AuthShellComponent,
     canActivateChild: [GuestGuard],
     children: [
       {

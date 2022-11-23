@@ -5,6 +5,7 @@ import {
   TuiErrorModule,
   TuiLabelModule,
   TuiLinkModule,
+  TuiNotificationModule,
   TuiTextfieldControllerModule,
   TuiTooltipModule,
 } from '@taiga-ui/core';
@@ -12,6 +13,7 @@ import {
   TuiFieldErrorPipeModule,
   TuiInputModule,
   TuiInputPasswordModule,
+  TuiIslandModule,
 } from '@taiga-ui/kit';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthRoutingModule } from './auth-routing.module';
@@ -20,6 +22,7 @@ import { LoginPageComponent } from './feature/login-page/login-page.component';
 import { EmailInputComponent } from './ui/email-input/email-input.component';
 import { PasswordInputComponent } from './ui/password-input/password-input.component';
 import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-password-page.component';
+import { AuthShellComponent } from './feature/auth-shell/auth-shell.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,7 @@ import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-
     EmailInputComponent,
     PasswordInputComponent,
     ResetPasswordPageComponent,
+    AuthShellComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +46,8 @@ import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-
     TuiFieldErrorPipeModule,
     TuiButtonModule,
     TuiLinkModule,
+    TuiNotificationModule,
+    TuiIslandModule,
   ],
 })
 export class AuthModule {}

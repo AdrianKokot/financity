@@ -54,11 +54,10 @@ export class LoginPageAdapter implements OnDestroy {
         tap(() => {
           this.submitButtonLoading$.next(false);
         }),
-        filter((res): res is { token: string } => res !== null)
+        filter(res => !!res)
       )
-      .subscribe(({ token }) => {
+      .subscribe(() => {
         _router.navigate(['/dashboard']);
-        console.log(token);
       });
   }
 

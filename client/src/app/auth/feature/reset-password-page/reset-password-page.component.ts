@@ -1,17 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ResetPasswordAdapter } from './reset-password.adapter';
 
 @Component({
   selector: 'app-reset-password-page',
   templateUrl: './reset-password-page.component.html',
-  styleUrls: ['./reset-password-page.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ResetPasswordAdapter],
 })
-export class ResetPasswordPageComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class ResetPasswordPageComponent {
+  constructor(public ui: ResetPasswordAdapter) {}
 }
