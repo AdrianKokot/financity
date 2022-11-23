@@ -2,7 +2,9 @@ import { Injectable, OnDestroy } from '@angular/core';
 import {
   BehaviorSubject,
   catchError,
+  distinctUntilChanged,
   filter,
+  map,
   of,
   share,
   Subject,
@@ -25,6 +27,14 @@ export class ResetPasswordAdapter implements OnDestroy {
     password: [{ value: '', disabled: true }, []],
     token: [{ value: '', disabled: true }, []],
   });
+
+  formError$ = this.form.statusChanges.pipe(
+    distinctUntilChanged(),
+    map(() => this.form.errors),
+    map(errors => (errors !== null ? Object.values(errors) : [])),
+    map(errors => (errors.length > 0 ? errors[0].message : null)),
+    distinctUntilChanged()
+  );
 
   submitButtonLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   submit$ = new Subject<void>();
@@ -117,7 +127,6 @@ export class ResetPasswordAdapter implements OnDestroy {
   }
 
   initToken(): void {
-    console.log(this._route.snapshot.queryParamMap);
     const resetToken = this._route.snapshot.queryParamMap.get('token');
 
     if (resetToken !== null) {

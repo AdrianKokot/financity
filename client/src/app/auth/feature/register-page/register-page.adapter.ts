@@ -52,7 +52,7 @@ export class RegisterPageAdapter implements OnDestroy {
             })
           )
         ),
-        tap(res => {
+        tap(() => {
           this.submitButtonLoading$.next(false);
         }),
         filter(res => !!res)
