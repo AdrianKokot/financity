@@ -16,7 +16,7 @@ public static class QueryKeys
     public const string OrderByQueryParamKey = "orderBy";
     public const string OrderByDirectionQueryParamKey = "direction";
 
-    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() {typeof(Guid), typeof(string), typeof(DateTime)};
+    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() { typeof(Guid), typeof(string), typeof(DateTime) };
 }
 
 public static class QueryParamFilters

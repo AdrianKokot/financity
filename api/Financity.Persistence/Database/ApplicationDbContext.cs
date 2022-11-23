@@ -59,7 +59,7 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         builder.SeedData();
 
         builder.HasDbFunction(
-            GetType().GetMethod(nameof(SearchUserTransactions), new[] {typeof(Guid), typeof(string), typeof(Guid?)})!
+            GetType().GetMethod(nameof(SearchUserTransactions), new[] { typeof(Guid), typeof(string), typeof(Guid?) })!
         );
 
         base.OnModelCreating(builder);
