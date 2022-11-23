@@ -11,7 +11,7 @@ import {
   tap,
 } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthApiService } from '../../data-access/api/auth-api.service';
+import { AuthService } from '../../data-access/api/auth.service';
 import { handleValidationApiError } from '@shared/utils/api/api-error-handler';
 import { Router } from '@angular/router';
 
@@ -28,7 +28,7 @@ export class RegisterPageAdapter implements OnDestroy {
 
   constructor(
     private _fb: FormBuilder,
-    private _auth: AuthApiService,
+    private _auth: AuthService,
     private _router: Router
   ) {
     this.submit$
