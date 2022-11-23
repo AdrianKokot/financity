@@ -19,6 +19,7 @@ import { RegisterPageComponent } from './feature/register-page/register-page.com
 import { LoginPageComponent } from './feature/login-page/login-page.component';
 import { EmailInputComponent } from './ui/email-input/email-input.component';
 import { PasswordInputComponent } from './ui/password-input/password-input.component';
+import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-password-page.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { PasswordInputComponent } from './ui/password-input/password-input.compo
     RegisterPageComponent,
     EmailInputComponent,
     PasswordInputComponent,
+    ResetPasswordPageComponent,
   ],
   imports: [
     CommonModule,

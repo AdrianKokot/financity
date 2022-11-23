@@ -23,6 +23,7 @@ export class RegisterPageAdapter implements OnDestroy {
     email: ['', [Validators.email, Validators.required]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
+
   submitButtonLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   submit$ = new Subject<void>();
 
