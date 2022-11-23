@@ -2,7 +2,6 @@
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
-using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 namespace Financity.Application.Auth.Commands;
