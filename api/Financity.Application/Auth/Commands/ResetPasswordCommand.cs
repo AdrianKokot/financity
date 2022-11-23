@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Web;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
@@ -31,7 +30,8 @@ public sealed class
         if (user is null)
             throw ValidationExceptionFactory.For("invalidToken", "Invalid token.");
 
-        var result = await _userManager.ResetPasswordAsync(user, Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(command.Token)), command.Password);
+        var result = await _userManager.ResetPasswordAsync(user,
+            Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(command.Token)), command.Password);
 
         if (!result.Succeeded)
             throw new ValidationException(result.Errors.Select(x => new ValidationFailure(x.Code, x.Description)));

@@ -8,6 +8,6 @@ public sealed class WalletAccessConfiguration : IEntityTypeConfiguration<WalletA
 {
     public void Configure(EntityTypeBuilder<WalletAccess> builder)
     {
-        builder.HasKey(x => new { x.UserId, x.WalletId });
+        builder.HasKey(x => new {x.UserId, x.WalletId});
     }
 }

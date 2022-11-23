@@ -17,7 +17,7 @@ public sealed class ConfigureJwtBearerOptions : IConfigureNamedOptions<JwtBearer
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidAlgorithms = new[] { _config.Algorithm },
+            ValidAlgorithms = new[] {_config.Algorithm},
             ValidateIssuer = _config.ValidateIssuer,
             ValidateAudience = _config.ValidateAudience,
             ValidateLifetime = _config.ValidateLifetime,

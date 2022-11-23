@@ -22,7 +22,7 @@ public class BudgetsController : BaseController
     public async Task<IActionResult> CreateEntity(CreateBudgetCommand command, CancellationToken ct)
     {
         var result = await HandleCommandAsync(command, ct);
-        return CreatedAtAction(nameof(GetEntity), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetEntity), new {id = result.Id}, result);
     }
 
     [HttpGet("{id:guid}")]

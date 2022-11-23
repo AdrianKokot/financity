@@ -54,7 +54,7 @@ export class LoginPageAdapter implements OnDestroy {
         tap(() => {
           this.submitButtonLoading$.next(false);
         }),
-        filter(res => !!res)
+        filter(res => Boolean(res))
       )
       .subscribe(() => {
         _router.navigateByUrl('/dashboard');

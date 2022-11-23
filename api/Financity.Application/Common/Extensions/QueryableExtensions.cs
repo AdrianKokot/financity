@@ -88,7 +88,7 @@ public static class QueryableExtensions
     {
         return op switch
         {
-            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] { typeof(string) }),
+            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] {typeof(string)}),
             _ => throw new ArgumentException($"Operator '{op}' is not supported")
         };
     }

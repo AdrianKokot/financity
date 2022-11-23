@@ -17,12 +17,14 @@ export class JwtInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (this._auth.isAuthenticated) {
-      request = request.clone({
-        setHeaders: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          Authorization: `Bearer ${this._auth.token}`,
-        },
-      });
+      return next.handle(
+        request.clone({
+          setHeaders: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            Authorization: `Bearer ${this._auth.token}`,
+          },
+        })
+      );
     }
 
     return next.handle(request);
