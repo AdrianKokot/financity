@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using Financity.Application.Common.Queries;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -71,11 +72,12 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
 
         var pageSizeString = valueProvider.GetValue(QueryKeys.PageSizeQueryParamKey).FirstValue;
 
-        if (pageSizeString is not null) specification.Take = int.Parse(pageSizeString);
+        if (pageSizeString is not null && int.TryParse(pageSizeString, null, out var pageSize))
+            specification.Take = pageSize;
 
         var pageString = valueProvider.GetValue(QueryKeys.PageQueryParamKey).FirstValue;
-        if (pageString is not null)
-            specification.Skip = specification.Take * Math.Clamp(int.Parse(pageString) - 1, 0, int.MaxValue);
+        if (pageString is not null && int.TryParse(pageString, null, out var page))
+            specification.Skip = specification.Take * Math.Clamp(page - 1, 0, int.MaxValue);
 
         return specification;
     }
@@ -85,7 +87,7 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
         var specification = new SortSpecification();
 
         var orderByString = (valueProvider.GetValue(QueryKeys.OrderByQueryParamKey).FirstValue ?? string.Empty)
-            .ToLower();
+            .ToLower(CultureInfo.InvariantCulture);
 
         specification.OrderBy = _entityProperties.TryGetValue(orderByString, out var info) ? info.Name : "Id";
 

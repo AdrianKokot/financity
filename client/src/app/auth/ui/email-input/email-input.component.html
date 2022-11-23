@@ -1,0 +1,14 @@
+<label [tuiLabel]="label">
+  <tui-input
+    [formControl]="control"
+    tuiTextfieldSize="m"
+    class="mt-1"
+    [tuiTextfieldLabelOutside]="true">
+    {{ placeholder }}
+    <input tuiTextfield type="email" />
+  </tui-input>
+
+  <tui-error
+    [formControl]="control"
+    [error]="[] | tuiFieldError | async"></tui-error>
+</label>

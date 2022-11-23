@@ -4,7 +4,7 @@
   }
 }
 
-@each $key,$value in (
+@each $key, $value in (
   justify-content: space-between,
   align-items: center
 ) {

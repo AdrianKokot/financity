@@ -5,9 +5,7 @@ import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletDashboardComponent } from './components/wallet-dashboard/wallet-dashboard.component';
 
 @NgModule({
-  declarations: [
-    WalletDashboardComponent
-  ],
+  declarations: [WalletDashboardComponent],
   imports: [CommonModule, WalletRoutingModule],
 })
 export class WalletModule {}

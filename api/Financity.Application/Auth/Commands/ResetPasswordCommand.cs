@@ -1,8 +1,11 @@
-﻿using Financity.Application.Abstractions.Messaging;
+﻿using System.Text;
+using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Financity.Application.Auth.Commands;
 
@@ -25,9 +28,10 @@ public sealed class
         var user = await _userManager.FindByEmailAsync(command.Email);
 
         if (user is null)
-            return new ResetPasswordCommandResult();
+            throw ValidationExceptionFactory.For("invalidToken", "Invalid token.");
 
-        var result = await _userManager.ResetPasswordAsync(user, command.Token, command.Password);
+        var result = await _userManager.ResetPasswordAsync(user,
+            Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(command.Token)), command.Password);
 
         if (!result.Succeeded)
             throw new ValidationException(result.Errors.Select(x => new ValidationFailure(x.Code, x.Description)));

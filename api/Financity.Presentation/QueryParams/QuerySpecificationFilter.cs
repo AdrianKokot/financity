@@ -9,10 +9,10 @@ public sealed class QuerySpecificationFilter : IOperationFilter
 {
     private static readonly IDictionary<Type, OpenApiSchema> ApiSchemas = new Dictionary<Type, OpenApiSchema>
     {
-        {typeof(int), new OpenApiSchema {Type = "integer", Format = nameof(Int32).ToLower()}},
-        {typeof(string), new OpenApiSchema {Type = nameof(String).ToLower()}},
-        {typeof(Guid), new OpenApiSchema {Type = nameof(String).ToLower(), Format = "uuid"}},
-        {typeof(DateTime), new OpenApiSchema {Type = nameof(String).ToLower(), Format = "date-time"}}
+        {typeof(int), new OpenApiSchema {Type = "integer", Format = "int32"}},
+        {typeof(string), new OpenApiSchema {Type = "string"}},
+        {typeof(Guid), new OpenApiSchema {Type = "string", Format = "uuid"}},
+        {typeof(DateTime), new OpenApiSchema {Type = "string", Format = "date-time"}}
     };
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)

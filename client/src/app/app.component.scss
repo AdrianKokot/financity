@@ -1,5 +1,8 @@
 .t-root-content {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+tui-root {
+  height: 100%;
 }

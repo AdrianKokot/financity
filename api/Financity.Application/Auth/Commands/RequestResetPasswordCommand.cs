@@ -1,7 +1,9 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using System.Text;
+using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Financity.Application.Auth.Commands;
 
@@ -29,6 +31,7 @@ public sealed class
             return new RequestResetPasswordCommandResult();
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
         await _emailService.SendEmailAsync(
             command.Email,
@@ -58,6 +61,6 @@ internal class ResetPasswordEmailTemplate
     public override string ToString()
     {
         return FileContent.Replace("{{expiration-time}}", "2 hours")
-                          .Replace("{{action_url}}", $"https://localhost:7025/?token={_token}");
+                          .Replace("{{action_url}}", $"http://localhost:4200/auth/reset-password?token={_token}");
     }
 }

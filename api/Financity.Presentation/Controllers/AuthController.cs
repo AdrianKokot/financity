@@ -38,7 +38,7 @@ public class AuthController : BaseController
     public async Task<IActionResult> RequestResetPassword(RequestResetPasswordCommand command)
     {
         await HandleCommandAsync(command);
-        return NoContent();
+        return Accepted();
     }
 
     [HttpPost("reset-password")]

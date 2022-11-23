@@ -1,0 +1,33 @@
+<h3 class="text-center mb-8">Welcome back!</h3>
+<form
+  [formGroup]="ui.form"
+  (ngSubmit)="$event.preventDefault(); ui.submit$.next()">
+  <app-email-input
+    [control]="ui.form.controls.email"
+    class="mb-6"></app-email-input>
+  <app-password-input
+    [control]="ui.form.controls.password"
+    class="mb-6"></app-password-input>
+
+  <button
+    tuiButton
+    type="submit"
+    class="w-full"
+    size="m"
+    [showLoader]="(ui.submitButtonLoading$ | async) ?? false">
+    Log in
+  </button>
+</form>
+
+<div class="text-center mt-4">
+  <p>
+    Don't have an account?
+    <a href="../register" routerLink="../register" tuiLink>Sign up</a>.
+  </p>
+  <p>
+    Forgot password?
+    <a href="../reset-password" routerLink="../reset-password" tuiLink
+      >Reset password</a
+    >.
+  </p>
+</div>

@@ -1,7 +1,7 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
-using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 namespace Financity.Application.Auth.Commands;
@@ -24,7 +24,7 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginCom
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-            throw new ValidationException("Authentication failed.");
+            throw ValidationExceptionFactory.For(nameof(request.Password), "User with given credentials doesn't exist");
 
         var token = _tokenService.GetTokenForUser(user);
 
