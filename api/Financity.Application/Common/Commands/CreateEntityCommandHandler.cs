@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EntityFramework.Exceptions.Common;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Exceptions;
 using Financity.Domain.Common;
 
 namespace Financity.Application.Common.Commands;
@@ -26,7 +28,20 @@ public abstract class CreateEntityCommandHandler<TCommand, TResult, TEntity> : I
 
         DbContext.GetDbSet<TEntity>().Add(entity);
 
-        await DbContext.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await DbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (UniqueConstraintException uniqueConstraintException)
+        {
+            var propertyName = (uniqueConstraintException.InnerException?.GetType()
+                                                         .GetProperty("ConstraintName")
+                                                         ?.GetValue(uniqueConstraintException.InnerException)?
+                                                         .ToString() ?? string.Empty).Split("_")
+                .Last();
+
+            throw new EntityAlreadyExistsException(typeof(TEntity).Name, propertyName);
+        }
 
         return Mapper.Map<TResult>(entity);
     }

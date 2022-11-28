@@ -21,7 +21,7 @@ public sealed class MappingProfile : Profile
     {
         var types = assembly.GetExportedTypes()
                             .Where(t => t is { IsGenericType: false, IsInterface: false } && t.GetInterfaces().Any(i =>
-                                  i.IsGenericType && _mappingInterfaces.Contains(i.GetGenericTypeDefinition()))
+                                i.IsGenericType && _mappingInterfaces.Contains(i.GetGenericTypeDefinition()))
                             );
 
         foreach (var type in types)
