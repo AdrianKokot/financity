@@ -69,6 +69,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             NotImplementedException => StatusCodes.Status501NotImplemented,
             AccessDeniedException => StatusCodes.Status403Forbidden,
             FormatException => StatusCodes.Status400BadRequest,
+            EntityAlreadyExistsException => StatusCodes.Status422UnprocessableEntity,
             _ => StatusCodes.Status500InternalServerError
         };
     }
@@ -83,6 +84,9 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
 
         if (exception is FormatException formatException)
             model.AddModelError(string.Empty, formatException.Message);
+
+        if (exception is EntityAlreadyExistsException existsException)
+            model.AddModelError(existsException.PropertyName, existsException.Message);
 
         return model;
     }

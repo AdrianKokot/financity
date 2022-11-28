@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using EntityFramework.Exceptions.PostgreSQL;
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
@@ -51,6 +52,12 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         where T : class, IEntity
     {
         return query.ExecuteDeleteAsync(ct);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseExceptionProcessor();
+        base.OnConfiguring(optionsBuilder);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
