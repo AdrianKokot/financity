@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CurrencyListItem } from '../models/currency.model';
+import { CurrencyListItem } from '../../shared/data-access/models/currency.model';
 import { GenericApiService } from './generic-api.service';
 
 @Injectable({

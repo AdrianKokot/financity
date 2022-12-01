@@ -4,6 +4,7 @@ import { Account } from './account.model';
 export interface Wallet {
   id: string;
   name: string;
+  currencyCode: string;
 }
 
 export interface WalletListItem extends Wallet {

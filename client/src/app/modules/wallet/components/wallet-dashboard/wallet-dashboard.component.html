@@ -1,7 +1,177 @@
-<div>
-  {{ wallet$ | async | json }}
-</div>
+<main class="bg-base px-8 py-4">
+  <!--  <div>-->
+  <!--    {{ wallet | json }}-->
+  <!--  </div>-->
+  <!--<p-->
+  <!--  tuiTextfieldSize="m"-->
+  <!--  class="filters"-->
+  <!--&gt;-->
+  <!--  <tui-input-->
+  <!--    class="input"-->
+  <!--    [tuiTextfieldCleaner]="true"-->
+  <!--    [(ngModel)]="search"-->
+  <!--  >-->
+  <!--    Find on page-->
+  <!--  </tui-input>-->
+  <!--  <tui-input-count-->
+  <!--    class="tui-space_horizontal-3"-->
+  <!--    [formControl]="minAge"-->
+  <!--  >-->
+  <!--    Minimum age-->
+  <!--  </tui-input-count>-->
+  <!--  <tui-hosted-dropdown [content]="dropdown">-->
+  <!--    <button-->
+  <!--      tuiButton-->
+  <!--      size="m"-->
+  <!--      [iconRight]="arrow"-->
+  <!--    >-->
+  <!--      Columns-->
+  <!--    </button>-->
+  <!--    <ng-template #dropdown>-->
+  <!--      <tui-reorder-->
+  <!--        class="columns"-->
+  <!--        [enabled]="enabled"-->
+  <!--        [(items)]="initial"-->
+  <!--        (enabledChange)="onEnabled($event)"-->
+  <!--      ></tui-reorder>-->
+  <!--    </ng-template>-->
+  <!--  </tui-hosted-dropdown>-->
+  <!--</p>-->
+  <!--  <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">-->
+  <tui-scrollbar>
+    <cdk-virtual-scroll-viewport
+      (scrolledIndexChange)="log($event)"
+      #viewport
+      tuiScrollable
+      class="viewport tui-zero-scrollbar"
+      [itemSize]="44"
+      [maxBufferPx]="500"
+      [minBufferPx]="400">
+      <table
+        tuiTable
+        class="w-full"
+        [columns]="['transactionDate', 'category', 'labels', 'note', 'amount']">
+        <!--
+    [direction]="(direction$ | async) || 1"
+    -->
+        <!--    [tuiSortBy]="sorter$ | async"-->
+        <!--    (tuiSortByChange)="sorter$.next($event!)"-->
+        <!--    (directionChange)="direction$.next($event)"-->
+        <thead>
+          <tr tuiThGroup>
+            <th
+              *tuiHead="'transactionDate'"
+              tuiTh
+              [sticky]="true"
+              [sorter]="null"
+              [style.top.px]="-viewport['_renderedContentOffset']"
+              class="column-date">
+              Date
+            </th>
+            <th
+              *tuiHead="'category'"
+              tuiTh
+              [sticky]="true"
+              [sorter]="null"
+              [style.top.px]="-viewport['_renderedContentOffset']"
+              class="column-category">
+              Category
+            </th>
+            <th
+              *tuiHead="'labels'"
+              tuiTh
+              [sticky]="true"
+              [sorter]="null"
+              [style.top.px]="-viewport['_renderedContentOffset']"
+              class="column-labels">
+              Labels
+            </th>
+            <th
+              *tuiHead="'note'"
+              tuiTh
+              [sticky]="true"
+              [sorter]="null"
+              [style.top.px]="-viewport['_renderedContentOffset']"
+              class="column-note">
+              Note
+            </th>
+            <th
+              *tuiHead="'amount'"
+              tuiTh
+              [sticky]="true"
+              [sorter]="null"
+              [style.top.px]="-viewport['_renderedContentOffset']"
+              class="column-amount">
+              Amount
+            </th>
+            <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
+          </tr>
+        </thead>
 
-<div class="mt-4">
-  {{ transactions$ | async | json }}
-</div>
+        <ng-container *ngIf="wallet$ | async as wallet">
+          <ng-container *ngIf="data$ | async as data">
+            <tbody *tuiLet="data" tuiTbody>
+              <tr *cdkVirtualFor="let item of data; trackBy: trackByIdx" tuiTr>
+                <td *tuiCell="'transactionDate'" tuiTd>
+                  {{ item.transactionDate | date: 'MM/dd/yyyy':'UTC' }}
+                </td>
+                <td *tuiCell="'category'" tuiTd>
+                  {{ item.categoryName ?? '-' }}
+                </td>
+                <td *tuiCell="'labels'" tuiTd>
+                  <tui-badge
+                    *ngFor="let label of item.labels"
+                    class="mr-1 bg-base-6"
+                    [ngClass]="label.appearance.color"
+                    status="custom"
+                    [value]="label.name"></tui-badge>
+
+                  <!--            <span *ngFor="let label of item.labels">{{ label.name }}</span>-->
+                </td>
+                <td *tuiCell="'note'" tuiTd>
+                  {{ item.note ?? '-' }}
+                </td>
+
+                <td *tuiCell="'amount'" tuiTd>
+                  <!--          {{ item.amount  }}-->
+                  <tui-money
+                    [currency]="item.currencyCode"
+                    [colored]="true"
+                    [value]="item.amount"></tui-money>
+
+                  <ng-container
+                    *ngIf="item.currencyCode !== wallet.currencyCode">
+                    <span class="ml-2">(</span>
+                    <tui-money
+                      [colored]="false"
+                      [currency]="wallet.currencyCode"
+                      [value]="item.amount * item.exchangeRate"></tui-money>
+                    <span>)</span>
+                  </ng-container>
+                </td>
+                <!--        <td *tuiCell="'dob'" tuiTd>-->
+                <!--          {{ item.dob }}-->
+                <!--        </td>-->
+                <!--        <td *tuiCell="'age'" tuiTd>-->
+                <!--          {{ getAge(item) }}-->
+                <!--        </td>-->
+              </tr>
+            </tbody>
+            <!--    <tfoot>-->
+            <!--      <tr>-->
+            <!--        <td [colSpan]="columns.length">-->
+            <!--          <tui-table-pagination-->
+            <!--            class="tui-space_top-2"-->
+            <!--            [total]="(total$ | async) || 0"-->
+            <!--            (pageChange)="onPage($event)"-->
+            <!--            (sizeChange)="onSize($event)"></tui-table-pagination>-->
+            <!--        </td>-->
+            <!--      </tr>-->
+          </ng-container>
+          <!--    </tfoot>-->
+        </ng-container>
+      </table>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
+  <!--  </tui-loader>-->
+</main>

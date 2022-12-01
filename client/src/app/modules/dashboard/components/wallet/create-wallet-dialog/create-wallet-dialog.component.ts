@@ -8,14 +8,14 @@ import {
 import {
   CreateWalletPayload,
   WalletListItem,
-} from '../../../../../core/models/wallet.model';
+} from '../../../../../shared/data-access/models/wallet.model';
 import { ModelFormBuilder } from '../../../../../core/utility/services/model-form.builder';
 import { Validators } from '@angular/forms';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { CurrencyApiService } from '../../../../../core/api/currency-api.service';
-import { CurrencyListItem } from '../../../../../core/models/currency.model';
+import { CurrencyListItem } from '../../../../../shared/data-access/models/currency.model';
 import { BehaviorSubject, finalize, Subject, takeUntil, tap } from 'rxjs';
 import { WalletApiService } from '../../../../../core/api/wallet-api.service';
 

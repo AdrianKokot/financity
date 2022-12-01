@@ -15,6 +15,7 @@ import { LayoutModule } from '@layout/layout.module';
 import { SharedModule } from '@shared/shared.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
+import { ApiInterceptor } from '@shared/data-access/api/api.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,11 @@ import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
       multi: true,
     },
   ],
