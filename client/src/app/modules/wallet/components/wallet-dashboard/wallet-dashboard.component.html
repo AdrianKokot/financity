@@ -37,7 +37,7 @@
   <!--    </ng-template>-->
   <!--  </tui-hosted-dropdown>-->
   <!--</p>-->
-  <!--  <tui-loader [overlay]="true" [showLoader]="!!(loading$ | async)">-->
+
   <tui-scrollbar>
     <cdk-virtual-scroll-viewport
       (scrolledIndexChange)="log($event)"
@@ -156,7 +156,14 @@
                 <!--          {{ getAge(item) }}-->
                 <!--        </td>-->
               </tr>
+
+              <tr *ngIf="!!(loading$ | async) as loading" [hidden]="!loading">
+                <td [colSpan]="5" class="py-4">
+                  <tui-loader [showLoader]="loading"></tui-loader>
+                </td>
+              </tr>
             </tbody>
+
             <!--    <tfoot>-->
             <!--      <tr>-->
             <!--        <td [colSpan]="columns.length">-->
@@ -173,5 +180,4 @@
       </table>
     </cdk-virtual-scroll-viewport>
   </tui-scrollbar>
-  <!--  </tui-loader>-->
 </main>

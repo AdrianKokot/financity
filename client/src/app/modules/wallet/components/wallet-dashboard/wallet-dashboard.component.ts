@@ -18,7 +18,6 @@ import {
   share,
   startWith,
   switchMap,
-  tap,
   withLatestFrom,
 } from 'rxjs';
 import { TransactionApiService } from '../../../../core/api/transaction-api.service';
@@ -50,19 +49,14 @@ export class WalletDashboardComponent implements OnInit, AfterViewInit {
   transactions$ = this.page$.pipe(
     distinctUntilChanged(),
     withLatestFrom(this.walletId$),
-    tap(([page, _]) => {
-      console.log('Current page: ' + page);
-    }),
     exhaustMap(([page, walletId]) =>
-      this._transactionApiService.getList(walletId, {
-        page,
-        pageSize: this._pageSize,
-      })
-    ),
-    tap(res => {
-      this.gotAllResults = res.length < 20;
-      console.log(res.map(x => x.transactionDate));
-    })
+      this._transactionApiService
+        .getList(walletId, {
+          page,
+          pageSize: this._pageSize,
+        })
+        .pipe(startWith(null))
+    )
   );
   gotAllResults = false;
 
@@ -75,6 +69,7 @@ export class WalletDashboardComponent implements OnInit, AfterViewInit {
     //   tuiControlValue<number>(this.minAge),
     // ])
     .pipe(
+      filter((x): x is TransactionListItem[] => x !== null),
       // zero time debounce for a case when both key and direction change
       debounceTime(0),
       scan((acc, val) => {
@@ -84,7 +79,7 @@ export class WalletDashboardComponent implements OnInit, AfterViewInit {
       share()
     );
 
-  readonly loading$ = this.request$.pipe(map(value => !value));
+  readonly loading$ = this.transactions$.pipe(map(value => !value));
   readonly data$ = this.request$.pipe(startWith([] as TransactionListItem[]));
 
   constructor(
