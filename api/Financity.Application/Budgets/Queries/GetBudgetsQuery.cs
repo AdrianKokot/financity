@@ -38,4 +38,5 @@ public sealed class
 }
 
 public sealed record BudgetListItem
-    (Guid Id, string Name, decimal Amount, Guid UserId, decimal CurrentPeriodExpenses) : IMapFrom<Budget>;
+(Guid Id, string Name, decimal Amount, Guid UserId, decimal CurrentPeriodExpenses,
+ string CurrencyId) : IMapFrom<Budget>;

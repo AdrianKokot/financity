@@ -29,6 +29,7 @@ public sealed class UpdateBudgetCommandHandler : ICommandHandler<UpdateBudgetCom
                                    CancellationToken cancellationToken)
     {
         var entity = await _dbContext.GetDbSet<Budget>()
+                                     .Include(x => x.TrackedCategories)
                                      .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Budget), command.Id);

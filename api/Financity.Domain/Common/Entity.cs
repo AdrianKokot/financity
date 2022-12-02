@@ -1,8 +1,12 @@
 ﻿namespace Financity.Domain.Common;
 
-public interface IEntity
+public interface IEntity<TKey> where TKey : IEquatable<TKey>
 {
-    public Guid Id { get; }
+    public TKey Id { get; }
+}
+
+public interface IEntity : IEntity<Guid>
+{
 }
 
 public abstract class Entity : IEntity
