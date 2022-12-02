@@ -15,5 +15,8 @@ public sealed class CreateBudgetValidator : AbstractValidator<CreateBudgetComman
         RuleFor(x => x.TrackedCategoriesId)
             .ForEach(x => x.NotEmpty())
             .HasUserAccess<CreateBudgetCommand, Category>(dbContext);
+        RuleFor(x => x.CurrencyId)
+            .NotEmpty()
+            .Exists<CreateBudgetCommand, Currency, string>(dbContext);
     }
 }

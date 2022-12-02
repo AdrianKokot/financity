@@ -15,6 +15,15 @@ public static class ApplicationDbContextExtensions
                   .AnyAsync(x => x.Id == id, ct);
     }
 
+    internal static Task<bool> Exists<TEntity, TKey>(this IApplicationDbContext ctx, TKey id, CancellationToken ct)
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        return ctx.GetDbSet<TEntity>()
+                  .AsNoTracking()
+                  .AnyAsync(x => x.Id.Equals(id), ct);
+    }
+
     public static Task<bool> HasUserAccess<TEntity>(this IApplicationDbContext ctx,
                                                     ImmutableHashSet<Guid> ids,
                                                     CancellationToken ct)

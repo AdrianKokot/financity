@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using Financity.Application.Common.Queries;
-using Financity.Domain.Common;
 
 namespace Financity.Application.Common.Extensions;
 
@@ -11,7 +10,7 @@ public static class QueryableExtensions
 {
     public static IQueryable<T> ApplyQuerySpecification<T, TQ>(this IQueryable<T> query,
                                                                QuerySpecification<TQ> specification)
-        where T : IEntity
+        where T : class
     {
         return query
                .Filter(specification.Filters)
@@ -20,14 +19,14 @@ public static class QueryableExtensions
     }
 
     private static IQueryable<T> Paginate<T>(this IQueryable<T> query, PaginationSpecification pagination)
-        where T : IEntity
+        where T : class
     {
         return query
                .Skip(pagination.Skip)
                .Take(pagination.Take);
     }
 
-    private static IQueryable<T> Sort<T>(this IQueryable<T> query, SortSpecification sort) where T : IEntity
+    private static IQueryable<T> Sort<T>(this IQueryable<T> query, SortSpecification sort) where T : class
     {
         return sort.Direction == ListSortDirection.Ascending
             ? query.OrderBy(PropertySelector<T>(sort.OrderBy))
@@ -35,7 +34,7 @@ public static class QueryableExtensions
     }
 
     private static IQueryable<T> Filter<T>(this IQueryable<T> query, IReadOnlyCollection<Filter> filters)
-        where T : IEntity
+        where T : class
     {
         if (!filters.Any()) return query;
 

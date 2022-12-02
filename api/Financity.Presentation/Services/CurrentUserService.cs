@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
-using Financity.Domain.Common;
+using Financity.Domain.Entities;
 using Financity.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -38,9 +38,12 @@ public class CurrentUserService : ICurrentUserService
     public string NormalizedUserEmail { get; } = string.Empty;
 
     public IImmutableDictionary<Guid, WalletAccessLevel> UserWallets =>
-        (_userWallets ??= DbContext?.GetDbSet<WalletAccess>()
-                                   .Where(x => x.UserId == UserId)
-                                   .ToImmutableDictionary(x => x.WalletId, x => x.WalletAccessLevel)) ??
+        (_userWallets ??= DbContext?.GetDbSet<Wallet>()
+                                   .Where(x => x.OwnerId == UserId || x.UsersWithSharedAccess.Any(y => y.Id == UserId))
+                                   .ToImmutableDictionary(x => x.Id,
+                                       x => x.OwnerId == UserId
+                                           ? WalletAccessLevel.Owner
+                                           : WalletAccessLevel.Shared)) ??
         ImmutableDictionary<Guid, WalletAccessLevel>.Empty;
 
     public ImmutableHashSet<Guid> UserWalletIds => _userWalletIds ??= UserWallets.Keys.ToImmutableHashSet();

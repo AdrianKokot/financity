@@ -23,4 +23,4 @@ public sealed class
     }
 }
 
-public sealed record CurrencyListItem(Guid Id, string? Code, string? Name) : IMapFrom<Currency>;
+public sealed record CurrencyListItem(string Id, string Name) : IMapFrom<Currency>;

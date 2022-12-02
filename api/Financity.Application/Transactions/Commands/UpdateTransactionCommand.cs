@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using AutoMapper;
+﻿using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
@@ -37,7 +36,9 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
 
     public async Task<Unit> Handle(UpdateTransactionCommand command, CancellationToken ct)
     {
-        var entity = await _dbContext.GetDbSet<Transaction>().FirstOrDefaultAsync(x => x.Id == command.Id, ct);
+        var entity = await _dbContext.GetDbSet<Transaction>()
+                                     .Include(x => x.Labels)
+                                     .FirstOrDefaultAsync(x => x.Id == command.Id, ct);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Transaction), command.Id);
 
@@ -48,9 +49,9 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
         if (command.TransactionDate is not null)
             entity.TransactionDate = ((DateTime)command.TransactionDate).ToUniversalTime();
 
-        entity.Labels = _dbContext.GetDbSet<Label>()
-                                  .Where(x => command.LabelIds.Contains(x.Id))
-                                  .ToImmutableArray();
+        entity.Labels = await _dbContext.GetDbSet<Label>()
+                                        .Where(x => command.LabelIds.Contains(x.Id))
+                                        .ToListAsync(ct);
 
         await _dbContext.SaveChangesAsync(ct);
 

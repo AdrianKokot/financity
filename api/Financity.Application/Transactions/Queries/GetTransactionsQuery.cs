@@ -29,5 +29,5 @@ public sealed record TransactionListItem(Guid Id, decimal Amount, string Note, G
                                          Guid WalletId, string WalletName, TransactionType TransactionType,
                                          DateTime TransactionDate,
                                          Guid? CategoryId, string? CategoryName,
-                                         ICollection<LabelListItem> Labels, string CurrencyCode, string CurrencyName,
-                                         Guid CurrencyId, float ExchangeRate) : IMapFrom<Transaction>;
+                                         ICollection<LabelListItem> Labels, string CurrencyName,
+                                         string CurrencyId, decimal ExchangeRate) : IMapFrom<Transaction>;

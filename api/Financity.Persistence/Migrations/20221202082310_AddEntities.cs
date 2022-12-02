@@ -17,8 +17,7 @@ namespace Financity.Persistence.Migrations
                 name: "Currencies",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Code = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -50,12 +49,41 @@ namespace Financity.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Budgets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    CurrencyId = table.Column<string>(type: "text", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Budgets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Budgets_Currencies_CurrencyId",
+                        column: x => x.CurrencyId,
+                        principalTable: "Currencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Budgets_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Wallets",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false)
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrencyId = table.Column<string>(type: "text", nullable: false),
+                    StartingAmount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,24 +94,38 @@ namespace Financity.Persistence.Migrations
                         principalTable: "Currencies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Wallets_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Budgets",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    AppearanceColor = table.Column<string>(name: "Appearance_Color", type: "text", nullable: true),
+                    AppearanceIconName = table.Column<string>(name: "Appearance_IconName", type: "text", nullable: true),
+                    ParentCategoryId = table.Column<Guid>(type: "uuid", nullable: true),
+                    TransactionType = table.Column<int>(type: "integer", nullable: false),
+                    WalletId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Budgets", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Budgets_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Categories_Categories_ParentCategoryId",
+                        column: x => x.ParentCategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Categories_Wallets_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -94,13 +136,9 @@ namespace Financity.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    AppearanceColor = table.Column<string>(name: "Appearance_Color", type: "text", nullable: false),
-                    AppearanceIconName = table.Column<string>(name: "Appearance_IconName", type: "text", nullable: false),
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                    AppearanceColor = table.Column<string>(name: "Appearance_Color", type: "text", nullable: true),
+                    AppearanceIconName = table.Column<string>(name: "Appearance_IconName", type: "text", nullable: true),
+                    WalletId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,11 +157,7 @@ namespace Financity.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                    WalletId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,64 +171,49 @@ namespace Financity.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WalletAccesses",
+                name: "UserWallet",
                 columns: table => new
                 {
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WalletAccessLevel = table.Column<int>(type: "integer", nullable: false)
+                    SharedWalletsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UsersWithSharedAccessId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WalletAccesses", x => new { x.UserId, x.WalletId });
+                    table.PrimaryKey("PK_UserWallet", x => new { x.SharedWalletsId, x.UsersWithSharedAccessId });
                     table.ForeignKey(
-                        name: "FK_WalletAccesses_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserWallet_Users_UsersWithSharedAccessId",
+                        column: x => x.UsersWithSharedAccessId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WalletAccesses_Wallets_WalletId",
-                        column: x => x.WalletId,
+                        name: "FK_UserWallet_Wallets_SharedWalletsId",
+                        column: x => x.SharedWalletsId,
                         principalTable: "Wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "BudgetCategory",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    AppearanceColor = table.Column<string>(name: "Appearance_Color", type: "text", nullable: false),
-                    AppearanceIconName = table.Column<string>(name: "Appearance_IconName", type: "text", nullable: false),
-                    ParentCategoryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TransactionType = table.Column<int>(type: "integer", nullable: true),
-                    BudgetId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                    BudgetsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TrackedCategoriesId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_BudgetCategory", x => new { x.BudgetsId, x.TrackedCategoriesId });
                     table.ForeignKey(
-                        name: "FK_Categories_Budgets_BudgetId",
-                        column: x => x.BudgetId,
+                        name: "FK_BudgetCategory_Budgets_BudgetsId",
+                        column: x => x.BudgetsId,
                         principalTable: "Budgets",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_ParentCategoryId",
-                        column: x => x.ParentCategoryId,
+                        name: "FK_BudgetCategory_Categories_TrackedCategoriesId",
+                        column: x => x.TrackedCategoriesId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Categories_Wallets_WalletId",
-                        column: x => x.WalletId,
-                        principalTable: "Wallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -207,15 +226,12 @@ namespace Financity.Persistence.Migrations
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExchangeRate = table.Column<decimal>(type: "numeric", nullable: false),
                     RecipientId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WalletId = table.Column<Guid>(type: "uuid", nullable: false),
                     TransactionType = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CurrencyId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                    CurrencyId = table.Column<string>(type: "text", nullable: false),
+                    WalletId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -270,23 +286,28 @@ namespace Financity.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Currencies",
-                columns: new[] { "Id", "Code", "Name" },
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("80c3d1bd-0ae2-4594-a96b-bb600b6d2c7f"), "USD", "United States Dollar" },
-                    { new Guid("ed1c273f-d57a-41c3-94e8-f465ae02cf4c"), "PLN", "Polski Złoty" },
-                    { new Guid("ff648f1d-191e-45c8-8d0e-2545b303664d"), "EUR", "Euro" }
+                    { "EUR", "Euro" },
+                    { "PLN", "Polski Złoty" },
+                    { "USD", "United States Dollar" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BudgetCategory_TrackedCategoriesId",
+                table: "BudgetCategory",
+                column: "TrackedCategoriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Budgets_CurrencyId",
+                table: "Budgets",
+                column: "CurrencyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Budgets_UserId",
                 table: "Budgets",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Categories_BudgetId",
-                table: "Categories",
-                column: "BudgetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_ParentCategoryId",
@@ -345,24 +366,35 @@ namespace Financity.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_WalletAccesses_WalletId",
-                table: "WalletAccesses",
-                column: "WalletId");
+                name: "IX_UserWallet_UsersWithSharedAccessId",
+                table: "UserWallet",
+                column: "UsersWithSharedAccessId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallets_CurrencyId",
                 table: "Wallets",
                 column: "CurrencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wallets_OwnerId",
+                table: "Wallets",
+                column: "OwnerId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BudgetCategory");
+
+            migrationBuilder.DropTable(
                 name: "LabelTransaction");
 
             migrationBuilder.DropTable(
-                name: "WalletAccesses");
+                name: "UserWallet");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
 
             migrationBuilder.DropTable(
                 name: "Labels");
@@ -377,16 +409,13 @@ namespace Financity.Persistence.Migrations
                 name: "Recipients");
 
             migrationBuilder.DropTable(
-                name: "Budgets");
-
-            migrationBuilder.DropTable(
                 name: "Wallets");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Currencies");
 
             migrationBuilder.DropTable(
-                name: "Currencies");
+                name: "Users");
         }
     }
 }

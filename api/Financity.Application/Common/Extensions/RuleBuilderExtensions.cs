@@ -40,6 +40,16 @@ public static class RuleBuilderExtensions
                           .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
     }
 
+    public static IRuleBuilder<T, TKey> Exists<T, TEntity, TKey>(
+        this IRuleBuilder<T, TKey> ruleBuilder,
+        IApplicationDbContext dbContext)
+        where TEntity : class, IEntity<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        return ruleBuilder.MustAsync(dbContext.Exists<TEntity, TKey>)
+                          .WithMessage($"{typeof(TEntity).Name} with given id doesn't exist.");
+    }
+
     public static IRuleBuilder<T, Guid> HasUserAccess<T, TEntity>(this IRuleBuilder<T, Guid> ruleBuilder,
                                                                   IApplicationDbContext dbContext)
         where TEntity : class, IEntity, IBelongsToWallet

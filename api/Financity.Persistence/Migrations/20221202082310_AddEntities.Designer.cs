@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221120085229_AddTransactionsCollectionToWallet")]
-    partial class AddTransactionsCollectionToWallet
+    [Migration("20221202082310_AddEntities")]
+    partial class AddEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,24 +40,6 @@ namespace Financity.Persistence.Migrations
                     b.ToTable("BudgetCategory");
                 });
 
-            modelBuilder.Entity("Financity.Domain.Common.WalletAccess", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("WalletId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("WalletAccessLevel")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId", "WalletId");
-
-                    b.HasIndex("WalletId");
-
-                    b.ToTable("WalletAccesses");
-                });
-
             modelBuilder.Entity("Financity.Domain.Entities.Budget", b =>
                 {
                     b.Property<Guid>("Id")
@@ -67,6 +49,10 @@ namespace Financity.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -75,6 +61,8 @@ namespace Financity.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("UserId");
 
@@ -111,12 +99,7 @@ namespace Financity.Persistence.Migrations
 
             modelBuilder.Entity("Financity.Domain.Entities.Currency", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -130,20 +113,17 @@ namespace Financity.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fe72159d-8edc-4e04-a4de-561ac953b592"),
-                            Code = "PLN",
+                            Id = "PLN",
                             Name = "Polski Złoty"
                         },
                         new
                         {
-                            Id = new Guid("222a9676-2366-4a63-85c1-f892af3635bc"),
-                            Code = "EUR",
+                            Id = "EUR",
                             Name = "Euro"
                         },
                         new
                         {
-                            Id = new Guid("34fa9244-3524-46c2-bb75-794a6ac5f82d"),
-                            Code = "USD",
+                            Id = "USD",
                             Name = "United States Dollar"
                         });
                 });
@@ -200,11 +180,12 @@ namespace Financity.Persistence.Migrations
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CurrencyId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<float>("ExchangeRate")
-                        .HasColumnType("real");
+                    b.Property<decimal>("ExchangeRate")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -300,12 +281,16 @@ namespace Financity.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CurrencyId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("StartingAmount")
                         .HasColumnType("numeric");
@@ -313,6 +298,8 @@ namespace Financity.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Wallets");
                 });
@@ -332,6 +319,21 @@ namespace Financity.Persistence.Migrations
                     b.ToTable("LabelTransaction");
                 });
 
+            modelBuilder.Entity("UserWallet", b =>
+                {
+                    b.Property<Guid>("SharedWalletsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UsersWithSharedAccessId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("SharedWalletsId", "UsersWithSharedAccessId");
+
+                    b.HasIndex("UsersWithSharedAccessId");
+
+                    b.ToTable("UserWallet");
+                });
+
             modelBuilder.Entity("BudgetCategory", b =>
                 {
                     b.HasOne("Financity.Domain.Entities.Budget", null)
@@ -347,32 +349,21 @@ namespace Financity.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Financity.Domain.Common.WalletAccess", b =>
-                {
-                    b.HasOne("Financity.Domain.Entities.User", "User")
-                        .WithMany("AvailableWallets")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
-                        .WithMany("UsersWithAccess")
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("Wallet");
-                });
-
             modelBuilder.Entity("Financity.Domain.Entities.Budget", b =>
                 {
+                    b.HasOne("Financity.Domain.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Financity.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Currency");
 
                     b.Navigation("User");
                 });
@@ -499,7 +490,15 @@ namespace Financity.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Financity.Domain.Entities.User", "Owner")
+                        .WithMany("OwnedWallets")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Currency");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("LabelTransaction", b =>
@@ -517,6 +516,21 @@ namespace Financity.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("UserWallet", b =>
+                {
+                    b.HasOne("Financity.Domain.Entities.Wallet", null)
+                        .WithMany()
+                        .HasForeignKey("SharedWalletsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Financity.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersWithSharedAccessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Transactions");
@@ -529,7 +543,7 @@ namespace Financity.Persistence.Migrations
 
             modelBuilder.Entity("Financity.Domain.Entities.User", b =>
                 {
-                    b.Navigation("AvailableWallets");
+                    b.Navigation("OwnedWallets");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Wallet", b =>
@@ -541,8 +555,6 @@ namespace Financity.Persistence.Migrations
                     b.Navigation("Recipients");
 
                     b.Navigation("Transactions");
-
-                    b.Navigation("UsersWithAccess");
                 });
 #pragma warning restore 612, 618
         }

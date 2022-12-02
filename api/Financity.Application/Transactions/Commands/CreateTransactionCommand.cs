@@ -18,7 +18,7 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
     public Guid WalletId { get; set; } = Guid.Empty;
     public TransactionType TransactionType { get; set; } = TransactionType.Income;
     public Guid? CategoryId { get; set; } = null;
-    public Guid CurrencyId { get; set; } = Guid.Empty;
+    public string CurrencyId { get; set; } = string.Empty;
     public DateTime TransactionDate { get; set; } = AppDateTime.Now;
     public HashSet<Guid> LabelIds { get; set; } = new();
 

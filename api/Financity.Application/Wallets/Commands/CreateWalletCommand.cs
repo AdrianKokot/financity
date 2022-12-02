@@ -3,17 +3,21 @@ using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
-using Financity.Domain.Common;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 
 namespace Financity.Application.Wallets.Commands;
 
 public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>, IMapTo<Wallet>
 {
     public string Name { get; set; } = string.Empty;
-    public Guid CurrencyId { get; set; } = Guid.Empty;
+    public string CurrencyId { get; set; } = string.Empty;
     public Guid UserId { get; set; } = Guid.Empty;
+
+    public static void CreateMap(Profile profile)
+    {
+        profile.CreateMap<CreateWalletCommand, Wallet>()
+               .ForMember(x => x.OwnerId, x => x.MapFrom(y => y.UserId));
+    }
 }
 
 public sealed class
@@ -33,14 +37,6 @@ public sealed class
         if (command.UserId == Guid.Empty) command.UserId = _userService.UserId;
 
         var entity = Mapper.Map<Wallet>(command);
-
-        entity.UsersWithAccess ??= new List<WalletAccess>();
-        entity.UsersWithAccess.Add(new WalletAccess
-        {
-            WalletId = entity.Id,
-            WalletAccessLevel = WalletAccessLevel.Owner,
-            UserId = command.UserId
-        });
 
         DbContext.GetDbSet<Wallet>().Add(entity);
 
