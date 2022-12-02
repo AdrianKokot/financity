@@ -33,5 +33,5 @@ public sealed class GetBudgetQueryHandler : UserEntityQueryHandler<GetBudgetQuer
 }
 
 public sealed record BudgetDetails(Guid Id, string Name, decimal Amount, Guid UserId,
-                                   IEnumerable<CategoryListItem> TrackedCategories,
-                                   decimal CurrentPeriodExpenses) : IMapFrom<Budget>;
+                                   IEnumerable<CategoryListItem> TrackedCategories, string CurrencyId,
+                                   string CurrencyName, decimal CurrentPeriodExpenses) : IMapFrom<Budget>;

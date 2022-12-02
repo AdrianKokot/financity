@@ -2,7 +2,6 @@
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +24,8 @@ public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWal
 
     public async Task<Unit> Handle(RevokeWalletAccessCommand command, CancellationToken ct)
     {
-        var wallet = await _dbContext.GetDbSet<Wallet>().Include(x => x.UsersWithAccess)
+        var wallet = await _dbContext.GetDbSet<Wallet>()
+                                     .Include(x => x.UsersWithSharedAccess)
                                      .FirstOrDefaultAsync(x => x.Id == command.WalletId, ct);
 
         if (wallet is null)
@@ -37,17 +37,13 @@ public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWal
         if (user is null)
             throw ValidationExceptionFactory.For(nameof(command.UserEmail), "User with given email doesn't exist");
 
-        var walletAccess = wallet.UsersWithAccess.FirstOrDefault(x => x.UserId == user.Id);
+        var userWithSharedAccess = wallet.UsersWithSharedAccess.FirstOrDefault(x => x.Id == user.Id);
 
-        if (walletAccess is null)
+        if (userWithSharedAccess is null)
             throw ValidationExceptionFactory.For(nameof(command.UserEmail),
                 "User with given email doesn't have access to the given wallet.");
 
-        if (walletAccess.WalletAccessLevel == WalletAccessLevel.Owner)
-            throw ValidationExceptionFactory.For(nameof(command.UserEmail),
-                "You cannot revoke access from the wallet owner.");
-
-        wallet.UsersWithAccess.Remove(walletAccess);
+        wallet.UsersWithSharedAccess.Remove(userWithSharedAccess);
 
         await _dbContext.SaveChangesAsync(ct);
 

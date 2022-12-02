@@ -8,7 +8,7 @@ public sealed class Transaction : Entity, IBelongsToWallet
     public decimal Amount { get; set; }
     public string Note { get; set; } = string.Empty;
     public DateTime TransactionDate { get; set; } = DateTime.Now;
-    public float ExchangeRate { get; set; } = 1;
+    public decimal ExchangeRate { get; set; } = 1;
 
     public Guid? RecipientId { get; set; }
     public Recipient? Recipient { get; set; }
@@ -20,7 +20,7 @@ public sealed class Transaction : Entity, IBelongsToWallet
     public Guid? CategoryId { get; set; }
     public Category? Category { get; set; }
 
-    public Guid CurrencyId { get; set; }
+    public string CurrencyId { get; set; }
     public Currency Currency { get; set; }
 
     public Guid WalletId { get; set; }

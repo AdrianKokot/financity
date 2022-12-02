@@ -13,6 +13,6 @@ public sealed class CreateWalletCommandValidator : AbstractValidator<CreateWalle
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
-            .Exists<CreateWalletCommand, Currency>(dbContext);
+            .Exists<CreateWalletCommand, Currency, string>(dbContext);
     }
 }

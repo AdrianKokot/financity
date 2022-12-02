@@ -18,7 +18,7 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
         RuleFor(x => x.TransactionDate).NotEmpty();
         RuleFor(x => x.RecipientId).HasUserAccessOrNull<CreateTransactionCommand, Recipient>(dbContext);
         RuleFor(x => x.CategoryId).HasUserAccessOrNull<CreateTransactionCommand, Category>(dbContext);
-        RuleFor(x => x.CurrencyId).NotEmpty().Exists<CreateTransactionCommand, Currency>(dbContext);
+        RuleFor(x => x.CurrencyId).NotEmpty().Exists<CreateTransactionCommand, Currency, string>(dbContext);
         RuleFor(x => x.LabelIds)
             .ForEach(y => y.NotEmpty())
             .HasUserAccess<CreateTransactionCommand, Label>(dbContext);

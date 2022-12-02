@@ -11,7 +11,7 @@ namespace Financity.Application.Common.Queries.FilteredQuery;
 public abstract class
     FilteredEntitiesQueryHandler<TQuery, TEntity, TMappedEntity> : IQueryHandler<TQuery,
         IEnumerable<TMappedEntity>>
-    where TEntity : Entity
+    where TEntity : class
     where TMappedEntity : class
     where TQuery : IFilteredEntitiesListQuery<TMappedEntity>
 {

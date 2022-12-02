@@ -6,6 +6,8 @@ namespace Financity.Domain.Entities;
 public sealed class Budget : Entity, IBelongsToUser
 {
     public string Name { get; set; } = string.Empty;
+    public string CurrencyId { get; set; } = string.Empty;
+    public Currency Currency { get; set; }
 
     /// <summary>
     ///     Budget figure
@@ -17,10 +19,11 @@ public sealed class Budget : Entity, IBelongsToUser
     /// </summary>
     public decimal CurrentPeriodExpenses =>
         TrackedCategories.SelectMany(x => x.Transactions)
-                         .Where(x => x.TransactionType == TransactionType.Outcome)
-                         .Where(x => x.TransactionDate.Month == DateTime.Now.ToUniversalTime().Month &&
-                                     x.TransactionDate.Year == DateTime.Now.ToUniversalTime().Year)
-                         .Sum(x => x.Amount);
+                         .Where(x => x.TransactionType == TransactionType.Outcome &&
+                                     x.TransactionDate.Month == DateTime.Now.ToUniversalTime().Month &&
+                                     x.TransactionDate.Year == DateTime.Now.ToUniversalTime().Year &&
+                                     x.Wallet.CurrencyId == CurrencyId)
+                         .Sum(x => x.Amount * x.ExchangeRate);
 
     public ICollection<Category> TrackedCategories { get; set; } = new List<Category>();
 
