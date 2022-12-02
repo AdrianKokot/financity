@@ -36,7 +36,7 @@ public class CurrentUserService : ICurrentUserService
     public bool IsAuthenticated { get; }
     public Guid UserId { get; } = Guid.Empty;
     public string NormalizedUserEmail { get; } = string.Empty;
-    
+
     public IImmutableDictionary<Guid, WalletAccessLevel> UserWallets =>
         (_userWallets ??= DbContext?.GetDbSet<Wallet>()
                                    .Where(x => x.OwnerId == UserId || x.UsersWithSharedAccess.Any(y => y.Id == UserId))
