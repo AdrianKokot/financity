@@ -1,4 +1,5 @@
-<main class="bg-base px-8 py-4">
+<main
+  class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
   <!--  <div>-->
   <!--    {{ wallet | json }}-->
   <!--  </div>-->
@@ -38,10 +39,38 @@
   <!--  </tui-hosted-dropdown>-->
   <!--</p>-->
 
+  <table
+    tuiTable
+    class="w-full"
+    [columns]="['transactionDate', 'category', 'labels', 'note', 'amount']">
+    <thead>
+      <tr tuiThGroup>
+        <th
+          *tuiHead="'transactionDate'"
+          tuiTh
+          [sorter]="null"
+          class="column-date">
+          Date
+        </th>
+        <th *tuiHead="'category'" tuiTh [sorter]="null" class="column-category">
+          Category
+        </th>
+        <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
+          Labels
+        </th>
+        <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
+          Note
+        </th>
+        <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
+          Amount
+        </th>
+        <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
+      </tr>
+    </thead>
+  </table>
   <tui-scrollbar>
     <cdk-virtual-scroll-viewport
-      (scrolledIndexChange)="log($event)"
-      #viewport
+      (scrolledIndexChange)="log()"
       tuiScrollable
       class="viewport tui-zero-scrollbar"
       [itemSize]="44"
@@ -62,48 +91,28 @@
             <th
               *tuiHead="'transactionDate'"
               tuiTh
-              [sticky]="true"
               [sorter]="null"
-              [style.top.px]="-viewport['_renderedContentOffset']"
-              class="column-date">
-              Date
-            </th>
+              class="column-date"></th>
             <th
               *tuiHead="'category'"
               tuiTh
-              [sticky]="true"
               [sorter]="null"
-              [style.top.px]="-viewport['_renderedContentOffset']"
-              class="column-category">
-              Category
-            </th>
+              class="column-category"></th>
             <th
               *tuiHead="'labels'"
               tuiTh
-              [sticky]="true"
               [sorter]="null"
-              [style.top.px]="-viewport['_renderedContentOffset']"
-              class="column-labels">
-              Labels
-            </th>
+              class="column-labels"></th>
             <th
               *tuiHead="'note'"
               tuiTh
-              [sticky]="true"
               [sorter]="null"
-              [style.top.px]="-viewport['_renderedContentOffset']"
-              class="column-note">
-              Note
-            </th>
+              class="column-note"></th>
             <th
               *tuiHead="'amount'"
               tuiTh
-              [sticky]="true"
               [sorter]="null"
-              [style.top.px]="-viewport['_renderedContentOffset']"
-              class="column-amount">
-              Amount
-            </th>
+              class="column-amount"></th>
             <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
           </tr>
         </thead>
@@ -135,16 +144,15 @@
                 <td *tuiCell="'amount'" tuiTd>
                   <!--          {{ item.amount  }}-->
                   <tui-money
-                    [currency]="item.currencyCode"
+                    [currency]="item.currencyId"
                     [colored]="true"
                     [value]="item.amount"></tui-money>
 
-                  <ng-container
-                    *ngIf="item.currencyCode !== wallet.currencyCode">
+                  <ng-container *ngIf="item.currencyId !== wallet.currencyId">
                     <span class="ml-2">(</span>
                     <tui-money
                       [colored]="false"
-                      [currency]="wallet.currencyCode"
+                      [currency]="wallet.currencyId"
                       [value]="item.amount * item.exchangeRate"></tui-money>
                     <span>)</span>
                   </ng-container>

@@ -3,6 +3,12 @@
 :host {
   .viewport {
     min-height: 75vh;
+
+    table thead {
+      th {
+        height: 0 !important;
+      }
+    }
   }
 
   .column-date {
@@ -23,6 +29,10 @@
   th {
     white-space: nowrap;
     border: none;
+  }
+
+  tr th {
+    background: var(--tui-base-02);
   }
 
   tbody {

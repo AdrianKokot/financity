@@ -5,9 +5,8 @@ export interface Transaction {
 }
 
 export interface TransactionListItem extends Transaction {
-  currencyCode: string;
-  currencyName: string;
   currencyId: string;
+  currencyName: string;
   transactionDate: string;
   amount: number;
   exchangeRate: number;

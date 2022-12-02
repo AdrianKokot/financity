@@ -35,7 +35,7 @@ export class WalletListComponent {
       .open(
         new PolymorpheusComponent(CreateWalletDialogComponent, this._injector)
       )
-      .subscribe(res => {
+      .subscribe(() => {
         this.poll$.next(true);
       });
   }

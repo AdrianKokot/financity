@@ -1,20 +1,17 @@
-import { Currency } from './currency.model';
-import { Account } from './account.model';
-
 export interface Wallet {
   id: string;
   name: string;
-  currencyCode: string;
+  currencyId: string;
+  startingAmount: number;
 }
 
 export interface WalletListItem extends Wallet {
-  currencyCode: string;
+  currencyId: string;
   currencyName: string;
-  balance: number;
+  currentState: number;
 }
 
-export interface CreateWalletPayload extends Pick<Wallet, 'name'> {
-  accountId: Account['id'];
-  currencyId: Currency['id'];
-  startingBalance: number;
-}
+export type CreateWalletPayload = Pick<
+  Wallet,
+  'name' | 'currencyId' | 'startingAmount'
+>;

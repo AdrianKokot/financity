@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { WalletApiService } from '../../../../core/api/wallet-api.service';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -31,7 +25,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
   // encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WalletDashboardComponent implements OnInit, AfterViewInit {
+export class WalletDashboardComponent {
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
 
   walletId$ = this._activatedRoute.params.pipe(
@@ -88,28 +82,15 @@ export class WalletDashboardComponent implements OnInit, AfterViewInit {
     private _transactionApiService: TransactionApiService
   ) {}
 
-  log($event: number) {
+  log() {
     if (this.gotAllResults) return;
     const { end } = this.viewport.getRenderedRange();
     const total = this.viewport.getDataLength();
 
-    // console.log($event);
-    // console.log(this.viewport.getDataLength());
-    // console.log(this.viewport.getRenderedRange().end);
     if (end === total) {
-      // console.log({ end, total, $event, res: Math.floor(total / 20) + 1 });
       this.page$.next(Math.floor(total / this._pageSize) + 1);
     }
   }
 
-  trackByIdx = (index: number, i: TransactionListItem) => index; //i.id;
-
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
-    // this.viewport.getDataLength();
-    // this.viewport.renderedRangeStream.subscribe(i => {
-    //   console.log(i);
-    // });
-  }
+  trackByIdx = (index: number) => index;
 }
