@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from '@shared/shared.module';
-import { FooterComponent } from './components/footer/footer.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { FooterComponent } from './ui/footer/footer.component';
+import { NavbarComponent } from './ui/navbar/navbar.component';
+import { NotFoundComponent } from './ui/not-found/not-found.component';
+import { TuiButtonModule, TuiLinkModule } from '@taiga-ui/core';
+import { RouterLinkWithHref } from '@angular/router';
 
 const exportedComponents = [
   NavbarComponent,
@@ -15,6 +15,6 @@ const exportedComponents = [
 @NgModule({
   declarations: [...exportedComponents],
   exports: [...exportedComponents],
-  imports: [SharedModule, CommonModule, RouterModule.forChild([])],
+  imports: [CommonModule, TuiLinkModule, TuiButtonModule, RouterLinkWithHref],
 })
 export class LayoutModule {}
