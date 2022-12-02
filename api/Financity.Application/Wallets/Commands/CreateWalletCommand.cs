@@ -11,6 +11,7 @@ public sealed class CreateWalletCommand : ICommand<CreateWalletCommandResult>, I
 {
     public string Name { get; set; } = string.Empty;
     public string CurrencyId { get; set; } = string.Empty;
+    public decimal StartingAmount { get; set; } = 0;
     public Guid UserId { get; set; } = Guid.Empty;
 
     public static void CreateMap(Profile profile)
