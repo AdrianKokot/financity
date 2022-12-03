@@ -3,9 +3,11 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { combineLatest, filter, map } from 'rxjs';
+import { combineLatest, distinctUntilKeyChanged, filter, map } from 'rxjs';
 import { WalletListItem } from '@shared/data-access/models/wallet.model';
 import { HttpClient } from '@angular/common/http';
+import { RouteDataService } from '@shared/data-access/services/route-data.service';
+import { RouteData } from '@shared/utils/toggles/route-data';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,12 @@ import { HttpClient } from '@angular/common/http';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor(private _http: HttpClient) {
+  isNavbarVisible$ = this._route.data$.pipe(
+    distinctUntilKeyChanged(RouteData.NAVBAR_VISIBLE),
+    map(x => x[RouteData.NAVBAR_VISIBLE] ?? true)
+  );
+
+  constructor(private _http: HttpClient, private _route: RouteDataService) {
     this._http
       .get<unknown[]>('/api/transactions?pageSize=1')
       .pipe(filter(x => x.length == 0))

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from '@layout/ui/not-found/not-found.component';
+import { RouteData } from '@shared/utils/toggles/route-data';
 
 const routes: Routes = [
   {
@@ -11,6 +12,9 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    data: {
+      [RouteData.NAVBAR_VISIBLE]: false,
+    },
   },
   {
     path: 'dashboard',
@@ -27,6 +31,9 @@ const routes: Routes = [
   {
     path: '**',
     component: NotFoundComponent,
+    data: {
+      [RouteData.NAVBAR_VISIBLE]: false,
+    },
   },
 ];
 

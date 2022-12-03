@@ -1,12 +1,12 @@
-@use 'src/styles/shared/shared' as *;
-
-app-navbar {
-  display: block;
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  @include shadow(6);
-  border-bottom: 1px solid var(--tui-base-03);
-  z-index: 1;
-}
+//@use 'src/styles/shared/shared' as *;
+//
+//app-navbar {
+//  display: block;
+//  position: sticky;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  @include shadow(6);
+//  border-bottom: 1px solid var(--tui-base-03);
+//  z-index: 1;
+//}

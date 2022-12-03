@@ -13,5 +13,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
-  @HostBinding('class') hostClasses = 'bg-base py-4';
+  @HostBinding('class') hostClasses = '';
 }
