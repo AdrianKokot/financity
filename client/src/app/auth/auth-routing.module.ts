@@ -5,6 +5,7 @@ import { RegisterPageComponent } from './feature/register-page/register-page.com
 import { GuestGuard } from './data-access/guards/guest.guard';
 import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-password-page.component';
 import { AuthShellComponent } from './feature/auth-shell/auth-shell.component';
+import { LogoutGuard } from './data-access/guards/logout.guard';
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
         component: ResetPasswordPageComponent,
       },
     ],
+  },
+  {
+    path: 'logout',
+    canActivate: [LogoutGuard],
+    children: [],
   },
 ];
 
