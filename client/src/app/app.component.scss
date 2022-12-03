@@ -6,3 +6,8 @@
 tui-root {
   height: 100%;
 }
+
+app-navbar + .tui-container.w-full {
+  width: calc(100% - var(--app-sidebar-width));
+  margin-left: var(--app-sidebar-width);
+}

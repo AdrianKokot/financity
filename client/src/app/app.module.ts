@@ -1,12 +1,15 @@
 import {
+  TUI_SANITIZER,
   TuiAlertModule,
   TuiDialogModule,
   TuiModeModule,
   TuiRootModule,
+  TuiSvgModule,
+  TuiSvgService,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +19,7 @@ import { SharedModule } from '@shared/shared.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
 import { ApiInterceptor } from '@shared/data-access/api/api.interceptor';
+import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +35,7 @@ import { ApiInterceptor } from '@shared/data-access/api/api.interceptor';
     TuiModeModule,
     LayoutModule,
     HttpClientModule,
+    TuiSvgModule,
   ],
   providers: [
     {
@@ -43,7 +48,17 @@ import { ApiInterceptor } from '@shared/data-access/api/api.interceptor';
       useClass: ApiInterceptor,
       multi: true,
     },
+    {
+      provide: TUI_SANITIZER,
+      useClass: NgDompurifySanitizer,
+    },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(@Inject(TuiSvgService) svgService: TuiSvgService) {
+    svgService.define({
+      appHomeIcon: 'assets/icons/home-24px.svg#home-24px',
+    });
+  }
+}

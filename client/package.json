@@ -31,6 +31,8 @@
     "@taiga-ui/icons": "^3.8.0",
     "@taiga-ui/kit": "^3.8.0",
     "@taiga-ui/styles": "^3.8.0",
+    "@tinkoff/ng-dompurify": "^4.0.0",
+    "dompurify": "^2.4.1",
     "rxjs": "~7.5.7",
     "tslib": "^2.4.0",
     "zone.js": "~0.11.8"
@@ -44,6 +46,7 @@
     "@angular-eslint/template-parser": "14.1.2",
     "@angular/cli": "~14.2.7",
     "@angular/compiler-cli": "^14.2.8",
+    "@types/dompurify": "^2.4.0",
     "@types/jasmine": "~4.3.0",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",

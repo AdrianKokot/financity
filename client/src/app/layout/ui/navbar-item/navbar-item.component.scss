@@ -1,0 +1,18 @@
+app-navbar-item {
+  a {
+    transition: .3s background-color, .3s color;
+
+    &:hover {
+      background-color: var(--tui-base-02);
+    }
+
+    &.text-bolder {
+      color: var(--tui-primary) !important;
+      background-color: var(--tui-secondary);
+
+      &:hover {
+        background-color: var(--tui-secondary-hover);
+      }
+    }
+  }
+}

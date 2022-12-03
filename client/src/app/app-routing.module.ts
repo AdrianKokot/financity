@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NotFoundComponent } from '@layout/ui/not-found/not-found.component';
+import { NotFoundComponent } from '@layout/feature/not-found/not-found.component';
 import { RouteData } from '@shared/utils/toggles/route-data';
 
 const routes: Routes = [

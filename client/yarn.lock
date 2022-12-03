@@ -1685,6 +1685,13 @@
   resolved "https://registry.yarnpkg.com/@taiga-ui/styles/-/styles-3.8.0.tgz#beb5356618021a37ad32972de83aa3f189390dfa"
   integrity sha512-iZYto2OcW7wF2RZ0xV1IliaL0CqwUZM9sZiMtpUdmDQgZGRkMcoGtx9xrF549IkFN2eyQ+Nnuvxp7hOZ/afjVA==
 
+"@tinkoff/ng-dompurify@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@tinkoff/ng-dompurify/-/ng-dompurify-4.0.0.tgz#f6930e136e698d89c4169c443e8baeb8330df9bf"
+  integrity sha512-BjKUweWLrOx8UOZw+Tl+Dae5keYuSbeMkppcXQdsvwASMrPfmP7d3Q206Q6HDqOV2WnpnFqGUB95IMbLAeRRuw==
+  dependencies:
+    tslib "^2.0.0"
+
 "@tinkoff/ng-event-plugins@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@tinkoff/ng-event-plugins/-/ng-event-plugins-3.0.0.tgz#a5b0e252aefe724d9059593a249809346b2d9a12"
@@ -1753,6 +1760,13 @@
   version "2.8.12"
   resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.12.tgz#6b2c510a7ad7039e98e7b8d3d6598f4359e5c080"
   integrity sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==
+
+"@types/dompurify@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-2.4.0.tgz#fd9706392a88e0e0e6d367f3588482d817df0ab9"
+  integrity sha512-IDBwO5IZhrKvHFUl+clZxgf3hn2b/lU6H1KaBShPkQyGJUQ0xwebezIPSuiyGwfz1UzJWQl4M7BDxtHtCCPlTg==
+  dependencies:
+    "@types/trusted-types" "*"
 
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
@@ -1882,6 +1896,11 @@
   integrity sha512-f0KEEe05NvUnat+boPTZ0dgaLZ4SfSouXUgv5noUiefG2ajgKjmETo9ZJyuqsl7dfl2aHlLJUiki6B4ZYldiiw==
   dependencies:
     "@types/node" "*"
+
+"@types/trusted-types@*":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
+  integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
 "@types/ws@^8.5.1":
   version "8.5.3"
@@ -3173,6 +3192,11 @@ domhandler@^4.2.0, domhandler@^4.3.1:
   integrity sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ==
   dependencies:
     domelementtype "^2.2.0"
+
+dompurify@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.4.1.tgz#f9cb1a275fde9af6f2d0a2644ef648dd6847b631"
+  integrity sha512-ewwFzHzrrneRjxzmK6oVz/rZn9VWspGFRDb4/rRtIsM1n36t9AKma/ye8syCpcw+XJ25kOK/hOG7t1j2I2yBqA==
 
 domutils@^2.8.0:
   version "2.8.0"

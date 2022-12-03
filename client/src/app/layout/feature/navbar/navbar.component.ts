@@ -1,9 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostBinding,
   ViewEncapsulation,
 } from '@angular/core';
+import {
+  AppNavRoutes,
+  UserRelatedRoutes,
+} from '@layout/data-access/nav-routes';
 
 @Component({
   selector: 'app-navbar',
@@ -13,5 +16,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
-  @HostBinding('class') hostClasses = '';
+  appRoutes = AppNavRoutes;
+  userRoutes = UserRelatedRoutes;
 }

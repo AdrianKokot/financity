@@ -5,3 +5,11 @@ $alignments: left, right, center, justify;
     text-align: $alignment;
   }
 }
+
+$styles: normal, bolder;
+
+@each $style in $styles {
+  .text-#{$style} {
+    font-weight: $style;
+  }
+}
