@@ -1,4 +1,4 @@
-<nav class="d-flex flex-column justify-content-space-between">
+<nav class="d-flex flex-column h-full">
   <div>
     <header class="tui-text_h5 px-4 py-4">Financity</header>
     <ul class="py-4 px-4 d-flex flex-column">
@@ -8,7 +8,7 @@
     </ul>
   </div>
 
-  <ul class="py-4 px-4 d-flex flex-column mb-0 mt-full">
+  <ul class="py-4 px-4 d-flex flex-column mb-0 mt-auto">
     <li *ngFor="let route of userRoutes">
       <app-navbar-item [route]="route"></app-navbar-item>
     </li>

@@ -3,15 +3,12 @@
 }
 
 app-navbar {
+  background-color: var(--tui-base-01);
   z-index: 0;
   position: fixed;
   inset: 0 auto 0 0;
   width: var(--app-sidebar-width);
   border-right: 1px solid var(--tui-base-03);
-
-  nav {
-    height: calc(100% - 53px)
-  }
 
   header {
     color: var(--tui-link);
