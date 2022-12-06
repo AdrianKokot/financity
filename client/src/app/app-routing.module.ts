@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from '@layout/feature/not-found/not-found.component';
 import { RouteData } from '@shared/utils/toggles/route-data';
+import { AuthGuard } from './auth/data-access/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -22,11 +23,21 @@ const routes: Routes = [
       import('./modules/dashboard/dashboard.module').then(
         m => m.DashboardModule
       ),
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./user-settings/user-settings.module').then(
+        m => m.UserSettingsModule
+      ),
+    canLoad: [AuthGuard],
   },
   {
     path: 'wallet',
     loadChildren: () =>
       import('./modules/wallet/wallet.module').then(m => m.WalletModule),
+    canLoad: [AuthGuard],
   },
   {
     path: '**',

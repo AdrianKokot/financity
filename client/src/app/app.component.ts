@@ -8,6 +8,7 @@ import { WalletListItem } from '@shared/data-access/models/wallet.model';
 import { HttpClient } from '@angular/common/http';
 import { RouteDataService } from '@shared/data-access/services/route-data.service';
 import { RouteData } from '@shared/utils/toggles/route-data';
+import { UserSettingsService } from './user-settings/data-access/services/user-settings.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,13 @@ export class AppComponent {
     map(x => x[RouteData.NAVBAR_VISIBLE] ?? true)
   );
 
-  constructor(private _http: HttpClient, private _route: RouteDataService) {
+  settings$ = this._settings.settings$;
+
+  constructor(
+    private _http: HttpClient,
+    private _route: RouteDataService,
+    private _settings: UserSettingsService
+  ) {
     this._http
       .get<unknown[]>('/api/transactions?pageSize=1')
       .pipe(filter(x => x.length == 0))

@@ -1,4 +1,6 @@
-<!--<tui-theme-night *ngIf="enabled"></tui-theme-night>-->
+<tui-theme-night *ngIf="!!(settings$ | async)?.isDarkModeEnabled">
+</tui-theme-night>
+
 <tui-root>
   <app-navbar *ngIf="!!(isNavbarVisible$ | async)"></app-navbar>
 

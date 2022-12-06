@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivationEnd, Router } from '@angular/router';
-import { filter, map, share } from 'rxjs';
+import { filter, map, shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,6 @@ export class RouteDataService {
 
       return data;
     }),
-    share()
+    shareReplay()
   );
 }

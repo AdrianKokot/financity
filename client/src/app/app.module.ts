@@ -20,6 +20,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
 import { ApiInterceptor } from '@shared/data-access/api/api.interceptor';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
     LayoutModule,
     HttpClientModule,
     TuiSvgModule,
+    TuiLetModule,
   ],
   providers: [
     {
