@@ -41,13 +41,13 @@ public sealed class TokenService : ITokenService
 
     private IEnumerable<Claim> GetUserClaims(User user)
     {
-        if (user.Email is null || user.UserName is null) return ImmutableArray<Claim>.Empty;
+        if (user.Email is null) return ImmutableArray<Claim>.Empty;
 
         return new Claim[]
         {
             new(_options.UserIdClaimType, user.Id.ToString()),
             new(_options.EmailClaimType, user.Email),
-            new(_options.UserNameClaimType, user.UserName)
+            new(_options.UserNameClaimType, user.Name)
         };
     }
 }

@@ -32,4 +32,5 @@ public sealed class GetWalletsQueryHandler : FilteredEntitiesQueryHandler<GetWal
 }
 
 public sealed record WalletListItem
-    (Guid Id, string Name, string CurrencyId, string CurrencyName, decimal CurrentState, decimal StartingAmount, Guid OwnerId) : IMapFrom<Wallet>;
+(Guid Id, string Name, string CurrencyId, string CurrencyName, decimal CurrentState, decimal StartingAmount,
+ Guid OwnerId) : IMapFrom<Wallet>;
