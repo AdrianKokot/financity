@@ -2,6 +2,21 @@
 <form
   [formGroup]="ui.form"
   (ngSubmit)="$event.preventDefault(); ui.submit$.next()">
+  <label tuiLabel="Name" class="mb-6">
+    <tui-input
+      [formControl]="ui.form.controls.name"
+      tuiTextfieldSize="m"
+      class="mt-1"
+      [tuiTextfieldLabelOutside]="true">
+      John Deere
+      <input tuiTextfield type="text" />
+    </tui-input>
+
+    <tui-error
+      [formControl]="ui.form.controls.name"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
   <app-email-input
     [control]="ui.form.controls.email"
     class="mb-6"></app-email-input>

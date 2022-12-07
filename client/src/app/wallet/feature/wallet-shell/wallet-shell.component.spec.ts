@@ -8,9 +8,8 @@ describe('WalletShellComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WalletShellComponent ]
-    })
-    .compileComponents();
+      declarations: [WalletShellComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WalletShellComponent);
     component = fixture.componentInstance;

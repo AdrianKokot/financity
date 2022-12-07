@@ -13,7 +13,6 @@ import { ModelFormBuilder } from '../../../../../core/utility/services/model-for
 import { Validators } from '@angular/forms';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { CurrencyApiService } from '../../../../../core/api/currency-api.service';
 import { CurrencyListItem } from '@shared/data-access/models/currency.model';
 import { BehaviorSubject, finalize, Subject, takeUntil, tap } from 'rxjs';
@@ -25,14 +24,6 @@ import { WalletApiService } from '../../../../../core/api/wallet-api.service';
   styleUrls: ['./create-wallet-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: TUI_VALIDATION_ERRORS,
-      useValue: {
-        required: 'This field is required',
-      },
-    },
-  ],
 })
 export class CreateWalletDialogComponent implements OnDestroy {
   form = this._fb.from<CreateWalletPayload>({

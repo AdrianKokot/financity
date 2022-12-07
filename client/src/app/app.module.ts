@@ -17,6 +17,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from '@shared/data-access/interceptors/jwt.interceptor';
 import { ApiInterceptor } from '@shared/data-access/interceptors/api.interceptor';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
+import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,6 +46,12 @@ import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
     {
       provide: TUI_SANITIZER,
       useClass: NgDompurifySanitizer,
+    },
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: {
+        required: 'This field is required',
+      },
     },
   ],
   bootstrap: [AppComponent],

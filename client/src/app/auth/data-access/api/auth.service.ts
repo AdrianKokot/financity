@@ -39,8 +39,8 @@ export class AuthService {
       )
     );
 
-    this._user = Object.keys(ClaimTypes).reduce(
-      (user, key) => ({ ...user, [key]: payload[key] }),
+    this._user = (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
+      (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
       <User>{}
     );
 

@@ -80,6 +80,6 @@ export class WalletSettingsComponent implements OnDestroy {
           })
         )
       )
-      .subscribe(() => {});
+      .subscribe();
   }
 }
