@@ -1,5 +1,6 @@
 import {
   TUI_SANITIZER,
+  TuiAlertModule,
   TuiDialogModule,
   TuiRootModule,
   TuiSvgService,
@@ -25,6 +26,7 @@ import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
     BrowserAnimationsModule,
     TuiRootModule,
     TuiDialogModule,
+    TuiAlertModule,
     TuiThemeNightModule,
     LayoutModule,
     HttpClientModule,

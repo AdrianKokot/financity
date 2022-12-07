@@ -19,4 +19,8 @@ export class WalletApiService extends GenericApiService {
   create(payload: CreateWalletPayload) {
     return this.http.post('/api/wallets', payload);
   }
+
+  update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
+    return this.http.put('/api/wallets/' + payload.id, payload);
+  }
 }

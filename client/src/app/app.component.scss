@@ -16,6 +16,14 @@ app-navbar + .tui-container.w-full {
   max-height: 100vh;
   height: 100vh;
   padding-top: 61px;
+
+  &:has(.container > * > tui-tabs) {
+    padding-top: 0;
+
+    .container {
+      padding-top: 5px;
+    }
+  }
 }
 
 .container {

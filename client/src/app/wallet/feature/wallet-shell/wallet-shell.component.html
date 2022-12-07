@@ -1,191 +1,22 @@
-<main
-  class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
-  <!--  <div>-->
-  <!--    {{ wallet | json }}-->
-  <!--  </div>-->
-  <!--<p-->
-  <!--  tuiTextfieldSize="m"-->
-  <!--  class="filters"-->
-  <!--&gt;-->
-  <!--  <tui-input-->
-  <!--    class="input"-->
-  <!--    [tuiTextfieldCleaner]="true"-->
-  <!--    [(ngModel)]="search"-->
-  <!--  >-->
-  <!--    Find on page-->
-  <!--  </tui-input>-->
-  <!--  <tui-input-count-->
-  <!--    class="tui-space_horizontal-3"-->
-  <!--    [formControl]="minAge"-->
-  <!--  >-->
-  <!--    Minimum age-->
-  <!--  </tui-input-count>-->
-  <!--  <tui-hosted-dropdown [content]="dropdown">-->
-  <!--    <button-->
-  <!--      tuiButton-->
-  <!--      size="m"-->
-  <!--      [iconRight]="arrow"-->
-  <!--    >-->
-  <!--      Columns-->
-  <!--    </button>-->
-  <!--    <ng-template #dropdown>-->
-  <!--      <tui-reorder-->
-  <!--        class="columns"-->
-  <!--        [enabled]="enabled"-->
-  <!--        [(items)]="initial"-->
-  <!--        (enabledChange)="onEnabled($event)"-->
-  <!--      ></tui-reorder>-->
-  <!--    </ng-template>-->
-  <!--  </tui-hosted-dropdown>-->
-  <!--</p>-->
+<tui-tabs>
+  <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
+    <tui-svg src="tuiIconCard" class="mr-2"></tui-svg>
+    Transactions
+  </a>
+  <a tuiTab href="categories" routerLink="categories" routerLinkActive>
+    <tui-svg src="tuiIconFolder" class="mr-2"></tui-svg>
+    Categories
+  </a>
+  <a tuiTab href="labels" routerLink="labels" routerLinkActive>
+    <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
+    Labels
+  </a>
+  <a tuiTab href="settings" routerLink="settings" routerLinkActive>
+    <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
+    Settings
+  </a>
+</tui-tabs>
 
-  <table
-    tuiTable
-    class="w-full"
-    [columns]="['transactionDate', 'category', 'labels', 'note', 'amount']">
-    <thead>
-      <tr tuiThGroup>
-        <th
-          *tuiHead="'transactionDate'"
-          tuiTh
-          [sorter]="null"
-          class="column-date">
-          Date
-        </th>
-        <th *tuiHead="'category'" tuiTh [sorter]="null" class="column-category">
-          Category
-        </th>
-        <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
-          Labels
-        </th>
-        <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
-          Note
-        </th>
-        <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
-          Amount
-        </th>
-        <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
-      </tr>
-    </thead>
-  </table>
-  <tui-scrollbar>
-    <cdk-virtual-scroll-viewport
-      (scrolledIndexChange)="log()"
-      tuiScrollable
-      class="viewport tui-zero-scrollbar"
-      [itemSize]="44"
-      [maxBufferPx]="500"
-      [minBufferPx]="400">
-      <table
-        tuiTable
-        class="w-full"
-        [columns]="['transactionDate', 'category', 'labels', 'note', 'amount']">
-        <!--
-    [direction]="(direction$ | async) || 1"
-    -->
-        <!--    [tuiSortBy]="sorter$ | async"-->
-        <!--    (tuiSortByChange)="sorter$.next($event!)"-->
-        <!--    (directionChange)="direction$.next($event)"-->
-        <thead>
-          <tr tuiThGroup>
-            <th
-              *tuiHead="'transactionDate'"
-              tuiTh
-              [sorter]="null"
-              class="column-date"></th>
-            <th
-              *tuiHead="'category'"
-              tuiTh
-              [sorter]="null"
-              class="column-category"></th>
-            <th
-              *tuiHead="'labels'"
-              tuiTh
-              [sorter]="null"
-              class="column-labels"></th>
-            <th
-              *tuiHead="'note'"
-              tuiTh
-              [sorter]="null"
-              class="column-note"></th>
-            <th
-              *tuiHead="'amount'"
-              tuiTh
-              [sorter]="null"
-              class="column-amount"></th>
-            <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
-          </tr>
-        </thead>
-
-        <ng-container *ngIf="wallet$ | async as wallet">
-          <ng-container *ngIf="data$ | async as data">
-            <tbody *tuiLet="data" tuiTbody>
-              <tr *cdkVirtualFor="let item of data; trackBy: trackByIdx" tuiTr>
-                <td *tuiCell="'transactionDate'" tuiTd>
-                  {{ item.transactionDate | date: 'MM/dd/yyyy':'UTC' }}
-                </td>
-                <td *tuiCell="'category'" tuiTd>
-                  {{ item.categoryName ?? '-' }}
-                </td>
-                <td *tuiCell="'labels'" tuiTd>
-                  <tui-badge
-                    *ngFor="let label of item.labels"
-                    class="mr-1 bg-base-6"
-                    [ngClass]="label.appearance.color"
-                    status="custom"
-                    [value]="label.name"></tui-badge>
-
-                  <!--            <span *ngFor="let label of item.labels">{{ label.name }}</span>-->
-                </td>
-                <td *tuiCell="'note'" tuiTd>
-                  {{ item.note ?? '-' }}
-                </td>
-
-                <td *tuiCell="'amount'" tuiTd>
-                  <!--          {{ item.amount  }}-->
-                  <tui-money
-                    [currency]="item.currencyId"
-                    [colored]="true"
-                    [value]="item.amount"></tui-money>
-
-                  <ng-container *ngIf="item.currencyId !== wallet.currencyId">
-                    <span class="ml-2">(</span>
-                    <tui-money
-                      [colored]="false"
-                      [currency]="wallet.currencyId"
-                      [value]="item.amount * item.exchangeRate"></tui-money>
-                    <span>)</span>
-                  </ng-container>
-                </td>
-                <!--        <td *tuiCell="'dob'" tuiTd>-->
-                <!--          {{ item.dob }}-->
-                <!--        </td>-->
-                <!--        <td *tuiCell="'age'" tuiTd>-->
-                <!--          {{ getAge(item) }}-->
-                <!--        </td>-->
-              </tr>
-
-              <tr *ngIf="!!(loading$ | async) as loading" [hidden]="!loading">
-                <td [colSpan]="5" class="py-4">
-                  <tui-loader [showLoader]="loading"></tui-loader>
-                </td>
-              </tr>
-            </tbody>
-
-            <!--    <tfoot>-->
-            <!--      <tr>-->
-            <!--        <td [colSpan]="columns.length">-->
-            <!--          <tui-table-pagination-->
-            <!--            class="tui-space_top-2"-->
-            <!--            [total]="(total$ | async) || 0"-->
-            <!--            (pageChange)="onPage($event)"-->
-            <!--            (sizeChange)="onSize($event)"></tui-table-pagination>-->
-            <!--        </td>-->
-            <!--      </tr>-->
-          </ng-container>
-          <!--    </tfoot>-->
-        </ng-container>
-      </table>
-    </cdk-virtual-scroll-viewport>
-  </tui-scrollbar>
-</main>
+<section class="py-4">
+  <router-outlet></router-outlet>
+</section>

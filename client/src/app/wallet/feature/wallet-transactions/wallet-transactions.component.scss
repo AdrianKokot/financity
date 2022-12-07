@@ -1,0 +1,52 @@
+@use '~@taiga-ui/core/styles/taiga-ui-local' as *;
+
+:host {
+  .viewport {
+    min-height: 75vh;
+
+    table thead {
+      th {
+        height: 0 !important;
+      }
+    }
+  }
+
+  .column-date {
+    min-width: 100px;
+    max-width: 100px;
+  }
+
+  .column-amount, .column-note, .column-category {
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .column-labels {
+    width: 100%;
+  }
+
+  td,
+  th {
+    white-space: nowrap;
+    border: none;
+  }
+
+  tr th {
+    background: var(--tui-base-02);
+  }
+
+  tbody {
+    border-color: transparent;
+
+    tr {
+      td {
+        border-bottom: 1px solid var(--tui-base-03);
+      }
+
+      &:last-child td {
+
+        border-color: transparent;
+      }
+    }
+  }
+}

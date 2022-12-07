@@ -15,7 +15,7 @@ import { WalletListItem } from '@shared/data-access/models/wallet.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletListItemComponent {
-  @HostBinding('class') hostClass = 'w-full d-block border-radius-m px-4 py-3';
+  @HostBinding('class') hostClass = 'w-full d-block border-radius-m';
   @Input() wallet: WalletListItem | null = null;
   @Input() showSkeleton = false;
 }
