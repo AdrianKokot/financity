@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { WalletApiService } from '../../../../core/api/wallet-api.service';
-import { ActivatedRoute } from '@angular/router';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
   BehaviorSubject,
   debounceTime,
@@ -14,18 +13,19 @@ import {
   switchMap,
   withLatestFrom,
 } from 'rxjs';
-import { TransactionApiService } from '../../../../core/api/transaction-api.service';
 import { TransactionListItem } from '@shared/data-access/models/transaction.model';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { ActivatedRoute } from '@angular/router';
+import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { TransactionApiService } from '../../../core/api/transaction-api.service';
 
 @Component({
-  selector: 'app-wallet-dashboard',
-  templateUrl: './wallet-dashboard.component.html',
-  styleUrls: ['./wallet-dashboard.component.scss'],
+  selector: 'app-wallet-shell',
+  templateUrl: './wallet-shell.component.html',
+  styleUrls: ['./wallet-shell.component.scss'],
   // encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WalletDashboardComponent {
+export class WalletShellComponent {
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
 
   walletId$ = this._activatedRoute.params.pipe(

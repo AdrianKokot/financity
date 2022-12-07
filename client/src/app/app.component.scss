@@ -12,6 +12,16 @@ app-navbar + .tui-container.w-full {
   margin-left: var(--app-sidebar-width);
 }
 
+.tui-container {
+  max-height: 100vh;
+  height: 100vh;
+  padding-top: 61px;
+}
+
+.container {
+  max-width: 85rem;
+}
+
 app-navbar ~ app-footer {
   display: none !important;
 }

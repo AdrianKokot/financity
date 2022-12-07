@@ -1,8 +1,8 @@
 <div class="d-flex flex-wrap gap-2">
   <a
     tuiIsland
-    href="/wallet/{{ wallet.id }}"
-    routerLink="/wallet/{{ wallet.id }}"
+    href="/wallets/{{ wallet.id }}"
+    routerLink="/wallets/{{ wallet.id }}"
     *ngFor="let wallet of wallets$ | async"
     size="s">
     <h3 class="tui-island__title" [title]="wallet.name">

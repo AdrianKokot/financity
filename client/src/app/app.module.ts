@@ -1,10 +1,7 @@
 import {
   TUI_SANITIZER,
-  TuiAlertModule,
   TuiDialogModule,
-  TuiModeModule,
   TuiRootModule,
-  TuiSvgModule,
   TuiSvgService,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
@@ -15,12 +12,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from '@layout/layout.module';
-import { SharedModule } from '@shared/shared.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
-import { ApiInterceptor } from '@shared/data-access/api/api.interceptor';
+import { JwtInterceptor } from '@shared/data-access/interceptors/jwt.interceptor';
+import { ApiInterceptor } from '@shared/data-access/interceptors/api.interceptor';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
-import { TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,15 +24,10 @@ import { TuiLetModule } from '@taiga-ui/cdk';
     AppRoutingModule,
     BrowserAnimationsModule,
     TuiRootModule,
-    TuiAlertModule,
     TuiDialogModule,
-    SharedModule,
     TuiThemeNightModule,
-    TuiModeModule,
     LayoutModule,
     HttpClientModule,
-    TuiSvgModule,
-    TuiLetModule,
   ],
   providers: [
     {

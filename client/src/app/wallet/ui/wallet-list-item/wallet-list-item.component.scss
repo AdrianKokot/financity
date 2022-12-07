@@ -1,0 +1,23 @@
+app-wallet-list-item {
+  cursor: pointer;
+
+  border: 1px solid var(--tui-base-03);
+  transition: .3s;
+  //
+  //.text-clamp-1 {
+  //  //color: var(--tui-text-01);
+  //}
+
+  tui-money:not(._green):not(._red) {
+    color: var(--tui-text-02);
+
+    .t-lighter {
+      color: var(--tui-text-03);
+    }
+  }
+
+  &:hover {
+    border-color: var(--tui-base-04);
+    box-shadow: 0 0.2rem 0.5rem rgba(0 0 0 / 5%);
+  }
+}

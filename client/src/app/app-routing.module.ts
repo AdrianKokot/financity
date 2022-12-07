@@ -34,9 +34,9 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
-    path: 'wallet',
+    path: 'wallets',
     loadChildren: () =>
-      import('./modules/wallet/wallet.module').then(m => m.WalletModule),
+      import('./wallet/wallet.module').then(m => m.WalletModule),
     canLoad: [AuthGuard],
   },
   {

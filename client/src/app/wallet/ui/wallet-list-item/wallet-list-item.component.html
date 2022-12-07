@@ -1,0 +1,29 @@
+<a
+  *ngIf="wallet !== null; else ngContent"
+  href="/wallets/{{ wallet.id }}"
+  routerLink="/wallets/{{ wallet.id }}"
+  class="h-full"
+  [title]="wallet.name">
+  <div
+    class="tui-text_body-m text-clamp-1 mb-1"
+    [class.tui-skeleton]="showSkeleton">
+    {{ wallet.name }}
+  </div>
+  <tui-money
+    [class.tui-skeleton]="showSkeleton"
+    [currency]="wallet.currencyId"
+    [colored]="true"
+    [value]="wallet.currentState">
+  </tui-money>
+</a>
+
+<ng-container *ngIf="showSkeleton">
+  <div class="h-full">
+    <div class="tui-text_body-m mb-1 tui-skeleton">Skeleton text</div>
+    <span class="tui-text_body-s tui-skeleton">Skeleton text</span>
+  </div>
+</ng-container>
+
+<ng-template #ngContent>
+  <ng-content></ng-content>
+</ng-template>

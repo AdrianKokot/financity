@@ -38,5 +38,6 @@ import { TuiCurrencyPipeModule } from '@taiga-ui/addon-commerce';
     TuiInputNumberModule,
     TuiCurrencyPipeModule,
   ],
+  exports: [WalletListComponent],
 })
 export class DashboardModule {}
