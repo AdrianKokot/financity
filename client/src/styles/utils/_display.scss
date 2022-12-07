@@ -5,8 +5,9 @@
 }
 
 @each $key, $value in (
-  justify-content: space-between,
-  align-items: center
+    (justify-content, space-between),
+    (justify-content, center),
+    (align-items, center)
 ) {
   .#{$key}-#{$value} {
     #{$key}: $value;
@@ -15,4 +16,16 @@
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.hidden {
+  display: none;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }

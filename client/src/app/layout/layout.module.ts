@@ -1,10 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from '@shared/shared.module';
-import { FooterComponent } from './components/footer/footer.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { FooterComponent } from './feature/footer/footer.component';
+import { NavbarComponent } from './feature/navbar/navbar.component';
+import { NotFoundComponent } from './feature/not-found/not-found.component';
+import {
+  TuiButtonModule,
+  TuiLinkModule,
+  TuiScrollbarModule,
+  TuiSvgModule,
+} from '@taiga-ui/core';
+import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
+import { NavbarItemComponent } from './ui/navbar-item/navbar-item.component';
+import { TuiBadgeModule } from '@taiga-ui/kit';
 
 const exportedComponents = [
   NavbarComponent,
@@ -13,8 +20,17 @@ const exportedComponents = [
 ];
 
 @NgModule({
-  declarations: [...exportedComponents],
+  declarations: [...exportedComponents, NavbarItemComponent],
   exports: [...exportedComponents],
-  imports: [SharedModule, CommonModule, RouterModule.forChild([])],
+  imports: [
+    CommonModule,
+    TuiLinkModule,
+    TuiButtonModule,
+    RouterLinkWithHref,
+    TuiScrollbarModule,
+    RouterLinkActive,
+    TuiSvgModule,
+    TuiBadgeModule,
+  ],
 })
 export class LayoutModule {}

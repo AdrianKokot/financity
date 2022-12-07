@@ -14,5 +14,6 @@ public sealed class CreateWalletCommandValidator : AbstractValidator<CreateWalle
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
             .Exists<CreateWalletCommand, Currency, string>(dbContext);
+        RuleFor(x => x.StartingAmount).NotNull();
     }
 }

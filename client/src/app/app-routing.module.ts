@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NotFoundComponent } from '@layout/not-found/not-found.component';
+import { NotFoundComponent } from '@layout/feature/not-found/not-found.component';
+import { RouteData } from '@shared/utils/toggles/route-data';
+import { AuthGuard } from './auth/data-access/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -11,6 +13,9 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    data: {
+      [RouteData.NAVBAR_VISIBLE]: false,
+    },
   },
   {
     path: 'dashboard',
@@ -18,20 +23,37 @@ const routes: Routes = [
       import('./modules/dashboard/dashboard.module').then(
         m => m.DashboardModule
       ),
+    canLoad: [AuthGuard],
   },
   {
-    path: 'wallet',
+    path: 'settings',
     loadChildren: () =>
-      import('./modules/wallet/wallet.module').then(m => m.WalletModule),
+      import('./user-settings/user-settings.module').then(
+        m => m.UserSettingsModule
+      ),
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'wallets',
+    loadChildren: () =>
+      import('./wallet/wallet.module').then(m => m.WalletModule),
+    canLoad: [AuthGuard],
   },
   {
     path: '**',
     component: NotFoundComponent,
+    data: {
+      [RouteData.NAVBAR_VISIBLE]: false,
+    },
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      paramsInheritanceStrategy: 'always',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

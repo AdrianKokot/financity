@@ -1,0 +1,22 @@
+<tui-tabs>
+  <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
+    <tui-svg src="tuiIconCard" class="mr-2"></tui-svg>
+    Transactions
+  </a>
+  <a tuiTab href="categories" routerLink="categories" routerLinkActive>
+    <tui-svg src="tuiIconFolder" class="mr-2"></tui-svg>
+    Categories
+  </a>
+  <a tuiTab href="labels" routerLink="labels" routerLinkActive>
+    <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
+    Labels
+  </a>
+  <a tuiTab href="settings" routerLink="settings" routerLinkActive>
+    <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
+    Settings
+  </a>
+</tui-tabs>
+
+<section class="py-4">
+  <router-outlet></router-outlet>
+</section>

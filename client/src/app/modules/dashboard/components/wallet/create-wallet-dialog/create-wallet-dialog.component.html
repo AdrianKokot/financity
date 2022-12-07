@@ -31,12 +31,12 @@
 
   <div class="tui-form__row">
     <tui-input-number
-      formControlName="startingBalance"
-      [postfix]="(currency.valueChanges | async)?.code ?? null | tuiCurrency">
+      formControlName="startingAmount"
+      [postfix]="(currency.valueChanges | async)?.id ?? null | tuiCurrency">
       Starting balance
     </tui-input-number>
     <tui-error
-      formControlName="startingBalance"
+      formControlName="startingAmount"
       [error]="[] | tuiFieldError | async"></tui-error>
   </div>
 

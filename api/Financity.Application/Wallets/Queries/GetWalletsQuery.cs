@@ -4,6 +4,7 @@ using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Queries;
 
@@ -24,11 +25,12 @@ public sealed class GetWalletsQueryHandler : FilteredEntitiesQueryHandler<GetWal
     {
         return FilterAndMapAsync(
             query,
-            q => q.Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id)),
+            q => q.Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id)).Include(x => x.Transactions),
             cancellationToken
         );
     }
 }
 
 public sealed record WalletListItem
-    (Guid Id, string Name, string CurrencyId, string CurrencyName, decimal CurrentState) : IMapFrom<Wallet>;
+(Guid Id, string Name, string CurrencyId, string CurrencyName, decimal CurrentState, decimal StartingAmount,
+ Guid OwnerId) : IMapFrom<Wallet>;

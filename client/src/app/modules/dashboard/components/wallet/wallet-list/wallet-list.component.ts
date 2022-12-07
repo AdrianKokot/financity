@@ -1,15 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
-  Injector,
   ViewEncapsulation,
 } from '@angular/core';
 import { WalletApiService } from '../../../../../core/api/wallet-api.service';
-import { TuiDialogService } from '@taiga-ui/core';
-import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { CreateWalletDialogComponent } from '../create-wallet-dialog/create-wallet-dialog.component';
 import { BehaviorSubject, switchMap } from 'rxjs';
+import { DialogService } from '@shared/utils/services/dialog.service';
 
 @Component({
   selector: 'app-wallet-list',
@@ -24,19 +21,12 @@ export class WalletListComponent {
 
   constructor(
     private _walletApi: WalletApiService,
-    @Inject(Injector) private _injector: Injector,
-    private _dialog: TuiDialogService
-  ) {
-    this.poll$.next(true);
-  }
+    private _dialog: DialogService
+  ) {}
 
   showDialog() {
-    this._dialog
-      .open(
-        new PolymorpheusComponent(CreateWalletDialogComponent, this._injector)
-      )
-      .subscribe(res => {
-        this.poll$.next(true);
-      });
+    this._dialog.open(CreateWalletDialogComponent).subscribe(() => {
+      this.poll$.next(true);
+    });
   }
 }

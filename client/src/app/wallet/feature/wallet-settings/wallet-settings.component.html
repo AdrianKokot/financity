@@ -1,0 +1,55 @@
+<div class="tui-row">
+  <div class="tui-col_6">
+    <form
+      (ngSubmit)="$event.preventDefault(); submit()"
+      [formGroup]="form"
+      *ngIf="wallet$ | async as wallet">
+      <label tuiLabel="Name" class="mb-6">
+        <tui-input
+          formControlName="name"
+          tuiTextfieldSize="m"
+          class="mt-1"
+          [tuiTextfieldLabelOutside]="true">
+          Example name
+          <input tuiTextfield type="text" />
+        </tui-input>
+
+        <tui-error
+          formControlName="name"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+
+      <label tuiLabel="Starting balance" class="mb-6">
+        <tui-input-number
+          [postfix]="wallet.currencyId | tuiCurrency"
+          formControlName="startingAmount"
+          tuiTextfieldSize="m"
+          class="mt-1"
+          [tuiTextfieldLabelOutside]="true">
+        </tui-input-number>
+
+        <tui-error
+          formControlName="startingAmount"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+
+      <div class="text-right">
+        <button
+          tuiButton
+          type="submit"
+          size="m"
+          [showLoader]="(loading$ | async) ?? false">
+          Submit
+        </button>
+      </div>
+
+      <!--      <label class="d-flex align-items-center text-2">-->
+      <!--        <span>Dark mode</span>-->
+      <!--        <tui-toggle-->
+      <!--          size="m"-->
+      <!--          class="ml-2"-->
+      <!--          formControlName="isDarkModeEnabled"></tui-toggle>-->
+      <!--      </label>-->
+    </form>
+  </div>
+</div>

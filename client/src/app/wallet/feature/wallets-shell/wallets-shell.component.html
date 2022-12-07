@@ -1,0 +1,21 @@
+<h1 class="tui-text_h4 mb-4">Wallets</h1>
+
+<div class="wallets-container gap-3">
+  <app-wallet-list-item (click)="openCreateWalletDialog()">
+    <div
+      class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
+      <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
+      <span>Create new</span>
+    </div>
+  </app-wallet-list-item>
+
+  <ng-template #loading>
+    <app-wallet-list-item
+      *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+      [showSkeleton]="true"></app-wallet-list-item>
+  </ng-template>
+
+  <app-wallet-list-item
+    *ngFor="let wallet of wallets$ | async; else: loading"
+    [wallet]="wallet"></app-wallet-list-item>
+</div>

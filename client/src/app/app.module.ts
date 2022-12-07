@@ -1,20 +1,23 @@
 import {
+  TUI_SANITIZER,
   TuiAlertModule,
   TuiDialogModule,
-  TuiModeModule,
   TuiRootModule,
+  TuiSvgService,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from '@layout/layout.module';
-import { SharedModule } from '@shared/shared.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
+import { JwtInterceptor } from '@shared/data-access/interceptors/jwt.interceptor';
+import { ApiInterceptor } from '@shared/data-access/interceptors/api.interceptor';
+import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
+import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,11 +26,9 @@ import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
     AppRoutingModule,
     BrowserAnimationsModule,
     TuiRootModule,
-    TuiAlertModule,
     TuiDialogModule,
-    SharedModule,
+    TuiAlertModule,
     TuiThemeNightModule,
-    TuiModeModule,
     LayoutModule,
     HttpClientModule,
   ],
@@ -37,7 +38,28 @@ import { JwtInterceptor } from '@shared/data-access/api/jwt.interceptor';
       useClass: JwtInterceptor,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true,
+    },
+    {
+      provide: TUI_SANITIZER,
+      useClass: NgDompurifySanitizer,
+    },
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: {
+        required: 'This field is required',
+      },
+    },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(@Inject(TuiSvgService) svgService: TuiSvgService) {
+    svgService.define({
+      appHomeIcon: 'assets/icons/home-24px.svg#home-24px',
+    });
+  }
+}

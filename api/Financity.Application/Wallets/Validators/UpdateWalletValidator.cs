@@ -11,7 +11,7 @@ public sealed class UpdateWalletValidator : AbstractValidator<UpdateWalletComman
     public UpdateWalletValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
-
         RuleFor(x => x.Id).HasUserAccessToWallet(dbContext, WalletAccessLevel.Owner);
+        RuleFor(x => x.StartingAmount).NotNull();
     }
 }

@@ -5,3 +5,7 @@ $sizes: (xs, s, m, l);
     border-radius: var(--tui-radius-#{$size});
   }
 }
+
+.h-full {
+  height: 100%;
+}

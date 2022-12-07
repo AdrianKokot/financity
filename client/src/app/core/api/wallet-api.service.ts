@@ -4,7 +4,7 @@ import {
   CreateWalletPayload,
   Wallet,
   WalletListItem,
-} from '../models/wallet.model';
+} from '@shared/data-access/models/wallet.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +13,14 @@ export class WalletApiService extends GenericApiService {
   getList = this.cachedRequest(this.http.get<WalletListItem[]>('/api/wallets'));
 
   get(walletId: Wallet['id']) {
-    return this.http.get('/api/wallets/' + walletId);
+    return this.http.get<Wallet>(`/api/wallets/${walletId}`);
   }
 
   create(payload: CreateWalletPayload) {
     return this.http.post('/api/wallets', payload);
+  }
+
+  update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
+    return this.http.put(`/api/wallets/${payload.id}`, payload);
   }
 }

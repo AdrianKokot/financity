@@ -22,6 +22,7 @@ export class RegisterPageAdapter implements OnDestroy {
   form = this._fb.nonNullable.group({
     email: ['', [Validators.email, Validators.required]],
     password: ['', [Validators.required, Validators.minLength(8)]],
+    name: ['', [Validators.required, Validators.maxLength(128)]],
   });
 
   submitButtonLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);

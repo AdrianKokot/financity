@@ -1,0 +1,22 @@
+:root {
+  --app-sidebar-width: 220px;
+}
+
+app-navbar {
+  background-color: var(--tui-base-01);
+  z-index: 0;
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--app-sidebar-width);
+  border-right: 1px solid var(--tui-base-03);
+
+  header {
+    color: var(--tui-link);
+    text-align: center;
+    border-bottom: 1px solid var(--tui-base-02);
+  }
+
+  ul {
+    row-gap: 0.25rem;
+  }
+}

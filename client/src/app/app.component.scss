@@ -6,3 +6,30 @@
 tui-root {
   height: 100%;
 }
+
+app-navbar + .tui-container.w-full {
+  width: calc(100% - var(--app-sidebar-width));
+  margin-left: var(--app-sidebar-width);
+}
+
+.tui-container {
+  max-height: 100vh;
+  height: 100vh;
+  padding-top: 61px;
+
+  &:has(.container > * > tui-tabs) {
+    padding-top: 0;
+
+    .container {
+      padding-top: 5px;
+    }
+  }
+}
+
+.container {
+  max-width: 85rem;
+}
+
+app-navbar ~ app-footer {
+  display: none !important;
+}

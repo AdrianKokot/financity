@@ -5,3 +5,18 @@ $alignments: left, right, center, justify;
     text-align: $alignment;
   }
 }
+
+$styles: normal, bolder;
+
+@each $style in $styles {
+  .text-#{$style} {
+    font-weight: $style;
+  }
+}
+
+.text-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

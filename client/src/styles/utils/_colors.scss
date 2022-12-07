@@ -3,6 +3,8 @@ $bgColors: (
   "base-2": var(--tui-base-02),
   "base-3": var(--tui-base-03),
   "base-4": var(--tui-base-04),
+  "base-5": var(--tui-base-05),
+  "base-6": var(--tui-base-06),
 );
 
 @each $var, $color in $bgColors {
@@ -11,6 +13,12 @@ $bgColors: (
   }
   .border-#{$var} {
     border: 1px solid $color;
+  }
+}
+
+@for $i from 1 through 20 {
+  .bg-support-#{$i} {
+    background-color: var(--tui-support-#{$i}, var(--tui-support-0#{$i}));
   }
 }
 
@@ -28,6 +36,6 @@ $textColors: (
 
 @each $var, $color in $textColors {
   .text-#{$var} {
-    color: $color;
+    color: $color !important;
   }
 }

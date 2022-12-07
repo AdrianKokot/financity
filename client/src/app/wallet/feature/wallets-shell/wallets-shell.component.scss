@@ -1,0 +1,21 @@
+app-wallets-shell .wallets-container {
+  display: grid;
+  //grid-auto-columns: 200px;
+  //grid-auto-flow: column;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: 74px;
+
+  app-wallet-list-item:first-of-type {
+    border-style: dashed !important;
+
+    &:hover {
+      border-color: var(--tui-base-05) !important;
+    }
+
+    &:not(:hover) {
+      border-color: var(--tui-base-04) !important;
+      color: var(--tui-text-03);
+    }
+  }
+}
+

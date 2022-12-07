@@ -1,0 +1,13 @@
+<div class="tui-row">
+  <div class="tui-col_6">
+    <form (ngSubmit)="$event.preventDefault()" [formGroup]="form">
+      <label class="d-flex align-items-center text-2">
+        <span>Dark mode</span>
+        <tui-toggle
+          size="m"
+          class="ml-2"
+          formControlName="isDarkModeEnabled"></tui-toggle>
+      </label>
+    </form>
+  </div>
+</div>
