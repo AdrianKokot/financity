@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, map, Observable, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { User } from '../models/user';
+import { ClaimTypes } from '../models/claim-types';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,36 @@ export class AuthService {
 
   get isAuthenticated(): boolean {
     return this.token !== null;
+  }
+
+  private _user: User | null = null;
+
+  get user(): User | null {
+    const token = this.token;
+    if (!this.isAuthenticated || token === null) return null;
+
+    if (this._user !== null) {
+      return this._user;
+    }
+
+    const payload = JSON.parse(
+      decodeURIComponent(
+        window
+          .atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
+          .split('')
+          .map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      )
+    );
+
+    this._user = Object.keys(ClaimTypes).reduce(
+      (user, key) => ({ ...user, [key]: payload[key] }),
+      <User>{}
+    );
+
+    return this._user;
   }
 
   get token(): string | null {

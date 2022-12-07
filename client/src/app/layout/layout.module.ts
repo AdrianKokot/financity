@@ -11,6 +11,7 @@ import {
 } from '@taiga-ui/core';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
 import { NavbarItemComponent } from './ui/navbar-item/navbar-item.component';
+import { TuiBadgeModule } from '@taiga-ui/kit';
 
 const exportedComponents = [
   NavbarComponent,
@@ -29,6 +30,7 @@ const exportedComponents = [
     TuiScrollbarModule,
     RouterLinkActive,
     TuiSvgModule,
+    TuiBadgeModule,
   ],
 })
 export class LayoutModule {}
