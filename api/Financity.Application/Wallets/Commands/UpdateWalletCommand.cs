@@ -11,6 +11,7 @@ public sealed class UpdateWalletCommand : ICommand<Unit>
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public decimal StartingAmount { get; set; } = 0;
 }
 
 public sealed class UpdateWalletCommandHandler : ICommandHandler<UpdateWalletCommand, Unit>
@@ -29,6 +30,7 @@ public sealed class UpdateWalletCommandHandler : ICommandHandler<UpdateWalletCom
         if (entity is null) throw new EntityNotFoundException(nameof(Wallet), request.Id);
 
         entity.Name = request.Name;
+        entity.StartingAmount = request.StartingAmount;
 
         await _dbContext.SaveChangesAsync(ct);
 
