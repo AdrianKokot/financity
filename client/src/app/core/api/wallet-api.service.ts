@@ -21,6 +21,6 @@ export class WalletApiService extends GenericApiService {
   }
 
   update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
-    return this.http.put('/api/wallets/' + payload.id, payload);
+    return this.http.put(`/api/wallets/${payload.id}`, payload);
   }
 }

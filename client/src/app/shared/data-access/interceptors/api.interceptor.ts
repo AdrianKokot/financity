@@ -20,7 +20,7 @@ export class ApiInterceptor implements HttpInterceptor {
     if (request.url.includes('/api/')) {
       return next.handle(request).pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status == 401) {
+          if (error.status === 401) {
             return this._auth.handleUnauthorized();
           }
           return throwError(() => error);

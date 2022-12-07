@@ -32,7 +32,7 @@ export class AppComponent {
   ) {
     this._http
       .get<unknown[]>('/api/transactions?pageSize=1')
-      .pipe(filter(x => x.length == 0))
+      .pipe(filter(x => x.length === 0))
       .subscribe(() => this.seedData());
   }
 
