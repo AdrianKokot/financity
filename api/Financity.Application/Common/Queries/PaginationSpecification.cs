@@ -7,7 +7,7 @@ public sealed class PaginationSpecification
     public int Take
     {
         get => _take;
-        set => _take = Math.Clamp(value, 1, 50);
+        set => _take = Math.Clamp(value, 1, 250);
     }
 
     public int Skip { get; set; } = 0;
