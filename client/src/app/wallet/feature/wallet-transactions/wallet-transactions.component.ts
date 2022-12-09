@@ -9,6 +9,7 @@ import {
   map,
   scan,
   share,
+  shareReplay,
   startWith,
   switchMap,
   withLatestFrom,
@@ -50,7 +51,8 @@ export class WalletTransactionsComponent {
           pageSize: this._pageSize,
         })
         .pipe(startWith(null))
-    )
+    ),
+    shareReplay(1)
   );
   gotAllResults = false;
 
