@@ -1,4 +1,4 @@
 export interface Appearance {
   color: string;
-  icon: string;
+  iconName: string;
 }

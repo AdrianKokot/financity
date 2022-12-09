@@ -13,3 +13,13 @@ body {
 tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   transition-property: none !important;
 }
+
+[tuiWrapper][data-appearance='flat-destructive'] {
+  background: transparent;
+  color: var(--tui-negative);
+
+  &:hover:not(._no-hover) {
+    background: var(--tui-error-bg-hover);
+    color: var(--tui-negative-hover)
+  }
+}

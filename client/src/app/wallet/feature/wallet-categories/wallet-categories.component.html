@@ -1,1 +1,74 @@
-<p>wallet-categories works!</p>
+<table
+  tuiTable
+  [columns]="columns"
+  *ngIf="categories$ | async as categories"
+  class="w-full">
+  <thead>
+    <tr tuiThGroup>
+      <th *tuiHead="'appearance'" tuiTh [sorter]="null">Appearance</th>
+      <th *tuiHead="'name'" class="w-full" tuiTh>Name</th>
+      <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
+    </tr>
+  </thead>
+  <ng-container *tuiLet="currentlyEditedId$ | async as editedId">
+    <tbody *tuiLet="categories | tuiTableSort as data" tuiTbody [data]="data">
+      <ng-container *ngFor="let item of data; let index = index">
+        <tr
+          *tuiLet="item.id === editedId as isEdited"
+          [class.currently-edited]="isEdited"
+          tuiTr>
+          <td *tuiCell="'appearance'" tuiTd>
+            <ng-container *ngIf="isEdited; else notEdited"></ng-container>
+            <ng-template #notEdited>
+              <tui-svg
+                [class]="item.appearance.color ?? ''"
+                [src]="item.appearance.iconName"></tui-svg>
+            </ng-template>
+          </td>
+          <td *tuiCell="'name'" tuiTd>
+            <tui-input
+              [pseudoFocus]="false"
+              [readOnly]="!isEdited"
+              [ngModel]="item.name"></tui-input>
+          </td>
+          <!--    <td *tuiCell="'email'" tuiTd>-->
+          <!--      <a *ngIf="item.email" tuiLink [href]="'mailto:' + item.email">-->
+          <!--        {{ item.email }}-->
+          <!--      </a>-->
+          <!--    </td>-->
+
+          <td *tuiCell="'actions'" tuiTd>
+            <button
+              tuiIconButton
+              appearance="flat"
+              size="s"
+              icon="fa::pen"
+              title="Edit"
+              shape="rounded"
+              class="mr-1"
+              (click)="edit(item.id)"
+              *ngIf="!isEdited"></button>
+            <button
+              tuiIconButton
+              appearance="flat"
+              size="s"
+              icon="fa::save"
+              title="Save changes"
+              shape="rounded"
+              class="mr-1"
+              (click)="save()"
+              *ngIf="isEdited"></button>
+            <button
+              tuiIconButton
+              appearance="flat-destructive"
+              size="s"
+              icon="tuiIconTrash"
+              title="Remove"
+              shape="rounded"
+              (click)="remove(item.id)"></button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </ng-container>
+</table>

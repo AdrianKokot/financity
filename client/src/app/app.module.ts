@@ -1,5 +1,6 @@
 import {
   TUI_SANITIZER,
+  TUI_SVG_SRC_PROCESSOR,
   TuiAlertModule,
   TuiDialogModule,
   TuiRootModule,
@@ -51,6 +52,21 @@ import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
       provide: TUI_VALIDATION_ERRORS,
       useValue: {
         required: 'This field is required',
+      },
+    },
+    {
+      provide: TUI_SVG_SRC_PROCESSOR,
+      useFactory: () => {
+        return (src: string | null): string => {
+          if (src === null) {
+            return '';
+          }
+          const myCustomPrefix = 'fa::';
+
+          return src.startsWith(myCustomPrefix)
+            ? `assets/icons/fa/${src.replace(myCustomPrefix, '')}.svg`
+            : src;
+        };
       },
     },
   ],

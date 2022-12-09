@@ -7,6 +7,7 @@ import {
   TuiButtonModule,
   TuiErrorModule,
   TuiLabelModule,
+  TuiLinkModule,
   TuiLoaderModule,
   TuiScrollbarModule,
   TuiSvgModule,
@@ -26,6 +27,7 @@ import {
   TuiInputNumberModule,
   TuiIslandModule,
   TuiTabsModule,
+  TuiTagModule,
 } from '@taiga-ui/kit';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
@@ -35,7 +37,7 @@ import { WalletSettingsComponent } from './feature/wallet-settings/wallet-settin
 import { WalletTransactionsComponent } from './feature/wallet-transactions/wallet-transactions.component';
 import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.component';
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -72,6 +74,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     TuiCurrencyPipeModule,
     TuiTextfieldControllerModule,
     TuiLabelModule,
+    TuiLinkModule,
+    TuiTagModule,
+    FormsModule,
   ],
 })
 export class WalletModule {}

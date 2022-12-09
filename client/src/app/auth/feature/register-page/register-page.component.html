@@ -1,7 +1,5 @@
 <h3 class="text-center mb-8">Nice to meet you!</h3>
-<form
-  [formGroup]="ui.form"
-  (ngSubmit)="$event.preventDefault(); ui.submit$.next()">
+<form [formGroup]="ui.form" (ngSubmit)="ui.submit$.next()">
   <label tuiLabel="Name" class="mb-6">
     <tui-input
       [formControl]="ui.form.controls.name"

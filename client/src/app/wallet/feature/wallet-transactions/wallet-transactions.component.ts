@@ -38,7 +38,7 @@ export class WalletTransactionsComponent {
   );
 
   page$ = new BehaviorSubject<number>(1);
-  private _pageSize = 50;
+  private _pageSize = 250;
 
   transactions$ = this.page$.pipe(
     distinctUntilChanged(),

@@ -1,7 +1,7 @@
 <div class="tui-row">
   <div class="tui-col_6">
     <form
-      (ngSubmit)="$event.preventDefault(); submit()"
+      (ngSubmit)="submit()"
       [formGroup]="form"
       *ngIf="wallet$ | async as wallet">
       <label tuiLabel="Name" class="mb-6">
