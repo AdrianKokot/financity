@@ -38,6 +38,7 @@ import { WalletTransactionsComponent } from './feature/wallet-transactions/walle
 import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.component';
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CategoryModule } from '../category/category.module';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TuiLinkModule,
     TuiTagModule,
     FormsModule,
+    CategoryModule,
   ],
 })
 export class WalletModule {}

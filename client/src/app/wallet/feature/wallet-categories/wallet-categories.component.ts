@@ -1,14 +1,21 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+} from '@angular/core';
+import { BehaviorSubject, filter, map, shareReplay, switchMap } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { TuiAlertService } from '@taiga-ui/core';
+import { TuiAlertService, TuiDialogService } from '@taiga-ui/core';
 import { CategoryApiService } from '../../../core/api/category-api.service';
 import {
   Category,
   CategoryListItem,
 } from '@shared/data-access/models/category.model';
+import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';
+import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 
 @Component({
   selector: 'app-wallet-categories',
@@ -20,7 +27,8 @@ import {
 export class WalletCategoriesComponent {
   walletId$ = this._activatedRoute.params.pipe(
     filter((params): params is { id: string } => 'id' in params),
-    map(params => params.id)
+    map(params => params.id),
+    shareReplay(1)
   );
 
   // wallet$ = this._activatedRoute.params.pipe(
@@ -39,7 +47,9 @@ export class WalletCategoriesComponent {
     private _walletService: WalletApiService,
     private _activatedRoute: ActivatedRoute,
     private _categoryService: CategoryApiService,
-    @Inject(TuiAlertService) private readonly _alertService: TuiAlertService
+    @Inject(TuiAlertService) private readonly _alertService: TuiAlertService,
+    @Inject(Injector) private _injector: Injector,
+    private _dialog: TuiDialogService
   ) {}
 
   readonly columns = ['appearance', 'name', 'actions'];
@@ -52,5 +62,24 @@ export class WalletCategoriesComponent {
 
   edit(id: Category['id']): void {
     this.currentlyEditedId$.next(id);
+  }
+
+  openCreateDialog(): void {
+    this.walletId$
+      .pipe(
+        switchMap(walletId => {
+          return this._dialog.open<Category>(
+            new PolymorpheusComponent(CreateCategoryComponent, this._injector),
+            {
+              data: {
+                walletId,
+              },
+            }
+          );
+        })
+      )
+      .subscribe(() => {
+        console.log('next');
+      });
   }
 }

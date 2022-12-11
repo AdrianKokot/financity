@@ -20,18 +20,17 @@ export class CategoryApiService {
     );
   }
 
-  // get(walletId: Wallet['id']) {
-  //   return this.http.get<Wallet>(`/api/wallets/${walletId}`);
-  // }
-  //
+  get(walletId: Category['id']) {
+    return this.http.get<Category>(`/api/categories/${walletId}`);
+  }
+
   create(payload: CreateCategoryPayload): Observable<Category> {
     return this.http
       .post<{ id: Category['id'] }>('/api/categories', payload)
       .pipe(map(({ id }) => ({ ...payload, id })));
   }
 
-  //
-  // update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
-  //   return this.http.put(`/api/wallets/${payload.id}`, payload);
-  // }
+  update(payload: Pick<Category, 'id' | 'name' | 'appearance'>) {
+    return this.http.put<Category>(`/api/categories/${payload.id}`, payload);
+  }
 }
