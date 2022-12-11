@@ -22,7 +22,6 @@ import { UpdateCategoryComponent } from 'src/app/category/feature/update-categor
   selector: 'app-wallet-categories',
   templateUrl: './wallet-categories.component.html',
   styleUrls: ['./wallet-categories.component.scss'],
-  // encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletCategoriesComponent {
@@ -32,11 +31,6 @@ export class WalletCategoriesComponent {
     shareReplay(1)
   );
 
-  // wallet$ = this._activatedRoute.params.pipe(
-  //   filter((params): params is { id: string } => 'id' in params),
-  //   map(params => params.id),
-  //   switchMap(walletId => this._walletService.get(walletId))
-  // );
   currentlyEditedId$ = new BehaviorSubject<CategoryListItem['id'] | null>(null);
   poll$ = new BehaviorSubject<void>(undefined);
 
@@ -56,8 +50,6 @@ export class WalletCategoriesComponent {
   ) {}
 
   readonly columns = ['appearance', 'name', 'actions'];
-
-  remove(id: Category['id']): void {}
 
   save(): void {
     this.currentlyEditedId$.next(null);
@@ -82,7 +74,7 @@ export class WalletCategoriesComponent {
           );
         })
       )
-      .subscribe(category => {
+      .subscribe(() => {
         this.poll$.next();
       });
   }
@@ -98,7 +90,7 @@ export class WalletCategoriesComponent {
           },
         }
       )
-      .subscribe(category => this.poll$.next());
+      .subscribe(() => this.poll$.next());
   }
 
   deleteCategory(id: Category['id']): void {

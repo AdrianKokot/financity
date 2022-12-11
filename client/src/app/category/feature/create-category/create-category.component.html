@@ -33,63 +33,10 @@
       </ng-template>
     </tui-select>
 
-    <!--    <tui-combo-box-->
-    <!--      formControlName="transactionType"-->
-    <!--      [stringify]="getTransactionTypeLabel"-->
-    <!--      type="text"-->
-    <!--      [tuiTextfieldLabelOutside]="true"-->
-    <!--      class="mt-1"-->
-    <!--      tuiTextfieldSize="m">-->
-    <!--      <input tuiTextfield />-->
-
-    <!--      <span class="tui-required"></span>-->
-    <!--      <tui-error-->
-    <!--        formControlName="transactionType"-->
-    <!--        [error]="[] | tuiFieldError | async"></tui-error>-->
-    <!--    </tui-combo-box>-->
-
     <tui-error
       formControlName="transactionType"
       [error]="[] | tuiFieldError | async"></tui-error>
   </label>
-
-  <!--  <div class="tui-form__row">-->
-  <!--    <tui-input formControlName="name">-->
-  <!--      Name-->
-  <!--      <span class="tui-required"></span>-->
-  <!--    </tui-input>-->
-  <!--    <tui-error-->
-  <!--      formControlName="name"-->
-  <!--      [error]="[] | tuiFieldError | async"></tui-error>-->
-  <!--  </div>-->
-
-  <!--  <div class="tui-form__row">-->
-  <!--    <tui-combo-box-->
-  <!--      formControlName="transactionType"-->
-  <!--      [stringify]="getTransactionTypeLabel">-->
-  <!--      Transaction type-->
-  <!--      <input tuiTextfield />-->
-
-  <!--      <span class="tui-required"></span>-->
-  <!--      <tui-data-list-wrapper-->
-  <!--        *tuiDataList-->
-  <!--        [items]="transactionTypes"></tui-data-list-wrapper>-->
-  <!--      <tui-error-->
-  <!--        formControlName="transactionType"-->
-  <!--        [error]="[] | tuiFieldError | async"></tui-error>-->
-  <!--    </tui-combo-box>-->
-  <!--  </div>-->
-
-  <!--  <div class="tui-form__row">-->
-  <!--    <tui-input-number-->
-  <!--      formControlName="startingAmount"-->
-  <!--      [postfix]="(currency.valueChanges | async)?.id ?? null | tuiCurrency">-->
-  <!--      Starting balance-->
-  <!--    </tui-input-number>-->
-  <!--    <tui-error-->
-  <!--      formControlName="startingAmount"-->
-  <!--      [error]="[] | tuiFieldError | async"></tui-error>-->
-  <!--  </div>-->
 
   <div class="tui-form__row text-right">
     <button
