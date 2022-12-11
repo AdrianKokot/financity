@@ -55,18 +55,8 @@
               title="Edit"
               shape="rounded"
               class="mr-1"
-              (click)="edit(item.id)"
-              *ngIf="!isEdited"></button>
-            <button
-              tuiIconButton
-              appearance="flat"
-              size="s"
-              icon="fa::save"
-              title="Save changes"
-              shape="rounded"
-              class="mr-1"
-              (click)="save()"
-              *ngIf="isEdited"></button>
+              (click)="openEditDialog(item.id)"></button>
+
             <button
               tuiIconButton
               appearance="flat-destructive"

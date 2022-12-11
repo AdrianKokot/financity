@@ -16,6 +16,7 @@ import {
 } from '@shared/data-access/models/category.model';
 import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { UpdateCategoryComponent } from 'src/app/category/feature/update-category/update-category.component';
 
 @Component({
   selector: 'app-wallet-categories',
@@ -37,8 +38,10 @@ export class WalletCategoriesComponent {
   //   switchMap(walletId => this._walletService.get(walletId))
   // );
   currentlyEditedId$ = new BehaviorSubject<CategoryListItem['id'] | null>(null);
+  poll$ = new BehaviorSubject<void>(undefined);
 
-  categories$ = this.walletId$.pipe(
+  categories$ = this.poll$.pipe(
+    switchMap(() => this.walletId$),
     switchMap(walletId => this._categoryService.getList(walletId))
   );
 
@@ -71,6 +74,7 @@ export class WalletCategoriesComponent {
           return this._dialog.open<Category>(
             new PolymorpheusComponent(CreateCategoryComponent, this._injector),
             {
+              label: 'Create category',
               data: {
                 walletId,
               },
@@ -78,8 +82,22 @@ export class WalletCategoriesComponent {
           );
         })
       )
-      .subscribe(() => {
-        console.log('next');
+      .subscribe(category => {
+        this.poll$.next();
       });
+  }
+
+  openEditDialog(id: Category['id']): void {
+    this._dialog
+      .open<Category>(
+        new PolymorpheusComponent(UpdateCategoryComponent, this._injector),
+        {
+          label: 'Edit category',
+          data: {
+            id,
+          },
+        }
+      )
+      .subscribe(category => this.poll$.next());
   }
 }

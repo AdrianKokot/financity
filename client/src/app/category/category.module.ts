@@ -20,9 +20,10 @@ import {
 } from '@taiga-ui/kit';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogService } from '@shared/utils/services/dialog.service';
+import { UpdateCategoryComponent } from './feature/update-category/update-category.component';
 
 @NgModule({
-  declarations: [CreateCategoryComponent],
+  declarations: [CreateCategoryComponent, UpdateCategoryComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

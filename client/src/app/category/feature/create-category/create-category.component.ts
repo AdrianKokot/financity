@@ -6,7 +6,6 @@ import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
 import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
-import { tuiItemsHandlersProvider } from '@taiga-ui/kit';
 import {
   TuiContextWithImplicit,
   tuiPure,
@@ -17,11 +16,6 @@ import {
   selector: 'app-create-category',
   templateUrl: './create-category.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    tuiItemsHandlersProvider({
-      stringify: (item: { label: string }) => item.label,
-    }),
-  ],
 })
 export class CreateCategoryComponent {
   form = this._fb.nonNullable.group({
