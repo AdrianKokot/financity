@@ -63,8 +63,10 @@
               size="s"
               icon="tuiIconTrash"
               title="Remove"
-              shape="rounded"
-              (click)="remove(item.id)"></button>
+              appRequireConfirmation
+              (confirm)="deleteCategory(item.id)"
+              confirmationMessage="Are you sure you want to delete this category? This action is irreversible."
+              shape="rounded"></button>
           </td>
         </tr>
       </ng-container>

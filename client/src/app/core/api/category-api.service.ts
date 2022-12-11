@@ -33,4 +33,10 @@ export class CategoryApiService {
   update(payload: Pick<Category, 'id' | 'name' | 'appearance'>) {
     return this.http.put<Category>(`/api/categories/${payload.id}`, payload);
   }
+
+  delete(id: Category['id']): Observable<boolean> {
+    return this.http
+      .delete(`/api/categories/${id}`, { observe: 'response' })
+      .pipe(map(res => res.status >= 200 && res.status < 300));
+  }
 }

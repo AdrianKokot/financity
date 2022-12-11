@@ -39,6 +39,7 @@ import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.com
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategoryModule } from '../category/category.module';
+import { RequireConfirmationDirective } from '@shared/utils/directives/require-confirmation.directive';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { CategoryModule } from '../category/category.module';
     TuiTagModule,
     FormsModule,
     CategoryModule,
+    RequireConfirmationDirective,
   ],
 })
 export class WalletModule {}

@@ -100,4 +100,13 @@ export class WalletCategoriesComponent {
       )
       .subscribe(category => this.poll$.next());
   }
+
+  deleteCategory(id: Category['id']): void {
+    this._categoryService
+      .delete(id)
+      .pipe(filter(success => success))
+      .subscribe(() => {
+        this.poll$.next();
+      });
+  }
 }
