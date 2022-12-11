@@ -19,7 +19,7 @@ public sealed class Budget : Entity, IBelongsToUser
     /// </summary>
     public decimal CurrentPeriodExpenses =>
         TrackedCategories.SelectMany(x => x.Transactions)
-                         .Where(x => x.TransactionType == TransactionType.Outcome &&
+                         .Where(x => x.TransactionType == TransactionType.Expense &&
                                      x.TransactionDate.Month == DateTime.Now.ToUniversalTime().Month &&
                                      x.TransactionDate.Year == DateTime.Now.ToUniversalTime().Year &&
                                      x.Wallet.CurrencyId == CurrencyId)

@@ -5,7 +5,6 @@ using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 
 namespace Financity.Application.Transactions.Commands;
 
@@ -16,7 +15,7 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
     public float? ExchangeRate { get; set; } = null;
     public Guid? RecipientId { get; set; } = null;
     public Guid WalletId { get; set; } = Guid.Empty;
-    public TransactionType TransactionType { get; set; } = TransactionType.Income;
+    public string TransactionType { get; init; } = Domain.Enums.TransactionType.Expense.ToString();
     public Guid? CategoryId { get; set; } = null;
     public string CurrencyId { get; set; } = string.Empty;
     public DateTime TransactionDate { get; set; } = AppDateTime.Now;

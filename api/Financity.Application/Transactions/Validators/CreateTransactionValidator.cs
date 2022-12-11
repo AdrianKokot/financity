@@ -2,6 +2,7 @@
 using Financity.Application.Common.Extensions;
 using Financity.Application.Transactions.Commands;
 using Financity.Domain.Entities;
+using Financity.Domain.Enums;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,7 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
         RuleFor(x => x.Amount).NotEmpty();
         RuleFor(x => x.Note).MaximumLength(255);
         RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
-        RuleFor(x => x.TransactionType).NotNull().IsInEnum();
+        RuleFor(x => x.TransactionType).IsEnumName(typeof(TransactionType), false);
         RuleFor(x => x.TransactionDate).NotEmpty();
         RuleFor(x => x.RecipientId).HasUserAccessOrNull<CreateTransactionCommand, Recipient>(dbContext);
         RuleFor(x => x.CategoryId).HasUserAccessOrNull<CreateTransactionCommand, Category>(dbContext);

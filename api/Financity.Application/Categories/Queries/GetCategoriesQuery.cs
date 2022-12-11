@@ -23,4 +23,5 @@ public sealed class
     }
 }
 
-public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance) : IMapFrom<Category>;
+public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance,
+                                      string TransactionType) : IMapFrom<Category>;

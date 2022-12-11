@@ -6,12 +6,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Financity.Persistence.Configuration;
 
-public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
+public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
 {
-    public void Configure(EntityTypeBuilder<Category> builder)
+    public void Configure(EntityTypeBuilder<Transaction> builder)
     {
-        builder.OwnsOne(x => x.Appearance);
-
         builder.Property(x => x.TransactionType)
                .HasConversion(new EnumToStringConverter<TransactionType>());
     }

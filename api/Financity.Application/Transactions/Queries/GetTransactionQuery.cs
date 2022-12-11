@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
+using Financity.Application.Categories.Queries;
 using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Application.Labels.Queries;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 
 namespace Financity.Application.Transactions.Queries;
 
@@ -19,8 +19,8 @@ public sealed class
 }
 
 public sealed record TransactionDetails(Guid Id, decimal Amount, string Note, Guid? RecipientId, string? RecipientName,
-                                        Guid WalletId, string WalletName, TransactionType TransactionType,
+                                        Guid WalletId, string WalletName, string TransactionType,
                                         DateTime TransactionDate,
-                                        Guid? CategoryId, string? CategoryName,
+                                        Guid? CategoryId, CategoryListItem? Category,
                                         IEnumerable<LabelListItem> Labels, string CurrencyName,
                                         string CurrencyId, decimal ExchangeRate) : IMapFrom<Transaction>;
