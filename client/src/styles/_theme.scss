@@ -23,3 +23,9 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
     color: var(--tui-negative-hover)
   }
 }
+
+[tuiWrapper][data-appearance=textfield] {
+  .no-shadow &, &.no-shadow {
+    box-shadow: none !important;
+  }
+}

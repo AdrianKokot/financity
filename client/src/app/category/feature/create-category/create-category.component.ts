@@ -20,9 +20,9 @@ import {
 export class CreateCategoryComponent {
   form = this._fb.nonNullable.group({
     name: ['', [Validators.required]],
-    appearance: this._fb.nonNullable.group({
-      iconName: [''],
-      color: [''],
+    appearance: this._fb.group({
+      iconName: <(string | null)[]>[null],
+      color: <(string | null)[]>[null],
     }),
     walletId: ['', [Validators.required]],
     transactionType: [TransactionType.Income, [Validators.required]],

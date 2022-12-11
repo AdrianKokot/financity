@@ -14,9 +14,12 @@ import { map, Observable } from 'rxjs';
 export class CategoryApiService {
   constructor(protected http: HttpClient) {}
 
-  getList(walletId: Wallet['id']) {
+  getList(
+    walletId: Wallet['id'],
+    pagination: { page: number; pageSize: number }
+  ) {
     return this.http.get<CategoryListItem[]>(
-      `/api/categories?walletId_eq=${walletId}`
+      `/api/categories?page=${pagination.page}&pageSize=${pagination.pageSize}&walletId_eq=${walletId}&orderBy=name&direction=asc`
     );
   }
 

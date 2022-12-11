@@ -3,8 +3,23 @@ import {
   Component,
   Inject,
   Injector,
+  ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, filter, map, shareReplay, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  map,
+  merge,
+  scan,
+  share,
+  shareReplay,
+  startWith,
+  Subject,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { ActivatedRoute } from '@angular/router';
@@ -17,6 +32,7 @@ import {
 import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { UpdateCategoryComponent } from 'src/app/category/feature/update-category/update-category.component';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-wallet-categories',
@@ -31,13 +47,7 @@ export class WalletCategoriesComponent {
     shareReplay(1)
   );
 
-  currentlyEditedId$ = new BehaviorSubject<CategoryListItem['id'] | null>(null);
-  poll$ = new BehaviorSubject<void>(undefined);
-
-  categories$ = this.poll$.pipe(
-    switchMap(() => this.walletId$),
-    switchMap(walletId => this._categoryService.getList(walletId))
-  );
+  poll$ = new Subject<void>();
 
   constructor(
     private _fb: FormBuilder,
@@ -49,15 +59,7 @@ export class WalletCategoriesComponent {
     private _dialog: TuiDialogService
   ) {}
 
-  readonly columns = ['appearance', 'name', 'actions'];
-
-  save(): void {
-    this.currentlyEditedId$.next(null);
-  }
-
-  edit(id: Category['id']): void {
-    this.currentlyEditedId$.next(id);
-  }
+  readonly columns = ['category', 'transactionType', 'actions'];
 
   openCreateDialog(): void {
     this.walletId$
@@ -74,8 +76,8 @@ export class WalletCategoriesComponent {
           );
         })
       )
-      .subscribe(() => {
-        this.poll$.next();
+      .subscribe(cat => {
+        this._newCategory$.next(cat);
       });
   }
 
@@ -90,7 +92,7 @@ export class WalletCategoriesComponent {
           },
         }
       )
-      .subscribe(() => this.poll$.next());
+      .subscribe(category => this._modifiedCategory$.next(category));
   }
 
   deleteCategory(id: Category['id']): void {
@@ -98,7 +100,102 @@ export class WalletCategoriesComponent {
       .delete(id)
       .pipe(filter(success => success))
       .subscribe(() => {
-        this.poll$.next();
+        this._deletedCategory$.next({ id });
       });
   }
+
+  // trackByIdx = (index: number, item: CategoryListItem) => JSON.stringify(item);
+
+  log() {
+    if (this.gotAllResults) return;
+    const { end } = this.viewport.getRenderedRange();
+    const total = this.viewport.getDataLength();
+
+    if (end === total) {
+      this.page$.next(Math.floor(total / this._pageSize) + 1);
+    }
+  }
+
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+
+  page$ = new BehaviorSubject<number>(1);
+  private _pageSize = 250;
+
+  categories$ = this.page$.pipe(
+    distinctUntilChanged(),
+    withLatestFrom(this.walletId$),
+    exhaustMap(([page, walletId]) =>
+      this._categoryService
+        .getList(walletId, {
+          page,
+          pageSize: this._pageSize,
+        })
+        .pipe(startWith(null))
+    ),
+    shareReplay(1)
+  );
+
+  gotAllResults = false;
+
+  private _modifiedCategory$ = new Subject<Category>();
+  private _deletedCategory$ = new Subject<Pick<Category, 'id'>>();
+  private _newCategory$ = new Subject<Category>();
+
+  readonly request$ = merge(
+    this.categories$.pipe(
+      filter((x): x is CategoryListItem[] => x !== null),
+      map(items => (acc: CategoryListItem[]) => [...acc, ...items])
+    ),
+    this._modifiedCategory$.pipe(
+      map(cat => (acc: CategoryListItem[]) => {
+        const index = acc.findIndex(x => x.id === cat.id);
+
+        if (index !== -1) {
+          acc[index] = cat;
+          return [...acc];
+        }
+
+        return null;
+      }),
+      filter(
+        (x): x is (acc: CategoryListItem[]) => CategoryListItem[] => x !== null
+      )
+    ),
+    this._deletedCategory$.pipe(
+      map(({ id }) => (acc: CategoryListItem[]) => {
+        const index = acc.findIndex(x => x.id === id);
+
+        if (index !== -1) {
+          acc.splice(index, 1);
+          return [...acc];
+        }
+
+        return null;
+      }),
+      filter(
+        (x): x is (acc: CategoryListItem[]) => CategoryListItem[] => x !== null
+      )
+    ),
+    this._newCategory$.pipe(
+      map(
+        item => (acc: CategoryListItem[]) =>
+          [...acc, item].sort((a, b) => a.name.localeCompare(b.name))
+      )
+    )
+  )
+    //   combineLatest([
+    //   this.sorter$,
+    //   this.direction$,
+    //   this.page$,
+    //   this.size$,
+    //   tuiControlValue<number>(this.minAge),
+    // ])
+    .pipe(
+      // zero time debounce for a case when both key and direction change
+      scan((acc: CategoryListItem[], fn) => fn(acc), [] as CategoryListItem[]),
+      share()
+    );
+
+  readonly loading$ = this.categories$.pipe(map(value => !value));
+  readonly data$ = this.request$.pipe(startWith([] as CategoryListItem[]));
 }

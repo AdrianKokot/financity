@@ -10,9 +10,7 @@ export interface Category {
   transactionType: TransactionType;
 }
 
-export interface CategoryListItem extends Category {
-  walletName: string;
-}
+export type CategoryListItem = Category;
 
 export type CreateCategoryPayload = Pick<
   Category,

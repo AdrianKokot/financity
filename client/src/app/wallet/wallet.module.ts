@@ -26,6 +26,7 @@ import {
   TuiInputModule,
   TuiInputNumberModule,
   TuiIslandModule,
+  TuiMarkerIconModule,
   TuiTabsModule,
   TuiTagModule,
 } from '@taiga-ui/kit';
@@ -81,6 +82,7 @@ import { RequireConfirmationDirective } from '@shared/utils/directives/require-c
     FormsModule,
     CategoryModule,
     RequireConfirmationDirective,
+    TuiMarkerIconModule,
   ],
 })
 export class WalletModule {}

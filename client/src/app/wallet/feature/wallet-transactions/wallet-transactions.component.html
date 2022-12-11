@@ -125,7 +125,17 @@
                   {{ item.transactionDate | date: 'MM/dd/yyyy':'UTC' }}
                 </td>
                 <td *tuiCell="'category'" tuiTd>
-                  {{ item.categoryName ?? '-' }}
+                  <span class="d-flex align-items-center">
+                    <tui-marker-icon
+                      size="xs"
+                      [class]="item.category.appearance.color ?? 'icon-default'"
+                      [src]="
+                        item.category.appearance.iconName ?? 'fa::question'
+                      "></tui-marker-icon>
+                    <span class="ml-2">
+                      {{ item.category.name ?? '-' }}
+                    </span>
+                  </span>
                 </td>
                 <td *tuiCell="'labels'" tuiTd>
                   <tui-badge

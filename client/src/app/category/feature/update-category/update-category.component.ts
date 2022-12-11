@@ -23,9 +23,9 @@ export class UpdateCategoryComponent implements OnDestroy {
     walletId: ['', [Validators.required]],
     transactionType: [TransactionType.Income, [Validators.required]],
     name: ['', [Validators.required]],
-    appearance: this._fb.nonNullable.group({
-      iconName: [''],
-      color: [''],
+    appearance: this._fb.group({
+      iconName: <(string | null)[]>[null],
+      color: <(string | null)[]>[null],
     }),
   });
 
