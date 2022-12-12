@@ -30,7 +30,7 @@ export class RequireConfirmationDirective implements OnDestroy {
       .open<boolean>(new PolymorpheusComponent(ConfirmationDialogComponent), {
         required: true,
         data: { content: this.confirmationMessage },
-        size: 's',
+        size: 'm',
         label: this.confirmationTitle,
       })
       .pipe(

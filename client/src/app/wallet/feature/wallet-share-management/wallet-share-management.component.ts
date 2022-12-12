@@ -8,7 +8,8 @@ import {
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import {
   BehaviorSubject,
-  distinctUntilChanged,
+  debounceTime,
+  distinctUntilKeyChanged,
   exhaustMap,
   filter,
   map,
@@ -20,6 +21,7 @@ import {
   Subject,
   switchMap,
   take,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
@@ -42,10 +44,26 @@ import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletShareManagementComponent {
+  form = this._fb.nonNullable.group({
+    search: [''],
+  });
+
   walletId$ = this._activatedRoute.params.pipe(
     filter((params): params is { id: string } => 'id' in params),
     map(params => params.id),
     shareReplay(1)
+  );
+
+  filters$ = this.form.valueChanges.pipe(
+    debounceTime(300),
+    map(() => this.form.getRawValue()),
+    map(({ search }) => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      return { search: search.trim() };
+    }),
+    distinctUntilKeyChanged('search'),
+    share(),
+    startWith({})
   );
 
   constructor(
@@ -127,13 +145,14 @@ export class WalletShareManagementComponent {
   private _pageSize = 250;
 
   users$ = this.page$.pipe(
-    distinctUntilChanged(),
-    withLatestFrom(this.walletId$),
-    exhaustMap(([page, walletId]) =>
+    // distinctUntilChanged(),
+    withLatestFrom(this.walletId$, this.filters$),
+    exhaustMap(([page, walletId, filters]) =>
       this._walletService
         .getSharedToList(walletId, {
           page,
           pageSize: this._pageSize,
+          filters,
         })
         .pipe(startWith(null))
     ),
@@ -168,8 +187,13 @@ export class WalletShareManagementComponent {
         item => (acc: User[]) =>
           [...acc, item].sort((a, b) => a.name.localeCompare(b.name))
       )
+    ),
+    this.filters$.pipe(
+      map(_ => (acc: User[]) => []),
+      tap(() => this.page$.next(1))
     )
   ).pipe(
+    tap(console.log),
     scan((acc: User[], fn) => fn(acc), [] as User[]),
     share()
   );

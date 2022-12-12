@@ -7,6 +7,7 @@ import {
 } from '@shared/data-access/models/wallet.model';
 import { User } from '../../auth/data-access/models/user';
 import { map, Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -50,10 +51,20 @@ export class WalletApiService extends GenericApiService {
 
   getSharedToList(
     walletId: Wallet['id'],
-    pagination: { page: number; pageSize: number }
+    pagination: {
+      page: number;
+      pageSize: number;
+      filters?: Record<string, string>;
+    }
   ) {
-    return this.http.get<User[]>(
-      `/api/wallets/${walletId}/share?page=${pagination.page}&pageSize=${pagination.pageSize}&orderBy=email&direction=asc`
-    );
+    const params = new HttpParams().appendAll({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      orderBy: 'email',
+      direction: 'asc',
+      ...pagination.filters,
+    });
+
+    return this.http.get<User[]>(`/api/wallets/${walletId}/share`, { params });
   }
 }

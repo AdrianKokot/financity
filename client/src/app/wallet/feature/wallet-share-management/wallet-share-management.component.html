@@ -1,14 +1,15 @@
 <main>
   <div class="w-full d-flex gap-4 mb-4">
-    <!--        <label class="w-full">-->
-    <!--          <tui-input-->
-    <!--            tuiTextfieldSize="s"-->
-    <!--            [tuiTextfieldLabelOutside]="true"-->
-    <!--            class="no-shadow">-->
-    <!--            Search-->
-    <!--            <input tuiTextfield type="text" />-->
-    <!--          </tui-input>-->
-    <!--        </label>-->
+    <label class="w-full">
+      <tui-input
+        [formControl]="form.controls.search"
+        tuiTextfieldSize="s"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow">
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+    </label>
 
     <button
       tuiButton
