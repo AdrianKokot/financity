@@ -42,7 +42,7 @@ public sealed class
                                    .FirstOrDefaultAsync(x => x.NormalizedEmail == command.UserEmail.ToUpper(), ct);
 
         if (user is null)
-            throw ValidationExceptionFactory.For(nameof(command.UserEmail), "User with given email doesn't exist");
+            return new GiveWalletAccessCommandResult();
 
         if (wallet.UsersWithSharedAccess.Any(x => x.Id == user.Id))
             throw ValidationExceptionFactory.For(nameof(command.UserEmail),

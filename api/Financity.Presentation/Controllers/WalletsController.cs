@@ -60,12 +60,12 @@ public class WalletsController : BaseController
     }
 
     [HttpPost("{id:guid}/share")]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(GiveWalletAccessCommandResult))]
+    [SwaggerResponse(StatusCodes.Status204NoContent, Type = typeof(Unit))]
     public async Task<IActionResult> GiveAccess(GiveWalletAccessCommand command, Guid id, CancellationToken ct)
     {
         command.WalletId = id;
-        var result = await HandleCommandAsync(command, ct);
-        return Ok(result);
+        await HandleCommandAsync(command, ct);
+        return NoContent();
     }
 
     [HttpPut("{id:guid}/share")]
@@ -73,7 +73,7 @@ public class WalletsController : BaseController
     public async Task<IActionResult> RevokeAccess(RevokeWalletAccessCommand command, Guid id, CancellationToken ct)
     {
         command.WalletId = id;
-        var result = await HandleCommandAsync(command, ct);
+        await HandleCommandAsync(command, ct);
         return NoContent();
     }
 }
