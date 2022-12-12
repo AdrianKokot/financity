@@ -6,7 +6,7 @@ import {
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
 import { User } from '../../auth/data-access/models/user';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -34,10 +34,7 @@ export class WalletApiService extends GenericApiService {
       .post(`/api/wallets/${payload.walletId}/share`, payload, {
         observe: 'response',
       })
-      .pipe(
-        tap(console.log),
-        map(response => response.status === 204)
-      );
+      .pipe(map(response => response.status === 204));
   }
 
   revoke(payload: {

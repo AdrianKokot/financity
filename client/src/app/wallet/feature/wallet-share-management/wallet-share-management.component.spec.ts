@@ -8,9 +8,8 @@ describe('WalletShareManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WalletShareManagementComponent ]
-    })
-    .compileComponents();
+      declarations: [WalletShareManagementComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WalletShareManagementComponent);
     component = fixture.componentInstance;
