@@ -48,6 +48,14 @@ public abstract class
                                                                              expression,
                                                                          CancellationToken cancellationToken = default)
     {
+        return FilterAndMapAsync<TEntity>(query, expression, cancellationToken);
+    }
+
+    protected virtual Task<IEnumerable<TMappedEntity>> FilterAndMapAsync<TProxyEntity>(
+        TQuery query, Func<IQueryable<TEntity>, IQueryable<TProxyEntity>> expression,
+        CancellationToken cancellationToken = default)
+        where TProxyEntity : class
+    {
         return AccessAsync(q =>
             expression.Invoke(q)
                       .ApplyQuerySpecification(query.QuerySpecification)

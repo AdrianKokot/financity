@@ -51,6 +51,14 @@ public class WalletsController : BaseController
         return NoContent();
     }
 
+    [HttpGet("{id:guid}/share")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(UserWithSharedAccessListItem))]
+    public Task<IActionResult> GetWalletUsersWithSharedAccessList(
+        [FromQuery] QuerySpecification<UserWithSharedAccessListItem> querySpecification, Guid id, CancellationToken ct)
+    {
+        return HandleQueryAsync(new GetWalletUsersWithSharedAccessQuery(id, querySpecification), ct);
+    }
+
     [HttpPost("{id:guid}/share")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(GiveWalletAccessCommandResult))]
     public async Task<IActionResult> GiveAccess(GiveWalletAccessCommand command, Guid id, CancellationToken ct)
