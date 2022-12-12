@@ -21,6 +21,14 @@ public sealed class
     public GetCategoriesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
+
+    protected override IQueryable<Category> ExecuteSearch(IQueryable<Category> query, string search)
+    {
+        search = search.ToLower();
+
+        return query.Where(x =>
+            x.Name.ToLower().Contains(search) || x.TransactionType.ToString().ToLower().Contains(search));
+    }
 }
 
 public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance,
