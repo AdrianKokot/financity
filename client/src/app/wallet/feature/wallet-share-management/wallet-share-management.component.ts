@@ -58,7 +58,6 @@ export class WalletShareManagementComponent {
     debounceTime(300),
     map(() => this.form.getRawValue()),
     map(({ search }) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       return { search: search.trim() };
     }),
     distinctUntilKeyChanged('search'),
@@ -189,11 +188,10 @@ export class WalletShareManagementComponent {
       )
     ),
     this.filters$.pipe(
-      map(_ => (acc: User[]) => []),
+      map(() => () => []),
       tap(() => this.page$.next(1))
     )
   ).pipe(
-    tap(console.log),
     scan((acc: User[], fn) => fn(acc), [] as User[]),
     share()
   );

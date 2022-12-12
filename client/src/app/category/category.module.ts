@@ -41,7 +41,7 @@ import { UpdateCategoryComponent } from './feature/update-category/update-catego
     TuiSelectModule,
     TuiSelectOptionModule,
   ],
-  exports: [CreateCategoryComponent],
+  exports: [CreateCategoryComponent, UpdateCategoryComponent],
   providers: [DialogService],
 })
 export class CategoryModule {}
