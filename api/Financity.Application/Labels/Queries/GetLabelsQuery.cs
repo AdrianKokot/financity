@@ -20,6 +20,12 @@ public sealed class GetLabelsQueryHandler : FilteredUserWalletEntitiesQueryHandl
     public GetLabelsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
+
+    protected override IQueryable<Label> ExecuteSearch(IQueryable<Label> query, string search)
+    {
+        search = search.ToLower();
+        return query.Where(x => x.Name.ToLower().Contains(search));
+    }
 }
 
 public sealed record LabelListItem
