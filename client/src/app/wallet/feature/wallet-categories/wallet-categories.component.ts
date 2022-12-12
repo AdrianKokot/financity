@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import {
   BehaviorSubject,
-  distinctUntilChanged,
+  debounceTime,
+  distinctUntilKeyChanged,
   exhaustMap,
   filter,
   map,
@@ -18,6 +19,7 @@ import {
   startWith,
   Subject,
   switchMap,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
@@ -47,7 +49,20 @@ export class WalletCategoriesComponent {
     shareReplay(1)
   );
 
-  poll$ = new Subject<void>();
+  form = this._fb.nonNullable.group({
+    search: [''],
+  });
+
+  filters$ = this.form.valueChanges.pipe(
+    debounceTime(300),
+    map(() => this.form.getRawValue()),
+    map(({ search }) => {
+      return { search: search.trim() };
+    }),
+    distinctUntilKeyChanged('search'),
+    share(),
+    startWith({})
+  );
 
   constructor(
     private _fb: FormBuilder,
@@ -122,13 +137,13 @@ export class WalletCategoriesComponent {
   private _pageSize = 250;
 
   categories$ = this.page$.pipe(
-    distinctUntilChanged(),
-    withLatestFrom(this.walletId$),
-    exhaustMap(([page, walletId]) =>
+    withLatestFrom(this.walletId$, this.filters$),
+    exhaustMap(([page, walletId, filters]) =>
       this._categoryService
         .getList(walletId, {
           page,
           pageSize: this._pageSize,
+          filters,
         })
         .pipe(startWith(null))
     ),
@@ -181,6 +196,10 @@ export class WalletCategoriesComponent {
         item => (acc: CategoryListItem[]) =>
           [...acc, item].sort((a, b) => a.name.localeCompare(b.name))
       )
+    ),
+    this.filters$.pipe(
+      map(() => () => []),
+      tap(() => this.page$.next(1))
     )
   )
     //   combineLatest([

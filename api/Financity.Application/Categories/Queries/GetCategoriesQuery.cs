@@ -27,7 +27,7 @@ public sealed class
         search = search.ToLower();
 
         return query.Where(x =>
-            x.Name.ToLower().Contains(search) || x.TransactionType.ToString().ToLower().Contains(search));
+            x.Name.ToLower().Contains(search));
     }
 }
 

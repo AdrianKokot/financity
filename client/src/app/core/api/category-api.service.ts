@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import {
   Category,
@@ -16,11 +16,23 @@ export class CategoryApiService {
 
   getList(
     walletId: Wallet['id'],
-    pagination: { page: number; pageSize: number }
+    pagination: {
+      page: number;
+      pageSize: number;
+      filters?: Record<string, string>;
+    }
   ) {
-    return this.http.get<CategoryListItem[]>(
-      `/api/categories?page=${pagination.page}&pageSize=${pagination.pageSize}&walletId_eq=${walletId}&orderBy=name&direction=asc`
-    );
+    const params = new HttpParams().appendAll({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      orderBy: 'name',
+      direction: 'asc',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      walletId_eq: walletId,
+      ...pagination.filters,
+    });
+
+    return this.http.get<CategoryListItem[]>('/api/categories', { params });
   }
 
   get(walletId: Category['id']) {
