@@ -15,6 +15,7 @@ public static class QueryKeys
     public const string PageQueryParamKey = "page";
     public const string OrderByQueryParamKey = "orderBy";
     public const string OrderByDirectionQueryParamKey = "direction";
+    public const string SearchQueryParamKey = "search";
 
     public static readonly HashSet<Type> AllowedFilterKeyTypes = new() { typeof(Guid), typeof(string), typeof(DateTime) };
 }
@@ -57,13 +58,19 @@ public sealed class QuerySpecificationBinder<T> : IModelBinder
         {
             Pagination = ParsePagination(bindingContext.ValueProvider),
             Sort = ParseSort(bindingContext.ValueProvider),
-            Filters = ParseFilters(bindingContext)
+            Filters = ParseFilters(bindingContext),
+            Search = ParseSearch(bindingContext.ValueProvider)
         };
 
         bindingContext.Result = ModelBindingResult.Success(model);
         _validator.Validate(bindingContext.ActionContext, bindingContext.ValidationState, string.Empty, model);
 
         await Task.CompletedTask;
+    }
+
+    private static string ParseSearch(IValueProvider valueProvider)
+    {
+        return valueProvider.GetValue(QueryKeys.SearchQueryParamKey).FirstValue ?? string.Empty;
     }
 
     private static PaginationSpecification ParsePagination(IValueProvider valueProvider)

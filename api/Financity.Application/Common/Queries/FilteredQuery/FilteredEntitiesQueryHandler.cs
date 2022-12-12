@@ -31,6 +31,11 @@ public abstract class
         return FilterAndMapAsync(query, cancellationToken);
     }
 
+    protected virtual IQueryable<TEntity> ExecuteSearch(IQueryable<TEntity> query, string search)
+    {
+        throw new NotImplementedException(nameof(ExecuteSearch) + " is missing on given type.");
+    }
+
     protected virtual async Task<IEnumerable<TMappedEntity>> AccessAsync(
         Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
@@ -48,18 +53,15 @@ public abstract class
                                                                              expression,
                                                                          CancellationToken cancellationToken = default)
     {
-        return FilterAndMapAsync<TEntity>(query, expression, cancellationToken);
-    }
+        var expr = expression.Invoke;
 
-    protected virtual Task<IEnumerable<TMappedEntity>> FilterAndMapAsync<TProxyEntity>(
-        TQuery query, Func<IQueryable<TEntity>, IQueryable<TProxyEntity>> expression,
-        CancellationToken cancellationToken = default)
-        where TProxyEntity : class
-    {
+        if (!string.IsNullOrEmpty(query.QuerySpecification.Search))
+            expr = q => ExecuteSearch(expression.Invoke(q), query.QuerySpecification.Search);
+
         return AccessAsync(q =>
-            expression.Invoke(q)
-                      .ApplyQuerySpecification(query.QuerySpecification)
-                      .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider), cancellationToken);
+            expr.Invoke(q)
+                .ApplyQuerySpecification(query.QuerySpecification)
+                .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider), cancellationToken);
     }
 }
 

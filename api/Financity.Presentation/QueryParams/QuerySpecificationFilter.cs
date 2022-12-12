@@ -42,7 +42,8 @@ public sealed class QuerySpecificationFilter : IOperationFilter
             new(typeof(int), QueryKeys.PageQueryParamKey),
             new(typeof(int), QueryKeys.PageSizeQueryParamKey),
             new(typeof(string), QueryKeys.OrderByQueryParamKey),
-            new(typeof(string), QueryKeys.OrderByDirectionQueryParamKey)
+            new(typeof(string), QueryKeys.OrderByDirectionQueryParamKey),
+            new(typeof(string), QueryKeys.SearchQueryParamKey)
         };
 
         if (entityType is not null)

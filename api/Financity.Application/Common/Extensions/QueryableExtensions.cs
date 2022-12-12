@@ -8,6 +8,12 @@ namespace Financity.Application.Common.Extensions;
 
 public static class QueryableExtensions
 {
+    public static IQueryable<T> ApplySearch<T>(this IQueryable<T> query, Expression<Func<T, bool>> searchFn)
+        where T : class
+    {
+        return query.Where(searchFn);
+    }
+
     public static IQueryable<T> ApplyQuerySpecification<T, TQ>(this IQueryable<T> query,
                                                                QuerySpecification<TQ> specification)
         where T : class

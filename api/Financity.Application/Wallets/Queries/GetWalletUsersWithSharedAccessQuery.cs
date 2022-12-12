@@ -1,39 +1,47 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
-using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Queries;
-using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Application.Common.Queries.FilteredQuery;
-using Financity.Domain.Common;
 using Financity.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Queries;
 
 public sealed class GetWalletUsersWithSharedAccessQuery : FilteredEntitiesQuery<UserWithSharedAccessListItem>
 {
-    public Guid WalletId { get; init; }
-    public GetWalletUsersWithSharedAccessQuery(Guid walletId, QuerySpecification<UserWithSharedAccessListItem> querySpecification) : base(querySpecification)
+    public GetWalletUsersWithSharedAccessQuery(Guid walletId,
+                                               QuerySpecification<UserWithSharedAccessListItem> querySpecification) :
+        base(querySpecification)
     {
         WalletId = walletId;
     }
+
+    public Guid WalletId { get; init; }
 }
 
-public sealed class GetWalletUsersWithAccessQueryHandler : FilteredEntitiesQueryHandler<GetWalletUsersWithSharedAccessQuery, Wallet, UserWithSharedAccessListItem>
+public sealed class GetWalletUsersWithAccessQueryHandler : FilteredEntitiesQueryHandler<
+    GetWalletUsersWithSharedAccessQuery, User, UserWithSharedAccessListItem>
 {
-    public GetWalletUsersWithAccessQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+    public GetWalletUsersWithAccessQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext,
+        mapper)
     {
     }
 
-    public override Task<IEnumerable<UserWithSharedAccessListItem>> Handle(GetWalletUsersWithSharedAccessQuery query, CancellationToken cancellationToken)
+    public override Task<IEnumerable<UserWithSharedAccessListItem>> Handle(
+        GetWalletUsersWithSharedAccessQuery query, CancellationToken cancellationToken)
     {
         return FilterAndMapAsync(
             query,
-            q => q.Where(x => x.Id == query.WalletId).SelectMany(x => x.UsersWithSharedAccess),
+            q => q.Where(x => x.SharedWallets.Any(y => y.Id == query.WalletId)),
             cancellationToken
         );
+    }
+
+    protected override IQueryable<User> ExecuteSearch(IQueryable<User> query, string search)
+    {
+        search = search.ToLower();
+        return query.Where(x =>
+            x.Name.ToLower().Contains(search) || (x.Email ?? string.Empty).ToLower().Contains(search));
     }
 }
 
