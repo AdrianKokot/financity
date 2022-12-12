@@ -1,4 +1,4 @@
-<p class="mb-6">{{ content }}</p>
+<p class="mb-6" [innerHtml]="content | dompurify"></p>
 <div class="d-flex gap-2">
   <button
     tuiButton

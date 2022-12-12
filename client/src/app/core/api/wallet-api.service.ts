@@ -5,6 +5,8 @@ import {
   Wallet,
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
+import { User } from '../../auth/data-access/models/user';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +24,39 @@ export class WalletApiService extends GenericApiService {
 
   update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
     return this.http.put(`/api/wallets/${payload.id}`, payload);
+  }
+
+  share(payload: {
+    walletId: Wallet['id'];
+    userEmail: User['email'];
+  }): Observable<boolean> {
+    return this.http
+      .post(`/api/wallets/${payload.walletId}/share`, payload, {
+        observe: 'response',
+      })
+      .pipe(
+        tap(console.log),
+        map(response => response.status === 204)
+      );
+  }
+
+  revoke(payload: {
+    walletId: Wallet['id'];
+    userEmail: User['email'];
+  }): Observable<boolean> {
+    return this.http
+      .put(`/api/wallets/${payload.walletId}/share`, payload, {
+        observe: 'response',
+      })
+      .pipe(map(response => response.status === 204));
+  }
+
+  getSharedToList(
+    walletId: Wallet['id'],
+    pagination: { page: number; pageSize: number }
+  ) {
+    return this.http.get<User[]>(
+      `/api/wallets/${walletId}/share?page=${pagination.page}&pageSize=${pagination.pageSize}&orderBy=email&direction=asc`
+    );
   }
 }

@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label [tuiLabel]="'Email address'" class="mb-6">
+    <tui-input
+      formControlName="userEmail"
+      tuiTextfieldSize="m"
+      class="mt-1"
+      [tuiTextfieldLabelOutside]="true">
+      example@mail.com
+      <input tuiTextfield type="email" />
+    </tui-input>
+
+    <tui-error
+      formControlName="userEmail"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <div class="tui-form__row text-right">
+    <button
+      tuiButton
+      type="submit"
+      size="m"
+      [showLoader]="(loading$ | async) ?? false">
+      Share
+    </button>
+  </div>
+</form>

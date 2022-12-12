@@ -6,6 +6,7 @@ import { WalletTransactionsComponent } from './feature/wallet-transactions/walle
 import { WalletSettingsComponent } from './feature/wallet-settings/wallet-settings.component';
 import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.component';
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
+import { WalletShareManagementComponent } from './feature/wallet-share-management/wallet-share-management.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,10 @@ const routes: Routes = [
           {
             path: 'settings',
             component: WalletSettingsComponent,
+          },
+          {
+            path: 'access-management',
+            component: WalletShareManagementComponent,
           },
         ],
       },

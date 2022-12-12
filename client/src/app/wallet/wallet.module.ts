@@ -41,6 +41,8 @@ import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-ca
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CategoryModule } from '../category/category.module';
 import { RequireConfirmationDirective } from '@shared/utils/directives/require-confirmation.directive';
+import { WalletShareManagementComponent } from './feature/wallet-share-management/wallet-share-management.component';
+import { ShareWalletComponent } from './ui/share-wallet/share-wallet.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { RequireConfirmationDirective } from '@shared/utils/directives/require-c
     WalletTransactionsComponent,
     WalletLabelsComponent,
     WalletCategoriesComponent,
+    WalletShareManagementComponent,
+    ShareWalletComponent,
   ],
   imports: [
     CommonModule,
