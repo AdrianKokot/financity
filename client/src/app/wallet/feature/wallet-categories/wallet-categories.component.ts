@@ -13,6 +13,7 @@ import {
   filter,
   map,
   merge,
+  Observable,
   scan,
   share,
   shareReplay,
@@ -53,17 +54,22 @@ export class WalletCategoriesComponent {
 
   form = this._fb.nonNullable.group({
     search: [''],
-    transactionType: [''],
+    transactionType: ['' as TransactionType | ''],
   });
 
   transactionTypes = [TransactionType.Income, TransactionType.Expense];
   transactionTypeFilter = TransactionType.Income;
 
-  filters$ = this.form.valueChanges.pipe(
+  filters$: Observable<{
+    search?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    transactionType_eq?: TransactionType;
+  }> = this.form.valueChanges.pipe(
     debounceTime(300),
     map(() => this.form.getRawValue()),
     map(({ search, transactionType }) => {
-      const obj: Record<string, string> = {};
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const obj: { search?: string; transactionType_eq?: TransactionType } = {};
       search = search.trim();
 
       if (search) {
@@ -108,6 +114,11 @@ export class WalletCategoriesComponent {
               label: 'Create category',
               data: {
                 walletId,
+                transactionType:
+                  this.form.controls.transactionType.value ===
+                  TransactionType.Income
+                    ? TransactionType.Income
+                    : TransactionType.Expense,
               },
             }
           );
@@ -184,7 +195,19 @@ export class WalletCategoriesComponent {
       map(items => (acc: CategoryListItem[]) => [...acc, ...items])
     ),
     this._modifiedCategory$.pipe(
-      map(cat => (acc: CategoryListItem[]) => {
+      withLatestFrom(this.filters$),
+      filter(([item, filters]) => {
+        if (
+          filters.search &&
+          !item.name.toLowerCase().includes(filters.search.toLowerCase())
+        ) {
+          this._deletedCategory$.next(item);
+          return false;
+        }
+
+        return true;
+      }),
+      map(([cat]) => (acc: CategoryListItem[]) => {
         const index = acc.findIndex(x => x.id === cat.id);
 
         if (index !== -1) {
@@ -214,9 +237,24 @@ export class WalletCategoriesComponent {
       )
     ),
     this._newCategory$.pipe(
+      withLatestFrom(this.filters$),
+      filter(([item, filters]) => {
+        if (
+          filters.transactionType_eq &&
+          item.transactionType !== filters.transactionType_eq
+        ) {
+          return false;
+        }
+
+        return !(
+          filters.search &&
+          !item.name.toLowerCase().includes(filters.search.toLowerCase())
+        );
+      }),
       map(
-        item => (acc: CategoryListItem[]) =>
-          [...acc, item].sort((a, b) => a.name.localeCompare(b.name))
+        ([item]) =>
+          (acc: CategoryListItem[]) =>
+            [...acc, item].sort((a, b) => a.name.localeCompare(b.name))
       )
     ),
     this.filters$.pipe(

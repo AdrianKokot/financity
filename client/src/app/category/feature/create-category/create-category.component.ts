@@ -40,10 +40,14 @@ export class CreateCategoryComponent {
     private _categoryService: CategoryApiService,
     private readonly _fb: FormBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly _context: TuiDialogContext<Category, { walletId: string }>
+    private readonly _context: TuiDialogContext<
+      Category,
+      { walletId: string; transactionType: TransactionType }
+    >
   ) {
     this.form.patchValue({
       walletId: this._context.data.walletId,
+      transactionType: this._context.data.transactionType,
     });
   }
 
