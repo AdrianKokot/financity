@@ -11,12 +11,38 @@
       </tui-input>
     </label>
 
+    <ng-container *tuiLet="(appliedFiltersCount$ | async) ?? 0 as filtersCount">
+      <button
+        *ngIf="filtersCount > 0"
+        tuiIconButton
+        type="button"
+        appearance="flat-outline"
+        size="s"
+        title="Reset filters"
+        (click)="form.reset()"
+        icon="tuiIconFilter"
+        style="position: relative">
+        <tui-badge
+          [value]="filtersCount"
+          size="xs"
+          status="primary"
+          style="
+            color: var(--tui-text-01-night);
+            background: var(--tui-info-fill);
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+            transform: translate(30%, -30%);
+          "></tui-badge>
+      </button>
+    </ng-container>
+
     <button
       tuiButton
       type="button"
       appearance="primary"
       size="s"
-      class="ml-auto"
       (click)="openCreateDialog()">
       New category
     </button>
@@ -35,7 +61,19 @@
             [sorter]="null"
             tuiTh
             class="column-transactionType">
-            Transaction type
+            <app-dropdown-select
+              [allowDeselect]="true"
+              [emptyValue]="''"
+              [items]="transactionTypes"
+              [formControl]="form.controls.transactionType">
+              <span
+                class="column-filter-text"
+                [class.text-link]="form.controls.transactionType.value">
+                <span>Transaction type</span>
+
+                <tui-svg src="tuiIconSortDown"></tui-svg>
+              </span>
+            </app-dropdown-select>
           </th>
           <th
             *tuiHead="'actions'"

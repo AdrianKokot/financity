@@ -5,7 +5,9 @@ import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletShellComponent } from './feature/wallet-shell/wallet-shell.component';
 import {
   TuiButtonModule,
+  TuiDataListModule,
   TuiErrorModule,
+  TuiHostedDropdownModule,
   TuiLabelModule,
   TuiLinkModule,
   TuiLoaderModule,
@@ -19,6 +21,7 @@ import {
 } from '@taiga-ui/addon-commerce';
 import { TuiTableModule } from '@taiga-ui/addon-table';
 import {
+  TuiActionModule,
   TuiBadgeModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
@@ -27,6 +30,8 @@ import {
   TuiInputNumberModule,
   TuiIslandModule,
   TuiMarkerIconModule,
+  TuiMultiSelectModule,
+  TuiSelectModule,
   TuiTabsModule,
   TuiTagModule,
 } from '@taiga-ui/kit';
@@ -44,6 +49,7 @@ import { RequireConfirmationDirective } from '@shared/utils/directives/require-c
 import { WalletShareManagementComponent } from './feature/wallet-share-management/wallet-share-management.component';
 import { ShareWalletComponent } from './ui/share-wallet/share-wallet.component';
 import { LabelModule } from '../label/label.module';
+import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown-select.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +95,12 @@ import { LabelModule } from '../label/label.module';
     RequireConfirmationDirective,
     TuiMarkerIconModule,
     LabelModule,
+    TuiHostedDropdownModule,
+    TuiDataListModule,
+    TuiMultiSelectModule,
+    TuiSelectModule,
+    DropdownSelectComponent,
+    TuiActionModule,
   ],
 })
 export class WalletModule {}

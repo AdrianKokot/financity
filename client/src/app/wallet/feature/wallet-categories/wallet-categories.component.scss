@@ -6,6 +6,7 @@
 }
 
 :host {
+
   .viewport {
     min-height: calc(44px * 16);
 
@@ -17,8 +18,8 @@
   }
 
   .column-transactionType {
-    min-width: 135px;
-    max-width: 135px;
+    min-width: 165px;
+    max-width: 165px;
   }
 
   .column-actions {
@@ -77,7 +78,7 @@
     opacity: 0;
   }
 
-  tr:hover td button {
+  tr:hover td button, tr:focus-within td button {
     opacity: 1;
   }
 

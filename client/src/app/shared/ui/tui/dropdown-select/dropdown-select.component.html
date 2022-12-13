@@ -1,0 +1,21 @@
+<tui-hosted-dropdown
+  tuiDropdownLimitWidth="min"
+  [content]="itemContent !== null ? dropdownWithContent : dropdown"
+  [canOpen]="!disabled"
+  [(open)]="open"
+  (focusedChange)="onFocusedChange($event)">
+  <ng-content></ng-content>
+
+  <ng-template #dropdown>
+    <tui-data-list-wrapper
+      [items]="items"
+      [size]="size"></tui-data-list-wrapper>
+  </ng-template>
+
+  <ng-template #dropdownWithContent>
+    <tui-data-list-wrapper
+      [size]="size"
+      [items]="items"
+      [itemContent]="itemContent"></tui-data-list-wrapper>
+  </ng-template>
+</tui-hosted-dropdown>

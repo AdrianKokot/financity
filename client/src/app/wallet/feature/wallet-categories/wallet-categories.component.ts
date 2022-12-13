@@ -8,7 +8,7 @@ import {
 import {
   BehaviorSubject,
   debounceTime,
-  distinctUntilKeyChanged,
+  distinctUntilChanged,
   exhaustMap,
   filter,
   map,
@@ -35,6 +35,8 @@ import { CreateCategoryComponent } from '../../../category/feature/create-catego
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { UpdateCategoryComponent } from 'src/app/category/feature/update-category/update-category.component';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
+import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 
 @Component({
   selector: 'app-wallet-categories',
@@ -51,17 +53,37 @@ export class WalletCategoriesComponent {
 
   form = this._fb.nonNullable.group({
     search: [''],
+    transactionType: [''],
   });
+
+  transactionTypes = [TransactionType.Income, TransactionType.Expense];
+  transactionTypeFilter = TransactionType.Income;
 
   filters$ = this.form.valueChanges.pipe(
     debounceTime(300),
     map(() => this.form.getRawValue()),
-    map(({ search }) => {
-      return { search: search.trim() };
+    map(({ search, transactionType }) => {
+      const obj: Record<string, string> = {};
+      search = search.trim();
+
+      if (search) {
+        obj['search'] = search;
+      }
+
+      if (transactionType) {
+        obj['transactionType_eq'] = transactionType;
+      }
+      return obj;
     }),
-    distinctUntilKeyChanged('search'),
+    distinctUntilChangedObject(),
     share(),
     startWith({})
+  );
+
+  appliedFiltersCount$ = this.filters$.pipe(
+    map(x => Object.keys(x).length),
+    distinctUntilChanged(),
+    shareReplay(1)
   );
 
   constructor(

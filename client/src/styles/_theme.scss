@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500&display=swap');
+@import '~@taiga-ui/core/styles/taiga-ui-local';
 
 body {
   background-color: var(--tui-base-01)
@@ -27,5 +28,29 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
 [tuiWrapper][data-appearance=textfield] {
   .no-shadow &, &.no-shadow {
     box-shadow: none !important;
+  }
+}
+
+[tuiWrapper][data-appearance='flat-outline'] {
+  border: 1px solid var(--tui-base-03);
+  background: transparent;
+  color: var(--tui-link);
+
+  @include wrapper-hover {
+    background: var(--tui-secondary-hover);
+    color: var(--tui-link-hover);
+  }
+}
+
+.column-filter-text {
+  cursor: pointer;
+  transition: .3s color;
+
+  &:hover, [data-dropdown-opened=true] & {
+    color: var(--tui-text-03);
+
+    &.text-link {
+      color: var(--tui-link-hover) !important;
+    }
   }
 }
