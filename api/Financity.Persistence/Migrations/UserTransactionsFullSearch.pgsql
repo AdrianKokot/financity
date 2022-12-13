@@ -67,5 +67,18 @@ BEGIN
 END
 $$;
 
-SELECT *
-FROM "SearchUserTransactions"((SELECT "Id" FROM "Users"), 'postman');
+CREATE OR REPLACE PROCEDURE "GenerateDefaultCategories"(walletId uuid)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    INSERT INTO "Categories" ("Name", "Appearance_Color", "Appearance_IconName", "TransactionType", "WalletId")
+    VALUES ('Uncategorized income', 'icon-support-01', 'fa::wallet', 'Income', walletId),
+           ('Salary', 'icon-support-02', 'fa::money-bill', 'Income', walletId),
+           ('Uncategorized expense', 'icon-support-01', 'fa::sack', 'Expense', walletId),
+           ('Food', 'icon-support-03', 'fa::utensils', 'Expense', walletId),
+           ('Commute', 'icon-support-04', 'fa:train', 'Expense', walletId),
+           ('Household chemistry', 'icon-support-05', 'fa::soap', 'Expense', walletId),
+           ('Dining out', 'icon-support-06', 'fa::pizza-slice', 'Expense', walletId),
+           ('Rent', 'icon-support-07', 'fa::building', 'Expense', walletId);
+END
+$$;
