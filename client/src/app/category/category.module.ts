@@ -21,6 +21,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogService } from '@shared/utils/services/dialog.service';
 import { UpdateCategoryComponent } from './feature/update-category/update-category.component';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [CreateCategoryComponent, UpdateCategoryComponent],
@@ -40,6 +41,7 @@ import { UpdateCategoryComponent } from './feature/update-category/update-catego
     TuiFilterByInputPipeModule,
     TuiSelectModule,
     TuiSelectOptionModule,
+    TuiAutoFocusModule,
   ],
   exports: [CreateCategoryComponent, UpdateCategoryComponent],
   providers: [DialogService],

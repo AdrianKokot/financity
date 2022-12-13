@@ -6,13 +6,14 @@ import {
   TuiDialogService,
 } from '@taiga-ui/core';
 import { NgDompurifyModule } from '@tinkoff/ng-dompurify';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
 
 @Component({
   standalone: true,
   selector: 'app-confirmation-dialog',
   templateUrl: './confirmation-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TuiButtonModule, NgDompurifyModule],
+  imports: [TuiButtonModule, NgDompurifyModule, TuiAutoFocusModule],
 })
 export class ConfirmationDialogComponent {
   content = '';

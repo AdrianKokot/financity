@@ -1,6 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <label [tuiLabel]="'Name'" class="mb-6">
     <tui-input
+      tuiAutoFocus
       formControlName="name"
       tuiTextfieldSize="m"
       class="mt-1"
