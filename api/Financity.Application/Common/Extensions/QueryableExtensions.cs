@@ -86,6 +86,9 @@ public static class QueryableExtensions
         if (info.PropertyType == typeof(Guid))
             return Expression.Constant(Guid.Parse(value));
 
+        if (info.PropertyType.IsEnum)
+            return Expression.Constant(Enum.Parse(info.PropertyType, value));
+
         return Expression.Constant(value);
     }
 
