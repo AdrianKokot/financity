@@ -13,7 +13,6 @@ public sealed class CreateBudgetCommand : ICommand<CreateBudgetCommandResult>, I
     public string Name { get; set; } = string.Empty;
     public decimal Amount { get; set; }
 
-    public Guid UserId { get; set; }
     public string CurrencyId { get; set; } = string.Empty;
 
     public HashSet<Guid> TrackedCategoriesId { get; set; } = new();

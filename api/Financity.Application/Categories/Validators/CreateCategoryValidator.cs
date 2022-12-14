@@ -10,7 +10,10 @@ public sealed class CreateCategoryValidator : AbstractValidator<CreateCategoryCo
 {
     public CreateCategoryValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(64);
+
         RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
         RuleFor(x => x.TransactionType).IsEnumName(typeof(TransactionType), false);
         RuleFor(x => x.Appearance).ChildRules(x =>

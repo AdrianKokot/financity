@@ -5,6 +5,7 @@ using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
 using Financity.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Commands;
 
@@ -24,7 +25,10 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
     public static void CreateMap(Profile profile)
     {
         profile.CreateMap<CreateTransactionCommand, Transaction>()
-               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate());
+               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate())
+               .ForMember(x => x.TransactionDate,
+                   x => x.MapFrom(y => DateOnly.FromDateTime(y.TransactionDate.ToUniversalTime()))
+               );
     }
 }
 
@@ -38,7 +42,6 @@ public sealed class CreateTransactionCommandHandler :
     public override async Task<CreateTransactionCommandResult> Handle(CreateTransactionCommand command,
                                                                       CancellationToken cancellationToken)
     {
-        command.TransactionDate = command.TransactionDate.ToUniversalTime();
         var entity = Mapper.Map<Transaction>(command);
 
         if (command.ExchangeRate is null) entity.ExchangeRate = 1;
@@ -47,7 +50,24 @@ public sealed class CreateTransactionCommandHandler :
                                  .Where(x => command.LabelIds.Contains(x.Id))
                                  .ToImmutableArray();
 
+        entity.Currency = await DbContext.GetDbSet<Currency>()
+                                         .FirstAsync(x => x.Id == command.CurrencyId, cancellationToken);
+
+        if (command.CategoryId != null)
+        {
+            entity.Category = await DbContext.GetDbSet<Category>()
+                                             .FirstAsync(x => x.Id == command.CategoryId, cancellationToken);
+        }
+
+        if (command.RecipientId != null)
+        {
+            entity.Recipient = await DbContext.GetDbSet<Recipient>()
+                                              .FirstAsync(x => x.Id == command.RecipientId, cancellationToken);
+        }
+
+
         DbContext.GetDbSet<Transaction>().Add(entity);
+
 
         await DbContext.SaveChangesAsync(cancellationToken);
 

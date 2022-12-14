@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EntityFramework.Exceptions.Common;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
@@ -16,12 +17,15 @@ public sealed class UpdateTransactionCommand : ICommand<Unit>
     public Guid? RecipientId { get; set; } = null;
     public Guid? CategoryId { get; set; } = null;
     public HashSet<Guid> LabelIds { get; set; } = new();
-    public DateTime? TransactionDate { get; set; } = null;
+    public DateTime TransactionDate { get; set; } = AppDateTime.Now;
 
     public static void CreateMap(Profile profile)
     {
         profile.CreateMap<CreateTransactionCommand, Transaction>()
-               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate());
+               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate())
+               .ForMember(x => x.TransactionDate,
+                   x => x.MapFrom(y => DateOnly.FromDateTime(y.TransactionDate.ToUniversalTime()))
+               );
     }
 }
 
@@ -44,10 +48,15 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
 
         entity.Amount = command.Amount;
         entity.Note = command.Note;
-        entity.RecipientId = command.RecipientId;
-        entity.CategoryId = command.CategoryId;
-        if (command.TransactionDate is not null)
-            entity.TransactionDate = ((DateTime)command.TransactionDate).ToUniversalTime();
+
+        entity.Recipient = command.RecipientId != null
+            ? await _dbContext.GetDbSet<Recipient>().FirstAsync(x => x.Id == command.RecipientId, ct)
+            : null;
+        entity.Category = command.CategoryId != null
+            ? await _dbContext.GetDbSet<Category>().FirstAsync(x => x.Id == command.CategoryId, ct)
+            : null;
+
+        entity.TransactionDate = DateOnly.FromDateTime(command.TransactionDate.ToUniversalTime());
 
         entity.Labels = await _dbContext.GetDbSet<Label>()
                                         .Where(x => command.LabelIds.Contains(x.Id))

@@ -10,7 +10,10 @@ public sealed class UpdateLabelValidator : AbstractValidator<UpdateLabelCommand>
 {
     public UpdateLabelValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(64);
+
         RuleFor(x => x.Appearance).ChildRules(x =>
         {
             x.RuleFor(y => y.Color).MaximumLength(64);

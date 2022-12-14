@@ -3,6 +3,7 @@ using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Exceptions;
 using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Commands;
@@ -17,13 +18,15 @@ public sealed class
     GiveWalletAccessCommandHandler : ICommandHandler<GiveWalletAccessCommand, GiveWalletAccessCommandResult>
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
     private readonly ICurrentUserService _userService;
 
     public GiveWalletAccessCommandHandler(IApplicationDbContext dbContext,
-                                          ICurrentUserService userService)
+                                          ICurrentUserService userService, UserManager<User> userManager)
     {
         _dbContext = dbContext;
         _userService = userService;
+        _userManager = userManager;
     }
 
     public async Task<GiveWalletAccessCommandResult> Handle(GiveWalletAccessCommand command, CancellationToken ct)
@@ -38,8 +41,9 @@ public sealed class
         if (wallet.OwnerId != _userService.UserId)
             throw new AccessDeniedException();
 
+        var normalizedEmail = _userManager.NormalizeEmail(command.UserEmail);
         var user = await _dbContext.GetDbSet<User>()
-                                   .FirstOrDefaultAsync(x => x.NormalizedEmail == command.UserEmail.ToUpper(), ct);
+                                   .FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail, ct);
 
         if (user is null)
             return new GiveWalletAccessCommandResult();

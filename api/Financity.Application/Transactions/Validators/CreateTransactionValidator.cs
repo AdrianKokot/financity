@@ -13,7 +13,7 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
     public CreateTransactionValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Amount).NotEmpty();
-        RuleFor(x => x.Note).MaximumLength(255);
+        RuleFor(x => x.Note).MaximumLength(512);
         RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
         RuleFor(x => x.TransactionType).IsEnumName(typeof(TransactionType), false);
         RuleFor(x => x.TransactionDate).NotEmpty();

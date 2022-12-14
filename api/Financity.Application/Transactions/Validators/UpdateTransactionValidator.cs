@@ -11,7 +11,7 @@ public sealed class UpdateTransactionValidator : AbstractValidator<UpdateTransac
     public UpdateTransactionValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Amount).NotEmpty();
-        RuleFor(x => x.Note).MaximumLength(255);
+        RuleFor(x => x.Note).MaximumLength(512);
         RuleFor(x => x.LabelIds)
             .ForEach(y => y.NotEmpty())
             .HasUserAccess<UpdateTransactionCommand, Label>(dbContext);

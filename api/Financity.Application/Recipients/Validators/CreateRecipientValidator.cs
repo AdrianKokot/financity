@@ -9,7 +9,10 @@ public sealed class CreateRecipientValidator : AbstractValidator<CreateRecipient
 {
     public CreateRecipientValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(64);
+
         RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
     }
 }
