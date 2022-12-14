@@ -3,6 +3,7 @@ using System;
 using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221214145332_AddForeignEntitiesWalletIdKeysInTransactionCheckConstraints")]
+    partial class AddForeignEntitiesWalletIdKeysInTransactionCheckConstraints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,8 +191,8 @@ namespace Financity.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid?>("CategoryId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid?>("CategoryWalletId")
                         .HasColumnType("uuid");
@@ -206,8 +209,8 @@ namespace Financity.Persistence.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.Property<Guid?>("RecipientId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("RecipientName")
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid?>("RecipientWalletId")
                         .HasColumnType("uuid");
@@ -231,9 +234,9 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.HasIndex("CategoryId", "CategoryWalletId");
+                    b.HasIndex("CategoryWalletId", "CategoryName");
 
-                    b.HasIndex("RecipientId", "RecipientWalletId");
+                    b.HasIndex("RecipientWalletId", "RecipientName");
 
                     b.ToTable("Transactions", t =>
                         {
@@ -299,6 +302,7 @@ namespace Financity.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
+                        .IsUnique()
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
@@ -341,28 +345,19 @@ namespace Financity.Persistence.Migrations
                     b.ToTable("Wallets");
                 });
 
-            modelBuilder.Entity("System.Collections.Generic.Dictionary<string, System.Guid>", b =>
+            modelBuilder.Entity("LabelTransaction", b =>
                 {
-                    b.Property<Guid>("LabelId")
+                    b.Property<Guid>("LabelsId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("LabelWalletId")
+                    b.Property<Guid>("TransactionsId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TransactionId")
-                        .HasColumnType("uuid");
+                    b.HasKey("LabelsId", "TransactionsId");
 
-                    b.Property<Guid>("TransactionWalletId")
-                        .HasColumnType("uuid");
+                    b.HasIndex("TransactionsId");
 
-                    b.HasKey("LabelId", "LabelWalletId", "TransactionId", "TransactionWalletId");
-
-                    b.HasIndex("TransactionId", "TransactionWalletId");
-
-                    b.ToTable("TransactionLabel", null, t =>
-                        {
-                            t.HasCheckConstraint("CH_TransactionLabel_TransactionWalletId_LabelWalletId", "\"TransactionWalletId\" = \"LabelWalletId\"");
-                        });
+                    b.ToTable("LabelTransaction");
                 });
 
             modelBuilder.Entity("UserWallet", b =>
@@ -517,14 +512,14 @@ namespace Financity.Persistence.Migrations
 
                     b.HasOne("Financity.Domain.Entities.Category", "Category")
                         .WithMany("Transactions")
-                        .HasForeignKey("CategoryId", "CategoryWalletId")
-                        .HasPrincipalKey("Id", "WalletId")
+                        .HasForeignKey("CategoryWalletId", "CategoryName")
+                        .HasPrincipalKey("WalletId", "Name")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
                         .WithMany("Transactions")
-                        .HasForeignKey("RecipientId", "RecipientWalletId")
-                        .HasPrincipalKey("Id", "WalletId")
+                        .HasForeignKey("RecipientWalletId", "RecipientName")
+                        .HasPrincipalKey("WalletId", "Name")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
@@ -555,19 +550,17 @@ namespace Financity.Persistence.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("System.Collections.Generic.Dictionary<string, System.Guid>", b =>
+            modelBuilder.Entity("LabelTransaction", b =>
                 {
                     b.HasOne("Financity.Domain.Entities.Label", null)
                         .WithMany()
-                        .HasForeignKey("LabelId", "LabelWalletId")
-                        .HasPrincipalKey("Id", "WalletId")
+                        .HasForeignKey("LabelsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Financity.Domain.Entities.Transaction", null)
                         .WithMany()
-                        .HasForeignKey("TransactionId", "TransactionWalletId")
-                        .HasPrincipalKey("Id", "WalletId")
+                        .HasForeignKey("TransactionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

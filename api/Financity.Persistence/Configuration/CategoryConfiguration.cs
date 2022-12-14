@@ -1,8 +1,6 @@
 ﻿using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Financity.Persistence.Configuration;
 
@@ -10,9 +8,19 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.OwnsOne(x => x.Appearance);
+        var appearanceBuilder = builder.OwnsOne(x => x.Appearance);
+
+        appearanceBuilder.Property(x => x.Color).HasMaxLength(64);
+        appearanceBuilder.Property(x => x.IconName).HasMaxLength(64);
+
+        builder.Property(x => x.Name).HasMaxLength(64);
 
         builder.Property(x => x.TransactionType)
-               .HasConversion(new EnumToStringConverter<TransactionType>());
+               .HasConversion<string>()
+               .HasMaxLength(32);
+
+        builder.HasIndex(x => x.TransactionType);
+
+        builder.HasIndex(nameof(Category.WalletId), nameof(Category.Name)).IsUnique();
     }
 }
