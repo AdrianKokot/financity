@@ -31,7 +31,7 @@ public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transact
 
         builder.HasMany(x => x.Labels)
                .WithMany(x => x.Transactions)
-               .UsingEntity<Dictionary<string, Guid>>(
+               .UsingEntity<Dictionary<string, object>>(
                    x => x.HasOne<Label>()
                          .WithMany()
                          .HasForeignKey($"{nameof(Label)}{nameof(Label.Id)}",

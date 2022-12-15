@@ -3,6 +3,7 @@ using System;
 using Financity.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Financity.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221214174243_RenameManyToManyRelationColumns")]
+    partial class RenameManyToManyRelationColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("BudgetCategory", (string)null);
+                    b.ToTable("BudgetCategory");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Budget", b =>
@@ -65,7 +68,7 @@ namespace Financity.Persistence.Migrations
                     b.HasIndex("UserId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Budgets", (string)null);
+                    b.ToTable("Budgets");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
@@ -99,7 +102,7 @@ namespace Financity.Persistence.Migrations
                     b.HasIndex("WalletId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Currency", b =>
@@ -115,7 +118,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies", (string)null);
+                    b.ToTable("Currencies");
 
                     b.HasData(
                         new
@@ -154,7 +157,7 @@ namespace Financity.Persistence.Migrations
                     b.HasIndex("WalletId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Labels", (string)null);
+                    b.ToTable("Labels");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
@@ -176,7 +179,7 @@ namespace Financity.Persistence.Migrations
                     b.HasIndex("WalletId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Recipients", (string)null);
+                    b.ToTable("Recipients");
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Transaction", b =>
@@ -235,7 +238,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("RecipientId", "RecipientWalletId");
 
-                    b.ToTable("Transactions", null, t =>
+                    b.ToTable("Transactions", t =>
                         {
                             t.HasCheckConstraint("CH__WalletId_CategoryWalletId", "\"CategoryWalletId\" is null or \"CategoryWalletId\" = \"WalletId\"");
 
@@ -339,7 +342,7 @@ namespace Financity.Persistence.Migrations
                     b.HasIndex("OwnerId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Wallets", (string)null);
+                    b.ToTable("Wallets");
                 });
 
             modelBuilder.Entity("LabelTransaction", b =>
@@ -378,7 +381,7 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("UserWallet", (string)null);
+                    b.ToTable("UserWallet");
                 });
 
             modelBuilder.Entity("BudgetCategory", b =>
@@ -427,7 +430,7 @@ namespace Financity.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Financity.Domain.Entities.Category.Appearance#Financity.Domain.Common.Appearance", "Appearance", b1 =>
+                    b.OwnsOne("Financity.Domain.Common.Appearance", "Appearance", b1 =>
                         {
                             b1.Property<Guid>("CategoryId")
                                 .HasColumnType("uuid");
@@ -442,7 +445,7 @@ namespace Financity.Persistence.Migrations
 
                             b1.HasKey("CategoryId");
 
-                            b1.ToTable("Categories", (string)null);
+                            b1.ToTable("Categories");
 
                             b1.WithOwner()
                                 .HasForeignKey("CategoryId");
@@ -464,7 +467,7 @@ namespace Financity.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Financity.Domain.Entities.Label.Appearance#Financity.Domain.Common.Appearance", "Appearance", b1 =>
+                    b.OwnsOne("Financity.Domain.Common.Appearance", "Appearance", b1 =>
                         {
                             b1.Property<Guid>("LabelId")
                                 .HasColumnType("uuid");
@@ -479,7 +482,7 @@ namespace Financity.Persistence.Migrations
 
                             b1.HasKey("LabelId");
 
-                            b1.ToTable("Labels", (string)null);
+                            b1.ToTable("Labels");
 
                             b1.WithOwner()
                                 .HasForeignKey("LabelId");
