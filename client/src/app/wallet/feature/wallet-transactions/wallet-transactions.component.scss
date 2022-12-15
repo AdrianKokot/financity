@@ -2,7 +2,7 @@
 
 :host {
   .viewport {
-    min-height: 75vh;
+    min-height: calc(44px * 15.5);
 
     table thead {
       th {

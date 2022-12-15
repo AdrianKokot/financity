@@ -50,6 +50,7 @@ import { WalletShareManagementComponent } from './feature/wallet-share-managemen
 import { ShareWalletComponent } from './ui/share-wallet/share-wallet.component';
 import { LabelModule } from '../label/label.module';
 import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown-select.component';
+import { TransactionModule } from '../transaction/transaction.module';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown
     TuiSelectModule,
     DropdownSelectComponent,
     TuiActionModule,
+    TransactionModule,
   ],
 })
 export class WalletModule {}

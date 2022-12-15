@@ -77,7 +77,7 @@ export class CreateWalletDialogComponent implements OnDestroy {
           name: payload.name,
           currentState: payload.startingAmount,
           startingAmount: payload.startingAmount,
-          currencyId: this.currency.value?.code ?? '',
+          currencyId: this.currency.value?.id ?? '',
           currencyName: this.currency.value?.name ?? '',
           id: '',
         });

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+  ViewChild,
+} from '@angular/core';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
   BehaviorSubject,
@@ -11,13 +17,22 @@ import {
   share,
   shareReplay,
   startWith,
+  Subject,
   switchMap,
   withLatestFrom,
 } from 'rxjs';
-import { TransactionListItem } from '@shared/data-access/models/transaction.model';
+import {
+  Transaction,
+  TransactionListItem,
+} from '@shared/data-access/models/transaction.model';
 import { ActivatedRoute } from '@angular/router';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { TuiAlertService, TuiDialogService } from '@taiga-ui/core';
+import { UpdateTransactionComponent } from '../../../transaction/feature/update-transaction/update-transaction.component';
+import { CreateTransactionComponent } from 'src/app/transaction/feature/create-transaction/create-transaction.component';
+import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -35,7 +50,8 @@ export class WalletTransactionsComponent {
   );
 
   wallet$ = this.walletId$.pipe(
-    switchMap(walletId => this._walletApiService.get(walletId))
+    switchMap(walletId => this._walletApiService.get(walletId)),
+    shareReplay(1)
   );
 
   page$ = new BehaviorSubject<number>(1);
@@ -55,6 +71,58 @@ export class WalletTransactionsComponent {
     shareReplay(1)
   );
   gotAllResults = false;
+
+  openCreateDialog(): void {
+    this.wallet$
+      .pipe(
+        switchMap(({ id, currencyId }) => {
+          return this._dialog.open<Transaction>(
+            new PolymorpheusComponent(
+              CreateTransactionComponent,
+              this._injector
+            ),
+            {
+              label: 'Create transaction',
+              data: {
+                walletId: id,
+                walletCurrencyId: currencyId,
+                transactionType: TransactionType.Expense,
+              },
+            }
+          );
+        })
+      )
+      .subscribe(item => {
+        this._newTransaction$.next(item);
+      });
+  }
+
+  openEditDialog(id: Transaction['id']): void {
+    this._dialog
+      .open<Transaction>(
+        new PolymorpheusComponent(UpdateTransactionComponent, this._injector),
+        {
+          label: 'Edit transaction',
+          data: {
+            id,
+          },
+        }
+      )
+      .subscribe(item => this._modifiedTransaction$.next(item));
+  }
+
+  deleteTransaction(id: Transaction['id']): void {
+    this._transactionApiService
+      .delete(id)
+      .pipe(filter(success => success))
+      .subscribe(() => {
+        this._deletedTransaction$.next({ id });
+      });
+  }
+
+  private _modifiedTransaction$ = new Subject<Transaction>();
+  private _deletedTransaction$ = new Subject<Pick<Transaction, 'id'>>();
+  private _newTransaction$ = new Subject<Transaction>();
 
   readonly request$ = this.transactions$
     //   combineLatest([
@@ -81,7 +149,10 @@ export class WalletTransactionsComponent {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _walletApiService: WalletApiService,
-    private _transactionApiService: TransactionApiService
+    private _transactionApiService: TransactionApiService,
+    @Inject(TuiAlertService) private readonly _alertService: TuiAlertService,
+    @Inject(Injector) private _injector: Injector,
+    private _dialog: TuiDialogService
   ) {}
 
   log() {

@@ -7,7 +7,8 @@
 @each $key, $value in (
     (justify-content, space-between),
     (justify-content, center),
-    (align-items, center)
+    (align-items, center),
+    (align-items, flex-start)
 ) {
   .#{$key}-#{$value} {
     #{$key}: $value;

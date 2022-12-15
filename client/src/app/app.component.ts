@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouteDataService } from '@shared/data-access/services/route-data.service';
 import { RouteData } from '@shared/utils/toggles/route-data';
 import { UserSettingsService } from './user-settings/data-access/services/user-settings.service';
+import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,7 @@ export class AppComponent {
     private _settings: UserSettingsService
   ) {
     this._http
-      .get<unknown[]>('/api/transactions?pageSize=1')
+      .get<unknown[]>('/api/transactions?pageSize=1&page=1')
       .pipe(filter(x => x.length === 0))
       .subscribe(() => this.seedData());
   }
@@ -61,15 +62,15 @@ export class AppComponent {
         .pipe(map(x => x[0].id)),
     ]).subscribe(
       ([{ walletId, currencyId }, categoryId, recipientId, labelId]) => {
-        for (let i = 0; i < 300; i++)
+        for (let i = 0; i < 30000; i++)
           this._http
             .post('/api/transactions', {
               amount: Math.floor(Math.random() * 500),
               recipientId,
               walletId,
-              transactionType: 0,
+              transactionType: TransactionType.Expense,
               categoryId,
-              currencyId,
+              currencyId: currencyId,
               labelIds: [labelId],
               transactionDate: new Date(
                 start.getTime() +
