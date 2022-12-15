@@ -12,7 +12,8 @@ public sealed class QuerySpecificationFilter : IOperationFilter
         {typeof(int), new OpenApiSchema {Type = "integer", Format = "int32"}},
         {typeof(string), new OpenApiSchema {Type = "string"}},
         {typeof(Guid), new OpenApiSchema {Type = "string", Format = "uuid"}},
-        {typeof(DateTime), new OpenApiSchema {Type = "string", Format = "date-time"}}
+        {typeof(DateTime), new OpenApiSchema {Type = "string", Format = "date-time"}},
+        {typeof(DateOnly), new OpenApiSchema {Type = "string", Format = "date"}}
     };
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)

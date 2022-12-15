@@ -17,7 +17,8 @@ public static class QueryKeys
     public const string OrderByDirectionQueryParamKey = "direction";
     public const string SearchQueryParamKey = "search";
 
-    public static readonly HashSet<Type> AllowedFilterKeyTypes = new() { typeof(Guid), typeof(string), typeof(DateTime) };
+    public static readonly HashSet<Type> AllowedFilterKeyTypes =
+        new() { typeof(Guid), typeof(string), typeof(DateTime), typeof(DateOnly) };
 }
 
 public static class QueryParamFilters
@@ -29,6 +30,14 @@ public static class QueryParamFilters
             {typeof(string), new[] {FilterOperators.Equal, FilterOperators.NotEqual, FilterOperators.Contain}},
             {
                 typeof(DateTime),
+                new[]
+                {
+                    FilterOperators.Equal, FilterOperators.NotEqual, FilterOperators.GreaterOrEqual,
+                    FilterOperators.LessOrEqual
+                }
+            },
+            {
+                typeof(DateOnly),
                 new[]
                 {
                     FilterOperators.Equal, FilterOperators.NotEqual, FilterOperators.GreaterOrEqual,

@@ -19,14 +19,14 @@ public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transact
 
         builder.HasOne(x => x.Category)
                .WithMany(x => x.Transactions)
-               .HasForeignKey(x => new {x.CategoryId, x.CategoryWalletId})
-               .HasPrincipalKey(x => new {x.Id, x.WalletId})
+               .HasForeignKey(x => new { x.CategoryId, x.CategoryWalletId })
+               .HasPrincipalKey(x => new { x.Id, x.WalletId })
                .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Recipient)
                .WithMany(x => x.Transactions)
-               .HasForeignKey(x => new {x.RecipientId, x.RecipientWalletId})
-               .HasPrincipalKey(x => new {x.Id, x.WalletId})
+               .HasForeignKey(x => new { x.RecipientId, x.RecipientWalletId })
+               .HasPrincipalKey(x => new { x.Id, x.WalletId })
                .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasMany(x => x.Labels)
@@ -36,13 +36,13 @@ public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transact
                          .WithMany()
                          .HasForeignKey($"{nameof(Label)}{nameof(Label.Id)}",
                              $"{nameof(Label)}{nameof(Label.WalletId)}")
-                         .HasPrincipalKey(y => new {y.Id, y.WalletId})
+                         .HasPrincipalKey(y => new { y.Id, y.WalletId })
                          .OnDelete(DeleteBehavior.Cascade),
                    x => x.HasOne<Transaction>()
                          .WithMany()
                          .HasForeignKey($"{nameof(Transaction)}{nameof(Transaction.Id)}",
                              $"{nameof(Transaction)}{nameof(Transaction.WalletId)}")
-                         .HasPrincipalKey(y => new {y.Id, y.WalletId})
+                         .HasPrincipalKey(y => new { y.Id, y.WalletId })
                          .OnDelete(DeleteBehavior.Cascade),
                    t => t.ToTable(
                        $"{nameof(Transaction)}{nameof(Label)}",
