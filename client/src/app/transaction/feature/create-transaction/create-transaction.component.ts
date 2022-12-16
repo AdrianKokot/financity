@@ -133,9 +133,7 @@ export class CreateTransactionComponent implements OnDestroy {
       }
     >
   ) {
-    this.fetchExchangeRate$
-      .pipe(takeUntil(this._destroyed$))
-      .subscribe(() => {});
+    this.fetchExchangeRate$.pipe(takeUntil(this._destroyed$)).subscribe();
     // combineLatest([
     //   this.form.controls.amount.valueChanges.pipe(distinctUntilChanged()),
     //   this.form.controls.transactionType.valueChanges.pipe(

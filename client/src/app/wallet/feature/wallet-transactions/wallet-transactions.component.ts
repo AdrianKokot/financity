@@ -134,8 +134,6 @@ export class WalletTransactionsComponent {
       return obj;
     }),
     distinctUntilChangedObject(),
-
-    tap(console.log),
     shareReplay(1)
   );
 
