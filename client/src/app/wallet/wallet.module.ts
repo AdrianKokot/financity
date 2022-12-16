@@ -26,6 +26,7 @@ import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
+  TuiInputDateRangeModule,
   TuiInputModule,
   TuiInputNumberModule,
   TuiIslandModule,
@@ -103,6 +104,7 @@ import { TransactionModule } from '../transaction/transaction.module';
     DropdownSelectComponent,
     TuiActionModule,
     TransactionModule,
+    TuiInputDateRangeModule,
   ],
 })
 export class WalletModule {}

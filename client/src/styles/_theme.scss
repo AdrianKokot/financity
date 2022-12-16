@@ -54,3 +54,15 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
     }
   }
 }
+
+tui-dropdown .t-wrapper .t-scroll > .t-content:has(tui-calendar-range tui-calendar + .t-menu) {
+  max-height: 20.25rem;
+
+  tui-calendar-range tui-calendar {
+    position: sticky;
+    top: 0;
+    left: 0;
+  }
+}
+
+

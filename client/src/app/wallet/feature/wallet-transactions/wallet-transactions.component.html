@@ -1,20 +1,58 @@
 <main>
   <div class="w-full d-flex gap-4 mb-4">
-    <!--    <label class="w-full">-->
-    <!--      <tui-input-->
-    <!--        [formControl]="form.controls.search"-->
-    <!--        [tuiTextfieldLabelOutside]="true"-->
-    <!--        class="no-shadow"-->
-    <!--        tuiTextfieldSize="s">-->
-    <!--        Search-->
-    <!--        <input tuiTextfield type="text" />-->
-    <!--      </tui-input>-->
-    <!--    </label>-->
+    <label class="w-full">
+      <tui-input
+        [formControl]="form.controls.search"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow"
+        tuiTextfieldSize="s">
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+    </label>
+
+    <label class="ml-auto" style="width: 250px">
+      <tui-input-date-range
+        [formControl]="form.controls.dateRange"
+        [items]="dayRangeItems"
+        [tuiTextfieldCleaner]="true"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow"
+        tuiTextfieldSize="s">
+        Date range
+      </tui-input-date-range>
+    </label>
+
+    <ng-container *tuiLet="(appliedFiltersCount$ | async) ?? 0 as filtersCount">
+      <button
+        (click)="form.reset()"
+        appearance="flat-outline"
+        icon="tuiIconFilter"
+        size="s"
+        style="position: relative"
+        title="Reset filters to default"
+        tuiIconButton
+        type="button">
+        <tui-badge
+          *ngIf="filtersCount > 0"
+          [value]="filtersCount"
+          size="xs"
+          status="primary"
+          style="
+            color: var(--tui-text-01-night);
+            background: var(--tui-info-fill);
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+            transform: translate(30%, -30%);
+          "></tui-badge>
+      </button>
+    </ng-container>
 
     <button
       (click)="openCreateDialog()"
       appearance="primary"
-      class="ml-auto"
       size="s"
       tuiButton
       type="button">
