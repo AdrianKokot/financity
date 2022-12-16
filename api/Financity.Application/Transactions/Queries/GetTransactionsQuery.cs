@@ -14,6 +14,10 @@ public sealed class GetTransactionsQuery : FilteredEntitiesQuery<TransactionList
     public GetTransactionsQuery(QuerySpecification<TransactionListItem> querySpecification) : base(querySpecification)
     {
     }
+
+    public HashSet<Guid> LabelIds { get; set; } = new();
+    public HashSet<Guid> CategoryIds { get; set; } = new();
+    public HashSet<Guid> RecipientIds { get; set; } = new();
 }
 
 public sealed class
@@ -22,6 +26,27 @@ public sealed class
 {
     public GetTransactionsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
+    }
+
+    private static IQueryable<Transaction> ApplyIdsFilters(IQueryable<Transaction> q, GetTransactionsQuery query)
+    {
+        if (query.LabelIds.Count > 0) q = q.Where(x => x.Labels.Any(l => query.LabelIds.Contains(l.Id)));
+
+        if (query.CategoryIds.Count > 0) q = q.Where(x => query.CategoryIds.Contains(x.CategoryId ?? Guid.Empty));
+
+        if (query.RecipientIds.Count > 0) q = q.Where(x => query.RecipientIds.Contains(x.RecipientId ?? Guid.Empty));
+
+        return q;
+    }
+
+    public override Task<IEnumerable<TransactionListItem>> Handle(GetTransactionsQuery query,
+                                                                  CancellationToken cancellationToken)
+    {
+        return FilterAndMapAsync(
+            query,
+            q => ApplyIdsFilters(q, query),
+            cancellationToken
+        );
     }
 
     protected override IQueryable<Transaction> ExecuteSearch(IQueryable<Transaction> query, string search)
