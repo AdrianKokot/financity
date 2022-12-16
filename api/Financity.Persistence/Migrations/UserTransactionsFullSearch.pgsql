@@ -1,6 +1,6 @@
 ﻿CREATE EXTENSION pg_trgm;
 
-DROP VIEW "FullSearchTransactions";
+DROP VIEW IF EXISTS "FullSearchTransactions";
 CREATE VIEW "FullSearchTransactions" AS
 SELECT T."Id",
        T."Note",

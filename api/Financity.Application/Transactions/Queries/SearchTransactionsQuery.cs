@@ -14,9 +14,12 @@ public sealed class SearchTransactionsQuery : FilteredEntitiesQuery<TransactionL
     public SearchTransactionsQuery(QuerySpecification<TransactionListItem> querySpecification) : base(
         querySpecification)
     {
+        var walletIdFilter = querySpecification.Filters.FirstOrDefault(x => x.Key == "WalletId");
+
+        if (walletIdFilter is not null) WalletId = Guid.Parse(walletIdFilter.Value);
     }
 
-    public Guid? WalletId { get; set; } = null;
+    public Guid? WalletId { get; set; }
     public string SearchTerm { get; set; } = string.Empty;
 }
 
