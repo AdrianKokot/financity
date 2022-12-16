@@ -83,6 +83,9 @@ public static class QueryableExtensions
             return Expression.Constant(DateTime.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo,
                 DateTimeStyles.AssumeUniversal).ToUniversalTime());
 
+        if (info.PropertyType == typeof(DateOnly))
+            return Expression.Constant(DateOnly.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo));
+
         if (info.PropertyType == typeof(Guid))
             return Expression.Constant(Guid.Parse(value));
 
@@ -96,7 +99,7 @@ public static class QueryableExtensions
     {
         return op switch
         {
-            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] { typeof(string) }),
+            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] {typeof(string)}),
             _ => throw new ArgumentException($"Operator '{op}' is not supported")
         };
     }
