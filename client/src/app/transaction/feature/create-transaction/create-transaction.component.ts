@@ -32,6 +32,11 @@ import { CurrencyApiService } from '../../../core/api/currency-api.service';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { HttpClient } from '@angular/common/http';
 import { ExchangeRateApiService } from '../../../core/api/exchange-rate-api.service';
+import { CategoryApiService } from '../../../core/api/category-api.service';
+import { RecipientApiService } from '../../../core/api/recipient-api.service';
+import { Category } from '@shared/data-access/models/category.model';
+import { Recipient } from '@shared/data-access/models/recipient.model';
+import { LabelApiService } from '../../../core/api/label-api.service';
 
 @Component({
   selector: 'app-create-transaction',
@@ -97,12 +102,27 @@ export class CreateTransactionComponent implements OnDestroy {
     })
   );
 
+  categories$ = this._categoryService
+    .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
+    .pipe(shareReplay(1));
+
+  recipients$ = this._recipientService
+    .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
+    .pipe(shareReplay(1));
+
+  labels$ = this._labelService
+    .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
+    .pipe(shareReplay(1));
+
   constructor(
     private _http: HttpClient,
     private _transactionService: TransactionApiService,
     private readonly _fb: FormBuilder,
     private readonly _currencyService: CurrencyApiService,
     private _exchangeRate: ExchangeRateApiService,
+    private _categoryService: CategoryApiService,
+    private _recipientService: RecipientApiService,
+    private _labelService: LabelApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
       Transaction,
@@ -169,6 +189,20 @@ export class CreateTransactionComponent implements OnDestroy {
       .subscribe(cat => {
         this._context.completeWith(cat);
       });
+  }
+
+  getItemName = ({ name }: { name: string }) => name;
+
+  @tuiPure
+  stringifyName(
+    items: (Category | Recipient)[]
+  ): TuiStringHandler<TuiContextWithImplicit<string>> {
+    const map = new Map(
+      items.map(item => [item.id, item.name] as [string, string])
+    );
+
+    return ({ $implicit }: TuiContextWithImplicit<string>) =>
+      map.get($implicit) || '';
   }
 
   @tuiPure

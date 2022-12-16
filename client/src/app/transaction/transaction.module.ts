@@ -17,8 +17,11 @@ import {
   TuiFilterByInputPipeModule,
   TuiInputDateModule,
   TuiInputNumberModule,
+  TuiInputTagModule,
+  TuiMultiSelectModule,
   TuiSelectModule,
   TuiStringifyContentPipeModule,
+  TuiTextAreaModule,
 } from '@taiga-ui/kit';
 import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TuiCurrencyPipeModule } from '@taiga-ui/addon-commerce';
@@ -44,6 +47,9 @@ import { TuiCurrencyPipeModule } from '@taiga-ui/addon-commerce';
     TuiDataListWrapperModule,
     TuiStringifyContentPipeModule,
     TuiLetModule,
+    TuiTextAreaModule,
+    TuiInputTagModule,
+    TuiMultiSelectModule,
   ],
   exports: [CreateTransactionComponent, UpdateTransactionComponent],
 })
