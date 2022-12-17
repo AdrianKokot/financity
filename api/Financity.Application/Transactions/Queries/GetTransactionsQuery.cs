@@ -62,6 +62,7 @@ public sealed class
             || (x.Amount * x.ExchangeRate).ToString().Contains(numberSearch)
             || x.Currency.Name.ToLower().Contains(search)
             || x.CurrencyId.ToLower().Contains(search)
+            || (x.Recipient == null ? string.Empty : x.Recipient.Name.ToLower()).Contains(search)
         );
     }
 }
