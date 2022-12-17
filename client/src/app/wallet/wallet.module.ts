@@ -23,6 +23,7 @@ import { TuiTableModule } from '@taiga-ui/addon-table';
 import {
   TuiActionModule,
   TuiBadgeModule,
+  TuiBreadcrumbsModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
@@ -109,6 +110,7 @@ import { RecipientModule } from '../recipient/recipient.module';
     TransactionModule,
     TuiInputDateRangeModule,
     RecipientModule,
+    TuiBreadcrumbsModule,
   ],
 })
 export class WalletModule {}

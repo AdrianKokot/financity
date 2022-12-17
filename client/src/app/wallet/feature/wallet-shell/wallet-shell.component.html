@@ -1,4 +1,12 @@
-<!--<h4>Test</h4>-->
+<div style="margin-top: 12px; margin-bottom: 8px">
+  <tui-breadcrumbs *ngIf="wallet$ | async as wallet">
+    <a href="../" *tuiItem tuiLink routerLink="../"> Wallets </a>
+
+    <a *tuiItem tuiLink class="text-link">
+      {{ wallet.name }}
+    </a>
+  </tui-breadcrumbs>
+</div>
 
 <tui-tabs>
   <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
