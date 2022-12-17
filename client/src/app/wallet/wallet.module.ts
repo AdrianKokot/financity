@@ -52,6 +52,8 @@ import { ShareWalletComponent } from './ui/share-wallet/share-wallet.component';
 import { LabelModule } from '../label/label.module';
 import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown-select.component';
 import { TransactionModule } from '../transaction/transaction.module';
+import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
+import { RecipientModule } from '../recipient/recipient.module';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,7 @@ import { TransactionModule } from '../transaction/transaction.module';
     WalletCategoriesComponent,
     WalletShareManagementComponent,
     ShareWalletComponent,
+    WalletRecipientsComponent,
   ],
   imports: [
     CommonModule,
@@ -105,6 +108,7 @@ import { TransactionModule } from '../transaction/transaction.module';
     TuiActionModule,
     TransactionModule,
     TuiInputDateRangeModule,
+    RecipientModule,
   ],
 })
 export class WalletModule {}

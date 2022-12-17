@@ -7,6 +7,7 @@ import { WalletSettingsComponent } from './feature/wallet-settings/wallet-settin
 import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.component';
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
 import { WalletShareManagementComponent } from './feature/wallet-share-management/wallet-share-management.component';
+import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
           {
             path: 'categories',
             component: WalletCategoriesComponent,
+          },
+          {
+            path: 'recipients',
+            component: WalletRecipientsComponent,
           },
           {
             path: 'settings',

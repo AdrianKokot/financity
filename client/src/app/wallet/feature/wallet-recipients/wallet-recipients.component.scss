@@ -1,5 +1,10 @@
 @use '~@taiga-ui/core/styles/taiga-ui-local' as *;
 
+.icon-default {
+  background: var(--tui-base-02);
+  color: var(--tui-text-03);
+}
+
 :host {
   .viewport {
     min-height: calc(44px * 15.5);
@@ -11,19 +16,9 @@
     }
   }
 
-  .column-date {
-
+  .column-actions {
     min-width: 100px;
     max-width: 100px;
-  }
-
-  .column-category, .column-labels, .column-note, .column-recipient, .column-amount {
-    min-width: 200px;
-    max-width: 200px;
-  }
-
-  .column-note {
-    width: 100%;
   }
 
   td,
@@ -48,6 +43,28 @@
 
         border-color: transparent;
       }
+
+      &.currently-edited {
+        button {
+          opacity: 1;
+        }
+
+        td {
+          background: var(--tui-base-02);
+          border-bottom: 1px solid var(--tui-primary);
+        }
+      }
     }
+
   }
+
+  td button {
+    @include transition(opacity);
+    opacity: 0;
+  }
+
+  tr:hover td button {
+    opacity: 1;
+  }
+
 }

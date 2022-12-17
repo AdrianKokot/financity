@@ -101,7 +101,14 @@
   <div
     class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
     <table
-      [columns]="['transactionDate', 'category', 'labels', 'note', 'amount']"
+      [columns]="[
+        'transactionDate',
+        'category',
+        'labels',
+        'note',
+        'recipient',
+        'amount'
+      ]"
       class="w-full"
       tuiTable>
       <thead>
@@ -126,10 +133,12 @@
           <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
             Note
           </th>
+          <th *tuiHead="'recipient'" [sorter]="null" class="column-note" tuiTh>
+            Recipient
+          </th>
           <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
             Amount
           </th>
-          <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
         </tr>
       </thead>
     </table>
@@ -147,6 +156,7 @@
             'category',
             'labels',
             'note',
+            'recipient',
             'amount'
           ]"
           class="w-full"
@@ -179,6 +189,11 @@
                 tuiTh
                 [sorter]="null"
                 class="column-note"></th>
+              <th
+                *tuiHead="'recipient'"
+                [sorter]="null"
+                class="column-recipient"
+                tuiTh></th>
               <th
                 *tuiHead="'amount'"
                 tuiTh
@@ -225,7 +240,10 @@
                     <!--            <span *ngFor="let label of item.labels">{{ label.name }}</span>-->
                   </td>
                   <td *tuiCell="'note'" tuiTd>
-                    {{ item.note ?? '-' }}
+                    {{ (item.note ?? '').length > 0 ? item.note : '-' }}
+                  </td>
+                  <td *tuiCell="'recipient'" tuiTd>
+                    {{ item.recipientName ?? '-' }}
                   </td>
 
                   <td *tuiCell="'amount'" tuiTd>

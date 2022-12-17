@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label [tuiLabel]="'Name'" class="mb-6">
+    <tui-input
+      formControlName="name"
+      tuiTextfieldSize="m"
+      class="mt-1"
+      [tuiTextfieldLabelOutside]="true">
+      Example recipient
+      <input tuiTextfield type="text" />
+    </tui-input>
+
+    <tui-error
+      formControlName="name"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <div class="tui-form__row text-right">
+    <button
+      tuiButton
+      type="submit"
+      size="m"
+      [showLoader]="(loading$ | async) ?? false">
+      Submit
+    </button>
+  </div>
+</form>
