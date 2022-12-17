@@ -13,13 +13,14 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
         RuleFor(x => x.Email)
             .NotEmpty()
             .EmailAddress()
-            .MaximumLength(255);
+            .MaximumLength(256);
 
         RuleFor(x => x.Name)
             .NotEmpty()
             .MaximumLength(128);
 
         RuleFor(x => x.Password)
+            .NotEmpty()
             .Password(options.Value.Password);
     }
 }

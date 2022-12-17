@@ -19,9 +19,9 @@ app-navbar + .tui-container.w-full {
 
   &:has(.container > * > tui-tabs) {
     padding-top: 0;
-
+    //
     .container {
-      padding-top: 5px;
+      padding-top: 0px;
     }
   }
 }

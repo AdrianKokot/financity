@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500&display=swap');
+@import '~@taiga-ui/core/styles/taiga-ui-local';
 
 body {
   background-color: var(--tui-base-01)
@@ -13,3 +14,55 @@ body {
 tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   transition-property: none !important;
 }
+
+[tuiWrapper][data-appearance='flat-destructive'] {
+  background: transparent;
+  color: var(--tui-negative);
+
+  &:hover:not(._no-hover) {
+    background: var(--tui-error-bg-hover);
+    color: var(--tui-negative-hover)
+  }
+}
+
+[tuiWrapper][data-appearance=textfield] {
+  .no-shadow &, &.no-shadow {
+    box-shadow: none !important;
+  }
+}
+
+[tuiWrapper][data-appearance='flat-outline'] {
+  border: 1px solid var(--tui-base-03);
+  background: transparent;
+  color: var(--tui-link);
+
+  @include wrapper-hover {
+    background: var(--tui-secondary-hover);
+    color: var(--tui-link-hover);
+  }
+}
+
+.column-filter-text {
+  cursor: pointer;
+  transition: .3s color;
+
+  &:hover, [data-dropdown-opened=true] & {
+    color: var(--tui-text-03);
+
+    &.text-link {
+      color: var(--tui-link-hover) !important;
+    }
+  }
+}
+
+tui-dropdown .t-wrapper .t-scroll > .t-content:has(tui-calendar-range tui-calendar + .t-menu) {
+  max-height: 20.25rem;
+
+  tui-calendar-range tui-calendar {
+    position: sticky;
+    top: 0;
+    left: 0;
+  }
+}
+
+

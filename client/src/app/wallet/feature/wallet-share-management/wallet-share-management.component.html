@@ -1,0 +1,105 @@
+<main>
+  <div class="w-full d-flex gap-4 mb-4">
+    <label class="w-full">
+      <tui-input
+        [formControl]="form.controls.search"
+        tuiTextfieldSize="s"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow">
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+    </label>
+
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      size="s"
+      class="ml-auto"
+      (click)="openShareDialog()">
+      Share
+    </button>
+  </div>
+
+  <div
+    class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+    <table tuiTable class="w-full" [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          <th *tuiHead="'name'" [sorter]="null" tuiTh class="column-name">
+            Name
+          </th>
+          <th *tuiHead="'email'" [sorter]="null" tuiTh class="w-full">
+            Email address
+          </th>
+          <th
+            *tuiHead="'actions'"
+            tuiTh
+            [sorter]="null"
+            class="column-actions"></th>
+        </tr>
+      </thead>
+    </table>
+
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        (scrolledIndexChange)="log()"
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="44"
+        [maxBufferPx]="500"
+        [minBufferPx]="400">
+        <table
+          tuiTable
+          [columns]="columns"
+          *ngIf="data$ | async as data"
+          class="w-full">
+          <thead>
+            <tr tuiThGroup>
+              <th
+                *tuiHead="'name'"
+                [sorter]="null"
+                tuiTh
+                class="column-name"></th>
+              <th *tuiHead="'email'" [sorter]="null" tuiTh class="w-full"></th>
+              <th
+                *tuiHead="'actions'"
+                tuiTh
+                [sorter]="null"
+                class="column-actions"></th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            <tr *cdkVirtualFor="let item of data" tuiTr>
+              <td *tuiCell="'name'" tuiTd>
+                {{ item.name }}
+              </td>
+
+              <td *tuiCell="'email'" tuiTd class="column-transactionType">
+                {{ item.email }}
+              </td>
+
+              <td *tuiCell="'actions'" tuiTd class="column-actions">
+                <button
+                  tuiIconButton
+                  appearance="flat-destructive"
+                  size="s"
+                  icon="tuiIconTrash"
+                  title="Revoke access"
+                  appRequireConfirmation
+                  (confirm)="revokeAccess(item)"
+                  [confirmationMessage]="
+                    'Are you sure you want to revoke wallet access from <strong>' +
+                    item.name +
+                    '</strong>?'
+                  "
+                  shape="rounded"></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+</main>

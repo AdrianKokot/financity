@@ -9,8 +9,7 @@ import {
   CreateWalletPayload,
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
-import { ModelFormBuilder } from '../../../../../core/utility/services/model-form.builder';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { CurrencyApiService } from '../../../../../core/api/currency-api.service';
@@ -26,9 +25,9 @@ import { WalletApiService } from '../../../../../core/api/wallet-api.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateWalletDialogComponent implements OnDestroy {
-  form = this._fb.from<CreateWalletPayload>({
+  form = this._fb.group({
     name: ['', [Validators.required]],
-    currencyId: ['', [Validators.required]],
+    currencyId: [null as string | null, [Validators.required]],
     startingAmount: [0, [Validators.required]],
   });
 
@@ -39,11 +38,9 @@ export class CreateWalletDialogComponent implements OnDestroy {
   loading$ = new BehaviorSubject<boolean>(false);
   currencies$ = this._currencyService.getList();
   getCurrencyName = (item: CurrencyListItem) => `${item.name} [${item.id}]`;
-  getCurrencyId = (item: CurrencyListItem) => item.id;
-  currencyMatcher = (a: CurrencyListItem, b: CurrencyListItem) => a.id === b.id;
 
   constructor(
-    private readonly _fb: ModelFormBuilder,
+    private readonly _fb: FormBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<WalletListItem>,
     private readonly _currencyService: CurrencyApiService,
@@ -63,7 +60,7 @@ export class CreateWalletDialogComponent implements OnDestroy {
     if (!this.form.valid) {
       return;
     }
-    const payload = this.form.value as NonNullable<CreateWalletPayload>;
+    const payload = this.form.getRawValue() as NonNullable<CreateWalletPayload>;
 
     this._walletService
       .create(payload)
@@ -80,7 +77,7 @@ export class CreateWalletDialogComponent implements OnDestroy {
           name: payload.name,
           currentState: payload.startingAmount,
           startingAmount: payload.startingAmount,
-          currencyId: this.currency.value?.code ?? '',
+          currencyId: this.currency.value?.id ?? '',
           currencyName: this.currency.value?.name ?? '',
           id: '',
         });

@@ -12,7 +12,8 @@ public sealed class QuerySpecificationFilter : IOperationFilter
         {typeof(int), new OpenApiSchema {Type = "integer", Format = "int32"}},
         {typeof(string), new OpenApiSchema {Type = "string"}},
         {typeof(Guid), new OpenApiSchema {Type = "string", Format = "uuid"}},
-        {typeof(DateTime), new OpenApiSchema {Type = "string", Format = "date-time"}}
+        {typeof(DateTime), new OpenApiSchema {Type = "string", Format = "date-time"}},
+        {typeof(DateOnly), new OpenApiSchema {Type = "string", Format = "date"}}
     };
 
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
@@ -42,7 +43,8 @@ public sealed class QuerySpecificationFilter : IOperationFilter
             new(typeof(int), QueryKeys.PageQueryParamKey),
             new(typeof(int), QueryKeys.PageSizeQueryParamKey),
             new(typeof(string), QueryKeys.OrderByQueryParamKey),
-            new(typeof(string), QueryKeys.OrderByDirectionQueryParamKey)
+            new(typeof(string), QueryKeys.OrderByDirectionQueryParamKey),
+            new(typeof(string), QueryKeys.SearchQueryParamKey)
         };
 
         if (entityType is not null)

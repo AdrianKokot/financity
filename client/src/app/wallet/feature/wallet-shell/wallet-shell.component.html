@@ -1,3 +1,13 @@
+<div style="margin-top: 12px; margin-bottom: 8px">
+  <tui-breadcrumbs *ngIf="wallet$ | async as wallet">
+    <a href="../" *tuiItem tuiLink routerLink="../"> Wallets </a>
+
+    <a *tuiItem tuiLink class="text-link">
+      {{ wallet.name }}
+    </a>
+  </tui-breadcrumbs>
+</div>
+
 <tui-tabs>
   <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
     <tui-svg src="tuiIconCard" class="mr-2"></tui-svg>
@@ -11,12 +21,24 @@
     <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
     Labels
   </a>
+  <a href="recipients" routerLink="recipients" routerLinkActive tuiTab>
+    <tui-svg class="mr-2" src="fa::address-card"></tui-svg>
+    Recipients
+  </a>
+  <a
+    tuiTab
+    href="access-management"
+    routerLink="access-management"
+    routerLinkActive>
+    <tui-svg src="tuiIconUsers" class="mr-2"></tui-svg>
+    Shared access
+  </a>
   <a tuiTab href="settings" routerLink="settings" routerLinkActive>
     <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
     Settings
   </a>
 </tui-tabs>
 
-<section class="py-4">
+<section class="py-6">
   <router-outlet></router-outlet>
 </section>

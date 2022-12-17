@@ -1,1 +1,97 @@
-<p>wallet-labels works!</p>
+<main>
+  <div class="w-full d-flex gap-4 mb-4">
+    <label class="w-full">
+      <tui-input
+        [formControl]="form.controls.search"
+        tuiTextfieldSize="s"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow">
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+    </label>
+
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      size="s"
+      class="ml-auto"
+      (click)="openCreateDialog()">
+      New label
+    </button>
+  </div>
+
+  <div
+    class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+    <table tuiTable class="w-full" [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          <th *tuiHead="'label'" class="w-full" [sorter]="null" tuiTh>Label</th>
+          <th
+            *tuiHead="'actions'"
+            tuiTh
+            [sorter]="null"
+            class="column-actions"></th>
+        </tr>
+      </thead>
+    </table>
+
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        (scrolledIndexChange)="log()"
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="44"
+        [maxBufferPx]="500"
+        [minBufferPx]="400">
+        <table
+          tuiTable
+          [columns]="columns"
+          *ngIf="data$ | async as data"
+          class="w-full">
+          <thead>
+            <tr tuiThGroup>
+              <th *tuiHead="'label'" class="w-full" [sorter]="null" tuiTh></th>
+              <th
+                *tuiHead="'actions'"
+                tuiTh
+                [sorter]="null"
+                class="column-actions"></th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            <tr *cdkVirtualFor="let item of data" tuiTr>
+              <td *tuiCell="'label'" tuiTd>
+                {{ item.name }}
+              </td>
+
+              <td *tuiCell="'actions'" tuiTd class="column-actions">
+                <button
+                  tuiIconButton
+                  appearance="flat"
+                  size="s"
+                  icon="fa::pen"
+                  title="Edit"
+                  shape="rounded"
+                  class="mr-1"
+                  (click)="openEditDialog(item.id)"></button>
+
+                <button
+                  tuiIconButton
+                  appearance="flat-destructive"
+                  size="s"
+                  icon="tuiIconTrash"
+                  title="Remove"
+                  appRequireConfirmation
+                  (confirm)="deleteLabel(item.id)"
+                  confirmationMessage="Are you sure you want to delete this label? All transactions with this label will loose that information. This action is irreversible."
+                  shape="rounded"></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+</main>

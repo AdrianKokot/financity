@@ -12,12 +12,20 @@ public class TransactionsController : BaseController
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<TransactionListItem>))]
     public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<TransactionListItem> querySpecification,
-                                             [FromQuery] string? query, [FromQuery] Guid? walletId,
+                                             [FromQuery(Name = "query")] string? globalQuery,
+                                             [FromQuery(Name = "categoryId_in")] HashSet<Guid> includeCategoriesWithId,
+                                             [FromQuery(Name = "labelId_in")] HashSet<Guid> includeLabelsWithId,
+                                             [FromQuery(Name = "recipientId_in")] HashSet<Guid> includeRecipientsWithId,
                                              CancellationToken ct)
     {
-        return query is not null
-            ? Search(querySpecification, query, walletId)
-            : HandleQueryAsync(new GetTransactionsQuery(querySpecification), ct);
+        return globalQuery is not null
+            ? Search(querySpecification, globalQuery)
+            : HandleQueryAsync(new GetTransactionsQuery(querySpecification)
+            {
+                CategoryIds = includeCategoriesWithId,
+                LabelIds = includeLabelsWithId,
+                RecipientIds = includeRecipientsWithId
+            }, ct);
     }
 
     [HttpPost]
@@ -53,12 +61,10 @@ public class TransactionsController : BaseController
     }
 
     private async Task<IActionResult> Search([FromQuery] QuerySpecification<TransactionListItem> querySpecification,
-                                             [FromQuery] string query,
-                                             [FromQuery] Guid? walletId = null)
+                                             [FromQuery] string query)
     {
         return await HandleQueryAsync(new SearchTransactionsQuery(querySpecification)
         {
-            WalletId = walletId,
             SearchTerm = query
         });
     }

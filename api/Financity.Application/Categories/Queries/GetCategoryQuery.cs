@@ -17,4 +17,5 @@ public sealed class GetCategoryQueryHandler : UserWalletEntityQueryHandler<GetCa
 }
 
 public sealed record CategoryDetails
-    (Guid Id, string Name, Guid WalletId, string WalletName, Appearance Appearance) : IMapFrom<Category>;
+(Guid Id, string Name, Guid WalletId, string WalletName, Appearance Appearance,
+ string TransactionType) : IMapFrom<Category>;

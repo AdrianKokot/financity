@@ -2,6 +2,7 @@
 using Financity.Application.Common.Extensions;
 using Financity.Application.Transactions.Commands;
 using Financity.Domain.Entities;
+using Financity.Domain.Enums;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,9 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
     public CreateTransactionValidator(IApplicationDbContext dbContext)
     {
         RuleFor(x => x.Amount).NotEmpty();
-        RuleFor(x => x.Note).MaximumLength(255);
+        RuleFor(x => x.Note).MaximumLength(512);
         RuleFor(x => x.WalletId).NotEmpty().HasUserAccessToWallet(dbContext);
-        RuleFor(x => x.TransactionType).NotNull().IsInEnum();
+        RuleFor(x => x.TransactionType).IsEnumName(typeof(TransactionType), false);
         RuleFor(x => x.TransactionDate).NotEmpty();
         RuleFor(x => x.RecipientId).HasUserAccessOrNull<CreateTransactionCommand, Recipient>(dbContext);
         RuleFor(x => x.CategoryId).HasUserAccessOrNull<CreateTransactionCommand, Category>(dbContext);
@@ -35,10 +36,12 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
                         $"{nameof(CreateTransactionCommand.ExchangeRate)} should be specified when using other currency than wallet's default.")
                     .GreaterThan(0)
         ).Otherwise(() =>
-            RuleFor(x => x.ExchangeRate)
-                .Null()
-                .WithMessage(
-                    $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified when using the same currency as the wallet.")
+
+            // When(x => x.ExchangeRate is not null, () => RuleFor())
+
+            RuleFor(x => x.ExchangeRate).Equal(1).When(x => x.ExchangeRate is not null)
+                                        .WithMessage(
+                    $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified or equal 1 when using the same currency as the wallet.")
         );
     }
 }

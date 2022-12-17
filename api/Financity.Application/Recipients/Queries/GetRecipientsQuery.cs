@@ -20,6 +20,12 @@ public sealed class
     public GetRecipientsQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
+
+    protected override IQueryable<Recipient> ExecuteSearch(IQueryable<Recipient> query, string search)
+    {
+        search = search.ToLower(CultureInfo.InvariantCulture));
+        return query.Where(x => x.Name.ToLower().Contains(search));
+    }
 }
 
 public sealed record RecipientListItem(Guid Id, string Name, Guid WalletId) : IMapFrom<Recipient>;

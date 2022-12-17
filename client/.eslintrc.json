@@ -1,12 +1,18 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
   "overrides": [
     {
-      "files": ["src/**/*.ts"],
+      "files": [
+        "src/**/*.ts"
+      ],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
-        "project": ["tsconfig.json"],
+        "project": [
+          "tsconfig.json"
+        ],
         "createDefaultProgram": true
       },
       "extends": [
@@ -32,48 +38,134 @@
             "style": "kebab-case"
           }
         ],
-        "@typescript-eslint/array-type": ["error", { "default": "array" }],
+        "@typescript-eslint/array-type": [
+          "error",
+          {
+            "default": "array"
+          }
+        ],
         "@typescript-eslint/naming-convention": [
           "error",
           {
             "selector": "default",
-            "format": ["camelCase"]
+            "format": [
+              "camelCase"
+            ]
           },
           {
-            "selector": ["variable"],
-            "modifiers": ["exported", "const"],
-            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+            "selector": [
+              "variable"
+            ],
+            "modifiers": [
+              "exported",
+              "const"
+            ],
+            "format": [
+              "camelCase",
+              "PascalCase",
+              "UPPER_CASE"
+            ]
           },
           {
-            "selector": ["enumMember"],
-            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+            "selector": "parameter",
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "allow"
+          },
+          {
+            "selector": [
+              "enumMember"
+            ],
+            "format": [
+              "camelCase",
+              "PascalCase",
+              "UPPER_CASE"
+            ]
           },
           {
             "selector": "typeLike",
-            "format": ["PascalCase"]
+            "format": [
+              "PascalCase"
+            ]
           },
           {
-            "selector": ["memberLike", "classProperty"],
-            "modifiers": ["private"],
-            "format": ["camelCase"],
+            "selector": [
+              "memberLike",
+              "classProperty"
+            ],
+            "modifiers": [
+              "private"
+            ],
+            "format": [
+              "camelCase"
+            ],
             "leadingUnderscore": "require"
+          },
+          {
+            "selector": "typeParameter",
+            "format": [
+              "PascalCase"
+            ],
+            "prefix": [
+              "T"
+            ]
+          },
+          {
+            "selector": [
+              "objectLiteralProperty",
+              "property"
+            ],
+            "format": null,
+            "filter": {
+              "regex": "[-  ]|_(eq|in|ct)|Authorization",
+              "match": true
+            }
           }
         ],
-        "no-console": ["error", { "allow": ["warn", "error", "info"] }],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"]
+        "no-console": [
+          "error",
+          {
+            "allow": [
+              "warn",
+              "error",
+              "info"
+            ]
+          }
+        ],
+        "quotes": [
+          "error",
+          "single"
+        ],
+        "semi": [
+          "error",
+          "always"
+        ]
       }
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
       "rules": {}
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:prettier/recommended"],
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:prettier/recommended"
+      ],
       "rules": {
-        "prettier/prettier": ["error", { "parser": "angular" }]
+        "prettier/prettier": [
+          "error",
+          {
+            "parser": "angular"
+          }
+        ]
       }
     }
   ]

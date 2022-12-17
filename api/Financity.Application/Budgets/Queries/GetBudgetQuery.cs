@@ -26,7 +26,7 @@ public sealed class GetBudgetQueryHandler : UserEntityQueryHandler<GetBudgetQuer
             q => q.Include(x => x.TrackedCategories)
                   .ThenInclude(x => x.Transactions.Where(y =>
                       y.TransactionDate.Year == currentDate.Year &&
-                      y.TransactionDate.Month == currentDate.Month && y.TransactionType == TransactionType.Outcome)
+                      y.TransactionDate.Month == currentDate.Month && y.TransactionType == TransactionType.Expense)
                   ),
             cancellationToken);
     }

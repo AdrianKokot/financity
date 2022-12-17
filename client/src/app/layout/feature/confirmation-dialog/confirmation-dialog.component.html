@@ -1,0 +1,20 @@
+<p class="mb-6" [innerHtml]="content | dompurify"></p>
+<div class="d-flex gap-2">
+  <button
+    tuiButton
+    appearance="outline"
+    class="ml-auto"
+    (click)="cancel()"
+    type="button"
+    size="m">
+    Cancel
+  </button>
+  <button
+    tuiButton
+    appearance="secondary-destructive"
+    (click)="confirm()"
+    type="button"
+    size="m">
+    Confirm
+  </button>
+</div>

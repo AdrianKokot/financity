@@ -12,7 +12,7 @@ $bgColors: (
     background-color: $color;
   }
   .border-#{$var} {
-    border: 1px solid $color;
+    border: 1px solid $color !important;
   }
 }
 

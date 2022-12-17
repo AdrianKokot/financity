@@ -32,7 +32,7 @@ public sealed class
                                              .ThenInclude(x => x.Transactions.Where(y =>
                                                  y.TransactionDate.Year == currentDate.Year &&
                                                  y.TransactionDate.Month == currentDate.Month &&
-                                                 y.TransactionType == TransactionType.Outcome)
+                                                 y.TransactionType == TransactionType.Expense)
                                              ), cancellationToken);
     }
 }

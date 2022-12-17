@@ -24,17 +24,17 @@ namespace Financity.Persistence.Migrations
 
             modelBuilder.Entity("BudgetCategory", b =>
                 {
-                    b.Property<Guid>("BudgetsId")
+                    b.Property<Guid>("BudgetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TrackedCategoriesId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("BudgetsId", "TrackedCategoriesId");
+                    b.HasKey("BudgetId", "CategoryId");
 
-                    b.HasIndex("TrackedCategoriesId");
+                    b.HasIndex("CategoryId");
 
-                    b.ToTable("BudgetCategory");
+                    b.ToTable("BudgetCategory", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Budget", b =>
@@ -48,11 +48,12 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<string>("CurrencyId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -61,9 +62,10 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Name")
+                        .IsUnique();
 
-                    b.ToTable("Budgets");
+                    b.ToTable("Budgets", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Category", b =>
@@ -74,13 +76,16 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid?>("ParentCategoryId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("TransactionType")
-                        .HasColumnType("integer");
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
@@ -89,23 +94,28 @@ namespace Financity.Persistence.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.HasIndex("WalletId");
+                    b.HasIndex("TransactionType");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("WalletId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Currency", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
 
                     b.HasData(
                         new
@@ -133,16 +143,18 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WalletId");
+                    b.HasIndex("WalletId", "Name")
+                        .IsUnique();
 
-                    b.ToTable("Labels");
+                    b.ToTable("Labels", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Recipient", b =>
@@ -153,16 +165,18 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WalletId");
+                    b.HasIndex("WalletId", "Name")
+                        .IsUnique();
 
-                    b.ToTable("Recipients");
+                    b.ToTable("Recipients", (string)null);
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.Transaction", b =>
@@ -177,40 +191,56 @@ namespace Financity.Persistence.Migrations
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CategoryWalletId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("CurrencyId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<decimal>("ExchangeRate")
                         .HasColumnType("numeric");
 
                     b.Property<string>("Note")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<Guid?>("RecipientId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<Guid?>("RecipientWalletId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TransactionType")
-                        .HasColumnType("integer");
+                    b.Property<DateOnly>("TransactionDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("RecipientId");
+                    b.HasIndex("TransactionType");
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Transactions");
+                    b.HasIndex("CategoryId", "CategoryWalletId");
+
+                    b.HasIndex("RecipientId", "RecipientWalletId");
+
+                    b.ToTable("Transactions", null, t =>
+                        {
+                            t.HasCheckConstraint("CH__WalletId_CategoryWalletId", "\"CategoryWalletId\" is null or \"CategoryWalletId\" = \"WalletId\"");
+
+                            t.HasCheckConstraint("CH__WalletId_RecipientWalletId", "\"RecipientWalletId\" is null or \"RecipientWalletId\" = \"WalletId\"");
+                        });
                 });
 
             modelBuilder.Entity("Financity.Domain.Entities.User", b =>
@@ -227,6 +257,7 @@ namespace Financity.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -241,7 +272,8 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -267,6 +299,7 @@ namespace Financity.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
+                        .IsUnique()
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
@@ -284,68 +317,81 @@ namespace Financity.Persistence.Migrations
 
                     b.Property<string>("CurrencyId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("StartingAmount")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric")
+                        .HasDefaultValue(0m);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerId", "Name")
+                        .IsUnique();
 
-                    b.ToTable("Wallets");
+                    b.ToTable("Wallets", (string)null);
                 });
 
             modelBuilder.Entity("LabelTransaction", b =>
                 {
-                    b.Property<Guid>("LabelsId")
+                    b.Property<Guid>("LabelId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TransactionsId")
+                    b.Property<Guid>("LabelWalletId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("LabelsId", "TransactionsId");
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uuid");
 
-                    b.HasIndex("TransactionsId");
+                    b.Property<Guid>("TransactionWalletId")
+                        .HasColumnType("uuid");
 
-                    b.ToTable("LabelTransaction");
+                    b.HasKey("LabelId", "LabelWalletId", "TransactionId", "TransactionWalletId");
+
+                    b.HasIndex("TransactionId", "TransactionWalletId");
+
+                    b.ToTable("TransactionLabel", null, t =>
+                        {
+                            t.HasCheckConstraint("CH_TransactionLabel_TransactionWalletId_LabelWalletId", "\"TransactionWalletId\" = \"LabelWalletId\"");
+                        });
                 });
 
             modelBuilder.Entity("UserWallet", b =>
                 {
-                    b.Property<Guid>("SharedWalletsId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UsersWithSharedAccessId")
+                    b.Property<Guid>("WalletId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("SharedWalletsId", "UsersWithSharedAccessId");
+                    b.HasKey("UserId", "WalletId");
 
-                    b.HasIndex("UsersWithSharedAccessId");
+                    b.HasIndex("WalletId");
 
-                    b.ToTable("UserWallet");
+                    b.ToTable("UserWallet", (string)null);
                 });
 
             modelBuilder.Entity("BudgetCategory", b =>
                 {
                     b.HasOne("Financity.Domain.Entities.Budget", null)
                         .WithMany()
-                        .HasForeignKey("BudgetsId")
+                        .HasForeignKey("BudgetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Financity.Domain.Entities.Category", null)
                         .WithMany()
-                        .HasForeignKey("TrackedCategoriesId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -381,20 +427,22 @@ namespace Financity.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Financity.Domain.Common.Appearance", "Appearance", b1 =>
+                    b.OwnsOne("Financity.Domain.Entities.Category.Appearance#Financity.Domain.Common.Appearance", "Appearance", b1 =>
                         {
                             b1.Property<Guid>("CategoryId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Color")
-                                .HasColumnType("text");
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)");
 
                             b1.Property<string>("IconName")
-                                .HasColumnType("text");
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)");
 
                             b1.HasKey("CategoryId");
 
-                            b1.ToTable("Categories");
+                            b1.ToTable("Categories", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CategoryId");
@@ -416,20 +464,22 @@ namespace Financity.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Financity.Domain.Common.Appearance", "Appearance", b1 =>
+                    b.OwnsOne("Financity.Domain.Entities.Label.Appearance#Financity.Domain.Common.Appearance", "Appearance", b1 =>
                         {
                             b1.Property<Guid>("LabelId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Color")
-                                .HasColumnType("text");
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)");
 
                             b1.Property<string>("IconName")
-                                .HasColumnType("text");
+                                .HasMaxLength(64)
+                                .HasColumnType("character varying(64)");
 
                             b1.HasKey("LabelId");
 
-                            b1.ToTable("Labels");
+                            b1.ToTable("Labels", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("LabelId");
@@ -454,25 +504,29 @@ namespace Financity.Persistence.Migrations
 
             modelBuilder.Entity("Financity.Domain.Entities.Transaction", b =>
                 {
-                    b.HasOne("Financity.Domain.Entities.Category", "Category")
-                        .WithMany("Transactions")
-                        .HasForeignKey("CategoryId");
-
                     b.HasOne("Financity.Domain.Entities.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
-                        .WithMany("Transactions")
-                        .HasForeignKey("RecipientId");
-
                     b.HasOne("Financity.Domain.Entities.Wallet", "Wallet")
                         .WithMany("Transactions")
                         .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Financity.Domain.Entities.Category", "Category")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CategoryId", "CategoryWalletId")
+                        .HasPrincipalKey("Id", "WalletId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Financity.Domain.Entities.Recipient", "Recipient")
+                        .WithMany("Transactions")
+                        .HasForeignKey("RecipientId", "RecipientWalletId")
+                        .HasPrincipalKey("Id", "WalletId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Category");
 
@@ -506,28 +560,30 @@ namespace Financity.Persistence.Migrations
                 {
                     b.HasOne("Financity.Domain.Entities.Label", null)
                         .WithMany()
-                        .HasForeignKey("LabelsId")
+                        .HasForeignKey("LabelId", "LabelWalletId")
+                        .HasPrincipalKey("Id", "WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Financity.Domain.Entities.Transaction", null)
                         .WithMany()
-                        .HasForeignKey("TransactionsId")
+                        .HasForeignKey("TransactionId", "TransactionWalletId")
+                        .HasPrincipalKey("Id", "WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("UserWallet", b =>
                 {
-                    b.HasOne("Financity.Domain.Entities.Wallet", null)
+                    b.HasOne("Financity.Domain.Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("SharedWalletsId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Financity.Domain.Entities.User", null)
+                    b.HasOne("Financity.Domain.Entities.Wallet", null)
                         .WithMany()
-                        .HasForeignKey("UsersWithSharedAccessId")
+                        .HasForeignKey("WalletId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

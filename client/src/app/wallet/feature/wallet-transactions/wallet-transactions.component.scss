@@ -2,7 +2,7 @@
 
 :host {
   .viewport {
-    min-height: 75vh;
+    min-height: calc(44px * 15.5);
 
     table thead {
       th {
@@ -11,17 +11,18 @@
     }
   }
 
-  .column-date {
+  .column-date, .column-actions {
+
     min-width: 100px;
     max-width: 100px;
   }
 
-  .column-amount, .column-note, .column-category {
+  .column-category, .column-labels, .column-note, .column-recipient, .column-amount {
     min-width: 200px;
     max-width: 200px;
   }
 
-  .column-labels {
+  .column-note {
     width: 100%;
   }
 
@@ -48,5 +49,15 @@
         border-color: transparent;
       }
     }
+  }
+
+
+  td button {
+    @include transition(opacity);
+    opacity: 0;
+  }
+
+  tr:hover td button {
+    opacity: 1;
   }
 }

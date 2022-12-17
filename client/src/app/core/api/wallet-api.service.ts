@@ -5,6 +5,9 @@ import {
   Wallet,
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
+import { User } from '../../auth/data-access/models/user';
+import { map, Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +25,46 @@ export class WalletApiService extends GenericApiService {
 
   update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
     return this.http.put(`/api/wallets/${payload.id}`, payload);
+  }
+
+  share(payload: {
+    walletId: Wallet['id'];
+    userEmail: User['email'];
+  }): Observable<boolean> {
+    return this.http
+      .post(`/api/wallets/${payload.walletId}/share`, payload, {
+        observe: 'response',
+      })
+      .pipe(map(response => response.status === 204));
+  }
+
+  revoke(payload: {
+    walletId: Wallet['id'];
+    userEmail: User['email'];
+  }): Observable<boolean> {
+    return this.http
+      .put(`/api/wallets/${payload.walletId}/share`, payload, {
+        observe: 'response',
+      })
+      .pipe(map(response => response.status === 204));
+  }
+
+  getSharedToList(
+    walletId: Wallet['id'],
+    pagination: {
+      page: number;
+      pageSize: number;
+      filters?: Record<string, string>;
+    }
+  ) {
+    const params = new HttpParams().appendAll({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      orderBy: 'email',
+      direction: 'asc',
+      ...pagination.filters,
+    });
+
+    return this.http.get<User[]>(`/api/wallets/${walletId}/share`, { params });
   }
 }

@@ -1,0 +1,160 @@
+<form (ngSubmit)="submit()" [formGroup]="form">
+  <!--  <div class="tui-form__row">-->
+  <!--    <tui-input-number-->
+  <!--      formControlName="startingAmount"-->
+  <!--      [postfix]="(currency.valueChanges | async)?.id ?? null | tuiCurrency">-->
+  <!--      Starting balance-->
+  <!--    </tui-input-number>-->
+  <!--    <tui-error-->
+  <!--      formControlName="startingAmount"-->
+  <!--      [error]="[] | tuiFieldError | async"></tui-error>-->
+  <!--  </div>-->
+  <div class="d-flex gap-4 align-items-flex-start">
+    <label [tuiLabel]="'Amount'" class="mb-6 w-full">
+      <tui-input-number
+        [postfix]="
+          (form.controls.currencyId.valueChanges | async) ?? null | tuiCurrency
+        "
+        [tuiTextfieldLabelOutside]="true"
+        class="mt-1"
+        formControlName="amount"
+        tuiAutoFocus
+        tuiTextfieldSize="m">
+        Type an amount
+      </tui-input-number>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="amount"></tui-error>
+    </label>
+  </div>
+
+  <label [tuiLabel]="'Transaction date'" class="mb-6">
+    <tui-input-date
+      [max]="maxDate"
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1"
+      formControlName="transactionDate"
+      tuiTextfieldSize="m">
+      Choose a date
+      <input tuiTextfield />
+    </tui-input-date>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="transactionDate"></tui-error>
+  </label>
+
+  <label [tuiLabel]="'Note'" class="mb-6">
+    <tui-text-area
+      [expandable]="true"
+      [maxLength]="512"
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1"
+      formControlName="note"
+      tuiTextfieldSize="m">
+    </tui-text-area>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="note"></tui-error>
+  </label>
+
+  <label
+    *ngIf="categories$ | async as items"
+    [tuiLabel]="'Category'"
+    class="mb-6 w-full">
+    <tui-combo-box
+      [strict]="true"
+      [tuiTextfieldLabelOutside]="true"
+      [valueContent]="stringifyName(items)"
+      class="mt-1"
+      formControlName="categoryId"
+      tuiTextfieldSize="m">
+      Choose a category
+      <input placeholder="Type a name" tuiTextfield />
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button
+            *ngFor="let item of items | tuiFilterByInputWith: getItemName"
+            [value]="item.id"
+            tuiOption>
+            {{ getItemName(item) }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-combo-box>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="categoryId"></tui-error>
+  </label>
+
+  <label
+    *ngIf="recipients$ | async as items"
+    [tuiLabel]="'Recipient'"
+    class="mb-6 w-full">
+    <tui-combo-box
+      [strict]="true"
+      [tuiTextfieldLabelOutside]="true"
+      [valueContent]="stringifyName(items)"
+      class="mt-1"
+      formControlName="recipientId"
+      tuiTextfieldSize="m">
+      Choose a recipient
+      <input placeholder="Type a name" tuiTextfield />
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button
+            *ngFor="let item of items | tuiFilterByInputWith: getItemName"
+            [value]="item.id"
+            tuiOption>
+            {{ getItemName(item) }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-combo-box>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="recipientId"></tui-error>
+  </label>
+
+  <label [tuiLabel]="'Labels'" class="mb-6 w-full">
+    <tui-multi-select
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1"
+      formControlName="labelIds"
+      tuiTextfieldSize="m"
+      [expandable]="true">
+      Choose labels
+
+      <ng-template tuiDataList>
+        <tui-data-list>
+          <button
+            *ngFor="let item of labels$ | async"
+            [value]="item.id"
+            tuiOption>
+            {{ getItemName(item) }}
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </tui-multi-select>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="labelIds"></tui-error>
+  </label>
+
+  <div class="tui-form__row text-right">
+    <button
+      [showLoader]="(loading$ | async) ?? false"
+      size="m"
+      tuiButton
+      type="submit">
+      Submit
+    </button>
+  </div>
+</form>

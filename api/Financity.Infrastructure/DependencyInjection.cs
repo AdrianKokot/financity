@@ -13,6 +13,7 @@ public static class DependencyInjection
         services.AddPersistence(configuration);
 
         services.AddSingleton<IEmailService, EmailService>();
+        services.AddSingleton<IExchangeRateService, ExchangeRateService>();
 
         return services;
     }

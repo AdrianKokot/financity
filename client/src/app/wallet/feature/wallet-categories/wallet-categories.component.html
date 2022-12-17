@@ -1,1 +1,170 @@
-<p>wallet-categories works!</p>
+<main>
+  <div class="w-full d-flex gap-4 mb-4">
+    <label class="w-full">
+      <tui-input
+        [formControl]="form.controls.search"
+        tuiTextfieldSize="s"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow">
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+    </label>
+
+    <ng-container *tuiLet="(appliedFiltersCount$ | async) ?? 0 as filtersCount">
+      <button
+        *ngIf="filtersCount > 0"
+        tuiIconButton
+        type="button"
+        appearance="flat-outline"
+        size="s"
+        title="Reset filters"
+        (click)="form.reset()"
+        icon="tuiIconFilter"
+        style="position: relative">
+        <tui-badge
+          [value]="filtersCount"
+          size="xs"
+          status="primary"
+          style="
+            color: var(--tui-text-01-night);
+            background: var(--tui-info-fill);
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1;
+            transform: translate(30%, -30%);
+          "></tui-badge>
+      </button>
+    </ng-container>
+
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      size="s"
+      (click)="openCreateDialog()">
+      New category
+    </button>
+  </div>
+
+  <div
+    class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+    <table tuiTable class="w-full" [columns]="columns">
+      <thead>
+        <tr tuiThGroup>
+          <th *tuiHead="'category'" class="w-full" [sorter]="null" tuiTh>
+            Category
+          </th>
+          <th
+            *tuiHead="'transactionType'"
+            [sorter]="null"
+            tuiTh
+            class="column-transactionType">
+            <app-dropdown-select
+              [allowDeselect]="true"
+              [emptyValue]="''"
+              [items]="transactionTypes"
+              [formControl]="form.controls.transactionType">
+              <span
+                class="column-filter-text"
+                [class.text-link]="form.controls.transactionType.value">
+                <span>Transaction type</span>
+
+                <tui-svg src="tuiIconSortDown"></tui-svg>
+              </span>
+            </app-dropdown-select>
+          </th>
+          <th
+            *tuiHead="'actions'"
+            tuiTh
+            [sorter]="null"
+            class="column-actions"></th>
+        </tr>
+      </thead>
+    </table>
+
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        (scrolledIndexChange)="log()"
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="44"
+        [maxBufferPx]="500"
+        [minBufferPx]="400">
+        <table
+          tuiTable
+          [columns]="columns"
+          *ngIf="data$ | async as data"
+          class="w-full">
+          <thead>
+            <tr tuiThGroup>
+              <th
+                *tuiHead="'category'"
+                class="w-full"
+                [sorter]="null"
+                tuiTh></th>
+              <th
+                *tuiHead="'transactionType'"
+                [sorter]="null"
+                tuiTh
+                class="column-transactionType"></th>
+              <th
+                *tuiHead="'actions'"
+                tuiTh
+                [sorter]="null"
+                class="column-actions"></th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            <tr *cdkVirtualFor="let item of data" tuiTr>
+              <td *tuiCell="'category'" tuiTd>
+                <span class="d-flex align-items-center">
+                  <tui-marker-icon
+                    size="xs"
+                    [class]="item.appearance.color ?? 'icon-default'"
+                    [src]="
+                      item.appearance.iconName ?? 'fa::question'
+                    "></tui-marker-icon>
+                  <span class="ml-2">
+                    {{ item.name }}
+                  </span>
+                </span>
+              </td>
+
+              <td
+                *tuiCell="'transactionType'"
+                tuiTd
+                class="column-transactionType">
+                {{ item.transactionType }}
+              </td>
+
+              <td *tuiCell="'actions'" tuiTd class="column-actions">
+                <button
+                  tuiIconButton
+                  appearance="flat"
+                  size="s"
+                  icon="fa::pen"
+                  title="Edit"
+                  shape="rounded"
+                  class="mr-1"
+                  (click)="openEditDialog(item.id)"></button>
+
+                <button
+                  tuiIconButton
+                  appearance="flat-destructive"
+                  size="s"
+                  icon="tuiIconTrash"
+                  title="Remove"
+                  appRequireConfirmation
+                  (confirm)="deleteCategory(item.id)"
+                  confirmationMessage="Are you sure you want to delete this category? All transactions assigned to this category will be assigned to default category. This action is irreversible."
+                  shape="rounded"></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+</main>

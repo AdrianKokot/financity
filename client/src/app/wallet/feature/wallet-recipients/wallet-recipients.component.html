@@ -1,0 +1,99 @@
+<main>
+  <div class="w-full d-flex gap-4 mb-4">
+    <label class="w-full">
+      <tui-input
+        [formControl]="form.controls.search"
+        [tuiTextfieldLabelOutside]="true"
+        class="no-shadow"
+        tuiTextfieldSize="s">
+        Search
+        <input tuiTextfield type="text" />
+      </tui-input>
+    </label>
+
+    <button
+      (click)="openCreateDialog()"
+      appearance="primary"
+      class="ml-auto"
+      size="s"
+      tuiButton
+      type="button">
+      New recipient
+    </button>
+  </div>
+
+  <div
+    class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+    <table [columns]="columns" class="w-full" tuiTable>
+      <thead>
+        <tr tuiThGroup>
+          <th *tuiHead="'name'" [sorter]="null" class="w-full" tuiTh>
+            Recipient
+          </th>
+          <th
+            *tuiHead="'actions'"
+            [sorter]="null"
+            class="column-actions"
+            tuiTh></th>
+        </tr>
+      </thead>
+    </table>
+
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        (scrolledIndexChange)="log()"
+        [itemSize]="44"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+        class="viewport tui-zero-scrollbar"
+        tuiScrollable>
+        <table
+          *ngIf="data$ | async as data"
+          [columns]="columns"
+          class="w-full"
+          tuiTable>
+          <thead>
+            <tr tuiThGroup>
+              <th *tuiHead="'name'" [sorter]="null" class="w-full" tuiTh></th>
+              <th
+                *tuiHead="'actions'"
+                [sorter]="null"
+                class="column-actions"
+                tuiTh></th>
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            <tr *cdkVirtualFor="let item of data" tuiTr>
+              <td *tuiCell="'name'" tuiTd>
+                {{ item.name }}
+              </td>
+
+              <td *tuiCell="'actions'" class="column-actions" tuiTd>
+                <button
+                  (click)="openEditDialog(item.id)"
+                  appearance="flat"
+                  class="mr-1"
+                  icon="fa::pen"
+                  shape="rounded"
+                  size="s"
+                  title="Edit"
+                  tuiIconButton></button>
+
+                <button
+                  (confirm)="deleteRecipient(item.id)"
+                  appRequireConfirmation
+                  appearance="flat-destructive"
+                  confirmationMessage="Are you sure you want to delete this recipient? All transactions with this recipient will loose that information. This action is irreversible."
+                  icon="tuiIconTrash"
+                  shape="rounded"
+                  size="s"
+                  title="Remove"
+                  tuiIconButton></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+</main>

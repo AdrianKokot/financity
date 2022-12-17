@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
@@ -21,6 +22,15 @@ public sealed class
     public GetCategoriesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
+
+    protected override IQueryable<Category> ExecuteSearch(IQueryable<Category> query, string search)
+    {
+        search = search.ToLower(CultureInfo.InvariantCulture);
+
+        return query.Where(x =>
+            x.Name.ToLower().Contains(search));
+    }
 }
 
-public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance) : IMapFrom<Category>;
+public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance,
+                                      string TransactionType) : IMapFrom<Category>;

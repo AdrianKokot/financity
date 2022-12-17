@@ -5,8 +5,11 @@ import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletShellComponent } from './feature/wallet-shell/wallet-shell.component';
 import {
   TuiButtonModule,
+  TuiDataListModule,
   TuiErrorModule,
+  TuiHostedDropdownModule,
   TuiLabelModule,
+  TuiLinkModule,
   TuiLoaderModule,
   TuiScrollbarModule,
   TuiSvgModule,
@@ -18,14 +21,21 @@ import {
 } from '@taiga-ui/addon-commerce';
 import { TuiTableModule } from '@taiga-ui/addon-table';
 import {
+  TuiActionModule,
   TuiBadgeModule,
+  TuiBreadcrumbsModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
+  TuiInputDateRangeModule,
   TuiInputModule,
   TuiInputNumberModule,
   TuiIslandModule,
+  TuiMarkerIconModule,
+  TuiMultiSelectModule,
+  TuiSelectModule,
   TuiTabsModule,
+  TuiTagModule,
 } from '@taiga-ui/kit';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
@@ -35,7 +45,16 @@ import { WalletSettingsComponent } from './feature/wallet-settings/wallet-settin
 import { WalletTransactionsComponent } from './feature/wallet-transactions/wallet-transactions.component';
 import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.component';
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CategoryModule } from '../category/category.module';
+import { RequireConfirmationDirective } from '@shared/utils/directives/require-confirmation.directive';
+import { WalletShareManagementComponent } from './feature/wallet-share-management/wallet-share-management.component';
+import { ShareWalletComponent } from './ui/share-wallet/share-wallet.component';
+import { LabelModule } from '../label/label.module';
+import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown-select.component';
+import { TransactionModule } from '../transaction/transaction.module';
+import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
+import { RecipientModule } from '../recipient/recipient.module';
 
 @NgModule({
   declarations: [
@@ -46,6 +65,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     WalletTransactionsComponent,
     WalletLabelsComponent,
     WalletCategoriesComponent,
+    WalletShareManagementComponent,
+    ShareWalletComponent,
+    WalletRecipientsComponent,
   ],
   imports: [
     CommonModule,
@@ -72,6 +94,23 @@ import { ReactiveFormsModule } from '@angular/forms';
     TuiCurrencyPipeModule,
     TuiTextfieldControllerModule,
     TuiLabelModule,
+    TuiLinkModule,
+    TuiTagModule,
+    FormsModule,
+    CategoryModule,
+    RequireConfirmationDirective,
+    TuiMarkerIconModule,
+    LabelModule,
+    TuiHostedDropdownModule,
+    TuiDataListModule,
+    TuiMultiSelectModule,
+    TuiSelectModule,
+    DropdownSelectComponent,
+    TuiActionModule,
+    TransactionModule,
+    TuiInputDateRangeModule,
+    RecipientModule,
+    TuiBreadcrumbsModule,
   ],
 })
 export class WalletModule {}

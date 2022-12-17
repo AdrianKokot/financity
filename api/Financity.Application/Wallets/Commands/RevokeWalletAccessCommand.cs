@@ -3,6 +3,7 @@ using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Helpers;
 using Financity.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Commands;
@@ -16,10 +17,12 @@ public sealed class RevokeWalletAccessCommand : ICommand<Unit>
 public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWalletAccessCommand, Unit>
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
 
-    public RevokeWalletAccessCommandHandler(IApplicationDbContext dbContext)
+    public RevokeWalletAccessCommandHandler(IApplicationDbContext dbContext, UserManager<User> userManager)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
     }
 
     public async Task<Unit> Handle(RevokeWalletAccessCommand command, CancellationToken ct)
@@ -31,8 +34,10 @@ public sealed class RevokeWalletAccessCommandHandler : ICommandHandler<RevokeWal
         if (wallet is null)
             throw ValidationExceptionFactory.For(nameof(command.WalletId), "The given wallet doesn't exist");
 
+        var normalizedEmail = _userManager.NormalizeEmail(command.UserEmail);
+
         var user = await _dbContext.GetDbSet<User>()
-                                   .FirstOrDefaultAsync(x => x.NormalizedEmail == command.UserEmail.ToUpper(), ct);
+                                   .FirstOrDefaultAsync(x => x.NormalizedEmail == normalizedEmail, ct);
 
         if (user is null)
             throw ValidationExceptionFactory.For(nameof(command.UserEmail), "User with given email doesn't exist");

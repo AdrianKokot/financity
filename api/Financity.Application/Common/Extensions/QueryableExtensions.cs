@@ -8,6 +8,12 @@ namespace Financity.Application.Common.Extensions;
 
 public static class QueryableExtensions
 {
+    public static IQueryable<T> ApplySearch<T>(this IQueryable<T> query, Expression<Func<T, bool>> searchFn)
+        where T : class
+    {
+        return query.Where(searchFn);
+    }
+
     public static IQueryable<T> ApplyQuerySpecification<T, TQ>(this IQueryable<T> query,
                                                                QuerySpecification<TQ> specification)
         where T : class
@@ -77,8 +83,14 @@ public static class QueryableExtensions
             return Expression.Constant(DateTime.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo,
                 DateTimeStyles.AssumeUniversal).ToUniversalTime());
 
+        if (info.PropertyType == typeof(DateOnly))
+            return Expression.Constant(DateOnly.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo));
+
         if (info.PropertyType == typeof(Guid))
             return Expression.Constant(Guid.Parse(value));
+
+        if (info.PropertyType.IsEnum)
+            return Expression.Constant(Enum.Parse(info.PropertyType, value));
 
         return Expression.Constant(value);
     }

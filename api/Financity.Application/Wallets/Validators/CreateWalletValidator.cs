@@ -10,10 +10,14 @@ public sealed class CreateWalletCommandValidator : AbstractValidator<CreateWalle
 {
     public CreateWalletCommandValidator(IApplicationDbContext dbContext)
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(64);
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .MaximumLength(64);
+
         RuleFor(x => x.CurrencyId)
             .NotEmpty()
             .Exists<CreateWalletCommand, Currency, string>(dbContext);
+
         RuleFor(x => x.StartingAmount).NotNull();
     }
 }
