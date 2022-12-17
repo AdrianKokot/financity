@@ -116,7 +116,6 @@ export class WalletTransactionsComponent {
       }
 
       if (dateRange && dateRange.from) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         obj['transactionDate_gte'] = dateRange.from
           .toLocalNativeDate()
           .toISOString()
@@ -124,7 +123,6 @@ export class WalletTransactionsComponent {
       }
 
       if (dateRange && dateRange.to) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         obj['transactionDate_lte'] = dateRange.to
           .toLocalNativeDate()
           .toISOString()
@@ -156,7 +154,7 @@ export class WalletTransactionsComponent {
   );
 
   page$ = new BehaviorSubject<number>(1);
-  private _pageSize = 250;
+  private _pageSize = 20;
 
   transactions$ = this.page$.pipe(
     withLatestFrom(this.walletId$, this.filters$),

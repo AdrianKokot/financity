@@ -62,13 +62,11 @@ export class WalletCategoriesComponent {
 
   filters$: Observable<{
     search?: string;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     transactionType_eq?: TransactionType;
   }> = this.form.valueChanges.pipe(
     debounceTime(300),
     map(() => this.form.getRawValue()),
     map(({ search, transactionType }) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const obj: { search?: string; transactionType_eq?: TransactionType } = {};
       search = search.trim();
 

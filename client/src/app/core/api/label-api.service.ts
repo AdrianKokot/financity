@@ -27,7 +27,6 @@ export class LabelApiService {
       pageSize: pagination.pageSize,
       orderBy: 'name',
       direction: 'asc',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       walletId_eq: walletId,
       ...pagination.filters,
     });

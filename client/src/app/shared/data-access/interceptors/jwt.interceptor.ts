@@ -20,7 +20,6 @@ export class JwtInterceptor implements HttpInterceptor {
       return next.handle(
         request.clone({
           setHeaders: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             Authorization: `Bearer ${this._auth.token}`,
           },
         })

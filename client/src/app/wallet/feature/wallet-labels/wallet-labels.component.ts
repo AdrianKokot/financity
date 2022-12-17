@@ -124,7 +124,6 @@ export class WalletLabelsComponent {
     debounceTime(300),
     map(() => this.form.getRawValue()),
     map(({ search }) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       return { search: search.trim() };
     }),
     distinctUntilKeyChanged('search'),

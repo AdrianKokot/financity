@@ -18,7 +18,7 @@ export class TransactionApiService extends GenericApiService {
     pagination: {
       page: number;
       pageSize: number;
-      filters?: Record<string, string>;
+      filters?: Record<string, string | string[]>;
     }
   ) {
     const params = new HttpParams().appendAll({
@@ -26,7 +26,6 @@ export class TransactionApiService extends GenericApiService {
       pageSize: pagination.pageSize,
       orderBy: 'transactionDate',
       direction: 'desc',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       walletId_eq: walletId,
       ...pagination.filters,
     });
