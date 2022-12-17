@@ -107,7 +107,8 @@
         'labels',
         'note',
         'recipient',
-        'amount'
+        'amount',
+        'actions'
       ]"
       class="w-full"
       tuiTable>
@@ -139,6 +140,11 @@
           <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
             Amount
           </th>
+          <th
+            *tuiHead="'actions'"
+            tuiTh
+            [sorter]="null"
+            class="column-actions"></th>
         </tr>
       </thead>
     </table>
@@ -157,7 +163,8 @@
             'labels',
             'note',
             'recipient',
-            'amount'
+            'amount',
+            'actions'
           ]"
           class="w-full"
           tuiTable>
@@ -199,6 +206,11 @@
                 tuiTh
                 [sorter]="null"
                 class="column-amount"></th>
+              <th
+                *tuiHead="'actions'"
+                tuiTh
+                [sorter]="null"
+                class="column-actions"></th>
               <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
             </tr>
           </thead>
@@ -271,6 +283,28 @@
                   <!--        <td *tuiCell="'age'" tuiTd>-->
                   <!--          {{ getAge(item) }}-->
                   <!--        </td>-->
+                  <td *tuiCell="'actions'" tuiTd class="column-actions">
+                    <button
+                      tuiIconButton
+                      appearance="flat"
+                      size="s"
+                      icon="fa::pen"
+                      title="Edit"
+                      shape="rounded"
+                      class="mr-1"
+                      (click)="openEditDialog(item.id)"></button>
+
+                    <button
+                      tuiIconButton
+                      appearance="flat-destructive"
+                      size="s"
+                      icon="tuiIconTrash"
+                      title="Remove"
+                      appRequireConfirmation
+                      (confirm)="deleteTransaction(item.id)"
+                      confirmationMessage="Are you sure you want to delete this transaction? This action is irreversible."
+                      shape="rounded"></button>
+                  </td>
                 </tr>
 
                 <tr *ngIf="!!(loading$ | async) as loading" [hidden]="!loading">

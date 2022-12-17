@@ -20,6 +20,7 @@ import {
   startWith,
   Subject,
   switchMap,
+  take,
   tap,
   withLatestFrom,
 } from 'rxjs';
@@ -199,15 +200,24 @@ export class WalletTransactionsComponent {
   }
 
   openEditDialog(id: Transaction['id']): void {
-    this._dialog
-      .open<Transaction>(
-        new PolymorpheusComponent(UpdateTransactionComponent, this._injector),
-        {
-          label: 'Edit transaction',
-          data: {
-            id,
-          },
-        }
+    this.walletId$
+      .pipe(
+        take(1),
+        switchMap(walletId =>
+          this._dialog.open<Transaction>(
+            new PolymorpheusComponent(
+              UpdateTransactionComponent,
+              this._injector
+            ),
+            {
+              label: 'Edit transaction',
+              data: {
+                id,
+                walletId,
+              },
+            }
+          )
+        )
       )
       .subscribe(item => this._modifiedTransaction$.next(item));
   }

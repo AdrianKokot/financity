@@ -17,6 +17,10 @@ export interface Transaction {
   walletId: Wallet['id'];
 }
 
+export interface TransactionDetails extends Transaction {
+  labels: Label[];
+}
+
 export interface TransactionListItem extends Transaction {
   currencyName: string;
   labels: LabelListItem[];

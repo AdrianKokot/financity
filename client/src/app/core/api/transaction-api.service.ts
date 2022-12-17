@@ -4,6 +4,7 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import {
   CreateTransactionPayload,
   Transaction,
+  TransactionDetails,
   TransactionListItem,
 } from '@shared/data-access/models/transaction.model';
 import { HttpParams } from '@angular/common/http';
@@ -36,7 +37,7 @@ export class TransactionApiService extends GenericApiService {
   }
 
   get(walletId: Transaction['id']) {
-    return this.http.get<Transaction>(`/api/transactions/${walletId}`);
+    return this.http.get<TransactionDetails>(`/api/transactions/${walletId}`);
   }
 
   create(payload: CreateTransactionPayload): Observable<Transaction> {

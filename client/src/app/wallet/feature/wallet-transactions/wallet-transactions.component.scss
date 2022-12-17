@@ -11,7 +11,7 @@
     }
   }
 
-  .column-date {
+  .column-date, .column-actions {
 
     min-width: 100px;
     max-width: 100px;
@@ -49,5 +49,15 @@
         border-color: transparent;
       }
     }
+  }
+
+
+  td button {
+    @include transition(opacity);
+    opacity: 0;
+  }
+
+  tr:hover td button {
+    opacity: 1;
   }
 }
