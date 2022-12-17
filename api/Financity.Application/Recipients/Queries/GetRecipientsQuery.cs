@@ -23,7 +23,7 @@ public sealed class
 
     protected override IQueryable<Recipient> ExecuteSearch(IQueryable<Recipient> query, string search)
     {
-        search = search.ToLower();
+        search = search.ToLower(CultureInfo.InvariantCulture));
         return query.Where(x => x.Name.ToLower().Contains(search));
     }
 }

@@ -68,10 +68,9 @@ export class WalletCategoriesComponent {
     map(() => this.form.getRawValue()),
     map(({ search, transactionType }) => {
       const obj: { search?: string; transactionType_eq?: TransactionType } = {};
-      search = search.trim();
 
       if (search) {
-        obj['search'] = search;
+        obj['search'] = search.trim();
       }
 
       if (transactionType) {

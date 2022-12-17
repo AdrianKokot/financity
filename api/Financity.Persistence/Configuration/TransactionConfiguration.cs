@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-
 namespace Financity.Persistence.Configuration;
 
 public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transaction>

@@ -17,7 +17,6 @@ public sealed class GetExchangeRateQueryHandler : IQueryHandler<GetExchangeRateQ
 
     public async Task<ExchangeRate> Handle(GetExchangeRateQuery request, CancellationToken cancellationToken)
     {
-
         var rate = await _exchangeRateService.GetExchangeRate(request.From, request.To,
             cancellationToken);
         return new ExchangeRate(request.From, request.To, rate);

@@ -39,7 +39,7 @@ public sealed class GetWalletUsersWithAccessQueryHandler : FilteredEntitiesQuery
 
     protected override IQueryable<User> ExecuteSearch(IQueryable<User> query, string search)
     {
-        search = search.ToLower();
+        search = search.ToLower(CultureInfo.InvariantCulture));
         return query.Where(x =>
             x.Name.ToLower().Contains(search) || (x.Email ?? string.Empty).ToLower().Contains(search));
     }

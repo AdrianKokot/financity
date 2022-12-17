@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Categories.Queries;
@@ -51,7 +52,7 @@ public sealed class
 
     protected override IQueryable<Transaction> ExecuteSearch(IQueryable<Transaction> query, string search)
     {
-        search = search.Trim().ToLower();
+        search = search.Trim().ToLower(CultureInfo.InvariantCulture);
         var numberSearch = search.Replace(',', '.').Replace("-", "");
 
         return query.Where(x =>

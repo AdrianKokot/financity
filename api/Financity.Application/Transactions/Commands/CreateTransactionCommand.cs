@@ -65,9 +65,7 @@ public sealed class CreateTransactionCommandHandler :
                                               .FirstAsync(x => x.Id == command.RecipientId, cancellationToken);
         }
 
-
         DbContext.GetDbSet<Transaction>().Add(entity);
-
 
         await DbContext.SaveChangesAsync(cancellationToken);
 

@@ -70,7 +70,7 @@ export class AppComponent {
               walletId,
               transactionType: TransactionType.Expense,
               categoryId,
-              currencyId: currencyId,
+              currencyId,
               labelIds: [labelId],
               transactionDate: new Date(
                 start.getTime() +
