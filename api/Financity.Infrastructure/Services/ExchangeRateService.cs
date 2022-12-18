@@ -26,7 +26,7 @@ public sealed class ExchangeRateService : IExchangeRateService
 
         if (!response.IsSuccessStatusCode)
             throw new ExchangeRateApiException((await response.Content.ReadFromJsonAsync<object>(cancellationToken: ct))
-                ?.ToString());
+                ?.ToString() ?? string.Empty);
 
         var exchangeRate = await response.Content.ReadFromJsonAsync<ExchangeRateApiResponse>(cancellationToken: ct);
 

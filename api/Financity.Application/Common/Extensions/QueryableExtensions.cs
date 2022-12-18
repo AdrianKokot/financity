@@ -73,7 +73,10 @@ public static class QueryableExtensions
             FilterOperators.NotEqual => Expression.NotEqual(left, right),
             FilterOperators.LessOrEqual => Expression.LessThanOrEqual(left, right),
             FilterOperators.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
-            _ => Expression.Call(left, GetMethodForOperator(filter.Operator), right)
+            _ => Expression.Call(left,
+                GetMethodForOperator(filter.Operator) ??
+                throw new InvalidOperationException($"Filter operator '{filter.Operator}' is not a valid operator."),
+                right)
         };
     }
 
@@ -99,7 +102,7 @@ public static class QueryableExtensions
     {
         return op switch
         {
-            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] { typeof(string) }),
+            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] {typeof(string)}),
             _ => throw new ArgumentException($"Operator '{op}' is not supported")
         };
     }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
@@ -39,7 +40,7 @@ public sealed class GetWalletUsersWithAccessQueryHandler : FilteredEntitiesQuery
 
     protected override IQueryable<User> ExecuteSearch(IQueryable<User> query, string search)
     {
-        search = search.ToLower(CultureInfo.InvariantCulture));
+        search = search.ToLower(CultureInfo.InvariantCulture);
         return query.Where(x =>
             x.Name.ToLower().Contains(search) || (x.Email ?? string.Empty).ToLower().Contains(search));
     }

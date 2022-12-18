@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
@@ -23,7 +24,7 @@ public sealed class
 
     protected override IQueryable<Recipient> ExecuteSearch(IQueryable<Recipient> query, string search)
     {
-        search = search.ToLower(CultureInfo.InvariantCulture));
+        search = search.ToLower(CultureInfo.InvariantCulture);
         return query.Where(x => x.Name.ToLower().Contains(search));
     }
 }
