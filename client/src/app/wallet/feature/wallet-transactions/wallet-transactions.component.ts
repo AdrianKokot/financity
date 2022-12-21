@@ -40,6 +40,8 @@ import { FormBuilder } from '@angular/forms';
 import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { TuiDayRangePeriod } from '@taiga-ui/kit';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
+import { Category } from '@shared/data-access/models/category.model';
+import { CategoryApiService } from '../../../core/api/category-api.service';
 
 const createTransactionDateFilterGroups = () => {
   //https://github.com/Tinkoff/taiga-ui/blob/fdde12d70356bf5a018eed3c3e6747fff5adc8b0/projects/kit/utils/miscellaneous/create-default-day-range-periods.ts
@@ -103,14 +105,17 @@ export class WalletTransactionsComponent {
   form = this._fb.nonNullable.group({
     dateRange: [this.dayRangeItems[5].range],
     search: [''],
+    categories: [[] as Category['id'][]],
   });
 
   filters$ = this.form.valueChanges.pipe(
     debounceTime(300),
     startWith({}),
     map(() => this.form.getRawValue()),
-    map(({ search, dateRange }) => {
+    map(({ search, dateRange, categories }) => {
       const obj: Record<string, string> = {};
+
+      console.log(categories);
 
       if (search) {
         obj['search'] = search.trim();
@@ -151,6 +156,16 @@ export class WalletTransactionsComponent {
 
   wallet$ = this.walletId$.pipe(
     switchMap(walletId => this._walletApiService.get(walletId)),
+    shareReplay(1)
+  );
+
+  categories$ = this.walletId$.pipe(
+    switchMap(walletId =>
+      this._categoryService.getList(walletId, {
+        page: 1,
+        pageSize: 100,
+      })
+    ),
     shareReplay(1)
   );
 
@@ -267,6 +282,7 @@ export class WalletTransactionsComponent {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _walletApiService: WalletApiService,
+    private _categoryService: CategoryApiService,
     private _transactionApiService: TransactionApiService,
     @Inject(TuiAlertService) private readonly _alertService: TuiAlertService,
     @Inject(Injector) private _injector: Injector,

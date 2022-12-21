@@ -1,0 +1,24 @@
+<tui-primitive-textfield
+  #input
+  (keydown.arrowDown)="$event.preventDefault(); onArrowDown(list, $event)"
+  [(value)]="value"
+  [tuiTextfieldLabelOutside]="true"
+  class="no-shadow"
+  tuiTextfieldSize="m"
+  style="border: none"
+  tuiTextfieldIconLeft="tuiIconSearchLarge">
+  Search categories
+</tui-primitive-textfield>
+<hr />
+<tui-data-list
+  #list
+  (keydown)="onKeyDown($event.key, input.nativeFocusableElement)"
+  emptyContent="No results found">
+  <tui-opt-group *tuiLet="items | tuiFilter: filter:value as filtered">
+    <tui-opt-group *ngIf="filtered.length" tuiMultiSelectGroup>
+      <button *ngFor="let item of filtered" [value]="item.id" tuiOption>
+        {{ item.name }}
+      </button>
+    </tui-opt-group>
+  </tui-opt-group>
+</tui-data-list>

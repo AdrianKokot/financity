@@ -126,7 +126,15 @@
             tuiTh
             [sorter]="null"
             class="column-category">
-            Category
+            <tui-hosted-dropdown [content]="categoriesDropdown">
+              <span
+                [class.text-link]="form.controls.categories.value.length > 0"
+                class="column-filter-text">
+                <span>Category</span>
+
+                <tui-svg src="tuiIconSortDown"></tui-svg>
+              </span>
+            </tui-hosted-dropdown>
           </th>
           <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
             Labels
@@ -332,3 +340,10 @@
     </tui-scrollbar>
   </div>
 </main>
+
+<ng-template #categoriesDropdown>
+  <app-searchable-list
+    *ngIf="categories$ | async as items"
+    [items]="items"
+    [formControl]="form.controls.categories"></app-searchable-list>
+</ng-template>
