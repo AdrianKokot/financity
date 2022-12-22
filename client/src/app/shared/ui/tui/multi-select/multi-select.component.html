@@ -3,7 +3,8 @@
     *tuiLet="ids$ | async as items"
     (searchChange)="search$.next($event ?? '')"
     [expandable]="false"
-    [formControl]="formControl"
+    [ngModel]="value"
+    (ngModelChange)="writeValue($event)"
     [stringify]="stringify"
     [tuiTextfieldLabelOutside]="true"
     placeholder="Search"
@@ -18,7 +19,7 @@
       [style.--items-count]="(items ?? []).length"
       class="viewport tui-zero-scrollbar"
       tuiScrollable>
-      <tui-data-list tuiMultiSelectGroup [emptyContent]="'Nothing found'">
+      <tui-data-list tuiMultiSelectGroup [emptyContent]="emptyContent">
         <button
           *cdkVirtualFor="let item of items"
           [value]="item"
@@ -30,3 +31,5 @@
     </cdk-virtual-scroll-viewport>
   </tui-multi-select>
 </ng-container>
+
+<ng-template #emptyContent> Nothing found</ng-template>

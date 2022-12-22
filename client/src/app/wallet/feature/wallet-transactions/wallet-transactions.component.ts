@@ -115,8 +115,6 @@ export class WalletTransactionsComponent {
     map(({ search, dateRange, categories }) => {
       const obj: Record<string, string> = {};
 
-      console.log(categories);
-
       if (search) {
         obj['search'] = search.trim();
       }

@@ -213,29 +213,13 @@
       formControlName="recipientId"></tui-error>
   </label>
 
-  <label
-    [tuiLabel]="'Labels'"
-    class="mb-6 w-full"
-    *tuiLet="labelIds$ | async as items">
+  <label [tuiLabel]="'Labels'" class="mb-6 w-full">
     <app-multi-select
       class="mt-1"
+      formControlName="labelIds"
       [getListFunction]="getLabelsFunction"
       label="Choose labels">
     </app-multi-select>
-    <!--    <tui-multi-select [tuiTextfieldLabelOutside]="true"-->
-    <!--                      class="mt-1"-->
-    <!--                      formControlName="labelIds"-->
-    <!--                      tuiTextfieldSize="m"-->
-    <!--                      [expandable]="true"-->
-    <!--                      [stringify]="(stringifiedLabels$ | async)!">-->
-    <!--      Choose labels-->
-
-    <!--      <tui-data-list-wrapper *tuiDataList-->
-    <!--                             tuiMultiSelectGroup-->
-    <!--                             [items]="items"-->
-    <!--                             [itemContent]="(stringifiedLabels$ | async)!">-->
-    <!--      </tui-data-list-wrapper>-->
-    <!--    </tui-multi-select>-->
 
     <tui-error
       [error]="[] | tuiFieldError | async"
