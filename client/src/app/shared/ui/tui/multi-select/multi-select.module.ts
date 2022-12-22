@@ -21,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { EventPluginsModule } from '@tinkoff/ng-event-plugins';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
 
 @NgModule({
   declarations: [MultiSelectComponent],
@@ -41,6 +42,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ScrollingModule,
     TuiScrollbarModule,
     TuiDataListModule,
+    InfiniteVirtualScrollModule,
   ],
   exports: [MultiSelectComponent],
 })

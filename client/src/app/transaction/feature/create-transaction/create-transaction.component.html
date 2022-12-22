@@ -27,7 +27,9 @@
         <ng-template tuiDataList>
           <tui-data-list>
             <button
-              *ngFor="let item of items | tuiFilterByInputWith: getCurrencyName"
+              *ngFor="
+                let item of items | tuiFilterByInputWith : getCurrencyName
+              "
               [value]="item.id"
               tuiOption>
               {{ getCurrencyName(item) }}
@@ -166,7 +168,7 @@
       <ng-template tuiDataList>
         <tui-data-list>
           <button
-            *ngFor="let item of items | tuiFilterByInputWith: getItemName"
+            *ngFor="let item of items | tuiFilterByInputWith : getItemName"
             [value]="item.id"
             tuiOption>
             {{ getItemName(item) }}
@@ -197,7 +199,7 @@
       <ng-template tuiDataList>
         <tui-data-list>
           <button
-            *ngFor="let item of items | tuiFilterByInputWith: getItemName"
+            *ngFor="let item of items | tuiFilterByInputWith : getItemName"
             [value]="item.id"
             tuiOption>
             {{ getItemName(item) }}
@@ -215,7 +217,10 @@
     [tuiLabel]="'Labels'"
     class="mb-6 w-full"
     *tuiLet="labelIds$ | async as items">
-    <app-multi-select class="mt-1" [getListFunction]="getLabelsFunction">
+    <app-multi-select
+      class="mt-1"
+      [getListFunction]="getLabelsFunction"
+      label="Choose labels">
     </app-multi-select>
     <!--    <tui-multi-select [tuiTextfieldLabelOutside]="true"-->
     <!--                      class="mt-1"-->

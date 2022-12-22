@@ -1,10 +1,12 @@
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
+:host {
+  display: block;
+}
+
 .tui-zero-scrollbar {
   @include scrollbar-hidden;
-
-  height: calc(34px * (min(max(1, var(--items-count, 0)), 6) + 0.5));
-  //height: calc(34px * min(1, var(--items-count, 0)));
-  min-height: calc(34px * 1.5);
+  height: calc(34px * min(max(1, var(--items-count, 0)), 6) + 6px);
+  min-height: 40px;
   --tui-duration: 0;
 }

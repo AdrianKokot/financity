@@ -6,13 +6,15 @@ import {
   Label,
   LabelListItem,
 } from '@shared/data-access/models/label';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LabelApiService {
   constructor(protected http: HttpClient) {}
+
+  private _getListCache: Record<string, LabelListItem[]> = {};
 
   getList(
     walletId: Wallet['id'],
@@ -31,7 +33,17 @@ export class LabelApiService {
       ...pagination.filters,
     });
 
-    return this.http.get<LabelListItem[]>('/api/labels', { params });
+    const cacheKey = params.toString();
+
+    if (cacheKey in this._getListCache) {
+      return of(this._getListCache[cacheKey]);
+    }
+
+    return this.http.get<LabelListItem[]>('/api/labels', { params }).pipe(
+      tap(data => {
+        this._getListCache[cacheKey] = data;
+      })
+    );
   }
 
   get(walletId: Label['id']) {
