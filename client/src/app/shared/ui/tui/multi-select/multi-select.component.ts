@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -76,7 +77,7 @@ export class MultiSelectComponent<T extends { id: string; name: string }>
     )
   ).pipe(
     withLatestFrom(this._filters$, this.page$),
-    map(([_, filters, page]) => ({
+    map(([, filters, page]) => ({
       page,
       filters,
       pageSize: AUTOCOMPLETE_PAGE_SIZE,
@@ -88,16 +89,26 @@ export class MultiSelectComponent<T extends { id: string; name: string }>
     share()
   );
 
-  readonly items$ = this._api$.pipe(
-    filter((x): x is T[] => x !== null),
-    scan((acc: T[], data: T[]) => {
-      if (this.page$.value === 1) {
-        return [...data];
-      }
-      return [...acc, ...data];
-    }, [] as T[]),
-    shareReplay()
+  readonly apiLoading$ = this._api$.pipe(
+    map(x => x === null),
+    share()
   );
+
+  readonly items$ = merge(
+    this._api$.pipe(
+      filter((x): x is T[] => x !== null),
+      scan((acc: T[], data: T[]) => {
+        if (this.page$.value === 1) {
+          return [...data];
+        }
+        return [...acc, ...data];
+      }, [] as T[]),
+      map(x => x.map(y => y.id))
+    ),
+    this._api$.pipe(
+      filter((x): x is null => x === null && this.page$.value === 1)
+    )
+  ).pipe(share());
 
   private readonly _allItems$ = this._api$.pipe(
     filter((x): x is T[] => x !== null),
@@ -108,12 +119,6 @@ export class MultiSelectComponent<T extends { id: string; name: string }>
       [] as T[]
     ),
     shareReplay(1)
-  );
-
-  ids$ = this.items$.pipe(
-    filter((x): x is T[] => x !== null),
-    map(x => x.map(y => y.id)),
-    startWith(null)
   );
 
   stringify$ = this._allItems$.pipe(

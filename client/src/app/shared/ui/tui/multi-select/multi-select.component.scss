@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+
 }
 
 .tui-zero-scrollbar {
@@ -9,4 +10,11 @@
   height: calc(34px * min(max(1, var(--items-count, 0)), 6) + 6px);
   min-height: 40px;
   --tui-duration: 0;
+
+  &.disable-scrollbar {
+    &, .cdk-virtual-scroll-spacer {
+      height: 40px;
+    }
+  }
 }
+

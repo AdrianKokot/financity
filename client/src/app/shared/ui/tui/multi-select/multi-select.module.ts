@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MultiSelectComponent } from './multi-select.component';
 import {
+  TuiButtonModule,
   TuiDataListModule,
   TuiHostedDropdownModule,
+  TuiLoaderModule,
   TuiScrollbarModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
@@ -43,6 +45,8 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     TuiScrollbarModule,
     TuiDataListModule,
     InfiniteVirtualScrollModule,
+    TuiLoaderModule,
+    TuiButtonModule,
   ],
   exports: [MultiSelectComponent],
 })
