@@ -66,10 +66,18 @@ tui-dropdown .t-wrapper .t-scroll > .t-content:has(tui-calendar-range tui-calend
 }
 
 tui-data-list[data-list-size=s] {
+  --tui-data-list-margin: .0625rem !important;
+
   & > .t-empty {
     font: var(--tui-font-text-s);
     min-height: 2rem;
     padding: 0.3125rem 0.5rem;
     margin: var(--tui-data-list-margin) 0;
+  }
+}
+
+tui-data-list {
+  tui-loader + .t-empty {
+    display: none !important;
   }
 }

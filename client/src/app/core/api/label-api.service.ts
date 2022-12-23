@@ -43,7 +43,7 @@ export class LabelApiService {
       tap(data => {
         this._getListCache[cacheKey] = data;
       }),
-      delay(1000)
+      delay(5000)
     );
   }
 
