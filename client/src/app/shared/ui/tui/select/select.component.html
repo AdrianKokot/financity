@@ -15,23 +15,28 @@
     <cdk-virtual-scroll-viewport
       (pageChange)="page$.next($event)"
       *tuiDataList
-      [itemSize]="36"
+      [itemSize]="32"
       [minBufferPx]="200"
       [style.--items-count]="(items ?? []).length"
       appInfiniteVirtualScroll
       class="viewport tui-zero-scrollbar"
       tuiScrollable>
-      <ng-container *tuiLet="apiLoading$ | async as apiLoading">
-        <tui-data-list *ngIf="items; else loading" size="s">
-          <button *cdkVirtualFor="let item of items" [value]="item" tuiOption>
-            {{ stringify(item) }}
-          </button>
-          <tui-loader *ngIf="apiLoading" class="mb-1"></tui-loader>
-        </tui-data-list>
-        <ng-template #loading>
-          <tui-loader *cdkVirtualFor="let i of [0]" class="mt-1"></tui-loader>
-        </ng-template>
-      </ng-container>
+      <tui-data-list size="s">
+        <button
+          *cdkVirtualFor="let item of items ?? []"
+          [value]="item"
+          tuiOption>
+          {{ stringify(item) }}
+        </button>
+        <ng-container *tuiLet="(apiLoading$ | async)! as apiLoading">
+          <tui-loader
+            [overlay]="true"
+            [showLoader]="apiLoading"
+            [class.mb-1]="apiLoading"
+            [class.mt-1]="apiLoading && items === null">
+          </tui-loader>
+        </ng-container>
+      </tui-data-list>
     </cdk-virtual-scroll-viewport>
   </tui-combo-box>
 </ng-container>

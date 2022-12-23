@@ -6,7 +6,7 @@ import {
   Label,
   LabelListItem,
 } from '@shared/data-access/models/label';
-import { map, Observable, of, tap } from 'rxjs';
+import { delay, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +42,8 @@ export class LabelApiService {
     return this.http.get<LabelListItem[]>('/api/labels', { params }).pipe(
       tap(data => {
         this._getListCache[cacheKey] = data;
-      })
+      }),
+      delay(1000)
     );
   }
 

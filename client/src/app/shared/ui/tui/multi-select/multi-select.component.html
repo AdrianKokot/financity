@@ -10,24 +10,32 @@
     placeholder="Search"
     tuiTextfieldSize="m">
     {{ label }}
+
     <cdk-virtual-scroll-viewport
       (pageChange)="page$.next($event)"
       *tuiDataList
-      [itemSize]="34"
+      [itemSize]="32"
       [minBufferPx]="200"
       [style.--items-count]="(items ?? []).length"
       appInfiniteVirtualScroll
       class="viewport tui-zero-scrollbar"
       tuiScrollable>
-      <tui-data-list size="s" tuiMultiSelectGroup *ngIf="items; else loading">
-        <button *cdkVirtualFor="let item of items" [value]="item" tuiOption>
+      <tui-data-list size="s" tuiMultiSelectGroup>
+        <button
+          *cdkVirtualFor="let item of items ?? []"
+          [value]="item"
+          tuiOption>
           {{ stringify(item) }}
         </button>
-        <tui-loader *ngIf="apiLoading$ | async" class="mb-1"></tui-loader>
+        <ng-container *tuiLet="(apiLoading$ | async)! as apiLoading">
+          <tui-loader
+            [overlay]="true"
+            [showLoader]="apiLoading"
+            [class.mb-1]="apiLoading"
+            [class.mt-1]="apiLoading && items === null">
+          </tui-loader>
+        </ng-container>
       </tui-data-list>
-      <ng-template #loading>
-        <tui-loader class="mt-1" *cdkVirtualFor="let i of [0]"></tui-loader>
-      </ng-template>
     </cdk-virtual-scroll-viewport>
   </tui-multi-select>
 </ng-container>

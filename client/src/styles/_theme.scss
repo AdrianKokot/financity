@@ -66,8 +66,6 @@ tui-dropdown .t-wrapper .t-scroll > .t-content:has(tui-calendar-range tui-calend
 }
 
 tui-data-list[data-list-size=s] {
-  --tui-data-list-margin: .0625rem !important;
-
   & > .t-empty {
     font: var(--tui-font-text-s);
     min-height: 2rem;
