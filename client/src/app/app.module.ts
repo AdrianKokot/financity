@@ -1,4 +1,5 @@
 import {
+  TUI_DIALOGS_CLOSE,
   TUI_SANITIZER,
   TUI_SVG_SRC_PROCESSOR,
   TuiAlertModule,
@@ -19,6 +20,7 @@ import { JwtInterceptor } from '@shared/data-access/interceptors/jwt.interceptor
 import { ApiInterceptor } from '@shared/data-access/interceptors/api.interceptor';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
+import { AuthService } from './auth/data-access/api/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +36,11 @@ import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
     HttpClientModule,
   ],
   providers: [
+    {
+      provide: TUI_DIALOGS_CLOSE,
+      deps: [AuthService],
+      useFactory: (authService: AuthService) => authService.loggedOut$,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,

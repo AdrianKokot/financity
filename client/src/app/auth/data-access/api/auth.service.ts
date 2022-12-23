@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, map, Observable, of, tap } from 'rxjs';
+import { EMPTY, filter, map, Observable, of, share, Subject, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../models/user';
 import { ClaimTypes } from '../models/claim-types';
@@ -9,9 +9,18 @@ import { ClaimTypes } from '../models/claim-types';
   providedIn: 'root',
 })
 export class AuthService {
-  private _basePath = '/api/auth';
+  private readonly _basePath = '/api/auth';
+  private readonly _isAuthenticated$ = new Subject<boolean>();
 
-  constructor(private _http: HttpClient, private _router: Router) {}
+  constructor(
+    private readonly _http: HttpClient,
+    private readonly _router: Router
+  ) {}
+
+  loggedOut$ = this._isAuthenticated$.pipe(
+    filter(x => !x),
+    share()
+  );
 
   get isAuthenticated(): boolean {
     return this.token !== null;
@@ -52,8 +61,10 @@ export class AuthService {
   set token(value: string | null) {
     if (value === null) {
       localStorage.removeItem('token');
+      this._isAuthenticated$.next(false);
     } else {
       localStorage.setItem('token', value);
+      this._isAuthenticated$.next(true);
     }
   }
 
