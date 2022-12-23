@@ -74,6 +74,10 @@ tui-data-list[data-list-size=s] {
     padding: 0.3125rem 0.5rem;
     margin: var(--tui-data-list-margin) 0;
   }
+
+  .t-checkmark {
+    height: 20px;
+  }
 }
 
 tui-data-list {

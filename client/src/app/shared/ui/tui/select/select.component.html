@@ -23,7 +23,7 @@
       tuiScrollable>
       <tui-data-list size="s">
         <ng-container *cdkVirtualFor="let item of items ?? []">
-          <button [value]="item" tuiOption>
+          <button [value]="item" tuiOption tuiTextfieldIcon="tuiIconCheck">
             {{ stringify(item) }}
           </button>
         </ng-container>

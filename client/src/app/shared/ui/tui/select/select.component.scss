@@ -16,4 +16,8 @@
   tui-loader {
     margin: var(--tui-data-list-margin) 0;
   }
+
+  tui-data-list button {
+    white-space: nowrap;
+  }
 }
