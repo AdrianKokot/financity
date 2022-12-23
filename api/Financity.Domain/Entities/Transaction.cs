@@ -20,6 +20,7 @@ public sealed class Transaction : Entity, IBelongsToWallet
 
     public Guid? CategoryId { get; set; }
     public Guid? CategoryWalletId { get; set; }
+    public TransactionType? CategoryTransactionType { get; set; }
     public Category? Category { get; set; }
 
     public string CurrencyId { get; set; }

@@ -8,10 +8,7 @@ public sealed class Category : Entity, IBelongsToWallet
     public string Name { get; set; } = string.Empty;
 
     public Appearance Appearance { get; set; } = new();
-
-    public Guid? ParentCategoryId { get; set; }
-    public Category? ParentCategory { get; set; }
-
+    
     public TransactionType TransactionType { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

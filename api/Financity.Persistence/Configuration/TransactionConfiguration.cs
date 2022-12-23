@@ -10,16 +10,22 @@ public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transact
     {
         builder.Property(x => x.TransactionType)
                .HasConversion<string>()
-               .HasMaxLength(32);
-
+               .HasMaxLength(7)
+               .HasColumnName($"{nameof(Transaction.TransactionType)}Id");  
+        
+        builder.Property(x => x.CategoryTransactionType)
+               .HasConversion<string>()
+               .HasMaxLength(7)
+               .HasColumnName($"{nameof(Transaction.CategoryTransactionType)}Id");
+        
         builder.HasIndex(x => x.TransactionType);
 
         builder.Property(x => x.Note).HasMaxLength(512);
 
         builder.HasOne(x => x.Category)
                .WithMany(x => x.Transactions)
-               .HasForeignKey(x => new { x.CategoryId, x.CategoryWalletId })
-               .HasPrincipalKey(x => new { x.Id, x.WalletId })
+               .HasForeignKey(x => new { x.CategoryId, x.CategoryWalletId, x.CategoryTransactionType })
+               .HasPrincipalKey(x => new { x.Id, x.WalletId, x.TransactionType })
                .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(x => x.Recipient)
