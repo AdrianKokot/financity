@@ -6,7 +6,6 @@ import {
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { DialogService } from '@shared/utils/services/dialog.service';
-import { CreateWalletDialogComponent } from '../../../modules/dashboard/components/wallet/create-wallet-dialog/create-wallet-dialog.component';
 
 @Component({
   selector: 'app-wallets-shell',
@@ -25,8 +24,8 @@ export class WalletsShellComponent {
   ) {}
 
   openCreateWalletDialog() {
-    this._dialog.open(CreateWalletDialogComponent).subscribe(() => {
-      this.poll$.next(true);
-    });
+    // this._dialog.open(CreateWalletDialogComponent).subscribe(() => {
+    //   this.poll$.next(true);
+    // });
   }
 }

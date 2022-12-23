@@ -1,42 +1,12 @@
 <form (ngSubmit)="submit()" [formGroup]="form">
-  <!--  <div class="tui-form__row">-->
-  <!--    <tui-input-number-->
-  <!--      formControlName="startingAmount"-->
-  <!--      [postfix]="(currency.valueChanges | async)?.id ?? null | tuiCurrency">-->
-  <!--      Starting balance-->
-  <!--    </tui-input-number>-->
-  <!--    <tui-error-->
-  <!--      formControlName="startingAmount"-->
-  <!--      [error]="[] | tuiFieldError | async"></tui-error>-->
-  <!--  </div>-->
   <div class="d-flex gap-4 align-items-flex-start">
-    <label
-      *ngIf="currencies$ | async as items"
-      [tuiLabel]="'Currency'"
-      class="mb-6 w-full">
-      <tui-combo-box
-        [strict]="true"
-        [tuiTextfieldLabelOutside]="true"
-        [valueContent]="stringifyCurrencies(items)"
+    <label [tuiLabel]="'Currency'" class="mb-6 w-full">
+      <app-select
+        [getListFunction]="getCurrenciesFunction"
+        [stringify]="getCurrencyName"
         class="mt-1"
         formControlName="currencyId"
-        tuiTextfieldSize="m">
-        Choose a currency
-        <input placeholder="Type a name" tuiTextfield />
-
-        <ng-template tuiDataList>
-          <tui-data-list>
-            <button
-              *ngFor="
-                let item of items | tuiFilterByInputWith : getCurrencyName
-              "
-              [value]="item.id"
-              tuiOption>
-              {{ getCurrencyName(item) }}
-            </button>
-          </tui-data-list>
-        </ng-template>
-      </tui-combo-box>
+        label="Choose a currency"></app-select>
 
       <tui-error
         [error]="[] | tuiFieldError | async"
@@ -78,23 +48,6 @@
         formControlName="exchangeRate"></tui-error>
     </label>
   </div>
-  <!--  <div class="tui-form__row">-->
-  <!--    <tui-combo-box [formControl]="currency" [stringify]="getCurrencyName">-->
-  <!--      Currency-->
-  <!--      <input tuiTextfield />-->
-
-  <!--      <span class="tui-required"></span>-->
-  <!--      <tui-data-list-wrapper-->
-  <!--        *tuiDataList-->
-  <!--        [items]="currencies$ | async | tuiFilterByInputWith: getCurrencyName"-->
-  <!--        [itemContent]="-->
-  <!--          getCurrencyName | tuiStringifyContent-->
-  <!--        "></tui-data-list-wrapper>-->
-  <!--      <tui-error-->
-  <!--        [formControl]="currency"-->
-  <!--        [error]="[] | tuiFieldError | async"></tui-error>-->
-  <!--    </tui-combo-box>-->
-  <!--  </div>-->
 
   <label [tuiLabel]="'Transaction date'" class="mb-6">
     <tui-input-date
@@ -115,20 +68,11 @@
   <label [tuiLabel]="'Transaction type'" class="mb-6">
     <tui-select
       [tuiTextfieldLabelOutside]="true"
-      [valueContent]="stringifyTransactionTypes(transactionTypes)"
       class="mt-1"
       formControlName="transactionType"
       tuiTextfieldSize="m">
-      <ng-template tuiDataList>
-        <tui-data-list>
-          <button
-            *ngFor="let item of transactionTypes"
-            [value]="item.id"
-            tuiOption>
-            {{ item.label }}
-          </button>
-        </tui-data-list>
-      </ng-template>
+      <tui-data-list-wrapper *tuiDataList [items]="transactionTypes" size="s">
+      </tui-data-list-wrapper>
     </tui-select>
 
     <tui-error
@@ -151,62 +95,24 @@
       formControlName="note"></tui-error>
   </label>
 
-  <label
-    *ngIf="categories$ | async as items"
-    [tuiLabel]="'Category'"
-    class="mb-6 w-full">
-    <tui-combo-box
-      [strict]="true"
-      [tuiTextfieldLabelOutside]="true"
-      [valueContent]="stringifyName(items)"
+  <label [tuiLabel]="'Category'" class="mb-6 w-full">
+    <app-select
+      [getListFunction]="getCategoriesFunction"
       class="mt-1"
       formControlName="categoryId"
-      tuiTextfieldSize="m">
-      Choose a category
-      <input placeholder="Type a name" tuiTextfield />
-
-      <ng-template tuiDataList>
-        <tui-data-list>
-          <button
-            *ngFor="let item of items | tuiFilterByInputWith : getItemName"
-            [value]="item.id"
-            tuiOption>
-            {{ getItemName(item) }}
-          </button>
-        </tui-data-list>
-      </ng-template>
-    </tui-combo-box>
+      label="Choose a category"></app-select>
 
     <tui-error
       [error]="[] | tuiFieldError | async"
       formControlName="categoryId"></tui-error>
   </label>
 
-  <label
-    *ngIf="recipients$ | async as items"
-    [tuiLabel]="'Recipient'"
-    class="mb-6 w-full">
-    <tui-combo-box
-      [strict]="true"
-      [tuiTextfieldLabelOutside]="true"
-      [valueContent]="stringifyName(items)"
+  <label [tuiLabel]="'Recipient'" class="mb-6 w-full">
+    <app-select
+      [getListFunction]="getRecipientsFunction"
       class="mt-1"
       formControlName="recipientId"
-      tuiTextfieldSize="m">
-      Choose a recipient
-      <input placeholder="Type a name" tuiTextfield />
-
-      <ng-template tuiDataList>
-        <tui-data-list>
-          <button
-            *ngFor="let item of items | tuiFilterByInputWith : getItemName"
-            [value]="item.id"
-            tuiOption>
-            {{ getItemName(item) }}
-          </button>
-        </tui-data-list>
-      </ng-template>
-    </tui-combo-box>
+      label="Choose a recipient"></app-select>
 
     <tui-error
       [error]="[] | tuiFieldError | async"
@@ -232,7 +138,7 @@
       size="m"
       tuiButton
       type="submit">
-      Submit
+      Create
     </button>
   </div>
 </form>
