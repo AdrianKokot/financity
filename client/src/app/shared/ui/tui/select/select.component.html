@@ -1,5 +1,6 @@
 <ng-container *tuiLet="(stringify$ | async)! as stringify">
   <tui-combo-box
+    [class.tui-group__inherit-item]="shouldAddGroupClass"
     (ngModelChange)="writeValue($event)"
     (searchChange)="search$.next($event ?? '')"
     *tuiLet="items$ | async as items"

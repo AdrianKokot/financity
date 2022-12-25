@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 import {
@@ -35,7 +35,6 @@ import { LabelApiService } from '../../../core/api/label-api.service';
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
   styleUrls: ['./create-transaction.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class CreateTransactionComponent implements OnDestroy {
   maxDate = TuiDay.currentLocal();
@@ -58,7 +57,7 @@ export class CreateTransactionComponent implements OnDestroy {
     labelIds: [[] as Label['id'][]],
   });
 
-  getCurrencyName = (item: CurrencyListItem) => `${item.name} [${item.id}]`;
+  getCurrencyName = (item: CurrencyListItem) => item.id;
 
   transactionTypes = Object.keys(TransactionType);
   loading$ = new BehaviorSubject<boolean>(false);

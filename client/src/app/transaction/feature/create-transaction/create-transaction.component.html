@@ -1,10 +1,43 @@
 <form (ngSubmit)="submit()" [formGroup]="form">
-  <div class="d-flex gap-4 align-items-flex-start">
-    <label [tuiLabel]="'Currency'" class="mb-6 w-full">
+  <div tuiGroup class="mb-6" [rounded]="true">
+    <label [tuiLabel]="'Transaction type'" class="max-w-s">
+      <tui-select
+        [tuiTextfieldLabelOutside]="true"
+        class="mt-1 tui-group__inherit-item"
+        formControlName="transactionType"
+        tuiTextfieldSize="m">
+        <tui-data-list-wrapper *tuiDataList [items]="transactionTypes" size="s">
+        </tui-data-list-wrapper>
+      </tui-select>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="transactionType"></tui-error>
+    </label>
+
+    <label [tuiLabel]="'Transaction date'">
+      <tui-input-date
+        [max]="maxDate"
+        [tuiTextfieldLabelOutside]="true"
+        class="mt-1 tui-group__inherit-item"
+        formControlName="transactionDate"
+        tuiTextfieldSize="m">
+        Choose a date
+        <input tuiTextfield />
+      </tui-input-date>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="transactionDate"></tui-error>
+    </label>
+  </div>
+
+  <div tuiGroup class="mb-6" [rounded]="true">
+    <label [tuiLabel]="'Currency'" class="max-w-s">
       <app-select
         [getListFunction]="getCurrenciesFunction"
         [stringify]="getCurrencyName"
-        class="mt-1"
+        class="mt-1 tui-group__inherit-item"
         formControlName="currencyId"
         label="Choose a currency"></app-select>
 
@@ -13,13 +46,11 @@
         formControlName="currencyId"></tui-error>
     </label>
 
-    <label [tuiLabel]="'Amount'" class="mb-6 w-full">
+    <label [tuiLabel]="'Amount'">
       <tui-input-number
-        [postfix]="
-          (form.controls.currencyId.valueChanges | async) ?? null | tuiCurrency
-        "
+        [postfix]="form.controls.currencyId.value ?? null | tuiCurrency"
         [tuiTextfieldLabelOutside]="true"
-        class="mt-1"
+        class="mt-1 tui-group__inherit-item"
         formControlName="amount"
         tuiAutoFocus
         tuiTextfieldSize="m">
@@ -34,10 +65,10 @@
     <label
       *ngIf="shouldExchangeRateBeSpecified$ | async"
       [tuiLabel]="'Currency exchange rate'"
-      class="mb-6 w-full">
+      class="max-w-s">
       <tui-input-number
         [tuiTextfieldLabelOutside]="true"
-        class="mt-1"
+        class="mt-1 tui-group__inherit-item"
         formControlName="exchangeRate"
         tuiTextfieldSize="m">
         Type an amount
@@ -49,53 +80,7 @@
     </label>
   </div>
 
-  <label [tuiLabel]="'Transaction date'" class="mb-6">
-    <tui-input-date
-      [max]="maxDate"
-      [tuiTextfieldLabelOutside]="true"
-      class="mt-1"
-      formControlName="transactionDate"
-      tuiTextfieldSize="m">
-      Choose a date
-      <input tuiTextfield />
-    </tui-input-date>
-
-    <tui-error
-      [error]="[] | tuiFieldError | async"
-      formControlName="transactionDate"></tui-error>
-  </label>
-
-  <label [tuiLabel]="'Transaction type'" class="mb-6">
-    <tui-select
-      [tuiTextfieldLabelOutside]="true"
-      class="mt-1"
-      formControlName="transactionType"
-      tuiTextfieldSize="m">
-      <tui-data-list-wrapper *tuiDataList [items]="transactionTypes" size="s">
-      </tui-data-list-wrapper>
-    </tui-select>
-
-    <tui-error
-      [error]="[] | tuiFieldError | async"
-      formControlName="transactionType"></tui-error>
-  </label>
-
-  <label [tuiLabel]="'Note'" class="mb-6">
-    <tui-text-area
-      [expandable]="true"
-      [maxLength]="512"
-      [tuiTextfieldLabelOutside]="true"
-      class="mt-1"
-      formControlName="note"
-      tuiTextfieldSize="m">
-    </tui-text-area>
-
-    <tui-error
-      [error]="[] | tuiFieldError | async"
-      formControlName="note"></tui-error>
-  </label>
-
-  <label [tuiLabel]="'Category'" class="mb-6 w-full">
+  <label [tuiLabel]="'Category'" class="w-full mb-6">
     <app-select
       [getListFunction]="getCategoriesFunction"
       class="mt-1"
@@ -107,7 +92,7 @@
       formControlName="categoryId"></tui-error>
   </label>
 
-  <label [tuiLabel]="'Recipient'" class="mb-6 w-full">
+  <label [tuiLabel]="'Recipient'" class="w-full mb-6">
     <app-select
       [getListFunction]="getRecipientsFunction"
       class="mt-1"
@@ -130,6 +115,21 @@
     <tui-error
       [error]="[] | tuiFieldError | async"
       formControlName="labelIds"></tui-error>
+  </label>
+
+  <label [tuiLabel]="'Note'" class="mb-6">
+    <tui-text-area
+      [expandable]="true"
+      [maxLength]="512"
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1"
+      formControlName="note"
+      tuiTextfieldSize="m">
+    </tui-text-area>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="note"></tui-error>
   </label>
 
   <div class="tui-form__row text-right">

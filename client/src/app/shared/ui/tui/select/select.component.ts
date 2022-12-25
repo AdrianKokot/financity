@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { AbstractSelectComponent } from '@shared/ui/tui/abstract-select/abstract-select.component';
 
 @Component({
@@ -10,6 +10,12 @@ import { AbstractSelectComponent } from '@shared/ui/tui/abstract-select/abstract
 export class SelectComponent<
   T extends { id: string; name: string }
 > extends AbstractSelectComponent<T> {
+  @HostBinding('class') set hostClass(value: string) {
+    console.log(`set classes: ${value}`);
+    this.shouldAddGroupClass = value.includes('tui-group__inherit-item');
+  }
+
+  shouldAddGroupClass = false;
   value: T['id'] | null = null;
 
   writeValue(value: T['id'] | null) {
