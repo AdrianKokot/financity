@@ -9,11 +9,4 @@ import { AbstractSelectComponent } from '@shared/ui/tui/abstract-select/abstract
 })
 export class MultiSelectComponent<
   T extends { id: string; name: string }
-> extends AbstractSelectComponent<T> {
-  value: T['id'][] = [];
-
-  writeValue(value: T['id'][]) {
-    this.value = value;
-    this.onChange(this.value);
-  }
-}
+> extends AbstractSelectComponent<T> {}

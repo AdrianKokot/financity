@@ -35,10 +35,10 @@
   <div tuiGroup class="mb-6" [rounded]="true">
     <label [tuiLabel]="'Currency'" class="max-w-s">
       <app-select
+        [control]="form.controls.currencyId"
         [getListFunction]="getCurrenciesFunction"
         [stringify]="getCurrencyName"
         class="mt-1 tui-group__inherit-item"
-        formControlName="currencyId"
         label="Choose a currency"></app-select>
 
       <tui-error
@@ -48,7 +48,7 @@
 
     <label [tuiLabel]="'Amount'">
       <tui-input-number
-        [postfix]="form.controls.currencyId.value ?? null | tuiCurrency"
+        [postfix]="form.controls.currencyId.value | tuiCurrency"
         [tuiTextfieldLabelOutside]="true"
         class="mt-1 tui-group__inherit-item"
         formControlName="amount"
@@ -82,9 +82,9 @@
 
   <label [tuiLabel]="'Category'" class="w-full mb-6">
     <app-select
+      [control]="form.controls.categoryId"
       [getListFunction]="getCategoriesFunction"
       class="mt-1"
-      formControlName="categoryId"
       label="Choose a category"></app-select>
 
     <tui-error
@@ -94,9 +94,9 @@
 
   <label [tuiLabel]="'Recipient'" class="w-full mb-6">
     <app-select
+      [control]="form.controls.recipientId"
       [getListFunction]="getRecipientsFunction"
       class="mt-1"
-      formControlName="recipientId"
       label="Choose a recipient"></app-select>
 
     <tui-error
@@ -106,9 +106,9 @@
 
   <label [tuiLabel]="'Labels'" class="mb-6 w-full">
     <app-multi-select
-      class="mt-1"
-      formControlName="labelIds"
+      [control]="form.controls.labelIds"
       [getListFunction]="getLabelsFunction"
+      class="mt-1"
       label="Choose labels">
     </app-multi-select>
 

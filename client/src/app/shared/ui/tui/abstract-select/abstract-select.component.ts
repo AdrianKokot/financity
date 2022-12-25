@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Component, Input } from '@angular/core';
 import {
   BehaviorSubject,
   debounceTime,
@@ -22,14 +21,14 @@ import {
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TuiContextWithImplicit, tuiIsString } from '@taiga-ui/cdk';
+import { FormControl } from '@angular/forms';
 
 @Component({ template: '' })
 export abstract class AbstractSelectComponent<
   T extends { id: string; name: string }
-> implements ControlValueAccessor
-{
+> {
+  @Input() control: FormControl | null = null;
   @Input() label = '';
-
   @Input() preloadedResults: T[] = [];
 
   @Input() stringify = (item: T) => item.name;
@@ -129,31 +128,4 @@ export abstract class AbstractSelectComponent<
     ),
     shareReplay(1)
   );
-
-  onChange: (...args: unknown[]) => void = () => {};
-  onTouched: (...args: unknown[]) => void = () => {};
-
-  disabled = false;
-
-  constructor(
-    private readonly _detector: ChangeDetectorRef,
-    private readonly _control: NgControl
-  ) {
-    _control.valueAccessor = this;
-  }
-
-  abstract writeValue(value: unknown): void;
-
-  registerOnTouched(onTouched: (...args: unknown[]) => void) {
-    this.onTouched = onTouched;
-  }
-
-  registerOnChange(onChange: (...args: unknown[]) => void) {
-    this.onChange = onChange;
-  }
-
-  setDisabledState(disabled: boolean) {
-    this.disabled = disabled;
-    this._detector.markForCheck();
-  }
 }

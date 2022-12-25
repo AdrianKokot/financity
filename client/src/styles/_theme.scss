@@ -95,3 +95,7 @@ tui-data-list {
   border-top-right-radius: var(--tui-radius-m);
   border-bottom-right-radius: var(--tui-radius-m);
 }
+
+.tui-group {
+  align-items: flex-start;
+}

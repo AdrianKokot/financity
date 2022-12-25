@@ -13,7 +13,7 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualForOf,
@@ -38,6 +38,7 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     CdkVirtualForOf,
     TuiLoaderModule,
     TuiDataListWrapperModule,
+    ReactiveFormsModule,
   ],
   exports: [SelectComponent],
 })
