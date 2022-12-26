@@ -251,7 +251,11 @@
                     <tui-badge
                       *ngFor="let label of item.labels"
                       class="mr-1 bg-base-6"
-                      [ngClass]="label.appearance.color"
+                      [style.background-color]="
+                        label.appearance.color
+                          ? 'var(--' + label.appearance.color + ')'
+                          : null
+                      "
                       status="custom"
                       [value]="label.name"></tui-badge>
 

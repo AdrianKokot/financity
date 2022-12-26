@@ -1,25 +1,78 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <label [tuiLabel]="'Name'" class="mb-6">
-    <tui-input
-      formControlName="name"
-      tuiTextfieldSize="m"
-      class="mt-1"
-      [tuiTextfieldLabelOutside]="true">
-      Example label
-      <input tuiTextfield type="text" />
-    </tui-input>
+  <tui-hosted-dropdown
+    [content]="dataList"
+    class="w-full"
+    [(open)]="paletteDropdownOpened">
+    <div tuiGroup class="mb-6" [rounded]="true">
+      <label
+        tuiLabel="Color"
+        formGroupName="appearance"
+        class="tui-group__auto-width-item">
+        <button
+          type="button"
+          [pseudoFocus]="paletteDropdownOpened"
+          tuiButton
+          class="mt-1 tui-group__inherit-item button-select-dropdown"
+          appearance="textfield"
+          [iconRight]="arrow"
+          tuiHostedDropdownHost
+          size="m"
+          [tuiTextfieldLabelOutside]="true">
+          <span
+            [rounded]="true"
+            [appPaletteItem]="
+              form.controls.appearance.controls.color.value
+            "></span>
+        </button>
+        <ng-template #dataList>
+          <tui-data-list size="s">
+            <div class="palette-grid" [style.--items-count]="palletLength">
+              <tui-badged-content
+                *ngFor="let color of palette"
+                [colorTop]="
+                  color === form.controls.appearance.controls.color.value
+                    ? 'var(--tui-link)'
+                    : ''
+                "
+                size="xs">
+                <button
+                  tuiOption
+                  (click)="
+                    form.controls.appearance.controls.color.setValue(color);
+                    paletteDropdownOpened = false
+                  "
+                  [value]="color"
+                  [appPaletteItem]="color"
+                  [rounded]="true"></button>
+              </tui-badged-content>
+            </div>
+          </tui-data-list>
+        </ng-template>
 
-    <tui-error
-      formControlName="name"
-      [error]="[] | tuiFieldError | async"></tui-error>
-  </label>
+        <tui-error
+          formControlName="color"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+
+      <label [tuiLabel]="'Name'">
+        <tui-input
+          formControlName="name"
+          tuiTextfieldSize="m"
+          class="mt-1 tui-group__inherit-item"
+          [tuiTextfieldLabelOutside]="true">
+          Example label
+          <input tuiTextfield type="text" />
+        </tui-input>
+
+        <tui-error
+          formControlName="name"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+    </div>
+  </tui-hosted-dropdown>
 
   <div class="tui-form__row text-right">
-    <button
-      tuiButton
-      type="submit"
-      size="m"
-      [showLoader]="(loading$ | async) ?? false">
+    <button tuiButton type="submit" size="m" [showLoader]="(loading$ | async)!">
       Submit
     </button>
   </div>

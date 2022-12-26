@@ -99,3 +99,30 @@ tui-data-list {
 .tui-group {
   align-items: flex-start;
 }
+
+button.button-select-dropdown {
+  --tui-padding: var(--tui-padding-m);
+
+  .t-wrapper {
+    .t-right {
+      margin: 0 0 0 0.5rem;
+      color: var(--tui-text-03);
+      transition-property: color;
+      transition-duration: var(--tui-duration, .3s);
+      transition-timing-function: ease-in-out;
+    }
+
+    &:hover:not(._readonly) .t-right {
+      color: var(--tui-text-02);
+    }
+  }
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--items-count, 1), 2.3125rem);
+
+  & > * {
+    margin: 0.375rem;
+  }
+}

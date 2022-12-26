@@ -10,6 +10,9 @@ import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Label } from '@shared/data-access/models/label';
 import { LabelApiService } from '../../../core/api/label-api.service';
+import { ICON_COLORS } from '@shared/ui/icon-colors';
+import { TUI_ARROW } from '@taiga-ui/kit';
+import { PALETTE } from '../create-label/create-label.component';
 
 @Component({
   selector: 'app-update-label',
@@ -17,16 +20,23 @@ import { LabelApiService } from '../../../core/api/label-api.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateLabelComponent implements OnDestroy {
+  readonly palette = PALETTE;
+  readonly palletLength = ICON_COLORS.length;
   form = this._fb.nonNullable.group({
     id: ['', [Validators.required]],
-    walletId: ['', [Validators.required]],
     name: ['', [Validators.required]],
     appearance: this._fb.group({
-      iconName: <(string | null)[]>[null],
-      color: <(string | null)[]>[null],
+      color: this._fb.control<string>(
+        this.palette[Math.floor(this.palette.length * Math.random())],
+        [Validators.required]
+      ),
     }),
+    walletId: ['', [Validators.required]],
   });
 
+  readonly arrow = TUI_ARROW;
+
+  paletteDropdownOpened = false;
   loading$ = new BehaviorSubject<boolean>(false);
   private _destroyed$ = new Subject<void>();
 
