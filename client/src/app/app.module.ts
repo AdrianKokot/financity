@@ -68,11 +68,18 @@ import { AuthService } from './auth/data-access/api/auth.service';
           if (src === null) {
             return '';
           }
-          const myCustomPrefix = 'fa::';
 
-          return src.startsWith(myCustomPrefix)
-            ? `assets/icons/fa/${src.replace(myCustomPrefix, '')}.svg`
-            : src;
+          if (src.startsWith('fa::')) {
+            if (src.startsWith('fa::solid::')) {
+              return `assets/icons/fa/solid/${src.replace(
+                'fa::solid::',
+                ''
+              )}.svg`;
+            }
+            return `assets/icons/fa/${src.replace('fa::', '')}.svg`;
+          }
+
+          return src;
         };
       },
     },

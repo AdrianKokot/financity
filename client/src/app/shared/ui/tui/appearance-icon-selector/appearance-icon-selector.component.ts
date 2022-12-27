@@ -11,11 +11,16 @@ import {
   APPEARANCE_COLORS_COUNT,
   APPEARANCE_ICONS,
 } from '@shared/ui/appearance';
-import { TUI_ARROW, TuiBadgedContentModule } from '@taiga-ui/kit';
+import {
+  TUI_ARROW,
+  TuiBadgedContentModule,
+  TuiMarkerIconModule,
+} from '@taiga-ui/kit';
 import {
   TuiButtonModule,
   TuiDataListModule,
   TuiHostedDropdownModule,
+  TuiSvgModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { PaletteItemDirective } from '@shared/ui/tui/palette-item.directive';
@@ -31,6 +36,8 @@ import { PaletteItemDirective } from '@shared/ui/tui/palette-item.directive';
     TuiTextfieldControllerModule,
     TuiHostedDropdownModule,
     TuiButtonModule,
+    TuiSvgModule,
+    TuiMarkerIconModule,
   ],
   templateUrl: './appearance-icon-selector.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

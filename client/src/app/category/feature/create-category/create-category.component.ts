@@ -9,7 +9,10 @@ import {
   TRANSACTION_TYPES,
   TransactionType,
 } from '@shared/data-access/models/transaction-type.enum';
-import { getRandomAppearanceColor } from '@shared/ui/appearance';
+import {
+  getRandomAppearanceColor,
+  getRandomAppearanceIcon,
+} from '@shared/ui/appearance';
 
 @Component({
   selector: 'app-create-category',
@@ -20,7 +23,7 @@ export class CreateCategoryComponent {
   form = this._fb.nonNullable.group({
     name: ['', [Validators.required]],
     appearance: this._fb.group({
-      iconName: [null as string | null],
+      iconName: [getRandomAppearanceIcon(), [Validators.required]],
       color: [getRandomAppearanceColor(), [Validators.required]],
     }),
     walletId: ['', [Validators.required]],

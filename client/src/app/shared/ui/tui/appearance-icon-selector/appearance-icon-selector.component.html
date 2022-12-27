@@ -10,7 +10,13 @@
     tuiHostedDropdownHost
     size="m"
     [tuiTextfieldLabelOutside]="true">
-    <span [rounded]="true" [appPaletteItem]="value"></span>
+    <span appPaletteItem="" [rounded]="true">
+      <tui-svg
+        [src]="value"
+        *ngIf="value !== null"
+        class="w-full h-full text-1">
+      </tui-svg>
+    </span>
   </button>
   <ng-template #dataList>
     <tui-data-list size="s">
@@ -22,9 +28,10 @@
           <button
             tuiOption
             (click)="writeValue(item)"
-            [value]="item"
-            [appPaletteItem]="item"
-            [rounded]="true"></button>
+            appPaletteItem=""
+            [rounded]="true">
+            <tui-svg [src]="item" class="w-full h-full text-1"></tui-svg>
+          </button>
         </tui-badged-content>
       </div>
     </tui-data-list>

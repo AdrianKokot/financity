@@ -11,6 +11,10 @@ import { CategoryApiService } from '../../../core/api/category-api.service';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
+import {
+  getRandomAppearanceColor,
+  getRandomAppearanceIcon,
+} from '@shared/ui/appearance';
 
 @Component({
   selector: 'app-update-category',
@@ -24,8 +28,8 @@ export class UpdateCategoryComponent implements OnDestroy {
     transactionType: [TransactionType.Income, [Validators.required]],
     name: ['', [Validators.required]],
     appearance: this._fb.group({
-      iconName: <(string | null)[]>[null],
-      color: <(string | null)[]>[null],
+      iconName: [getRandomAppearanceIcon(), [Validators.required]],
+      color: [getRandomAppearanceColor(), [Validators.required]],
     }),
   });
 

@@ -37,8 +37,44 @@ export const getRandomAppearanceColor = () => {
 };
 
 export const APPEARANCE_ICONS = [
-  'fa::address-card',
-  'fa::pen',
-  'fa::question',
-  'fa::save',
+  'fa::solid::bicycle',
+  'fa::solid::book',
+  'fa::solid::building',
+  'fa::solid::car',
+  'fa::solid::cart-shopping',
+  'fa::solid::certificate',
+  'fa::solid::compass',
+  'fa::solid::computer',
+  'fa::solid::dog',
+  'fa::solid::film',
+  'fa::solid::futbol',
+  'fa::solid::gamepad',
+  'fa::solid::gift',
+  'fa::solid::hammer',
+  'fa::solid::hippo',
+  'fa::solid::lemon',
+  'fa::solid::location-dot',
+  'fa::solid::money-bill',
+  'fa::solid::mountain-sun',
+  'fa::solid::mug-hot',
+  'fa::solid::music',
+  'fa::solid::newspaper',
+  'fa::solid::pizza-slice',
+  'fa::solid::plane',
+  'fa::solid::puzzle-piece',
+  'fa::solid::receipt',
+  'fa::solid::sack',
+  'fa::solid::seedling',
+  'fa::solid::shirt',
+  'fa::solid::soap',
+  'fa::solid::tag',
+  'fa::solid::tooth',
+  'fa::solid::train',
+  'fa::solid::tree',
+  'fa::solid::utensils',
+  'fa::solid::wallet',
 ];
+
+export const getRandomAppearanceIcon = () => {
+  return APPEARANCE_ICONS[Math.floor(Math.random() * APPEARANCE_ICONS.length)];
+};

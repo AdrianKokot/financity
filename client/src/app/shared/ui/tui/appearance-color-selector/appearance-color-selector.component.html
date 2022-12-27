@@ -10,7 +10,7 @@
     tuiHostedDropdownHost
     size="m"
     [tuiTextfieldLabelOutside]="true">
-    <span [rounded]="true" [appPaletteItem]="value"></span>
+    <span [rounded]="true" [appPaletteItem]="value ?? ''"></span>
   </button>
   <ng-template #dataList>
     <tui-data-list size="s">
