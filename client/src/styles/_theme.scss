@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500&display=swap');
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
+
 body {
   background-color: var(--tui-base-01)
 }
@@ -13,6 +14,13 @@ body {
 
 tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   transition-property: none !important;
+}
+
+[tuiWrapper][data-appearance='outline'] {
+  &:after {
+    color: var(--tui-base-03);
+    transition-property: color;
+  }
 }
 
 [tuiWrapper][data-appearance='flat-destructive'] {

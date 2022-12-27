@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { CategoryApiService } from '../../../core/api/category-api.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { exhaustMap, filter, map, startWith, Subject, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
@@ -30,8 +30,21 @@ export class CreateCategoryComponent {
     transactionType: [TransactionType.Income, [Validators.required]],
   });
 
+  readonly submit$ = new Subject<void>();
+  readonly submitLoading$ = this.submit$.pipe(
+    tap(() => this.form.markAllAsTouched()),
+    filter(() => this.form.valid),
+    exhaustMap(() =>
+      this._categoryService.create(this.form.getRawValue()).pipe(
+        tap(result => this._context.completeWith(result)),
+        startWith(null)
+      )
+    ),
+    map(x => x === null),
+    startWith(false)
+  );
+
   transactionTypes = TRANSACTION_TYPES;
-  loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private _categoryService: CategoryApiService,
@@ -48,24 +61,7 @@ export class CreateCategoryComponent {
     });
   }
 
-  submit(): void {
-    if (!this.form.valid) {
-      return;
-    }
-    const payload = this.form.getRawValue();
-
-    this._categoryService
-      .create(payload)
-      .pipe(
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        finalize(() => {
-          this.loading$.next(false);
-        })
-      )
-      .subscribe(cat => {
-        this._context.completeWith(cat);
-      });
+  cancel(): void {
+    this._context.$implicit.complete();
   }
 }

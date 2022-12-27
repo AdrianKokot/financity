@@ -8,6 +8,7 @@ import {
   TuiGroupModule,
   TuiHostedDropdownModule,
   TuiLabelModule,
+  TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
@@ -24,7 +25,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogService } from '@shared/utils/services/dialog.service';
 import { UpdateCategoryComponent } from './feature/update-category/update-category.component';
-import { TuiAutoFocusModule } from '@taiga-ui/cdk';
+import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
 import { PaletteItemDirective } from '@shared/ui/tui/palette-item.directive';
 import { AppearanceColorSelectorComponent } from '@shared/ui/tui/appearance-color-selector/appearance-color-selector.component';
 import { AppearanceIconSelectorComponent } from '@shared/ui/tui/appearance-icon-selector/appearance-icon-selector.component';
@@ -54,6 +55,8 @@ import { AppearanceIconSelectorComponent } from '@shared/ui/tui/appearance-icon-
     TuiBadgedContentModule,
     AppearanceColorSelectorComponent,
     AppearanceIconSelectorComponent,
+    TuiLoaderModule,
+    TuiLetModule,
   ],
   exports: [CreateCategoryComponent, UpdateCategoryComponent],
   providers: [DialogService],

@@ -1,16 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
-import { BehaviorSubject, finalize, Subject, take, takeUntil, tap } from 'rxjs';
 import { CategoryApiService } from '../../../core/api/category-api.service';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
+import { exhaustMap, filter, map, startWith, Subject, tap } from 'rxjs';
+import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 import {
   getRandomAppearanceColor,
   getRandomAppearanceIcon,
@@ -21,8 +16,8 @@ import {
   templateUrl: './update-category.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UpdateCategoryComponent implements OnDestroy {
-  form = this._fb.nonNullable.group({
+export class UpdateCategoryComponent {
+  readonly form = this._fb.nonNullable.group({
     id: ['', [Validators.required]],
     walletId: ['', [Validators.required]],
     transactionType: [TransactionType.Income, [Validators.required]],
@@ -33,8 +28,27 @@ export class UpdateCategoryComponent implements OnDestroy {
     }),
   });
 
-  loading$ = new BehaviorSubject<boolean>(false);
-  private _destroyed$ = new Subject<void>();
+  readonly initialDataLoading$ = this._categoryService
+    .get(this._context.data.id)
+    .pipe(
+      tap(data => this.form.patchValue(data)),
+      map(() => false),
+      startWith(true)
+    );
+
+  readonly submit$ = new Subject<void>();
+  readonly submitLoading$ = this.submit$.pipe(
+    tap(() => this.form.markAllAsTouched()),
+    filter(() => this.form.valid),
+    exhaustMap(() =>
+      this._categoryService.update(this.form.getRawValue()).pipe(
+        tap(result => this._context.completeWith(result)),
+        startWith(null)
+      )
+    ),
+    map(x => x === null),
+    startWith(false)
+  );
 
   constructor(
     private _categoryService: CategoryApiService,
@@ -44,38 +58,9 @@ export class UpdateCategoryComponent implements OnDestroy {
       Category,
       { id: Category['id'] }
     >
-  ) {
-    this._categoryService
-      .get(this._context.data.id)
-      .pipe(take(1), takeUntil(this._destroyed$))
-      .subscribe(category => {
-        this.form.patchValue(category);
-      });
-  }
+  ) {}
 
-  submit(): void {
-    if (!this.form.valid) {
-      return;
-    }
-    const payload = this.form.getRawValue();
-
-    this._categoryService
-      .update(payload)
-      .pipe(
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        finalize(() => {
-          this.loading$.next(false);
-        })
-      )
-      .subscribe(cat => {
-        this._context.completeWith(cat);
-      });
-  }
-
-  ngOnDestroy(): void {
-    this._destroyed$.next();
-    this._destroyed$.complete();
+  cancel(): void {
+    this._context.$implicit.complete();
   }
 }
