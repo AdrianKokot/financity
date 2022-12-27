@@ -119,7 +119,7 @@ export class WalletTransactionsComponent {
         obj['search'] = search.trim();
       }
 
-      if (categories) {
+      if (categories.length > 0) {
         obj['categoryId_in'] = categories;
       }
 

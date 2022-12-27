@@ -236,8 +236,8 @@
                       class="d-flex align-items-center">
                       <tui-marker-icon
                         size="xs"
-                        [class]="
-                          item.category.appearance.color ?? 'icon-default'
+                        [attr.data-appearance-color]="
+                          item.category.appearance.color ?? ''
                         "
                         [src]="
                           item.category.appearance.iconName ?? 'fa::question'
