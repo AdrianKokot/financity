@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
@@ -20,6 +21,12 @@ public sealed class
 {
     public GetCurrenciesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
+    }
+
+    protected override IQueryable<Currency> ExecuteSearch(IQueryable<Currency> query, string search)
+    {
+        search = search.ToLower(CultureInfo.InvariantCulture);
+        return query.Where(x => x.Id.ToLower().Contains(search) || x.Name.ToLower().Contains(search));
     }
 }
 
