@@ -19,8 +19,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthRoutingModule } from './auth-routing.module';
 import { RegisterPageComponent } from './feature/register-page/register-page.component';
 import { LoginPageComponent } from './feature/login-page/login-page.component';
-import { EmailInputComponent } from './ui/email-input/email-input.component';
-import { PasswordInputComponent } from './ui/password-input/password-input.component';
 import { ResetPasswordPageComponent } from './feature/reset-password-page/reset-password-page.component';
 import { AuthShellComponent } from './feature/auth-shell/auth-shell.component';
 
@@ -28,8 +26,6 @@ import { AuthShellComponent } from './feature/auth-shell/auth-shell.component';
   declarations: [
     LoginPageComponent,
     RegisterPageComponent,
-    EmailInputComponent,
-    PasswordInputComponent,
     ResetPasswordPageComponent,
     AuthShellComponent,
   ],

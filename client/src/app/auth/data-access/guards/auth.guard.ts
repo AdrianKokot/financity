@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   canActivate(): boolean | UrlTree {
     return this._auth.isAuthenticated
       ? true
-      : this._router.createUrlTree(['/login']);
+      : this._router.createUrlTree(['/auth/login']);
   }
 
   canActivateChild(): boolean | UrlTree {
