@@ -1,6 +1,9 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
+import {
+  TRANSACTION_TYPES,
+  TransactionType,
+} from '@shared/data-access/models/transaction-type.enum';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -59,7 +62,7 @@ export class CreateTransactionComponent implements OnDestroy {
 
   getCurrencyName = (item: CurrencyListItem) => item.id;
 
-  transactionTypes = Object.keys(TransactionType);
+  transactionTypes = TRANSACTION_TYPES;
   loading$ = new BehaviorSubject<boolean>(false);
 
   private _selectedCurrency$ = this.form.controls.currencyId.valueChanges.pipe(

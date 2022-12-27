@@ -86,12 +86,12 @@ tui-data-list {
   }
 }
 
-.tui-group_rounded.tui-group_orientation_horizontal > *:first-child .t-content > .tui-group__inherit-item {
+.tui-group_rounded.tui-group_orientation_horizontal > *:first-child .t-content .tui-group__inherit-item {
   border-top-left-radius: var(--tui-radius-m);
   border-bottom-left-radius: var(--tui-radius-m);
 }
 
-.tui-group_rounded.tui-group_orientation_horizontal > *:last-child .t-content > .tui-group__inherit-item {
+.tui-group_rounded.tui-group_orientation_horizontal > *:last-child .t-content .tui-group__inherit-item {
   border-top-right-radius: var(--tui-radius-m);
   border-bottom-right-radius: var(--tui-radius-m);
 }

@@ -5,10 +5,13 @@ import {
   TuiButtonModule,
   TuiDataListModule,
   TuiErrorModule,
+  TuiGroupModule,
+  TuiHostedDropdownModule,
   TuiLabelModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
+  TuiBadgedContentModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
@@ -22,6 +25,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DialogService } from '@shared/utils/services/dialog.service';
 import { UpdateCategoryComponent } from './feature/update-category/update-category.component';
 import { TuiAutoFocusModule } from '@taiga-ui/cdk';
+import { PaletteItemDirective } from '@shared/ui/tui/palette-item.directive';
+import { AppearanceColorSelectorComponent } from '@shared/ui/tui/appearance-color-selector/appearance-color-selector.component';
+import { AppearanceIconSelectorComponent } from '@shared/ui/tui/appearance-icon-selector/appearance-icon-selector.component';
 
 @NgModule({
   declarations: [CreateCategoryComponent, UpdateCategoryComponent],
@@ -42,6 +48,12 @@ import { TuiAutoFocusModule } from '@taiga-ui/cdk';
     TuiSelectModule,
     TuiSelectOptionModule,
     TuiAutoFocusModule,
+    TuiHostedDropdownModule,
+    TuiGroupModule,
+    PaletteItemDirective,
+    TuiBadgedContentModule,
+    AppearanceColorSelectorComponent,
+    AppearanceIconSelectorComponent,
   ],
   exports: [CreateCategoryComponent, UpdateCategoryComponent],
   providers: [DialogService],

@@ -36,7 +36,10 @@ import { CreateCategoryComponent } from '../../../category/feature/create-catego
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { UpdateCategoryComponent } from 'src/app/category/feature/update-category/update-category.component';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
+import {
+  TRANSACTION_TYPES,
+  TransactionType,
+} from '@shared/data-access/models/transaction-type.enum';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 
 @Component({
@@ -57,7 +60,7 @@ export class WalletCategoriesComponent {
     transactionType: ['' as TransactionType | ''],
   });
 
-  transactionTypes = [TransactionType.Income, TransactionType.Expense];
+  transactionTypes = TRANSACTION_TYPES;
   transactionTypeFilter = TransactionType.Income;
 
   filters$: Observable<{

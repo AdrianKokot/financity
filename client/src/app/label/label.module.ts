@@ -23,6 +23,7 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiFocusableModule } from '@taiga-ui/cdk';
 import { PaletteItemDirective } from '@shared/ui/tui/palette-item.directive';
+import { AppearanceColorSelectorComponent } from '@shared/ui/tui/appearance-color-selector/appearance-color-selector.component';
 
 const exportedComponents = [CreateLabelComponent, UpdateLabelComponent];
 
@@ -49,6 +50,7 @@ const exportedComponents = [CreateLabelComponent, UpdateLabelComponent];
     TuiFocusableModule,
     TuiBadgedContentModule,
     PaletteItemDirective,
+    AppearanceColorSelectorComponent,
   ],
 })
 export class LabelModule {}
