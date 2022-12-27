@@ -11,13 +11,13 @@ public sealed class TransactionConfiguration : IEntityTypeConfiguration<Transact
         builder.Property(x => x.TransactionType)
                .HasConversion<string>()
                .HasMaxLength(7)
-               .HasColumnName($"{nameof(Transaction.TransactionType)}Id");  
-        
+               .HasColumnName($"{nameof(Transaction.TransactionType)}Id");
+
         builder.Property(x => x.CategoryTransactionType)
                .HasConversion<string>()
                .HasMaxLength(7)
                .HasColumnName($"{nameof(Transaction.CategoryTransactionType)}Id");
-        
+
         builder.HasIndex(x => x.TransactionType);
 
         builder.Property(x => x.Note).HasMaxLength(512);

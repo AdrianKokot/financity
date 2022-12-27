@@ -14,10 +14,8 @@ const appearanceColors = [
 ].map(x =>
   new Array(4)
     .fill(0)
-    .map((_, i) => i + 1)
-    .map(x => x * 2)
-    .map(x => x * 100)
-    .map(i => x + '-' + i)
+    .map((_, i) => (i + 1) * 2 * 100)
+    .map(i => `${x}-${i}`)
 );
 
 export const APPEARANCE_COLORS_COUNT = appearanceColors.length;

@@ -8,9 +8,8 @@ describe('DropdownMultiSelectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DropdownMultiSelectComponent ]
-    })
-    .compileComponents();
+      declarations: [DropdownMultiSelectComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DropdownMultiSelectComponent);
     component = fixture.componentInstance;

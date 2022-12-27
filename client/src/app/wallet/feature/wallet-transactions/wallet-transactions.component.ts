@@ -113,10 +113,14 @@ export class WalletTransactionsComponent {
     startWith({}),
     map(() => this.form.getRawValue()),
     map(({ search, dateRange, categories }) => {
-      const obj: Record<string, string> = {};
+      const obj: Record<string, string | string[]> = {};
 
       if (search) {
         obj['search'] = search.trim();
+      }
+
+      if (categories) {
+        obj['categoryId_in'] = categories;
       }
 
       if (dateRange && dateRange.from) {

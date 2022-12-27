@@ -73,7 +73,7 @@ export class UpdateTransactionComponent implements OnDestroy {
     .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
     .pipe(shareReplay(1));
 
-    labels$ = this._labelService
+  labels$ = this._labelService
     .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
     .pipe(shareReplay(1));
 

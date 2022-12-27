@@ -14,7 +14,7 @@
   #list
   (keydown)="onKeyDown($event.key, input.nativeFocusableElement)"
   emptyContent="No results found">
-  <tui-opt-group *tuiLet="items | tuiFilter: filter:value as filtered">
+  <tui-opt-group *tuiLet="items | tuiFilter : filter : value as filtered">
     <tui-opt-group *ngIf="filtered.length" tuiMultiSelectGroup>
       <button *ngFor="let item of filtered" [value]="item.id" tuiOption>
         {{ item.name }}

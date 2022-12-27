@@ -82,8 +82,8 @@ public static class QueryableExtensions
         }
 
         var toLowerMethodInfo = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
-        var containsMethodInfo = typeof(string).GetMethod(nameof(string.Contains), new[] {typeof(string)});
-        
+        var containsMethodInfo = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
+
         return Expression.Call(
             Expression.Call(left, toLowerMethodInfo!),
             containsMethodInfo!,

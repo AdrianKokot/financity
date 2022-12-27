@@ -1,15 +1,11 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
 } from '@angular/core';
-import {
-  EMPTY_ARRAY,
-  TuiFilterPipeModule,
-  TuiIdentityMatcher,
-  TuiLetModule,
-} from '@taiga-ui/cdk';
+import { TuiFilterPipeModule, TuiLetModule } from '@taiga-ui/cdk';
 import {
   TUI_DATA_LIST_HOST,
   TUI_OPTION_CONTENT,
@@ -26,7 +22,6 @@ import {
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
-import { TuiHandler } from '@taiga-ui/cdk/types';
 
 @Component({
   selector: 'app-searchable-list',
@@ -75,14 +70,7 @@ export class SearchableListComponent<T extends { id: string; name: string }>
     _control.valueAccessor = this;
   }
 
-  identityMatcher?: TuiIdentityMatcher<T> | undefined;
-  readonly all = EMPTY_ARRAY;
-
-  readonly filter = (
-    item: T,
-    search: string,
-    stringify?: TuiHandler<T, string>
-  ) => {
+  readonly filter = (item: T, search: string) => {
     return item.name.toLowerCase().includes(search.toLowerCase());
   };
 
