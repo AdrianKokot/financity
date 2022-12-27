@@ -1,6 +1,9 @@
-import { Component, Inject, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
+import {
+  TRANSACTION_TYPES,
+  TransactionType,
+} from '@shared/data-access/models/transaction-type.enum';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -18,12 +21,7 @@ import {
 } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
-import {
-  TuiContextWithImplicit,
-  TuiDay,
-  tuiPure,
-  TuiStringHandler,
-} from '@taiga-ui/cdk';
+import { TuiDay } from '@taiga-ui/cdk';
 import { Label } from '@shared/data-access/models/label';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
 import { Transaction } from '@shared/data-access/models/transaction.model';
@@ -34,15 +32,12 @@ import { HttpClient } from '@angular/common/http';
 import { ExchangeRateApiService } from '../../../core/api/exchange-rate-api.service';
 import { CategoryApiService } from '../../../core/api/category-api.service';
 import { RecipientApiService } from '../../../core/api/recipient-api.service';
-import { Category } from '@shared/data-access/models/category.model';
-import { Recipient } from '@shared/data-access/models/recipient.model';
 import { LabelApiService } from '../../../core/api/label-api.service';
 
 @Component({
   selector: 'app-create-transaction',
   templateUrl: './create-transaction.component.html',
   styleUrls: ['./create-transaction.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class CreateTransactionComponent implements OnDestroy {
   maxDate = TuiDay.currentLocal();
@@ -65,15 +60,9 @@ export class CreateTransactionComponent implements OnDestroy {
     labelIds: [[] as Label['id'][]],
   });
 
-  currencies$ = this._currencyService.getList().pipe(shareReplay(1));
-  getCurrencyName = (item: CurrencyListItem) => `${item.name} [${item.id}]`;
+  getCurrencyName = (item: CurrencyListItem) => item.id;
 
-  getTransactionTypeLabel = ({ label }: { label: string }) => label;
-  getTransactionTypeId = ({ id }: { id: TransactionType }) => id;
-  transactionTypes = [
-    { id: TransactionType.Income, label: 'Income' },
-    { id: TransactionType.Expense, label: 'Expense' },
-  ];
+  transactionTypes = TRANSACTION_TYPES;
   loading$ = new BehaviorSubject<boolean>(false);
 
   private _selectedCurrency$ = this.form.controls.currencyId.valueChanges.pipe(
@@ -89,6 +78,25 @@ export class CreateTransactionComponent implements OnDestroy {
     shareReplay(1)
   );
 
+  getLabelsFunction = this._labelService.getList.bind(
+    this._labelService,
+    this._context.data.walletId
+  );
+
+  getCategoriesFunction = this._categoryService.getList.bind(
+    this._categoryService,
+    this._context.data.walletId
+  );
+
+  getRecipientsFunction = this._recipientService.getList.bind(
+    this._recipientService,
+    this._context.data.walletId
+  );
+
+  getCurrenciesFunction = this._currencyService.getList.bind(
+    this._currencyService
+  );
+
   fetchExchangeRate$ = this._selectedCurrency$.pipe(
     withLatestFrom(this.shouldExchangeRateBeSpecified$),
     switchMap(([base, should]) => {
@@ -101,18 +109,6 @@ export class CreateTransactionComponent implements OnDestroy {
       this.form.controls.exchangeRate.setValue(rate);
     })
   );
-
-  categories$ = this._categoryService
-    .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
-    .pipe(shareReplay(1));
-
-  recipients$ = this._recipientService
-    .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
-    .pipe(shareReplay(1));
-
-  labels$ = this._labelService
-    .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
-    .pipe(shareReplay(1));
 
   constructor(
     private _http: HttpClient,
@@ -187,43 +183,5 @@ export class CreateTransactionComponent implements OnDestroy {
       .subscribe(cat => {
         this._context.completeWith(cat);
       });
-  }
-
-  getItemName = ({ name }: { name: string }) => name;
-
-  @tuiPure
-  stringifyName(
-    items: (Category | Recipient)[]
-  ): TuiStringHandler<TuiContextWithImplicit<string>> {
-    const map = new Map(
-      items.map(item => [item.id, item.name] as [string, string])
-    );
-
-    return ({ $implicit }: TuiContextWithImplicit<string>) =>
-      map.get($implicit) || '';
-  }
-
-  @tuiPure
-  stringifyCurrencies(
-    items: readonly CurrencyListItem[]
-  ): TuiStringHandler<TuiContextWithImplicit<string>> {
-    const map = new Map(
-      items.map(
-        item => [item.id, this.getCurrencyName(item)] as [string, string]
-      )
-    );
-
-    return ({ $implicit }: TuiContextWithImplicit<string>) =>
-      map.get($implicit) || '';
-  }
-
-  @tuiPure
-  stringifyTransactionTypes(
-    items: typeof this.transactionTypes
-  ): TuiStringHandler<TuiContextWithImplicit<TransactionType>> {
-    const map = new Map(items.map(({ id, label }) => [id, label]));
-
-    return ({ $implicit }: TuiContextWithImplicit<TransactionType>) =>
-      map.get($implicit) || '';
   }
 }

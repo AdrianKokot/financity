@@ -19,12 +19,11 @@ import { LabelApiService } from '../../../core/api/label-api.service';
 export class UpdateLabelComponent implements OnDestroy {
   form = this._fb.nonNullable.group({
     id: ['', [Validators.required]],
-    walletId: ['', [Validators.required]],
     name: ['', [Validators.required]],
     appearance: this._fb.group({
-      iconName: <(string | null)[]>[null],
-      color: <(string | null)[]>[null],
+      color: ['', [Validators.required]],
     }),
+    walletId: ['', [Validators.required]],
   });
 
   loading$ = new BehaviorSubject<boolean>(false);

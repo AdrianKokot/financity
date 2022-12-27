@@ -11,6 +11,7 @@ import {
   TuiLabelModule,
   TuiLinkModule,
   TuiLoaderModule,
+  TuiPrimitiveTextfieldModule,
   TuiScrollbarModule,
   TuiSvgModule,
   TuiTextfieldControllerModule,
@@ -55,6 +56,7 @@ import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown
 import { TransactionModule } from '../transaction/transaction.module';
 import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
 import { RecipientModule } from '../recipient/recipient.module';
+import { SearchableListComponent } from '@shared/ui/tui/searchable-list/searchable-list.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +113,8 @@ import { RecipientModule } from '../recipient/recipient.module';
     TuiInputDateRangeModule,
     RecipientModule,
     TuiBreadcrumbsModule,
+    TuiPrimitiveTextfieldModule,
+    SearchableListComponent,
   ],
 })
 export class WalletModule {}

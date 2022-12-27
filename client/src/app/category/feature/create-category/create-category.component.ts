@@ -5,12 +5,14 @@ import { BehaviorSubject, finalize, tap } from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
-import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 import {
-  TuiContextWithImplicit,
-  tuiPure,
-  TuiStringHandler,
-} from '@taiga-ui/cdk';
+  TRANSACTION_TYPES,
+  TransactionType,
+} from '@shared/data-access/models/transaction-type.enum';
+import {
+  getRandomAppearanceColor,
+  getRandomAppearanceIcon,
+} from '@shared/ui/appearance';
 
 @Component({
   selector: 'app-create-category',
@@ -21,19 +23,14 @@ export class CreateCategoryComponent {
   form = this._fb.nonNullable.group({
     name: ['', [Validators.required]],
     appearance: this._fb.group({
-      iconName: <(string | null)[]>[null],
-      color: <(string | null)[]>[null],
+      iconName: [getRandomAppearanceIcon(), [Validators.required]],
+      color: [getRandomAppearanceColor(), [Validators.required]],
     }),
     walletId: ['', [Validators.required]],
     transactionType: [TransactionType.Income, [Validators.required]],
   });
 
-  getTransactionTypeLabel = ({ label }: { label: string }) => label;
-  getTransactionTypeId = ({ id }: { id: TransactionType }) => id;
-  transactionTypes = [
-    { id: TransactionType.Income, label: 'Income' },
-    { id: TransactionType.Expense, label: 'Expense' },
-  ];
+  transactionTypes = TRANSACTION_TYPES;
   loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -70,15 +67,5 @@ export class CreateCategoryComponent {
       .subscribe(cat => {
         this._context.completeWith(cat);
       });
-  }
-
-  @tuiPure
-  stringify(
-    items: typeof this.transactionTypes
-  ): TuiStringHandler<TuiContextWithImplicit<TransactionType>> {
-    const map = new Map(items.map(({ id, label }) => [id, label]));
-
-    return ({ $implicit }: TuiContextWithImplicit<TransactionType>) =>
-      map.get($implicit) || '';
   }
 }

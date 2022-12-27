@@ -7,6 +7,7 @@ import {
   TuiButtonModule,
   TuiDataListModule,
   TuiErrorModule,
+  TuiGroupModule,
   TuiLabelModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
@@ -25,6 +26,8 @@ import {
 } from '@taiga-ui/kit';
 import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TuiCurrencyPipeModule } from '@taiga-ui/addon-commerce';
+import { MultiSelectModule } from '@shared/ui/tui/multi-select/multi-select.module';
+import { SelectModule } from '@shared/ui/tui/select/select.module';
 
 @NgModule({
   declarations: [CreateTransactionComponent, UpdateTransactionComponent],
@@ -50,6 +53,9 @@ import { TuiCurrencyPipeModule } from '@taiga-ui/addon-commerce';
     TuiTextAreaModule,
     TuiInputTagModule,
     TuiMultiSelectModule,
+    MultiSelectModule,
+    SelectModule,
+    TuiGroupModule,
   ],
   exports: [CreateTransactionComponent, UpdateTransactionComponent],
 })

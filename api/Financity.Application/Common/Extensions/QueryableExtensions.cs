@@ -6,6 +6,14 @@ using Financity.Application.Common.Queries;
 
 namespace Financity.Application.Common.Extensions;
 
+internal static class StringExtensions
+{
+    public static bool ContainsIgnoreCase(this string source, string toCheck)
+    {
+        return source.Contains(toCheck);
+    }
+}
+
 public static class QueryableExtensions
 {
     public static IQueryable<T> ApplySearch<T>(this IQueryable<T> query, Expression<Func<T, bool>> searchFn)
@@ -65,6 +73,24 @@ public static class QueryableExtensions
         return query.Where(lambda);
     }
 
+    private static Expression GetExpressionCallForOperator(string op, Expression left, Expression right)
+    {
+        if (op != FilterOperators.Contain)
+        {
+            throw new InvalidOperationException(
+                $"Filter operator '{op}' is not a valid operator.");
+        }
+
+        var toLowerMethodInfo = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
+        var containsMethodInfo = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
+
+        return Expression.Call(
+            Expression.Call(left, toLowerMethodInfo!),
+            containsMethodInfo!,
+            Expression.Call(right, toLowerMethodInfo!)
+        );
+    }
+
     private static Expression GenerateFilterExpression(Filter filter, Expression left, Expression right)
     {
         return filter.Operator switch
@@ -73,10 +99,7 @@ public static class QueryableExtensions
             FilterOperators.NotEqual => Expression.NotEqual(left, right),
             FilterOperators.LessOrEqual => Expression.LessThanOrEqual(left, right),
             FilterOperators.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
-            _ => Expression.Call(left,
-                GetMethodForOperator(filter.Operator) ??
-                throw new InvalidOperationException($"Filter operator '{filter.Operator}' is not a valid operator."),
-                right)
+            _ => GetExpressionCallForOperator(filter.Operator, left, right)
         };
     }
 
@@ -96,15 +119,6 @@ public static class QueryableExtensions
             return Expression.Constant(Enum.Parse(info.PropertyType, value));
 
         return Expression.Constant(value);
-    }
-
-    private static MethodInfo? GetMethodForOperator(string op)
-    {
-        return op switch
-        {
-            FilterOperators.Contain => typeof(string).GetMethod("Contains", new[] { typeof(string) }),
-            _ => throw new ArgumentException($"Operator '{op}' is not supported")
-        };
     }
 
     private static Expression<Func<T, object>> PropertySelector<T>(string propertyName)

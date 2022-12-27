@@ -77,7 +77,7 @@
       <ng-template tuiDataList>
         <tui-data-list>
           <button
-            *ngFor="let item of items | tuiFilterByInputWith: getItemName"
+            *ngFor="let item of items | tuiFilterByInputWith : getItemName"
             [value]="item.id"
             tuiOption>
             {{ getItemName(item) }}
@@ -108,7 +108,7 @@
       <ng-template tuiDataList>
         <tui-data-list>
           <button
-            *ngFor="let item of items | tuiFilterByInputWith: getItemName"
+            *ngFor="let item of items | tuiFilterByInputWith : getItemName"
             [value]="item.id"
             tuiOption>
             {{ getItemName(item) }}
@@ -122,25 +122,25 @@
       formControlName="recipientId"></tui-error>
   </label>
 
-  <label [tuiLabel]="'Labels'" class="mb-6 w-full">
+  <label
+    [tuiLabel]="'Labels'"
+    class="mb-6 w-full"
+    *tuiLet="labelIds$ | async as items">
     <tui-multi-select
       [tuiTextfieldLabelOutside]="true"
       class="mt-1"
       formControlName="labelIds"
       tuiTextfieldSize="m"
-      [expandable]="true">
+      [expandable]="true"
+      [stringify]="(stringifiedLabels$ | async)!">
       Choose labels
 
-      <ng-template tuiDataList>
-        <tui-data-list>
-          <button
-            *ngFor="let item of labels$ | async"
-            [value]="item.id"
-            tuiOption>
-            {{ getItemName(item) }}
-          </button>
-        </tui-data-list>
-      </ng-template>
+      <tui-data-list-wrapper
+        *tuiDataList
+        tuiMultiSelectGroup
+        [items]="items"
+        [itemContent]="(stringifiedLabels$ | async)!">
+      </tui-data-list-wrapper>
     </tui-multi-select>
 
     <tui-error

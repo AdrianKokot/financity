@@ -17,7 +17,8 @@ public sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         builder.Property(x => x.TransactionType)
                .HasConversion<string>()
-               .HasMaxLength(32);
+               .HasMaxLength(7)
+               .HasColumnName($"{nameof(Category.TransactionType)}Id");
 
         builder.HasIndex(x => x.TransactionType);
 

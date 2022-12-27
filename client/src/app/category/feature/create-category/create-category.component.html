@@ -1,37 +1,53 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <label [tuiLabel]="'Name'" class="mb-6">
-    <tui-input
-      tuiAutoFocus
-      formControlName="name"
-      tuiTextfieldSize="m"
-      class="mt-1"
-      [tuiTextfieldLabelOutside]="true">
-      Example category
-      <input tuiTextfield type="text" />
-    </tui-input>
+  <div tuiGroup class="mb-6" [rounded]="true">
+    <label
+      tuiLabel="Color"
+      formGroupName="appearance"
+      class="tui-group__auto-width-item">
+      <app-appearance-color-selector formControlName="color" class="mt-1">
+      </app-appearance-color-selector>
 
-    <tui-error
-      formControlName="name"
-      [error]="[] | tuiFieldError | async"></tui-error>
-  </label>
+      <tui-error
+        formControlName="color"
+        [error]="[] | tuiFieldError | async"></tui-error>
+    </label>
+
+    <label
+      tuiLabel="Icon"
+      formGroupName="appearance"
+      class="tui-group__auto-width-item">
+      <app-appearance-icon-selector class="mt-1" formControlName="iconName">
+      </app-appearance-icon-selector>
+
+      <tui-error
+        formControlName="iconName"
+        [error]="[] | tuiFieldError | async"></tui-error>
+    </label>
+
+    <label [tuiLabel]="'Name'">
+      <tui-input
+        formControlName="name"
+        tuiTextfieldSize="m"
+        class="mt-1 tui-group__inherit-item"
+        [tuiTextfieldLabelOutside]="true">
+        Example category
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="name"
+        [error]="[] | tuiFieldError | async"></tui-error>
+    </label>
+  </div>
 
   <label [tuiLabel]="'Transaction type'" class="mb-6">
     <tui-select
       formControlName="transactionType"
       [tuiTextfieldLabelOutside]="true"
-      [valueContent]="stringify(transactionTypes)"
       tuiTextfieldSize="m"
       class="mt-1">
-      <ng-template tuiDataList>
-        <tui-data-list>
-          <button
-            *ngFor="let item of transactionTypes"
-            tuiOption
-            [value]="item.id">
-            {{ item.label }}
-          </button>
-        </tui-data-list>
-      </ng-template>
+      <tui-data-list-wrapper *tuiDataList [items]="transactionTypes" size="s">
+      </tui-data-list-wrapper>
     </tui-select>
 
     <tui-error
@@ -40,11 +56,7 @@
   </label>
 
   <div class="tui-form__row text-right">
-    <button
-      tuiButton
-      type="submit"
-      size="m"
-      [showLoader]="(loading$ | async) ?? false">
+    <button tuiButton type="submit" size="m" [showLoader]="(loading$ | async)!">
       Submit
     </button>
   </div>

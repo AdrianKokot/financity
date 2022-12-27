@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { CreateWalletDialogComponent } from './components/wallet/create-wallet-dialog/create-wallet-dialog.component';
 import { WalletListComponent } from './components/wallet/wallet-list/wallet-list.component';
 import {
   TuiComboBoxModule,
@@ -23,11 +22,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    DashboardComponent,
-    CreateWalletDialogComponent,
-    WalletListComponent,
-  ],
+  declarations: [DashboardComponent, WalletListComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,

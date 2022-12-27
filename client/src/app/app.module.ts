@@ -1,4 +1,5 @@
 import {
+  TUI_DIALOGS_CLOSE,
   TUI_SANITIZER,
   TUI_SVG_SRC_PROCESSOR,
   TuiAlertModule,
@@ -19,6 +20,7 @@ import { JwtInterceptor } from '@shared/data-access/interceptors/jwt.interceptor
 import { ApiInterceptor } from '@shared/data-access/interceptors/api.interceptor';
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
+import { AuthService } from './auth/data-access/api/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +36,11 @@ import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
     HttpClientModule,
   ],
   providers: [
+    {
+      provide: TUI_DIALOGS_CLOSE,
+      deps: [AuthService],
+      useFactory: (authService: AuthService) => authService.loggedOut$,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
@@ -61,11 +68,18 @@ import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
           if (src === null) {
             return '';
           }
-          const myCustomPrefix = 'fa::';
 
-          return src.startsWith(myCustomPrefix)
-            ? `assets/icons/fa/${src.replace(myCustomPrefix, '')}.svg`
-            : src;
+          if (src.startsWith('fa::')) {
+            if (src.startsWith('fa::solid::')) {
+              return `assets/icons/fa/solid/${src.replace(
+                'fa::solid::',
+                ''
+              )}.svg`;
+            }
+            return `assets/icons/fa/${src.replace('fa::', '')}.svg`;
+          }
+
+          return src;
         };
       },
     },

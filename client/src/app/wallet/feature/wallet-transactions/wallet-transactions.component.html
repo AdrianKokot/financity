@@ -126,7 +126,15 @@
             tuiTh
             [sorter]="null"
             class="column-category">
-            Category
+            <tui-hosted-dropdown [content]="categoriesDropdown">
+              <span
+                [class.text-link]="form.controls.categories.value.length > 0"
+                class="column-filter-text">
+                <span>Category</span>
+
+                <tui-svg src="tuiIconSortDown"></tui-svg>
+              </span>
+            </tui-hosted-dropdown>
           </th>
           <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
             Labels
@@ -152,8 +160,6 @@
       <cdk-virtual-scroll-viewport
         (scrolledIndexChange)="log()"
         [itemSize]="44"
-        [maxBufferPx]="500"
-        [minBufferPx]="400"
         class="viewport tui-zero-scrollbar"
         tuiScrollable>
         <table
@@ -222,7 +228,7 @@
                   *cdkVirtualFor="let item of data; trackBy: trackByIdx"
                   tuiTr>
                   <td *tuiCell="'transactionDate'" tuiTd>
-                    {{ item.transactionDate | date: 'dd/MM/yyyy':'UTC' }}
+                    {{ item.transactionDate | date : 'dd/MM/yyyy' : 'UTC' }}
                   </td>
                   <td *tuiCell="'category'" tuiTd>
                     <span
@@ -245,7 +251,11 @@
                     <tui-badge
                       *ngFor="let label of item.labels"
                       class="mr-1 bg-base-6"
-                      [ngClass]="label.appearance.color"
+                      [style.background-color]="
+                        label.appearance.color
+                          ? 'var(--' + label.appearance.color + ')'
+                          : null
+                      "
                       status="custom"
                       [value]="label.name"></tui-badge>
 
@@ -332,3 +342,10 @@
     </tui-scrollbar>
   </div>
 </main>
+
+<ng-template #categoriesDropdown>
+  <app-searchable-list
+    *ngIf="categories$ | async as items"
+    [items]="items"
+    [formControl]="form.controls.categories"></app-searchable-list>
+</ng-template>

@@ -1,0 +1,36 @@
+<ng-container *ngIf="control !== null">
+  <ng-container *tuiLet="(stringify$ | async)! as stringify">
+    <tui-multi-select
+      [formControl]="control"
+      (searchChange)="search$.next($event ?? '')"
+      *tuiLet="items$ | async as items"
+      [expandable]="false"
+      [stringify]="stringify"
+      [tuiTextfieldLabelOutside]="true"
+      placeholder="Search"
+      tuiTextfieldSize="m">
+      {{ label }}
+
+      <cdk-virtual-scroll-viewport
+        (pageChange)="page$.next($event)"
+        *tuiDataList
+        [itemSize]="34"
+        [minBufferPx]="200"
+        [style.--items-count]="(items ?? []).length"
+        appInfiniteVirtualScroll
+        class="viewport tui-zero-scrollbar"
+        tuiScrollable>
+        <tui-data-list size="s" tuiMultiSelectGroup>
+          <ng-container *cdkVirtualFor="let item of items ?? []">
+            <button [value]="item" tuiOption>
+              {{ stringify(item) }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="(apiLoading$ | async)!">
+            <tui-loader></tui-loader>
+          </ng-container>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-multi-select>
+  </ng-container>
+</ng-container>

@@ -1,0 +1,39 @@
+<tui-hosted-dropdown [content]="dataList" [(open)]="dropdownOpened">
+  <button
+    type="button"
+    [disabled]="disabled"
+    [pseudoFocus]="dropdownOpened"
+    tuiButton
+    class="tui-group__inherit-item button-select-dropdown"
+    appearance="textfield"
+    [iconRight]="arrow"
+    tuiHostedDropdownHost
+    size="m"
+    [tuiTextfieldLabelOutside]="true">
+    <span appPaletteItem="" [rounded]="true">
+      <tui-svg
+        [src]="value"
+        *ngIf="value !== null"
+        class="w-full h-full text-1">
+      </tui-svg>
+    </span>
+  </button>
+  <ng-template #dataList>
+    <tui-data-list size="s">
+      <div class="palette-grid" [style.--items-count]="gridSize">
+        <tui-badged-content
+          *ngFor="let item of items"
+          [colorTop]="item === value ? 'var(--tui-link)' : ''"
+          size="xs">
+          <button
+            tuiOption
+            (click)="writeValue(item)"
+            appPaletteItem=""
+            [rounded]="true">
+            <tui-svg [src]="item" class="w-full h-full text-1"></tui-svg>
+          </button>
+        </tui-badged-content>
+      </div>
+    </tui-data-list>
+  </ng-template>
+</tui-hosted-dropdown>

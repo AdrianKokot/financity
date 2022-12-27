@@ -16,5 +16,5 @@ public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, W
 }
 
 public sealed record WalletDetails
-(Guid Id, string Name, string CurrencyId, string CurrencyName, decimal CurrentState,
+(Guid Id, string Name, string CurrencyId, string CurrencyName,
  decimal StartingAmount) : IMapFrom<Wallet>;

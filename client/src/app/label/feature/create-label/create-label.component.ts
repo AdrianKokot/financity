@@ -5,6 +5,7 @@ import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { LabelApiService } from '../../../core/api/label-api.service';
 import { Label } from '@shared/data-access/models/label';
+import { getRandomAppearanceColor } from '@shared/ui/appearance';
 
 @Component({
   selector: 'app-create-label',
@@ -15,8 +16,7 @@ export class CreateLabelComponent {
   form = this._fb.nonNullable.group({
     name: ['', [Validators.required]],
     appearance: this._fb.group({
-      iconName: <(string | null)[]>[null],
-      color: <(string | null)[]>[null],
+      color: [getRandomAppearanceColor(), [Validators.required]],
     }),
     walletId: ['', [Validators.required]],
   });
@@ -36,7 +36,7 @@ export class CreateLabelComponent {
 
   submit(): void {
     if (!this.form.valid) {
-      return;
+      return this.form.markAllAsTouched();
     }
 
     this._labelService

@@ -5,7 +5,7 @@ export interface Label {
   id: string;
   name: string;
   walletId: Wallet['id'];
-  appearance: Appearance;
+  appearance: Pick<Appearance, 'color'>;
 }
 
 export type LabelListItem = Label;

@@ -8,12 +8,16 @@ import {
 import {
   TuiContextWithImplicit,
   TuiDay,
+  TuiHandler,
+  tuiIsString,
   tuiPure,
   TuiStringHandler,
 } from '@taiga-ui/cdk';
 import {
   BehaviorSubject,
   finalize,
+  map,
+  Observable,
   shareReplay,
   Subject,
   take,
@@ -73,6 +77,16 @@ export class UpdateTransactionComponent implements OnDestroy {
     .getList(this._context.data.walletId, { pageSize: 250, page: 1 })
     .pipe(shareReplay(1));
 
+  labelIds$ = this.labels$.pipe(map(data => data.map(y => y.id)));
+  stringifiedLabels$: Observable<
+    TuiHandler<TuiContextWithImplicit<string> | string, string>
+  > = this.labels$.pipe(
+    map(data => new Map(data.map(({ id, name }) => [id, name]))),
+    map(
+      m => (id: TuiContextWithImplicit<string> | string) =>
+        (tuiIsString(id) ? m.get(id) : m.get(id.$implicit)) || 'Loading'
+    )
+  );
   constructor(
     private _http: HttpClient,
     private _transactionService: TransactionApiService,
