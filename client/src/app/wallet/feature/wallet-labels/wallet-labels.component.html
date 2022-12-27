@@ -42,9 +42,7 @@
         (scrolledIndexChange)="log()"
         tuiScrollable
         class="viewport tui-zero-scrollbar"
-        [itemSize]="44"
-        [maxBufferPx]="500"
-        [minBufferPx]="400">
+        [itemSize]="44">
         <table
           tuiTable
           [columns]="columns"
@@ -63,7 +61,17 @@
           <tbody tuiTbody>
             <tr *cdkVirtualFor="let item of data" tuiTr>
               <td *tuiCell="'label'" tuiTd>
-                {{ item.name }}
+                <span class="d-flex align-items-center">
+                  <tui-marker-icon
+                    size="xs"
+                    [attr.data-appearance-color]="
+                      item.appearance.color ?? ''
+                    "></tui-marker-icon>
+                  <span class="ml-2">
+                    {{ item.name }}
+                  </span>
+                </span>
+                <!--                {{ item.name }}-->
               </td>
 
               <td *tuiCell="'actions'" tuiTd class="column-actions">

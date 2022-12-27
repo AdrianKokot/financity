@@ -126,3 +126,13 @@ button.button-select-dropdown {
     margin: 0.375rem;
   }
 }
+
+tui-marker-icon[data-appearance-color] {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+
+  svg {
+    height: 1.25rem !important;
+    width: 1.25rem !important;
+  }
+}

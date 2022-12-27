@@ -1,3 +1,18 @@
+@use "sass:string";
+@use "sass:color";
+
+@function getTextColor($hex, $inverse: false) {
+  $r: color.red($hex);
+  $g: color.green($hex);
+  $b: color.blue($hex);
+
+  @if (($r * 0.299 + $g * 0.587 + $b * 0.114) > 186) == not $inverse {
+    @return var(--tui-base-08);
+  } @else {
+    @return var(--tui-base-01);
+  }
+}
+
 $appearanceColor: (
   slate-100: #f1f5f9,
   slate-200: #e2e8f0,
@@ -111,6 +126,11 @@ $appearanceColor: (
   }
   [data-appearance-color="#{$name}"] {
     background-color: var(--#{$name}) !important;
-    color: var(--tui-text-01) !important;
+    color: getTextColor($hex) !important;
+  }
+
+  body tui-theme-night + tui-root [data-appearance-color="#{$name}"] {
+    background-color: var(--#{$name}) !important;
+    color: getTextColor($hex, true) !important;
   }
 }
