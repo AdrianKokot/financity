@@ -70,6 +70,17 @@
 
               <td *tuiCell="'actions'" class="column-actions" tuiTd>
                 <button
+                  tuiIconButton
+                  routerLink="../transactions"
+                  [queryParams]="{ recipients: item.id }"
+                  appearance="flat"
+                  size="s"
+                  icon="tuiIconEyeOpen"
+                  title="View related transactions"
+                  shape="rounded"
+                  class="mr-1"></button>
+
+                <button
                   (click)="openEditDialog(item.id)"
                   appearance="flat"
                   class="mr-1"

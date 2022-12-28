@@ -61,7 +61,6 @@ export class WalletCategoriesComponent {
   });
 
   transactionTypes = TRANSACTION_TYPES;
-  transactionTypeFilter = TransactionType.Income;
 
   filters$: Observable<{
     search?: string;
