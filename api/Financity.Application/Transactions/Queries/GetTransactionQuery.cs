@@ -4,6 +4,7 @@ using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Categories.Queries;
 using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Application.Labels.Queries;
+using Financity.Application.Recipients.Queries;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Transactions.Queries;
@@ -18,9 +19,10 @@ public sealed class
     }
 }
 
-public sealed record TransactionDetails(Guid Id, decimal Amount, string Note, Guid? RecipientId, string? RecipientName,
+public sealed record TransactionDetails(Guid Id, decimal Amount, string Note, Guid? RecipientId,
+                                        RecipientListItem? Recipient,
                                         Guid WalletId, string WalletName, string TransactionType,
                                         DateOnly TransactionDate,
                                         Guid? CategoryId, CategoryListItem? Category,
-                                        IEnumerable<LabelListItem> Labels, string CurrencyName,
+                                        IEnumerable<LabelListItem> Labels,
                                         string CurrencyId, decimal ExchangeRate) : IMapFrom<Transaction>;
