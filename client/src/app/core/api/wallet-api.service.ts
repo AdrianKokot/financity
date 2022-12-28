@@ -32,7 +32,9 @@ export class WalletApiService extends GenericApiService {
   }
 
   create(payload: CreateWalletPayload) {
-    return this.http.post('/api/wallets', payload);
+    return this.http
+      .post<{ id: Wallet['id'] }>('/api/wallets', payload)
+      .pipe(map(({ id }) => ({ ...payload, id })));
   }
 
   update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {

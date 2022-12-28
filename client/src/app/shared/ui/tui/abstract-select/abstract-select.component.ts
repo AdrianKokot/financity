@@ -133,7 +133,8 @@ export abstract class AbstractSelectComponent<
     startWith(new Map<string, string>()),
     map(
       m => (id: TuiContextWithImplicit<string> | string) =>
-        (tuiIsString(id) ? m.get(id) : m.get(id.$implicit)) || 'Loading...'
+        (tuiIsString(id) ? m.get(id) : m.get(id.$implicit)) ||
+        (id === '' ? '' : 'Loading...')
     ),
     shareReplay(1)
   );

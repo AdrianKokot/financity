@@ -1,0 +1,76 @@
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <label tuiLabel="Name" class="tui-form__row">
+    <tui-input
+      formControlName="name"
+      tuiTextfieldSize="m"
+      tuiAutoFocus
+      class="mt-1 tui-group__inherit-item"
+      [tuiTextfieldLabelOutside]="true">
+      Example category
+      <input tuiTextfield type="text" />
+    </tui-input>
+
+    <tui-error
+      formControlName="name"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <div tuiGroup class="tui-form__row" [rounded]="true">
+    <label tuiLabel="Currency" class="max-w-10">
+      <app-select
+        [control]="form.controls.currencyId"
+        [getListFunction]="dataApis.getCurrencies"
+        [stringify]="dataApis.getCurrencyName"
+        class="mt-1 tui-group__inherit-item"
+        label="Choose a currency"></app-select>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="currencyId"></tui-error>
+    </label>
+
+    <label tuiLabel="Starting amount">
+      <tui-input-number
+        [postfix]="form.controls.currencyId.value | tuiCurrency"
+        [tuiTextfieldLabelOutside]="true"
+        class="mt-1 tui-group__inherit-item"
+        formControlName="startingAmount"
+        tuiTextfieldSize="m"
+        [precision]="2"
+        decimal="always"
+        [min]="0.0">
+        Type an amount
+      </tui-input-number>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="startingAmount"></tui-error>
+    </label>
+  </div>
+
+  <div
+    class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
+    <button
+      tuiButton
+      appearance="outline"
+      class="tui-form__button"
+      (click)="cancel()"
+      type="button"
+      [disabled]="submitButtonLoading"
+      size="m">
+      Cancel
+    </button>
+
+    <button
+      tuiButton
+      type="submit"
+      class="tui-form__button"
+      size="m"
+      [showLoader]="submitButtonLoading">
+      Save
+    </button>
+  </div>
+</form>
