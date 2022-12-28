@@ -46,6 +46,10 @@ export abstract class AbstractSelectComponent<
     this.externalFilters$.next(value);
   }
 
+  get externalFilters() {
+    return this.externalFilters$.value;
+  }
+
   @Input() searchBy = 'name_ct';
 
   readonly search$ = new Subject<string>();

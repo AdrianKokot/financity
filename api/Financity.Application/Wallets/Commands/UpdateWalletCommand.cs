@@ -29,7 +29,7 @@ public sealed class UpdateWalletCommandHandler : UpdateEntityCommandHandler<Upda
 
         entity.Name = command.Name;
         entity.StartingAmount = command.StartingAmount;
-        
+
         return await base.Handle(command, ct);
     }
 }
