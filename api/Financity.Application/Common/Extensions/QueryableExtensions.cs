@@ -6,22 +6,8 @@ using Financity.Application.Common.Queries;
 
 namespace Financity.Application.Common.Extensions;
 
-internal static class StringExtensions
-{
-    public static bool ContainsIgnoreCase(this string source, string toCheck)
-    {
-        return source.Contains(toCheck);
-    }
-}
-
 public static class QueryableExtensions
 {
-    public static IQueryable<T> ApplySearch<T>(this IQueryable<T> query, Expression<Func<T, bool>> searchFn)
-        where T : class
-    {
-        return query.Where(searchFn);
-    }
-
     public static IQueryable<T> ApplyQuerySpecification<T, TQ>(this IQueryable<T> query,
                                                                QuerySpecification<TQ> specification)
         where T : class
@@ -76,10 +62,8 @@ public static class QueryableExtensions
     private static Expression GetExpressionCallForOperator(string op, Expression left, Expression right)
     {
         if (op != FilterOperators.Contain)
-        {
             throw new InvalidOperationException(
                 $"Filter operator '{op}' is not a valid operator.");
-        }
 
         var toLowerMethodInfo = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
         var containsMethodInfo = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
@@ -106,11 +90,17 @@ public static class QueryableExtensions
     private static ConstantExpression GetProperType(PropertyInfo info, string value)
     {
         if (info.PropertyType == typeof(DateTime))
-            return Expression.Constant(DateTime.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo,
+            return Expression.Constant(DateTime.Parse(value, DateTimeFormatInfo.InvariantInfo,
                 DateTimeStyles.AssumeUniversal).ToUniversalTime());
 
         if (info.PropertyType == typeof(DateOnly))
-            return Expression.Constant(DateOnly.ParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo));
+        {
+            var parsedDate = DateOnly.FromDateTime(DateTime.Parse(value).ToUniversalTime());
+
+            if (DateOnly.TryParse(value, out var successfullyParsed)) parsedDate = successfullyParsed;
+
+            return Expression.Constant(parsedDate);
+        }
 
         if (info.PropertyType == typeof(Guid))
             return Expression.Constant(Guid.Parse(value));

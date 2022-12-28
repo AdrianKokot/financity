@@ -46,8 +46,7 @@ export class CreateTransactionComponent {
           ...payload,
           transactionDate: payload.transactionDate
             .toUtcNativeDate()
-            .toISOString()
-            .split('T')[0],
+            .toISOString(),
         }),
       effect: item => this._context.completeWith(item),
     }

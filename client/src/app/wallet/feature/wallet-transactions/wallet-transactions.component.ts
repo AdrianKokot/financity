@@ -136,17 +136,11 @@ export class WalletTransactionsComponent {
       }
 
       if (dateRange && dateRange.from) {
-        obj['transactionDate_gte'] = dateRange.from
-          .toLocalNativeDate()
-          .toISOString()
-          .split('T')[0];
+        obj['transactionDate_gte'] = dateRange.from.toJSON();
       }
 
       if (dateRange && dateRange.to) {
-        obj['transactionDate_lte'] = dateRange.to
-          .toLocalNativeDate()
-          .toISOString()
-          .split('T')[0];
+        obj['transactionDate_lte'] = dateRange.to.toJSON();
       }
 
       return obj;

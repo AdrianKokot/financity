@@ -68,9 +68,29 @@ public sealed class
     }
 }
 
-public sealed record TransactionListItem(Guid Id, decimal Amount, string Note, Guid? RecipientId, string? RecipientName,
-                                         Guid WalletId, string WalletName, string TransactionType,
-                                         DateOnly TransactionDate,
-                                         Guid? CategoryId, CategoryListItem? Category,
-                                         ICollection<LabelListItem> Labels, string CurrencyName,
-                                         string CurrencyId, decimal ExchangeRate) : IMapFrom<Transaction>;
+public sealed class TransactionListItem : IMapFrom<Transaction>
+{
+    public Guid Id { get; set; }
+    public decimal Amount { get; set; }
+    public string Note { get; set; }
+    public Guid? RecipientId { get; set; }
+    public string? RecipientName { get; set; }
+    public Guid WalletId { get; set; }
+    public string WalletName { get; set; }
+    public string TransactionType { get; set; }
+    public DateTime TransactionDate { get; set; }
+    public Guid? CategoryId { get; set; }
+    public CategoryListItem? Category { get; set; }
+    public ICollection<LabelListItem> Labels { get; set; }
+    public string CurrencyName { get; set; }
+    public string CurrencyId { get; set; }
+    public decimal ExchangeRate { get; set; }
+
+    public static void CreateMap(Profile profile)
+    {
+        profile.CreateMap<Transaction, TransactionListItem>()
+               .ForMember(x => x.TransactionDate,
+                   x => x.MapFrom(y => y.TransactionDate.ToDateTime(TimeOnly.MinValue).ToUniversalTime())
+               );
+    }
+}
