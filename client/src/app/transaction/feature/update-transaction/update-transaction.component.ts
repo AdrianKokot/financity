@@ -11,6 +11,8 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
+import { Category } from '@shared/data-access/models/category.model';
+import { Recipient } from '@shared/data-access/models/recipient.model';
 
 @Component({
   selector: 'app-update-transaction',
@@ -49,17 +51,29 @@ export class UpdateTransactionComponent {
     this._context.data.walletId
   );
 
+  readonly preloadedData = {
+    labels: new Array<Label>(),
+    categories: new Array<Category>(),
+    recipients: new Array<Recipient>(),
+  };
+
   readonly initialDataLoading$ = this._dataService
     .get(this._context.data.id)
     .pipe(
-      toLoadingState(data =>
+      toLoadingState(data => {
         this.form.patchValue({
           ...data,
           note: data.note ?? '',
           transactionDate: TuiDay.jsonParse(data.transactionDate),
           labelIds: data.labels.map(x => x.id),
-        })
-      )
+        });
+
+        this.preloadedData.labels = data.labels;
+        if (data.category !== null)
+          this.preloadedData.categories = [data.category];
+        if (data.recipient !== null)
+          this.preloadedData.recipients = [data.recipient];
+      })
     );
 
   constructor(
