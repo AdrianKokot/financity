@@ -17,9 +17,12 @@ export class UpdateLabelComponent {
   readonly form = this._fb.form(
     {
       id: ['', [Validators.required]],
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(64)]],
       appearance: this._fb.group({
-        color: [getRandomAppearanceColor(), [Validators.required]],
+        color: [
+          getRandomAppearanceColor(),
+          [Validators.required, Validators.maxLength(64)],
+        ],
       }),
       walletId: ['', [Validators.required]],
     },

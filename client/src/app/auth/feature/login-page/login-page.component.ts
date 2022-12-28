@@ -12,7 +12,10 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 export class LoginPageComponent {
   readonly form = this._fb.form(
     {
-      email: ['', [Validators.email, Validators.required]],
+      email: [
+        '',
+        [Validators.email, Validators.required, Validators.maxLength(256)],
+      ],
       password: ['', [Validators.required]],
     },
     {

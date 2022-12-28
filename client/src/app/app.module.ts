@@ -62,8 +62,14 @@ import { AuthService } from './auth/data-access/api/auth.service';
     },
     {
       provide: TUI_VALIDATION_ERRORS,
+
       useValue: {
         required: 'This field is required',
+        email: 'This field must be a valid email address',
+        minlength: ({ requiredLength }: { requiredLength: number }) =>
+          `This field must be at least ${requiredLength} characters long`,
+        maxlength: ({ requiredLength }: { requiredLength: number }) =>
+          `This field may not be longer than ${requiredLength} characters`,
       },
     },
     {
