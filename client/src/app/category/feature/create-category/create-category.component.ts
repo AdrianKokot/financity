@@ -24,10 +24,16 @@ export class CreateCategoryComponent {
 
   readonly form = this._fb.form(
     {
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(64)]],
       appearance: this._fb.group({
-        iconName: [getRandomAppearanceIcon(), [Validators.required]],
-        color: [getRandomAppearanceColor(), [Validators.required]],
+        iconName: [
+          getRandomAppearanceIcon(),
+          [Validators.required, Validators.maxLength(64)],
+        ],
+        color: [
+          getRandomAppearanceColor(),
+          [Validators.required, Validators.maxLength(64)],
+        ],
       }),
       walletId: ['', [Validators.required]],
       transactionType: [TransactionType.Income, [Validators.required]],

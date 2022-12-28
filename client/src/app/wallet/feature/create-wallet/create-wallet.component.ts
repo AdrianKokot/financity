@@ -16,7 +16,7 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 export class CreateWalletComponent {
   readonly form = this._fb.form(
     {
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(64)]],
       currencyId: ['', [Validators.required]],
       startingAmount: [0, [Validators.required]],
     },

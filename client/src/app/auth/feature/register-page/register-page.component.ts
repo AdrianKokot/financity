@@ -3,6 +3,7 @@ import { Validators } from '@angular/forms';
 import { AuthService } from '../../data-access/api/auth.service';
 import { Router } from '@angular/router';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { CustomValidators } from '@shared/utils/form/custom-validators';
 
 @Component({
   selector: 'app-register-page',
@@ -12,8 +13,11 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 export class RegisterPageComponent {
   readonly form = this._fb.form(
     {
-      email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      email: [
+        '',
+        [Validators.email, Validators.required, Validators.maxLength(256)],
+      ],
+      password: ['', [Validators.required, CustomValidators.password()]],
       name: ['', [Validators.required, Validators.maxLength(128)]],
     },
     {

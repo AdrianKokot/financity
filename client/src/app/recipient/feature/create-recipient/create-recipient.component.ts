@@ -14,7 +14,7 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 export class CreateRecipientComponent {
   readonly form = this._fb.form(
     {
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(64)]],
       walletId: ['', [Validators.required]],
     },
     {

@@ -4,6 +4,7 @@ import { distinctUntilChanged, map, Subject } from 'rxjs';
 import { AuthService } from '../../data-access/api/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { CustomValidators } from '@shared/utils/form/custom-validators';
 
 @Component({
   selector: 'app-reset-password-page',
@@ -13,7 +14,10 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 export class ResetPasswordPageComponent {
   readonly form = this._fb.form(
     {
-      email: ['', [Validators.email, Validators.required]],
+      email: [
+        '',
+        [Validators.email, Validators.required, Validators.maxLength(256)],
+      ],
       password: [{ value: '', disabled: true }, []],
       token: [{ value: '', disabled: true }, []],
     },
@@ -73,7 +77,7 @@ export class ResetPasswordPageComponent {
       this.form.controls.password.enable();
       this.form.controls.password.setValidators([
         Validators.required,
-        Validators.minLength(8),
+        CustomValidators.password(),
       ]);
     }
   }

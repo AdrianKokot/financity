@@ -16,7 +16,7 @@ export class WalletSettingsComponent {
   readonly form = this._fb.form(
     {
       id: [''],
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(64)]],
       startingAmount: [0, [Validators.required]],
       currencyId: [''],
     },

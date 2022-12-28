@@ -16,7 +16,7 @@ export class UpdateRecipientComponent {
   readonly form = this._fb.form(
     {
       id: ['', [Validators.required]],
-      name: ['', [Validators.required]],
+      name: ['', [Validators.required, Validators.maxLength(64)]],
       walletId: ['', [Validators.required]],
     },
     {
