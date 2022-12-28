@@ -1,5 +1,5 @@
 <h3 class="text-center mb-8">Welcome back!</h3>
-<form [formGroup]="form" (ngSubmit)="submit$.next(undefined)" class="tui-form">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
   <label tuiLabel="Email address" class="tui-form__row">
     <tui-input
       formControlName="email"
@@ -36,7 +36,7 @@
       type="submit"
       class="w-full"
       size="m"
-      [showLoader]="(submitButtonLoading$ | async) ?? false">
+      [showLoader]="(form.submitButtonLoading$ | async) ?? false">
       Log in
     </button>
   </div>

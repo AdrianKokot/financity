@@ -1,5 +1,5 @@
 <h3 class="text-center mb-8">Nice to meet you!</h3>
-<form [formGroup]="form" (ngSubmit)="submit$.next(undefined)" class="tui-form">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
   <label tuiLabel="Name" class="tui-form__row">
     <tui-input
       formControlName="name"
@@ -51,7 +51,7 @@
       type="submit"
       class="w-full"
       size="m"
-      [showLoader]="(submitButtonLoading$ | async) ?? false">
+      [showLoader]="(form.submitButtonLoading$ | async) ?? false">
       Sign up
     </button>
   </div>
