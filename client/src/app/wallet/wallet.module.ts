@@ -7,6 +7,7 @@ import {
   TuiButtonModule,
   TuiDataListModule,
   TuiErrorModule,
+  TuiGroupModule,
   TuiHostedDropdownModule,
   TuiLabelModule,
   TuiLinkModule,
@@ -39,7 +40,7 @@ import {
   TuiTagModule,
 } from '@taiga-ui/kit';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
+import { TuiAutoFocusModule, TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import { WalletsShellComponent } from './feature/wallets-shell/wallets-shell.component';
 import { WalletListItemComponent } from './ui/wallet-list-item/wallet-list-item.component';
 import { WalletSettingsComponent } from './feature/wallet-settings/wallet-settings.component';
@@ -57,6 +58,8 @@ import { TransactionModule } from '../transaction/transaction.module';
 import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
 import { RecipientModule } from '../recipient/recipient.module';
 import { SearchableListComponent } from '@shared/ui/tui/searchable-list/searchable-list.component';
+import { CreateWalletComponent } from './feature/create-wallet/create-wallet.component';
+import { SelectModule } from '@shared/ui/tui/select/select.module';
 
 @NgModule({
   declarations: [
@@ -70,6 +73,7 @@ import { SearchableListComponent } from '@shared/ui/tui/searchable-list/searchab
     WalletShareManagementComponent,
     ShareWalletComponent,
     WalletRecipientsComponent,
+    CreateWalletComponent,
   ],
   imports: [
     CommonModule,
@@ -115,6 +119,9 @@ import { SearchableListComponent } from '@shared/ui/tui/searchable-list/searchab
     TuiBreadcrumbsModule,
     TuiPrimitiveTextfieldModule,
     SearchableListComponent,
+    TuiGroupModule,
+    SelectModule,
+    TuiAutoFocusModule,
   ],
 })
 export class WalletModule {}

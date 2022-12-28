@@ -71,10 +71,20 @@
                     {{ item.name }}
                   </span>
                 </span>
-                <!--                {{ item.name }}-->
               </td>
 
               <td *tuiCell="'actions'" tuiTd class="column-actions">
+                <button
+                  tuiIconButton
+                  routerLink="../transactions"
+                  [queryParams]="{ labels: item.id }"
+                  appearance="flat"
+                  size="s"
+                  icon="tuiIconEyeOpen"
+                  title="View related transactions"
+                  shape="rounded"
+                  class="mr-1"></button>
+
                 <button
                   tuiIconButton
                   appearance="flat"

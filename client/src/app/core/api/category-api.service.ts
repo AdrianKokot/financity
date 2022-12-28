@@ -6,7 +6,7 @@ import {
   CategoryListItem,
   CreateCategoryPayload,
 } from '@shared/data-access/models/category.model';
-import { map, Observable } from 'rxjs';
+import { delay, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,7 @@ export class CategoryApiService {
     pagination: {
       page: number;
       pageSize: number;
-      filters?: Record<string, string>;
+      filters?: Record<string, string | string[]>;
     }
   ) {
     const params = new HttpParams().appendAll({
@@ -39,9 +39,17 @@ export class CategoryApiService {
   }
 
   create(payload: CreateCategoryPayload): Observable<Category> {
-    return this.http
-      .post<{ id: Category['id'] }>('/api/categories', payload)
-      .pipe(map(({ id }) => ({ ...payload, id })));
+    return of(null).pipe(
+      switchMap(() =>
+        this.http.post<{ id: Category['id'] }>('/api/categories', payload).pipe(
+          map(({ id }) => ({ ...payload, id })),
+          delay(3000)
+        )
+      )
+    );
+    // return this.http
+    //   .post<{ id: Category['id'] }>('/api/categories', payload)
+    //   .pipe(map(({ id }) => ({ ...payload, id })));
   }
 
   update(payload: Pick<Category, 'id' | 'name' | 'appearance'>) {

@@ -1,5 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <div tuiGroup class="mb-6" [rounded]="true">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <div tuiGroup class="tui-form__row" [rounded]="true">
     <label
       tuiLabel="Color"
       formGroupName="appearance"
@@ -40,7 +40,7 @@
     </label>
   </div>
 
-  <label [tuiLabel]="'Transaction type'" class="mb-6">
+  <label [tuiLabel]="'Transaction type'" class="tui-form__row">
     <tui-select
       formControlName="transactionType"
       [tuiTextfieldLabelOutside]="true"
@@ -55,9 +55,29 @@
       [error]="[] | tuiFieldError | async"></tui-error>
   </label>
 
-  <div class="tui-form__row text-right">
-    <button tuiButton type="submit" size="m" [showLoader]="(loading$ | async)!">
-      Submit
+  <div
+    class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
+    <button
+      tuiButton
+      appearance="outline"
+      class="tui-form__button"
+      (click)="cancel()"
+      type="button"
+      [disabled]="submitButtonLoading"
+      size="m">
+      Cancel
+    </button>
+
+    <button
+      tuiButton
+      type="submit"
+      class="tui-form__button"
+      size="m"
+      [showLoader]="submitButtonLoading">
+      Save
     </button>
   </div>
 </form>

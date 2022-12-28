@@ -30,13 +30,12 @@ export class RequireConfirmationDirective implements OnDestroy {
       .open<boolean>(new PolymorpheusComponent(ConfirmationDialogComponent), {
         required: true,
         data: { content: this.confirmationMessage },
-        size: 'm',
         label: this.confirmationTitle,
       })
       .pipe(
-        take(1),
         takeUntil(this._destroyed$),
         catchError(() => of(false)),
+        take(1),
         filter(confirmed => confirmed)
       )
       .subscribe(() => this.confirm.emit());

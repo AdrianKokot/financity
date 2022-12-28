@@ -95,7 +95,7 @@ export class AuthService {
       .post(`${this._basePath}/register`, payload, {
         observe: 'response',
       })
-      .pipe(map(res => res.status === 204));
+      .pipe(map(res => res.status === 200));
   }
 
   requestPasswordReset(payload: { email: string }): Observable<boolean> {

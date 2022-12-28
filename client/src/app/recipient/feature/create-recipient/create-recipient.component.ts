@@ -1,34 +1,31 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  ViewEncapsulation,
-} from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { RecipientApiService } from '../../../core/api/recipient-api.service';
 import { Recipient } from '@shared/data-access/models/recipient.model';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-create-recipient',
   templateUrl: './create-recipient.component.html',
-  styleUrls: ['./create-recipient.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateRecipientComponent {
-  form = this._fb.nonNullable.group({
-    name: ['', [Validators.required]],
-    walletId: ['', [Validators.required]],
-  });
-
-  loading$ = new BehaviorSubject<boolean>(false);
+  readonly form = this._fb.form(
+    {
+      name: ['', [Validators.required]],
+      walletId: ['', [Validators.required]],
+    },
+    {
+      submit: payload => this._dataService.create(payload),
+      effect: item => this._context.completeWith(item),
+    }
+  );
 
   constructor(
-    private _recipientService: RecipientApiService,
-    private readonly _fb: FormBuilder,
+    private _dataService: RecipientApiService,
+    private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<Recipient, { walletId: string }>
   ) {
@@ -37,23 +34,7 @@ export class CreateRecipientComponent {
     });
   }
 
-  submit(): void {
-    if (!this.form.valid) {
-      return;
-    }
-
-    this._recipientService
-      .create(this.form.getRawValue())
-      .pipe(
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        finalize(() => {
-          this.loading$.next(false);
-        })
-      )
-      .subscribe(item => {
-        this._context.completeWith(item);
-      });
+  cancel() {
+    this._context.$implicit.complete();
   }
 }

@@ -1,8 +1,8 @@
 <h3 class="text-center mb-8">Nice to meet you!</h3>
-<form [formGroup]="ui.form" (ngSubmit)="ui.submit$.next()">
-  <label tuiLabel="Name" class="mb-6">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <label tuiLabel="Name" class="tui-form__row">
     <tui-input
-      [formControl]="ui.form.controls.name"
+      formControlName="name"
       tuiTextfieldSize="m"
       class="mt-1"
       [tuiTextfieldLabelOutside]="true">
@@ -11,29 +11,53 @@
     </tui-input>
 
     <tui-error
-      [formControl]="ui.form.controls.name"
+      formControlName="name"
       [error]="[] | tuiFieldError | async"></tui-error>
   </label>
 
-  <app-email-input
-    [control]="ui.form.controls.email"
-    class="mb-6"></app-email-input>
+  <label tuiLabel="Email address" class="tui-form__row">
+    <tui-input
+      formControlName="email"
+      tuiTextfieldSize="m"
+      class="mt-1"
+      [tuiTextfieldLabelOutside]="true">
+      mail@example.com
+      <input tuiTextfield type="email" />
+    </tui-input>
 
-  <app-password-input
-    [control]="ui.form.controls.password"
-    class="mb-6"></app-password-input>
+    <tui-error
+      formControlName="email"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
 
-  <button
-    tuiButton
-    type="submit"
-    class="w-full"
-    size="m"
-    [showLoader]="(ui.submitButtonLoading$ | async) ?? false">
-    Sign up
-  </button>
+  <label tuiLabel="Password" class="tui-form__row">
+    <tui-input-password
+      formControlName="password"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1">
+      ••••••••
+      <input tuiTextfield type="password" />
+    </tui-input-password>
+
+    <tui-error
+      formControlName="password"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <div class="tui-form__row tui-form__buttons">
+    <button
+      tuiButton
+      type="submit"
+      class="w-full"
+      size="m"
+      [showLoader]="(form.submitButtonLoading$ | async) ?? false">
+      Sign up
+    </button>
+  </div>
 </form>
 
-<div class="text-center mt-4">
+<div class="text-center tui-form__row">
   <p>
     Already have an account?
     <a href="../login" routerLink="../login" tuiLink>Log in</a>.

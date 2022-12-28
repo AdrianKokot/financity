@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
@@ -15,27 +16,24 @@ public sealed class UpdateLabelCommand : ICommand<Unit>
     public Appearance Appearance { get; set; } = new();
 }
 
-public sealed class UpdateLabelCommandHandler : ICommandHandler<UpdateLabelCommand, Unit>
+public sealed class UpdateLabelCommandHandler : UpdateEntityCommandHandler<UpdateLabelCommand, Label>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UpdateLabelCommandHandler(IApplicationDbContext dbContext)
+    public UpdateLabelCommandHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateLabelCommand request,
-                                   CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(UpdateLabelCommand command,
+                                            CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<Label>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await DbContext.GetDbSet<Label>().FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Label), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Label), command.Id);
 
-        entity.Name = request.Name;
-        entity.Appearance = request.Appearance;
+        entity.Name = command.Name;
+        entity.Appearance = command.Appearance;
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return await base.Handle(command, cancellationToken);
     }
 }

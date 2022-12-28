@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { CategoryApiService } from '../../../core/api/category-api.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
@@ -13,6 +12,7 @@ import {
   getRandomAppearanceColor,
   getRandomAppearanceIcon,
 } from '@shared/ui/appearance';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-create-category',
@@ -20,22 +20,27 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateCategoryComponent {
-  form = this._fb.nonNullable.group({
-    name: ['', [Validators.required]],
-    appearance: this._fb.group({
-      iconName: [getRandomAppearanceIcon(), [Validators.required]],
-      color: [getRandomAppearanceColor(), [Validators.required]],
-    }),
-    walletId: ['', [Validators.required]],
-    transactionType: [TransactionType.Income, [Validators.required]],
-  });
+  readonly transactionTypes = TRANSACTION_TYPES;
 
-  transactionTypes = TRANSACTION_TYPES;
-  loading$ = new BehaviorSubject<boolean>(false);
+  readonly form = this._fb.form(
+    {
+      name: ['', [Validators.required]],
+      appearance: this._fb.group({
+        iconName: [getRandomAppearanceIcon(), [Validators.required]],
+        color: [getRandomAppearanceColor(), [Validators.required]],
+      }),
+      walletId: ['', [Validators.required]],
+      transactionType: [TransactionType.Income, [Validators.required]],
+    },
+    {
+      submit: payload => this._dataService.create(payload),
+      effect: item => this._context.completeWith(item),
+    }
+  );
 
   constructor(
-    private _categoryService: CategoryApiService,
-    private readonly _fb: FormBuilder,
+    private readonly _dataService: CategoryApiService,
+    private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
       Category,
@@ -48,24 +53,7 @@ export class CreateCategoryComponent {
     });
   }
 
-  submit(): void {
-    if (!this.form.valid) {
-      return;
-    }
-    const payload = this.form.getRawValue();
-
-    this._categoryService
-      .create(payload)
-      .pipe(
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        finalize(() => {
-          this.loading$.next(false);
-        })
-      )
-      .subscribe(cat => {
-        this._context.completeWith(cat);
-      });
+  cancel() {
+    this._context.$implicit.complete();
   }
 }

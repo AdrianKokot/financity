@@ -171,7 +171,7 @@ create table "UserWallet"
     "WalletOwnerId" uuid not null,
     "WalletId"      uuid not null,
     constraint "FK_UserWallet_Wallets_WalletId_OwnerId"
-        foreign key ("UserId", "WalletId") references "Wallets" ("Id", "OwnerId")
+        foreign key ("WalletId", "WalletOwnerId") references "Wallets" ("Id", "OwnerId")
             on delete cascade,
     constraint "PK_UserWallet"
         primary key ("UserId", "WalletId"),

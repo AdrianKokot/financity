@@ -19,6 +19,8 @@ export interface Transaction {
 
 export interface TransactionDetails extends Transaction {
   labels: Label[];
+  category: Category | null;
+  recipient: Recipient | null;
 }
 
 export interface TransactionListItem extends Transaction {

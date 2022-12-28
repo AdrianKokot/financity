@@ -142,6 +142,17 @@
               <td *tuiCell="'actions'" tuiTd class="column-actions">
                 <button
                   tuiIconButton
+                  routerLink="../transactions"
+                  [queryParams]="{ categories: item.id }"
+                  appearance="flat"
+                  size="s"
+                  icon="tuiIconEyeOpen"
+                  title="View related transactions"
+                  shape="rounded"
+                  class="mr-1"></button>
+
+                <button
+                  tuiIconButton
                   appearance="flat"
                   size="s"
                   icon="fa::pen"

@@ -1,31 +1,56 @@
 <h3 class="text-center mb-8">Welcome back!</h3>
-<form [formGroup]="ui.form" (ngSubmit)="ui.submit$.next()">
-  <app-email-input
-    [control]="ui.form.controls.email"
-    class="mb-6"></app-email-input>
-  <app-password-input
-    [control]="ui.form.controls.password"
-    class="mb-6"></app-password-input>
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <label tuiLabel="Email address" class="tui-form__row">
+    <tui-input
+      formControlName="email"
+      tuiTextfieldSize="m"
+      class="mt-1"
+      [tuiTextfieldLabelOutside]="true">
+      mail@example.com
+      <input tuiTextfield type="email" />
+    </tui-input>
 
-  <button
-    tuiButton
-    type="submit"
-    class="w-full"
-    size="m"
-    [showLoader]="(ui.submitButtonLoading$ | async) ?? false">
-    Log in
-  </button>
+    <tui-error
+      formControlName="email"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <label tuiLabel="Password" class="tui-form__row">
+    <tui-input-password
+      formControlName="password"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1">
+      ••••••••
+      <input tuiTextfield type="password" />
+    </tui-input-password>
+
+    <tui-error
+      formControlName="password"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <div class="tui-form__row tui-form__buttons">
+    <button
+      tuiButton
+      type="submit"
+      class="w-full"
+      size="m"
+      [showLoader]="(form.submitButtonLoading$ | async) ?? false">
+      Log in
+    </button>
+  </div>
 </form>
 
-<div class="text-center mt-4">
+<div class="text-center tui-form__row">
   <p>
     Don't have an account?
     <a href="../register" routerLink="../register" tuiLink>Sign up</a>.
   </p>
   <p>
     Forgot password?
-    <a href="../reset-password" routerLink="../reset-password" tuiLink
-      >Reset password</a
+    <a href="../reset-password" routerLink="../reset-password" tuiLink>
+      Reset password </a
     >.
   </p>
 </div>

@@ -4,6 +4,7 @@ import {
   TUI_SVG_SRC_PROCESSOR,
   TuiAlertModule,
   TuiDialogModule,
+  tuiDialogOptionsProvider,
   TuiRootModule,
   TuiSvgService,
   TuiThemeNightModule,
@@ -41,6 +42,10 @@ import { AuthService } from './auth/data-access/api/auth.service';
       deps: [AuthService],
       useFactory: (authService: AuthService) => authService.loggedOut$,
     },
+    tuiDialogOptionsProvider({
+      dismissible: false,
+      required: true,
+    }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,

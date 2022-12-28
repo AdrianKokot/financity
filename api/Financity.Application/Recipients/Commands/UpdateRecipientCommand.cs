@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
@@ -13,27 +14,24 @@ public sealed class UpdateRecipientCommand : ICommand<Unit>
     public string Name { get; set; } = string.Empty;
 }
 
-public sealed class UpdateRecipientCommandHandler : ICommandHandler<UpdateRecipientCommand, Unit>
+public sealed class UpdateRecipientCommandHandler : UpdateEntityCommandHandler<UpdateRecipientCommand, Recipient>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UpdateRecipientCommandHandler(IApplicationDbContext dbContext)
+    public UpdateRecipientCommandHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateRecipientCommand request,
-                                   CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(UpdateRecipientCommand request,
+                                            CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<Recipient>()
-                                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await DbContext.GetDbSet<Recipient>()
+                                    .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Recipient), request.Id);
 
         entity.Name = request.Name;
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return await base.Handle(request, cancellationToken);
     }
 }

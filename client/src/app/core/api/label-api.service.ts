@@ -21,7 +21,7 @@ export class LabelApiService {
     pagination: {
       page: number;
       pageSize: number;
-      filters?: Record<string, string>;
+      filters?: Record<string, string | string[]>;
     }
   ) {
     const params = new HttpParams().appendAll({

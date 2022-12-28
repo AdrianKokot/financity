@@ -37,13 +37,7 @@ public sealed class
     {
         if (command.UserId == Guid.Empty) command.UserId = _userService.UserId;
 
-        var entity = Mapper.Map<Wallet>(command);
-
-        DbContext.GetDbSet<Wallet>().Add(entity);
-
-        await DbContext.SaveChangesAsync(cancellationToken);
-
-        return Mapper.Map<CreateWalletCommandResult>(entity);
+        return await base.Handle(command, cancellationToken);
     }
 }
 

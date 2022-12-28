@@ -1,20 +1,24 @@
-<p class="mb-6" [innerHtml]="content | dompurify"></p>
-<div class="d-flex gap-2">
-  <button
-    tuiButton
-    appearance="outline"
-    class="ml-auto"
-    (click)="cancel()"
-    type="button"
-    size="m">
-    Cancel
-  </button>
-  <button
-    tuiButton
-    appearance="secondary-destructive"
-    (click)="confirm()"
-    type="button"
-    size="m">
-    Confirm
-  </button>
+<div class="tui-form">
+  <div class="tui-form__row" [innerHtml]="content | dompurify"></div>
+  <div class="tui-form__row tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      appearance="outline"
+      (click)="cancel()"
+      class="tui-form__button"
+      type="button"
+      size="m">
+      Cancel
+    </button>
+
+    <button
+      tuiButton
+      type="button"
+      (click)="confirm()"
+      class="tui-form__button"
+      size="m"
+      appearance="secondary-destructive">
+      Confirm
+    </button>
+  </div>
 </div>

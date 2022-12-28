@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500&display=swap');
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
+
 body {
   background-color: var(--tui-base-01)
 }
@@ -13,6 +14,13 @@ body {
 
 tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   transition-property: none !important;
+}
+
+[tuiWrapper][data-appearance='outline'] {
+  &:after {
+    color: var(--tui-base-03);
+    transition-property: color;
+  }
 }
 
 [tuiWrapper][data-appearance='flat-destructive'] {
@@ -136,3 +144,28 @@ tui-marker-icon[data-appearance-color] {
     width: 1.25rem !important;
   }
 }
+
+.t-postfix.t-inline {
+  vertical-align: text-bottom !important;
+}
+
+.max-w-10 {
+  max-width: 10rem;
+  width: 100%;
+}
+
+[data-transaction-type='expense'], [data-transaction-type='Expense'] {
+  --transaction-type-color: var(--tui-negative);
+}
+
+[data-transaction-type='income'], [data-transaction-type='Income'] {
+  --transaction-type-color: var(--tui-positive);
+}
+
+[data-transaction-type],
+tui-input-number[data-transaction-type] .t-input,
+tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
+  color: var(--transaction-type-color);
+  font-weight: bolder;
+}
+

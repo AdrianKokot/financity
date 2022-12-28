@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
@@ -14,26 +15,21 @@ public sealed class UpdateWalletCommand : ICommand<Unit>
     public decimal StartingAmount { get; set; } = 0;
 }
 
-public sealed class UpdateWalletCommandHandler : ICommandHandler<UpdateWalletCommand, Unit>
+public sealed class UpdateWalletCommandHandler : UpdateEntityCommandHandler<UpdateWalletCommand, Wallet>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UpdateWalletCommandHandler(IApplicationDbContext dbContext)
+    public UpdateWalletCommandHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateWalletCommand request, CancellationToken ct)
+    public override async Task<Unit> Handle(UpdateWalletCommand command, CancellationToken ct)
     {
-        var entity = await _dbContext.GetDbSet<Wallet>().FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+        var entity = await DbContext.GetDbSet<Wallet>().FirstOrDefaultAsync(x => x.Id == command.Id, ct);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Wallet), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Wallet), command.Id);
 
-        entity.Name = request.Name;
-        entity.StartingAmount = request.StartingAmount;
+        entity.Name = command.Name;
+        entity.StartingAmount = command.StartingAmount;
 
-        await _dbContext.SaveChangesAsync(ct);
-
-        return Unit.Value;
+        return await base.Handle(command, ct);
     }
 }

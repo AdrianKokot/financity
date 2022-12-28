@@ -2,6 +2,7 @@
 import { Component, Input } from '@angular/core';
 import {
   BehaviorSubject,
+  combineLatest,
   debounceTime,
   distinctUntilChanged,
   EMPTY,
@@ -36,22 +37,34 @@ export abstract class AbstractSelectComponent<
   @Input() getListFunction: (pagination: {
     page: number;
     pageSize: number;
-    filters?: Record<string, string>;
+    filters?: Record<string, string | string[]>;
   }) => Observable<T[]> = () => EMPTY;
+
+  externalFilters$ = new BehaviorSubject<Record<string, string | string[]>>({});
+
+  @Input() set externalFilters(value: Record<string, string | string[]>) {
+    this.externalFilters$.next(value);
+  }
+
+  get externalFilters() {
+    return this.externalFilters$.value;
+  }
+
+  @Input() searchBy = 'name_ct';
 
   readonly search$ = new Subject<string>();
 
   readonly page$ = new BehaviorSubject<number>(1);
 
-  private readonly _filters$ = this.search$.pipe(
-    startWith(''),
-    distinctUntilChanged(),
-    debounceTime(300),
-    map(value => {
-      const obj: Record<string, string> = {};
+  private readonly _filters$ = combineLatest([
+    this.search$.pipe(startWith(''), distinctUntilChanged(), debounceTime(300)),
+    this.externalFilters$,
+  ]).pipe(
+    map(([search, external]) => {
+      const obj = { ...external };
 
-      if (value) {
-        obj['name_ct'] = value;
+      if (search) {
+        obj[this.searchBy] = search;
       }
 
       return obj;
@@ -124,7 +137,8 @@ export abstract class AbstractSelectComponent<
     startWith(new Map<string, string>()),
     map(
       m => (id: TuiContextWithImplicit<string> | string) =>
-        (tuiIsString(id) ? m.get(id) : m.get(id.$implicit)) || 'Loading...'
+        (tuiIsString(id) ? m.get(id) : m.get(id.$implicit)) ||
+        (id === '' ? '' : 'Loading...')
     ),
     shareReplay(1)
   );

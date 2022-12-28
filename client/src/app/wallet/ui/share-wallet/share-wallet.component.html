@@ -1,5 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <label [tuiLabel]="'Email address'" class="mb-6">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <label [tuiLabel]="'Email address'" class="tui-form__row">
     <tui-input
       formControlName="userEmail"
       tuiTextfieldSize="m"
@@ -14,12 +14,28 @@
       [error]="[] | tuiFieldError | async"></tui-error>
   </label>
 
-  <div class="tui-form__row text-right">
+  <div
+    class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
+    <button
+      tuiButton
+      appearance="outline"
+      class="tui-form__button"
+      (click)="cancel()"
+      type="button"
+      [disabled]="submitButtonLoading"
+      size="m">
+      Cancel
+    </button>
+
     <button
       tuiButton
       type="submit"
+      class="tui-form__button"
       size="m"
-      [showLoader]="(loading$ | async) ?? false">
+      [showLoader]="submitButtonLoading">
       Share
     </button>
   </div>
