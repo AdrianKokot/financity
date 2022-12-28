@@ -4,7 +4,7 @@ namespace Financity.Application.Abstractions.Mappings;
 
 public interface IMapFrom<TSource>
 {
-    static void CreateMap(Profile profile)
+    public static void CreateMap(Profile profile)
     {
     }
 }

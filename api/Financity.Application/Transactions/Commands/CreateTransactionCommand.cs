@@ -54,16 +54,12 @@ public sealed class CreateTransactionCommandHandler :
                                          .FirstAsync(x => x.Id == command.CurrencyId, cancellationToken);
 
         if (command.CategoryId != null)
-        {
             entity.Category = await DbContext.GetDbSet<Category>()
                                              .FirstAsync(x => x.Id == command.CategoryId, cancellationToken);
-        }
 
         if (command.RecipientId != null)
-        {
             entity.Recipient = await DbContext.GetDbSet<Recipient>()
                                               .FirstAsync(x => x.Id == command.RecipientId, cancellationToken);
-        }
 
         DbContext.GetDbSet<Transaction>().Add(entity);
 

@@ -18,6 +18,11 @@ public abstract class UpdateEntityCommandHandler<TCommand, TEntity> : ICommandHa
         DbContext = dbContext;
     }
 
+    public virtual async Task<Unit> Handle(TCommand command, CancellationToken cancellationToken)
+    {
+        return await SaveChangesWithExceptionHandle(cancellationToken);
+    }
+
     private async Task<Unit> SaveChangesWithExceptionHandle(CancellationToken cancellationToken)
     {
         try
@@ -36,10 +41,5 @@ public abstract class UpdateEntityCommandHandler<TCommand, TEntity> : ICommandHa
         }
 
         return Unit.Value;
-    }
-
-    public virtual async Task<Unit> Handle(TCommand command, CancellationToken cancellationToken)
-    {
-        return await SaveChangesWithExceptionHandle(cancellationToken);
     }
 }

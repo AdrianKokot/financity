@@ -86,7 +86,8 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             model.AddModelError(string.Empty, formatException.Message);
 
         if (exception is EntityAlreadyExistsException existsException)
-            model.AddModelError(JsonNamingPolicy.CamelCase.ConvertName(existsException.PropertyName), existsException.Message);
+            model.AddModelError(JsonNamingPolicy.CamelCase.ConvertName(existsException.PropertyName),
+                existsException.Message);
 
         return model;
     }

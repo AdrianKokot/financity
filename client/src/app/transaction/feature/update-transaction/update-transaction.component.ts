@@ -40,8 +40,7 @@ export class UpdateTransactionComponent {
           ...payload,
           transactionDate: payload.transactionDate
             .toUtcNativeDate()
-            .toISOString()
-            .split('T')[0],
+            .toISOString(),
         }),
       effect: item => this._context.completeWith(item),
     }

@@ -3,7 +3,7 @@ using Financity.Application.Abstractions.Data;
 
 namespace Financity.Infrastructure.Services;
 
-sealed record ExchangeRateApiResponse(decimal Result);
+internal sealed record ExchangeRateApiResponse(decimal Result);
 
 public sealed class ExchangeRateApiException : Exception
 {
@@ -17,7 +17,7 @@ public sealed class ExchangeRateService : IExchangeRateService
     public async Task<decimal> GetExchangeRate(string from, string to,
                                                CancellationToken ct = default)
     {
-        using var client = new HttpClient()
+        using var client = new HttpClient
         {
             BaseAddress = new Uri("https://api.exchangerate.host")
         };

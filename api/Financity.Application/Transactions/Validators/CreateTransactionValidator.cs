@@ -38,10 +38,9 @@ public sealed class CreateTransactionValidator : AbstractValidator<CreateTransac
         ).Otherwise(() =>
 
             // When(x => x.ExchangeRate is not null, () => RuleFor())
-
             RuleFor(x => x.ExchangeRate).Equal(1).When(x => x.ExchangeRate is not null)
                                         .WithMessage(
-                    $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified or equal 1 when using the same currency as the wallet.")
+                                            $"{nameof(CreateTransactionCommand.ExchangeRate)} shouldn't be specified or equal 1 when using the same currency as the wallet.")
         );
     }
 }
