@@ -1,6 +1,6 @@
-<form (ngSubmit)="submit()" [formGroup]="form">
-  <div tuiGroup class="mb-6" [rounded]="true">
-    <label [tuiLabel]="'Transaction type'" class="max-w-s">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <div tuiGroup class="tui-form__row" [rounded]="true">
+    <label tuiLabel="Transaction type" class="max-w-10">
       <tui-select
         [tuiTextfieldLabelOutside]="true"
         class="mt-1 tui-group__inherit-item"
@@ -15,9 +15,9 @@
         formControlName="transactionType"></tui-error>
     </label>
 
-    <label [tuiLabel]="'Transaction date'">
+    <label tuiLabel="Transaction date">
       <tui-input-date
-        [max]="maxDate"
+        [max]="transactionMaxDate"
         [tuiTextfieldLabelOutside]="true"
         class="mt-1 tui-group__inherit-item"
         formControlName="transactionDate"
@@ -32,8 +32,8 @@
     </label>
   </div>
 
-  <div tuiGroup class="mb-6" [rounded]="true">
-    <label [tuiLabel]="'Currency'" class="max-w-s">
+  <div tuiGroup class="tui-form__row" [rounded]="true">
+    <label tuiLabel="Currency" class="max-w-10">
       <app-select
         [control]="form.controls.currencyId"
         [getListFunction]="getCurrenciesFunction"
@@ -46,7 +46,7 @@
         formControlName="currencyId"></tui-error>
     </label>
 
-    <label [tuiLabel]="'Amount'">
+    <label tuiLabel="Amount">
       <tui-input-number
         [postfix]="form.controls.currencyId.value | tuiCurrency"
         [tuiTextfieldLabelOutside]="true"
@@ -62,28 +62,37 @@
         formControlName="amount"></tui-error>
     </label>
 
-    <label
-      *ngIf="shouldExchangeRateBeSpecified$ | async"
-      [tuiLabel]="'Currency exchange rate'"
-      class="max-w-s">
-      <tui-input-number
-        [tuiTextfieldLabelOutside]="true"
-        class="mt-1 tui-group__inherit-item"
-        formControlName="exchangeRate"
-        tuiTextfieldSize="m">
-        Type an amount
-      </tui-input-number>
+    <ng-container
+      *tuiLet="(exchangeRateLoading$ | async) ?? false as exchangeRateLoading">
+      <label
+        tuiLabel="Currency exchange rate"
+        class="max-w-10"
+        *ngIf="shouldExchangeRateBeSpecified$ | async">
+        <tui-loader [showLoader]="exchangeRateLoading" [overlay]="true">
+          <tui-input-number
+            [tuiTextfieldLabelOutside]="true"
+            class="mt-1 tui-group__inherit-item"
+            formControlName="exchangeRate"
+            tuiTextfieldSize="m"
+            [precision]="2">
+            Type an amount
+          </tui-input-number>
+        </tui-loader>
 
-      <tui-error
-        [error]="[] | tuiFieldError | async"
-        formControlName="exchangeRate"></tui-error>
-    </label>
+        <tui-error
+          [error]="[] | tuiFieldError | async"
+          formControlName="exchangeRate"></tui-error>
+      </label>
+    </ng-container>
   </div>
 
-  <label [tuiLabel]="'Category'" class="w-full mb-6">
+  <label tuiLabel="Category" class="tui-form__row">
     <app-select
       [control]="form.controls.categoryId"
       [getListFunction]="getCategoriesFunction"
+      [externalFilters]="{
+        transactionType_eq: this.form.controls.transactionType.value
+      }"
       class="mt-1"
       label="Choose a category"></app-select>
 
@@ -92,7 +101,7 @@
       formControlName="categoryId"></tui-error>
   </label>
 
-  <label [tuiLabel]="'Recipient'" class="w-full mb-6">
+  <label tuiLabel="Recipient" class="tui-form__row">
     <app-select
       [control]="form.controls.recipientId"
       [getListFunction]="getRecipientsFunction"
@@ -104,7 +113,7 @@
       formControlName="recipientId"></tui-error>
   </label>
 
-  <label [tuiLabel]="'Labels'" class="mb-6 w-full">
+  <label tuiLabel="Labels" class="tui-form__row">
     <app-multi-select
       [control]="form.controls.labelIds"
       [getListFunction]="getLabelsFunction"
@@ -117,7 +126,7 @@
       formControlName="labelIds"></tui-error>
   </label>
 
-  <label [tuiLabel]="'Note'" class="mb-6">
+  <label tuiLabel="Note" class="tui-form__row">
     <tui-text-area
       [expandable]="true"
       [maxLength]="512"
@@ -132,13 +141,29 @@
       formControlName="note"></tui-error>
   </label>
 
-  <div class="tui-form__row text-right">
+  <div
+    class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
     <button
-      [showLoader]="(loading$ | async) ?? false"
-      size="m"
       tuiButton
-      type="submit">
-      Create
+      appearance="outline"
+      class="tui-form__button"
+      (click)="cancel()"
+      type="button"
+      [disabled]="submitButtonLoading"
+      size="m">
+      Cancel
+    </button>
+
+    <button
+      tuiButton
+      type="submit"
+      class="tui-form__button"
+      size="m"
+      [showLoader]="submitButtonLoading">
+      Save
     </button>
   </div>
 </form>

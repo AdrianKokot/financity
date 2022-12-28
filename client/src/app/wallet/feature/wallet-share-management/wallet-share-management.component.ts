@@ -14,6 +14,7 @@ import {
   filter,
   map,
   merge,
+  Observable,
   scan,
   share,
   shareReplay,
@@ -54,16 +55,17 @@ export class WalletShareManagementComponent {
     shareReplay(1)
   );
 
-  filters$ = this.form.valueChanges.pipe(
-    debounceTime(300),
-    map(() => this.form.getRawValue()),
-    map(({ search }) => {
-      return { search: search.trim() };
-    }),
-    distinctUntilKeyChanged('search'),
-    share(),
-    startWith({})
-  );
+  filters$: Observable<Record<string, string | string[]>> =
+    this.form.valueChanges.pipe(
+      debounceTime(300),
+      map(() => this.form.getRawValue()),
+      map(({ search }) => {
+        return { search: search.trim() };
+      }),
+      distinctUntilKeyChanged('search'),
+      share(),
+      startWith({})
+    );
 
   constructor(
     private _fb: FormBuilder,

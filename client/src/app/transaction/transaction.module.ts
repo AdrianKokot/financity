@@ -9,6 +9,7 @@ import {
   TuiErrorModule,
   TuiGroupModule,
   TuiLabelModule,
+  TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
@@ -56,6 +57,7 @@ import { SelectModule } from '@shared/ui/tui/select/select.module';
     MultiSelectModule,
     SelectModule,
     TuiGroupModule,
+    TuiLoaderModule,
   ],
   exports: [CreateTransactionComponent, UpdateTransactionComponent],
 })

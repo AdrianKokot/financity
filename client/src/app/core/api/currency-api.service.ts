@@ -15,10 +15,10 @@ export class CurrencyApiService {
     pagination: {
       page: number;
       pageSize: number;
-      filters?: Record<string, string>;
+      filters?: Record<string, string | string[]>;
     } = { page: 1, pageSize: 500 }
   ) {
-    const filters: Record<string, string> = {};
+    const filters: Record<string, string | string[]> = {};
 
     if (pagination.filters && 'name_ct' in pagination.filters) {
       filters['search'] = pagination.filters['name_ct'];
