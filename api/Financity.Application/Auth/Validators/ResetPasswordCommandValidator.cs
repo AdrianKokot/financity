@@ -13,7 +13,7 @@ public sealed class ResetPasswordCommandValidator : AbstractValidator<ResetPassw
         RuleFor(x => x.Email)
             .NotEmpty()
             .EmailAddress()
-            .MaximumLength(255);
+            .MaximumLength(256);
 
         RuleFor(x => x.Token)
             .NotEmpty();

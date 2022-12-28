@@ -10,6 +10,6 @@ public sealed class RequestResetPasswordCommandValidator : AbstractValidator<Req
         RuleFor(x => x.Email)
             .NotEmpty()
             .EmailAddress()
-            .MaximumLength(255);
+            .MaximumLength(256);
     }
 }
