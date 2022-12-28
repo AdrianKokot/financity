@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { CategoryApiService } from '../../../core/api/category-api.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { exhaustMap, filter, map, startWith, Subject, tap } from 'rxjs';
+import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Category } from '@shared/data-access/models/category.model';
@@ -13,6 +12,7 @@ import {
   getRandomAppearanceColor,
   getRandomAppearanceIcon,
 } from '@shared/ui/appearance';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-create-category',
@@ -20,35 +20,27 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateCategoryComponent {
-  form = this._fb.nonNullable.group({
-    name: ['', [Validators.required]],
-    appearance: this._fb.group({
-      iconName: [getRandomAppearanceIcon(), [Validators.required]],
-      color: [getRandomAppearanceColor(), [Validators.required]],
-    }),
-    walletId: ['', [Validators.required]],
-    transactionType: [TransactionType.Income, [Validators.required]],
-  });
+  readonly transactionTypes = TRANSACTION_TYPES;
 
-  readonly submit$ = new Subject<void>();
-  readonly submitLoading$ = this.submit$.pipe(
-    tap(() => this.form.markAllAsTouched()),
-    filter(() => this.form.valid),
-    exhaustMap(() =>
-      this._categoryService.create(this.form.getRawValue()).pipe(
-        tap(result => this._context.completeWith(result)),
-        startWith(null)
-      )
-    ),
-    map(x => x === null),
-    startWith(false)
+  readonly form = this._fb.form(
+    {
+      name: ['', [Validators.required]],
+      appearance: this._fb.group({
+        iconName: [getRandomAppearanceIcon(), [Validators.required]],
+        color: [getRandomAppearanceColor(), [Validators.required]],
+      }),
+      walletId: ['', [Validators.required]],
+      transactionType: [TransactionType.Income, [Validators.required]],
+    },
+    {
+      submit: payload => this._dataService.create(payload),
+      effect: item => this._context.completeWith(item),
+    }
   );
 
-  transactionTypes = TRANSACTION_TYPES;
-
   constructor(
-    private _categoryService: CategoryApiService,
-    private readonly _fb: FormBuilder,
+    private readonly _dataService: CategoryApiService,
+    private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
       Category,
@@ -61,7 +53,7 @@ export class CreateCategoryComponent {
     });
   }
 
-  cancel(): void {
+  cancel() {
     this._context.$implicit.complete();
   }
 }

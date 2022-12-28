@@ -21,7 +21,7 @@ export type FormWithHandlerBuilderFunctions<
 @Injectable({
   providedIn: 'root',
 })
-export class FormWithHandlerBuilderService extends FormBuilder {
+export class FormWithHandlerBuilder extends FormBuilder {
   form<T extends {}, TResult>(
     controls: T,
     functions: FormWithHandlerBuilderFunctions<T, TResult>,

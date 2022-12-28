@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { LabelApiService } from '../../../core/api/label-api.service';
 import { Label } from '@shared/data-access/models/label';
 import { getRandomAppearanceColor } from '@shared/ui/appearance';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-create-label',
@@ -13,19 +13,23 @@ import { getRandomAppearanceColor } from '@shared/ui/appearance';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateLabelComponent {
-  form = this._fb.nonNullable.group({
-    name: ['', [Validators.required]],
-    appearance: this._fb.group({
-      color: [getRandomAppearanceColor(), [Validators.required]],
-    }),
-    walletId: ['', [Validators.required]],
-  });
-
-  loading$ = new BehaviorSubject<boolean>(false);
+  readonly form = this._fb.form(
+    {
+      name: ['', [Validators.required]],
+      appearance: this._fb.group({
+        color: [getRandomAppearanceColor(), [Validators.required]],
+      }),
+      walletId: ['', [Validators.required]],
+    },
+    {
+      submit: payload => this._dataService.create(payload),
+      effect: item => this._context.completeWith(item),
+    }
+  );
 
   constructor(
-    private _labelService: LabelApiService,
-    private readonly _fb: FormBuilder,
+    private _dataService: LabelApiService,
+    private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<Label, { walletId: string }>
   ) {
@@ -34,23 +38,7 @@ export class CreateLabelComponent {
     });
   }
 
-  submit(): void {
-    if (!this.form.valid) {
-      return this.form.markAllAsTouched();
-    }
-
-    this._labelService
-      .create(this.form.getRawValue())
-      .pipe(
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        finalize(() => {
-          this.loading$.next(false);
-        })
-      )
-      .subscribe(item => {
-        this._context.completeWith(item);
-      });
+  cancel() {
+    this._context.$implicit.complete();
   }
 }

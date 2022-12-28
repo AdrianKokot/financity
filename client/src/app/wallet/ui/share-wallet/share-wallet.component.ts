@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, finalize, tap } from 'rxjs';
+import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-share-wallet',
@@ -11,16 +11,20 @@ import { WalletApiService } from '../../../core/api/wallet-api.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShareWalletComponent {
-  form = this._fb.nonNullable.group({
-    userEmail: ['', [Validators.required, Validators.email]],
-    walletId: ['', [Validators.required]],
-  });
-
-  loading$ = new BehaviorSubject<boolean>(false);
+  readonly form = this._fb.form(
+    {
+      userEmail: ['', [Validators.required, Validators.email]],
+      walletId: ['', [Validators.required]],
+    },
+    {
+      submit: payload => this._dataService.share(payload),
+      effect: success => this._context.completeWith(success),
+    }
+  );
 
   constructor(
-    private _walletService: WalletApiService,
-    private readonly _fb: FormBuilder,
+    private _dataService: WalletApiService,
+    private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<boolean, { walletId: string }>
   ) {
@@ -29,24 +33,7 @@ export class ShareWalletComponent {
     });
   }
 
-  submit(): void {
-    if (!this.form.valid) {
-      return;
-    }
-    const payload = this.form.getRawValue();
-
-    this._walletService
-      .share(payload)
-      .pipe(
-        tap(() => {
-          this.loading$.next(true);
-        }),
-        finalize(() => {
-          this.loading$.next(false);
-        })
-      )
-      .subscribe(success => {
-        this._context.completeWith(success);
-      });
+  cancel() {
+    this._context.$implicit.complete();
   }
 }

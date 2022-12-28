@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { distinctUntilChanged, map, Subject } from 'rxjs';
 import { AuthService } from '../../data-access/api/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormWithHandlerBuilderService } from '@shared/utils/services/form-with-handler-builder.service';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-reset-password-page',
@@ -56,7 +56,7 @@ export class ResetPasswordPageComponent {
   }>();
 
   constructor(
-    private readonly _fb: FormWithHandlerBuilderService,
+    private readonly _fb: FormWithHandlerBuilder,
     private readonly _auth: AuthService,
     private readonly _route: ActivatedRoute,
     private readonly _router: Router

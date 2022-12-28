@@ -12,6 +12,7 @@ export const handleValidationApiError = (
 
   for (const key of Object.keys(errors)) {
     const control = form.get(key);
+    console.info(`[handleValidationApiError] for ${key}`);
     const errorMessage = new TuiValidationError(errors[key].join('. '));
 
     if (control !== null) {

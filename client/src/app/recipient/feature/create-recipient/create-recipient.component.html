@@ -1,9 +1,9 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <label [tuiLabel]="'Name'" class="mb-6">
+<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+  <label [tuiLabel]="'Name'" class="tui-form__row">
     <tui-input
       formControlName="name"
       tuiTextfieldSize="m"
-      class="mt-1"
+      class="mt-1 tui-group__inherit-item"
       [tuiTextfieldLabelOutside]="true">
       Example recipient
       <input tuiTextfield type="text" />
@@ -14,13 +14,29 @@
       [error]="[] | tuiFieldError | async"></tui-error>
   </label>
 
-  <div class="tui-form__row text-right">
+  <div
+    class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
+    <button
+      tuiButton
+      appearance="outline"
+      class="tui-form__button"
+      (click)="cancel()"
+      type="button"
+      [disabled]="submitButtonLoading"
+      size="m">
+      Cancel
+    </button>
+
     <button
       tuiButton
       type="submit"
+      class="tui-form__button"
       size="m"
-      [showLoader]="(loading$ | async) ?? false">
-      Submit
+      [showLoader]="submitButtonLoading">
+      Save
     </button>
   </div>
 </form>

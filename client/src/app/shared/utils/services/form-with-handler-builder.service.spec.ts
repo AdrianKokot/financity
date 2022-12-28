@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FormWithHandlerBuilderService } from './form-with-handler-builder.service';
+import { FormWithHandlerBuilder } from './form-with-handler-builder.service';
 
 describe('FormWithHandlerBuilderService', () => {
-  let service: FormWithHandlerBuilderService;
+  let service: FormWithHandlerBuilder;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FormWithHandlerBuilderService);
+    service = TestBed.inject(FormWithHandlerBuilder);
   });
 
   it('should be created', () => {

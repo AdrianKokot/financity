@@ -47,4 +47,8 @@ export class FormHandler<
   public submit() {
     this._submit$.next(undefined);
   }
+
+  public patchValue(...args: Parameters<typeof this.group.patchValue>) {
+    this.group.patchValue(...args);
+  }
 }

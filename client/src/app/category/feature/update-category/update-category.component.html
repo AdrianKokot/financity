@@ -1,6 +1,6 @@
 <form
-  [formGroup]="form"
-  (ngSubmit)="submit$.next(undefined)"
+  [formGroup]="form.group"
+  (ngSubmit)="form.submit()"
   class="tui-form"
   [attr.data-skeleton]="initialDataLoading$ | async">
   <div tuiGroup class="tui-form__row" [rounded]="true">
@@ -46,14 +46,16 @@
 
   <div
     class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
-    *tuiLet="(submitLoading$ | async) ?? false as submitting">
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
     <button
       tuiButton
       appearance="outline"
-      class="ml-auto"
+      class="tui-form__button"
       (click)="cancel()"
       type="button"
-      [disabled]="submitting"
+      [disabled]="submitButtonLoading"
       size="m">
       Cancel
     </button>
@@ -63,7 +65,7 @@
       type="submit"
       class="tui-form__button"
       size="m"
-      [showLoader]="submitting">
+      [showLoader]="submitButtonLoading">
       Save
     </button>
   </div>
