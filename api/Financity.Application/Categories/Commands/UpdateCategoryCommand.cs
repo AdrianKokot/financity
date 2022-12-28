@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
@@ -15,28 +16,23 @@ public sealed class UpdateCategoryCommand : ICommand<Unit>
     public Appearance Appearance { get; set; } = new();
 }
 
-public sealed class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand, Unit>
+public sealed class UpdateCategoryCommandHandler : UpdateEntityCommandHandler<UpdateCategoryCommand, Category>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UpdateCategoryCommandHandler(IApplicationDbContext dbContext)
+    public UpdateCategoryCommandHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateCategoryCommand request,
-                                   CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(UpdateCategoryCommand command,
+                                            CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<Category>()
-                                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var entity = await DbContext.GetDbSet<Category>()
+                                    .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
 
-        if (entity is null) throw new EntityNotFoundException(nameof(Category), request.Id);
+        if (entity is null) throw new EntityNotFoundException(nameof(Category), command.Id);
 
-        entity.Name = request.Name;
-        entity.Appearance = request.Appearance;
+        entity.Name = command.Name;
+        entity.Appearance = command.Appearance;
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
+        return await base.Handle(command, cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using EntityFramework.Exceptions.Common;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
@@ -29,20 +29,17 @@ public sealed class UpdateTransactionCommand : ICommand<Unit>
     }
 }
 
-public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTransactionCommand, Unit>
+public sealed class UpdateTransactionCommandHandler : UpdateEntityCommandHandler<UpdateTransactionCommand, Transaction>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UpdateTransactionCommandHandler(IApplicationDbContext dbContext)
+    public UpdateTransactionCommandHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateTransactionCommand command, CancellationToken ct)
+    public override async Task<Unit> Handle(UpdateTransactionCommand command, CancellationToken ct)
     {
-        var entity = await _dbContext.GetDbSet<Transaction>()
-                                     .Include(x => x.Labels)
-                                     .FirstOrDefaultAsync(x => x.Id == command.Id, ct);
+        var entity = await DbContext.GetDbSet<Transaction>()
+                                    .Include(x => x.Labels)
+                                    .FirstOrDefaultAsync(x => x.Id == command.Id, ct);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Transaction), command.Id);
 
@@ -50,20 +47,18 @@ public sealed class UpdateTransactionCommandHandler : ICommandHandler<UpdateTran
         entity.Note = command.Note;
 
         entity.Recipient = command.RecipientId != null
-            ? await _dbContext.GetDbSet<Recipient>().FirstAsync(x => x.Id == command.RecipientId, ct)
+            ? await DbContext.GetDbSet<Recipient>().FirstAsync(x => x.Id == command.RecipientId, ct)
             : null;
         entity.Category = command.CategoryId != null
-            ? await _dbContext.GetDbSet<Category>().FirstAsync(x => x.Id == command.CategoryId, ct)
+            ? await DbContext.GetDbSet<Category>().FirstAsync(x => x.Id == command.CategoryId, ct)
             : null;
 
         entity.TransactionDate = DateOnly.FromDateTime(command.TransactionDate.ToUniversalTime());
 
-        entity.Labels = await _dbContext.GetDbSet<Label>()
-                                        .Where(x => command.LabelIds.Contains(x.Id))
-                                        .ToListAsync(ct);
+        entity.Labels = await DbContext.GetDbSet<Label>()
+                                       .Where(x => command.LabelIds.Contains(x.Id))
+                                       .ToListAsync(ct);
 
-        await _dbContext.SaveChangesAsync(ct);
-
-        return Unit.Value;
+        return await base.Handle(command, ct);
     }
 }

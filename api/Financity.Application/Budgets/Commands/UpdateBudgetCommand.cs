@@ -1,5 +1,6 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
 using Financity.Domain.Entities;
 using MediatR;
@@ -16,33 +17,28 @@ public sealed class UpdateBudgetCommand : ICommand<Unit>
     public HashSet<Guid> TrackedCategoriesId { get; set; } = new();
 }
 
-public sealed class UpdateBudgetCommandHandler : ICommandHandler<UpdateBudgetCommand, Unit>
+public sealed class UpdateBudgetCommandHandler : UpdateEntityCommandHandler<UpdateBudgetCommand, Budget>
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UpdateBudgetCommandHandler(IApplicationDbContext dbContext)
+    public UpdateBudgetCommandHandler(IApplicationDbContext dbContext) : base(dbContext)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(UpdateBudgetCommand command,
-                                   CancellationToken cancellationToken)
+    public override async Task<Unit> Handle(UpdateBudgetCommand command,
+                                            CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.GetDbSet<Budget>()
-                                     .Include(x => x.TrackedCategories)
-                                     .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
+        var entity = await DbContext.GetDbSet<Budget>()
+                                    .Include(x => x.TrackedCategories)
+                                    .FirstOrDefaultAsync(x => x.Id == command.Id, cancellationToken);
 
         if (entity is null) throw new EntityNotFoundException(nameof(Budget), command.Id);
 
         entity.Name = command.Name;
         entity.Amount = command.Amount;
 
-        entity.TrackedCategories = await _dbContext.GetDbSet<Category>()
-                                                   .Where(x => command.TrackedCategoriesId.Contains(x.Id))
-                                                   .ToListAsync(cancellationToken);
+        entity.TrackedCategories = await DbContext.GetDbSet<Category>()
+                                                  .Where(x => command.TrackedCategoriesId.Contains(x.Id))
+                                                  .ToListAsync(cancellationToken);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
+        return await base.Handle(command, cancellationToken);
     }
 }
