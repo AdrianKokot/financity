@@ -153,3 +153,19 @@ tui-marker-icon[data-appearance-color] {
   max-width: 10rem;
   width: 100%;
 }
+
+[data-transaction-type='expense'], [data-transaction-type='Expense'] {
+  --transaction-type-color: var(--tui-negative);
+}
+
+[data-transaction-type='income'], [data-transaction-type='Income'] {
+  --transaction-type-color: var(--tui-positive);
+}
+
+[data-transaction-type],
+tui-input-number[data-transaction-type] .t-input,
+tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
+  color: var(--transaction-type-color);
+  font-weight: bolder;
+}
+

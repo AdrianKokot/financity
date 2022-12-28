@@ -36,8 +36,8 @@
     <label tuiLabel="Currency" class="max-w-10">
       <app-select
         [control]="form.controls.currencyId"
-        [getListFunction]="getCurrenciesFunction"
-        [stringify]="getCurrencyName"
+        [getListFunction]="dataApis.getCurrencies"
+        [stringify]="dataApis.getCurrencyName"
         class="mt-1 tui-group__inherit-item"
         label="Choose a currency"></app-select>
 
@@ -52,8 +52,12 @@
         [tuiTextfieldLabelOutside]="true"
         class="mt-1 tui-group__inherit-item"
         formControlName="amount"
+        [attr.data-transaction-type]="form.controls.transactionType.value"
         tuiAutoFocus
-        tuiTextfieldSize="m">
+        tuiTextfieldSize="m"
+        [precision]="2"
+        decimal="always"
+        [min]="0.0">
         Type an amount
       </tui-input-number>
 
@@ -74,7 +78,9 @@
             class="mt-1 tui-group__inherit-item"
             formControlName="exchangeRate"
             tuiTextfieldSize="m"
-            [precision]="2">
+            [precision]="2"
+            decimal="always"
+            [min]="0.0">
             Type an amount
           </tui-input-number>
         </tui-loader>
@@ -89,7 +95,7 @@
   <label tuiLabel="Category" class="tui-form__row">
     <app-select
       [control]="form.controls.categoryId"
-      [getListFunction]="getCategoriesFunction"
+      [getListFunction]="dataApis.getCategories"
       [externalFilters]="{
         transactionType_eq: this.form.controls.transactionType.value
       }"
@@ -104,7 +110,7 @@
   <label tuiLabel="Recipient" class="tui-form__row">
     <app-select
       [control]="form.controls.recipientId"
-      [getListFunction]="getRecipientsFunction"
+      [getListFunction]="dataApis.getRecipients"
       class="mt-1"
       label="Choose a recipient"></app-select>
 
@@ -116,7 +122,7 @@
   <label tuiLabel="Labels" class="tui-form__row">
     <app-multi-select
       [control]="form.controls.labelIds"
-      [getListFunction]="getLabelsFunction"
+      [getListFunction]="dataApis.getLabels"
       class="mt-1"
       label="Choose labels">
     </app-multi-select>
