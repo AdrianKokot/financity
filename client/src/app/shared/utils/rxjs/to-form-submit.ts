@@ -6,11 +6,14 @@ import {
   Observable,
   of,
   startWith,
+  switchMap,
+  take,
   tap,
 } from 'rxjs';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { handleValidationApiError } from '@shared/utils/api/api-error-handler';
+import { FormHandlerFunctions } from '@shared/utils/form/form-handler';
 
 export const toFormSubmit = <
   TControl extends {
@@ -19,12 +22,7 @@ export const toFormSubmit = <
   TResult
 >(
   form: FormGroup<TControl>,
-  functions: {
-    submit: (
-      formValue: ReturnType<typeof form.getRawValue>
-    ) => Observable<TResult>;
-    effect: (result: TResult) => void;
-  }
+  functions: FormHandlerFunctions<TControl, TResult>
 ) => {
   return function <TInput>(source: Observable<TInput>) {
     return source.pipe(
@@ -35,7 +33,9 @@ export const toFormSubmit = <
       filter(() => form.valid),
       exhaustMap(() =>
         functions.submit(form.getRawValue()).pipe(
-          tap(r => console.info(`[toFormSubmit::submit]: ${r}`)),
+          tap(r =>
+            console.info(`[toFormSubmit::submit]: ${JSON.stringify(r)}`)
+          ),
           startWith(null),
           catchError(err => {
             if (err instanceof HttpErrorResponse) {
@@ -46,10 +46,22 @@ export const toFormSubmit = <
         )
       ),
       tap(result => {
-        if (result !== null && result !== undefined) {
-          console.info(`[toFormSubmit::effect]: ${result}`);
+        if (result !== null && result !== undefined && functions.effect) {
+          console.info(`[toFormSubmit::effect]: ${JSON.stringify(result)}`);
           functions.effect(result);
         }
+      }),
+      switchMap(result => {
+        if (result !== null && result !== undefined && functions.effect$) {
+          console.info(`[toFormSubmit::effect$]: ${JSON.stringify(result)}`);
+          return functions.effect$(result).pipe(
+            take(1),
+            startWith(null),
+            map(() => result),
+            tap(() => console.info('[toFormSubmit::effect$] emit'))
+          );
+        }
+        return of(result);
       }),
       map(x => x === null),
       startWith(false)

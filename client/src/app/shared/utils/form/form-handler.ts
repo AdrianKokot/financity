@@ -13,7 +13,8 @@ export interface FormHandlerFunctions<
       InstanceType<typeof FormGroup<TControl>>['getRawValue']
     >
   ) => Observable<TResult>;
-  effect: (result: TResult) => void;
+  effect?: (result: TResult) => void;
+  effect$?: (result: TResult) => Observable<unknown>;
 }
 
 export class FormHandler<
