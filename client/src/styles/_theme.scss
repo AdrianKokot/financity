@@ -37,6 +37,12 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   .no-shadow &, &.no-shadow {
     box-shadow: none !important;
   }
+
+  .no-border &, &.no-border {
+    &:after {
+      border: none !important;
+    }
+  }
 }
 
 [tuiWrapper][data-appearance='flat-outline'] {
@@ -54,7 +60,7 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   cursor: pointer;
   transition: .3s color;
 
-  &:hover, [data-dropdown-opened=true] & {
+  &:hover, [data-dropdown-opened=true] &, ._hosted_dropdown_focused & {
     color: var(--tui-text-03);
 
     &.text-link {
@@ -167,5 +173,17 @@ tui-input-number[data-transaction-type] .t-input,
 tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   color: var(--transaction-type-color);
   font-weight: bolder;
+}
+
+.cdk-virtual-scroll-viewport.scrollbar-ellipsis .cdk-virtual-scroll-content-wrapper {
+  max-width: 100%;
+
+  [role="option"] {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
 }
 

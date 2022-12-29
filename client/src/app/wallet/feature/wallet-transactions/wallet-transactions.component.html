@@ -59,44 +59,6 @@
       New transaction
     </button>
   </div>
-  <!--  <div>-->
-  <!--    {{ wallet | json }}-->
-  <!--  </div>-->
-  <!--<p-->
-  <!--  tuiTextfieldSize="m"-->
-  <!--  class="filters"-->
-  <!--&gt;-->
-  <!--  <tui-input-->
-  <!--    class="input"-->
-  <!--    [tuiTextfieldCleaner]="true"-->
-  <!--    [(ngModel)]="search"-->
-  <!--  >-->
-  <!--    Find on page-->
-  <!--  </tui-input>-->
-  <!--  <tui-input-count-->
-  <!--    class="tui-space_horizontal-3"-->
-  <!--    [formControl]="minAge"-->
-  <!--  >-->
-  <!--    Minimum age-->
-  <!--  </tui-input-count>-->
-  <!--  <tui-hosted-dropdown [content]="dropdown">-->
-  <!--    <button-->
-  <!--      tuiButton-->
-  <!--      size="m"-->
-  <!--      [iconRight]="arrow"-->
-  <!--    >-->
-  <!--      Columns-->
-  <!--    </button>-->
-  <!--    <ng-template #dropdown>-->
-  <!--      <tui-reorder-->
-  <!--        class="columns"-->
-  <!--        [enabled]="enabled"-->
-  <!--        [(items)]="initial"-->
-  <!--        (enabledChange)="onEnabled($event)"-->
-  <!--      ></tui-reorder>-->
-  <!--    </ng-template>-->
-  <!--  </tui-hosted-dropdown>-->
-  <!--</p>-->
 
   <div
     class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
@@ -137,13 +99,29 @@
             </tui-hosted-dropdown>
           </th>
           <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
-            Labels
+            <tui-hosted-dropdown [content]="labelsDropdown">
+              <span
+                [class.text-link]="form.controls.labels.value.length > 0"
+                class="column-filter-text">
+                <span>Labels</span>
+
+                <tui-svg src="tuiIconSortDown"></tui-svg>
+              </span>
+            </tui-hosted-dropdown>
           </th>
           <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
             Note
           </th>
           <th *tuiHead="'recipient'" [sorter]="null" class="column-note" tuiTh>
-            Recipient
+            <tui-hosted-dropdown [content]="recipientsDropdown">
+              <span
+                [class.text-link]="form.controls.recipients.value.length > 0"
+                class="column-filter-text">
+                <span>Recipient</span>
+
+                <tui-svg src="tuiIconSortDown"></tui-svg>
+              </span>
+            </tui-hosted-dropdown>
           </th>
           <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
             Amount
@@ -345,7 +323,19 @@
 
 <ng-template #categoriesDropdown>
   <app-searchable-list
-    *ngIf="categories$ | async as items"
-    [items]="items"
-    [formControl]="form.controls.categories"></app-searchable-list>
+    [getListFunction]="dataApis.getCategories"
+    [control]="form.controls.categories">
+  </app-searchable-list>
+</ng-template>
+<ng-template #labelsDropdown>
+  <app-searchable-list
+    [getListFunction]="dataApis.getLabels"
+    [control]="form.controls.labels">
+  </app-searchable-list>
+</ng-template>
+<ng-template #recipientsDropdown>
+  <app-searchable-list
+    [getListFunction]="dataApis.getRecipients"
+    [control]="form.controls.recipients">
+  </app-searchable-list>
 </ng-template>

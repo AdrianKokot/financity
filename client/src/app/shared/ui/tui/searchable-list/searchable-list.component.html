@@ -1,24 +1,47 @@
-<tui-primitive-textfield
-  #input
-  (keydown.arrowDown)="$event.preventDefault(); onArrowDown(list, $event)"
-  [(value)]="value"
-  [tuiTextfieldLabelOutside]="true"
-  class="no-shadow"
-  tuiTextfieldSize="m"
-  style="border: none"
-  tuiTextfieldIconLeft="tuiIconSearchLarge">
-  Search categories
-</tui-primitive-textfield>
-<hr />
-<tui-data-list
-  #list
-  (keydown)="onKeyDown($event.key, input.nativeFocusableElement)"
-  emptyContent="No results found">
-  <tui-opt-group *tuiLet="items | tuiFilter : filter : value as filtered">
-    <tui-opt-group *ngIf="filtered.length" tuiMultiSelectGroup>
-      <button *ngFor="let item of filtered" [value]="item.id" tuiOption>
-        {{ item.name }}
-      </button>
-    </tui-opt-group>
-  </tui-opt-group>
-</tui-data-list>
+<ng-container *ngIf="control !== null">
+  <ng-container *tuiLet="(stringify$ | async)! as stringify">
+    <ng-container *tuiLet="items$ | async as items">
+      <tui-primitive-textfield
+        #input
+        tuiAutoFocus
+        (keydown.arrowDown.prevent)="onArrowDown(list, $event)"
+        (valueChange)="search$.next($event)"
+        class="no-shadow no-border"
+        tuiTextfieldIconLeft="tuiIconSearchLarge"
+        tuiTextfieldSize="s">
+        Search
+      </tui-primitive-textfield>
+      <hr />
+      <tui-scrollbar>
+        <cdk-virtual-scroll-viewport
+          (pageChange)="page$.next($event)"
+          [itemSize]="34"
+          [minBufferPx]="200"
+          [style.--items-count]="(items ?? []).length"
+          appInfiniteVirtualScroll
+          class="viewport tui-zero-scrollbar scrollbar-ellipsis"
+          tuiScrollable>
+          <tui-data-list
+            size="s"
+            tuiMultiSelectGroup
+            [formControl]="control"
+            #list
+            (keydown)="onKeyDown($event.key, input.nativeFocusableElement)">
+            <ng-container *cdkVirtualFor="let item of items ?? []">
+              <button
+                *tuiLet="stringify(item) as label"
+                [value]="item"
+                tuiOption
+                [title]="label">
+                {{ label }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="(apiLoading$ | async)!">
+              <tui-loader></tui-loader>
+            </ng-container>
+          </tui-data-list>
+        </cdk-virtual-scroll-viewport>
+      </tui-scrollbar>
+    </ng-container>
+  </ng-container>
+</ng-container>

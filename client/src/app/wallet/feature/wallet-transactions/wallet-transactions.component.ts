@@ -148,6 +148,11 @@ export class WalletTransactionsComponent {
     distinctUntilChangedObject(),
     shareReplay(1)
   );
+  readonly dataApis = this._walletApiService.getConcreteWalletApi(
+    this._activatedRoute.snapshot.params['id']
+  );
+
+  categoriesDropdownOpened = false;
 
   appliedFiltersCount$ = this.filters$.pipe(
     map(x => Object.keys(x).length - ('transactionDate_gte' in x ? 1 : 0)),
@@ -164,16 +169,6 @@ export class WalletTransactionsComponent {
 
   wallet$ = this.walletId$.pipe(
     switchMap(walletId => this._walletApiService.get(walletId)),
-    shareReplay(1)
-  );
-
-  categories$ = this.walletId$.pipe(
-    switchMap(walletId =>
-      this._categoryService.getList(walletId, {
-        page: 1,
-        pageSize: 100,
-      })
-    ),
     shareReplay(1)
   );
 
