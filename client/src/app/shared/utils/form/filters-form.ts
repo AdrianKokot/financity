@@ -30,16 +30,16 @@ export class FiltersForm<
 
         if ((data[key] as unknown) instanceof TuiDayRange) {
           if (data[key].from)
-            filters[filterKey + '_gte'] = data[key].from.toJSON();
+            filters[`${filterKey}_gte`] = data[key].from.toJSON();
 
-          if (data[key].to) filters[filterKey + '_lte'] = data[key].to.toJSON();
+          if (data[key].to) filters[`${filterKey}_lte`] = data[key].to.toJSON();
         }
 
         if (
           (data[key] as unknown) instanceof Array<string> &&
           data[key].length > 0
         ) {
-          filters[filterKey + '_in'] = data[key];
+          filters[`${filterKey}_in`] = data[key];
         }
 
         if (typeof data[key] === 'string') {

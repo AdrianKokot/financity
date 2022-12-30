@@ -18,11 +18,11 @@
   </label>
 
   <label tuiLabel="Recipient" class="tui-form__row">
-    {{ transaction.recipientName ?? '-' }}
+    {{ transaction.recipient?.name ?? '-' }}
   </label>
 
   <label tuiLabel="Category" class="tui-form__row">
-    {{ transaction.categoryName ?? '-' }}
+    {{ transaction.category?.name ?? '-' }}
   </label>
 
   <label tuiLabel="Amount" class="tui-form__row">

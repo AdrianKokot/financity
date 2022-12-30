@@ -9,3 +9,11 @@ $sizes: (xs, s, m, l);
 .h-full {
   height: 100%;
 }
+
+@each $w in (128, 100, 200, 250) {
+  .w-#{$w}px {
+    min-width: #{$w}px;
+    max-width: #{$w}px;
+    width: #{$w}px;
+  }
+}

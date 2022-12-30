@@ -6,7 +6,7 @@ import {
   CategoryListItem,
   CreateCategoryPayload,
 } from '@shared/data-access/models/category.model';
-import { delay, map, Observable, of, switchMap, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -53,26 +53,26 @@ export class CategoryApiService {
   }
 
   create(payload: CreateCategoryPayload): Observable<Category> {
-    return of(null).pipe(
-      switchMap(() =>
-        this.http.post<{ id: Category['id'] }>('/api/categories', payload).pipe(
-          map(({ id }) => ({ ...payload, id })),
-          delay(3000)
-        )
-      )
-    );
-    // return this.http
-    //   .post<{ id: Category['id'] }>('/api/categories', payload)
-    //   .pipe(map(({ id }) => ({ ...payload, id })));
+    return this.http
+      .post<{ id: Category['id'] }>('/api/categories', payload)
+      .pipe(
+        map(({ id }) => ({ ...payload, id })),
+        tap(() => (this._getListCache = {}))
+      );
   }
 
   update(payload: Pick<Category, 'id' | 'name' | 'appearance'>) {
-    return this.http.put<Category>(`/api/categories/${payload.id}`, payload);
+    return this.http
+      .put<Category>(`/api/categories/${payload.id}`, payload)
+      .pipe(tap(() => (this._getListCache = {})));
   }
 
   delete(id: Category['id']): Observable<boolean> {
     return this.http
       .delete(`/api/categories/${id}`, { observe: 'response' })
-      .pipe(map(res => res.status >= 200 && res.status < 300));
+      .pipe(
+        map(res => res.status >= 200 && res.status < 300),
+        tap(() => (this._getListCache = {}))
+      );
   }
 }

@@ -64,13 +64,12 @@
         (pageChange)="data.page($event)"
         [itemSize]="44"
         [fixed]="15.5"
-        [appendOnly]="true"
         class="tui-zero-scrollbar"
         tuiScrollable>
         <table
+          tuiTable
           [columns]="ui.columns"
           class="w-full"
-          tuiTable
           *tuiLet="wallet$ | async as wallet">
           <thead
             class="sticky-thead"
@@ -196,8 +195,8 @@
               </td>
 
               <td *tuiCell="'recipient'" tuiTd class="w-250px">
-                <div class="text-ellipsis" [title]="item.recipientName">
-                  {{ item.recipientName ?? '-' }}
+                <div class="text-ellipsis" [title]="item.recipient?.name">
+                  {{ item.recipient?.name ?? '-' }}
                 </div>
               </td>
 

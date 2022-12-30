@@ -26,8 +26,8 @@ export interface TransactionDetails extends Transaction {
 export interface TransactionListItem extends Transaction {
   currencyName: string;
   labels: LabelListItem[];
-  categoryName: string;
-  recipientName: string;
+  category: Category | null;
+  recipient: Recipient | null;
 }
 
 export interface CreateTransactionPayload

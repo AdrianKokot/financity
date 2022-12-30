@@ -104,7 +104,7 @@ export class WalletTransactionsComponent {
   readonly dialogs$ = merge(
     this.ui.actions.edit$.pipe(
       switchMap(id =>
-        this._dialog.open<Transaction>(
+        this._dialog.open(
           new PolymorpheusComponent(UpdateTransactionComponent, this._injector),
           {
             label: 'Edit transaction',
@@ -119,7 +119,7 @@ export class WalletTransactionsComponent {
     this.ui.actions.create$.pipe(
       withLatestFrom(this.wallet$),
       switchMap(([, { id, currencyId }]) => {
-        return this._dialog.open<Transaction>(
+        return this._dialog.open(
           new PolymorpheusComponent(CreateTransactionComponent, this._injector),
           {
             label: 'Create transaction',
@@ -154,15 +154,15 @@ export class WalletTransactionsComponent {
       ),
       map(() => false)
     )
-  ).pipe(tap(reset => !!reset && this.data.resetPage()));
+  ).pipe(tap(reset => reset !== false && this.data.resetPage()));
 
   constructor(
-    private _fb: FormWithHandlerBuilder,
-    private _activatedRoute: ActivatedRoute,
-    private _walletApiService: WalletApiService,
-    private _transactionApiService: TransactionApiService,
-    @Inject(Injector) private _injector: Injector,
-    private _dialog: TuiDialogService
+    private readonly _fb: FormWithHandlerBuilder,
+    private readonly _activatedRoute: ActivatedRoute,
+    private readonly _walletApiService: WalletApiService,
+    private readonly _transactionApiService: TransactionApiService,
+    @Inject(Injector) private readonly _injector: Injector,
+    @Inject(TuiDialogService) private readonly _dialog: TuiDialogService
   ) {
     this.filters.form.patchValue(this._getFiltersFromQueryParams());
   }

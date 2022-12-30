@@ -17,8 +17,15 @@ import {
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { AbstractControl } from '@angular/forms';
 
-export class ApiDataHandler<T> {
+export class ApiDataHandler<
+  T,
+  TControl extends {
+    [K in keyof TControl]: AbstractControl<unknown>;
+  },
+  TKey extends keyof TControl & string
+> {
   private readonly _page$ = new BehaviorSubject<number>(1);
 
   private readonly _api$ = merge(
@@ -47,7 +54,7 @@ export class ApiDataHandler<T> {
     share()
   );
 
-  readonly items$ = merge(
+  readonly items$: Observable<T[] | null> = merge(
     this._api$.pipe(
       filter((x): x is T[] => x !== null),
       scan((acc: T[], data: T[]) => {
@@ -68,7 +75,7 @@ export class ApiDataHandler<T> {
         InstanceType<typeof TransactionApiService>['getList']
       >[1]
     ) => Observable<T[]>,
-    private readonly _filters: FiltersForm<any, any>
+    private readonly _filters: FiltersForm<TControl, TKey>
   ) {}
 
   page(val: number): void {

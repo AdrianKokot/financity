@@ -1,35 +1,10 @@
-@use '@taiga-ui/core/styles/taiga-ui-local' as *;
+.w-rest {
+  --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - 1180px);
+  max-width: max(var(--rest), 250px);
+  width: max(var(--rest), 250px);
+  min-width: max(var(--rest), 250px);
+}
 
-:host {
-  @each $w in (128, 100, 200, 250) {
-    .w-#{$w}px {
-      min-width: #{$w}px;
-      max-width: #{$w}px;
-      width: #{$w}px;
-    }
-  }
-
-  .w-rest {
-    --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - 1180px);
-    max-width: max(var(--rest), 250px);
-    width: max(var(--rest), 250px);
-    min-width: max(var(--rest), 250px);
-  }
-
-  .max-w-150px {
-    max-width: 150px;
-  }
-
-  .sticky-thead {
-    position: sticky;
-    left: 0;
-    z-index: 30
-  }
-
-  .text-ellipsis {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 100%;
-  }
+.max-w-150px {
+  max-width: 150px;
 }

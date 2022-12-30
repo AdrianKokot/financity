@@ -246,13 +246,19 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
 }
 
 [data-infinite-viewport="true"] {
-  //&:not([data-fixed-infinite-viewport="true"]) {
-
   height: calc(var(--viewport-item-size, 0) * min(max(1, var(--viewport-items-count, 0)), var(--viewport-max-items-count, 1)) + var(--viewport-items-margin, 0) * 2);
   min-height: calc(var(--viewport-item-size, 0) + var(--viewport-items-margin, 0) * 2);
-  //}
+}
 
-  //[data-fixed-infinite-viewport="true"] {
-  //  height: calc(var(--viewport-item-size, 0) * var(--viewport-items-count, 0));
-  //}
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.sticky-thead {
+  position: sticky;
+  left: 0;
+  z-index: 30
 }
