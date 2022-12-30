@@ -33,6 +33,7 @@ import {
   TuiInputModule,
   TuiInputNumberModule,
   TuiIslandModule,
+  TuiItemsWithMoreModule,
   TuiMarkerIconModule,
   TuiMultiSelectModule,
   TuiSelectModule,
@@ -40,7 +41,12 @@ import {
   TuiTagModule,
 } from '@taiga-ui/kit';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { TuiAutoFocusModule, TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
+import {
+  TuiActiveZoneModule,
+  TuiAutoFocusModule,
+  TuiForModule,
+  TuiLetModule,
+} from '@taiga-ui/cdk';
 import { WalletsShellComponent } from './feature/wallets-shell/wallets-shell.component';
 import { WalletListItemComponent } from './ui/wallet-list-item/wallet-list-item.component';
 import { WalletSettingsComponent } from './feature/wallet-settings/wallet-settings.component';
@@ -57,9 +63,10 @@ import { DropdownSelectComponent } from '@shared/ui/tui/dropdown-select/dropdown
 import { TransactionModule } from '../transaction/transaction.module';
 import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
 import { RecipientModule } from '../recipient/recipient.module';
-import { SearchableListComponent } from '@shared/ui/tui/searchable-list/searchable-list.component';
 import { CreateWalletComponent } from './feature/create-wallet/create-wallet.component';
 import { SelectModule } from '@shared/ui/tui/select/select.module';
+import { SearchableListModule } from '@shared/ui/tui/searchable-list/searchable-list.module';
+import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
 
 @NgModule({
   declarations: [
@@ -118,10 +125,13 @@ import { SelectModule } from '@shared/ui/tui/select/select.module';
     RecipientModule,
     TuiBreadcrumbsModule,
     TuiPrimitiveTextfieldModule,
-    SearchableListComponent,
     TuiGroupModule,
     SelectModule,
     TuiAutoFocusModule,
+    SearchableListModule,
+    TuiActiveZoneModule,
+    InfiniteVirtualScrollModule,
+    TuiItemsWithMoreModule,
   ],
 })
 export class WalletModule {}

@@ -1,45 +1,18 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-} from '@angular/core';
-import { TuiFilterPipeModule, TuiLetModule } from '@taiga-ui/cdk';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   TUI_DATA_LIST_HOST,
   TUI_OPTION_CONTENT,
   TuiDataListComponent,
-  TuiDataListModule,
   tuiIsEditingKey,
-  TuiPrimitiveTextfieldModule,
-  TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { NgForOf, NgIf } from '@angular/common';
-import {
-  TUI_SELECT_OPTION,
-  TuiInputModule,
-  TuiMultiSelectModule,
-} from '@taiga-ui/kit';
-import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
+import { AbstractSelectComponent } from '@shared/ui/tui/abstract-select/abstract-select.component';
+import { TUI_SELECT_OPTION } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-searchable-list',
   templateUrl: './searchable-list.component.html',
+  styleUrls: ['./searchable-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    TuiTextfieldControllerModule,
-    TuiPrimitiveTextfieldModule,
-    TuiDataListModule,
-    TuiLetModule,
-    TuiFilterPipeModule,
-    NgIf,
-    NgForOf,
-    TuiMultiSelectModule,
-    TuiInputModule,
-    FormsModule,
-  ],
   providers: [
     {
       provide: TUI_DATA_LIST_HOST,
@@ -51,44 +24,9 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
     },
   ],
 })
-export class SearchableListComponent<T extends { id: string; name: string }>
-  implements ControlValueAccessor
-{
-  @Input()
-  items: readonly T[] = [];
-
-  value = '';
-  onChange: (...args: unknown[]) => void = () => {};
-  onTouched: (...args: unknown[]) => void = () => {};
-
-  disabled = false;
-
-  constructor(
-    private readonly _detector: ChangeDetectorRef,
-    private readonly _control: NgControl
-  ) {
-    _control.valueAccessor = this;
-  }
-
-  readonly filter = (item: T, search: string) => {
-    return item.name.toLowerCase().includes(search.toLowerCase());
-  };
-
-  writeValue() {}
-
-  registerOnTouched(onTouched: (...args: unknown[]) => void) {
-    this.onTouched = onTouched;
-  }
-
-  registerOnChange(onChange: (...args: unknown[]) => void) {
-    this.onChange = onChange;
-  }
-
-  setDisabledState(disabled: boolean) {
-    this.disabled = disabled;
-    this._detector.markForCheck();
-  }
-
+export class SearchableListComponent<
+  T extends { id: string; name: string }
+> extends AbstractSelectComponent<T> {
   onArrowDown<T>(list: TuiDataListComponent<T>, event: Event): void {
     list.onFocus(event, true);
   }

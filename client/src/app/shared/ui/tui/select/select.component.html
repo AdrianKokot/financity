@@ -17,9 +17,11 @@
         *tuiDataList
         [itemSize]="34"
         [minBufferPx]="200"
-        [style.--items-count]="(items ?? []).length"
+        [viewportItemsCount]="(items ?? []).length"
+        [itemsMargin]="3"
+        [showMax]="6"
         appInfiniteVirtualScroll
-        class="viewport tui-zero-scrollbar"
+        class="tui-zero-scrollbar"
         tuiScrollable>
         <tui-data-list size="s">
           <ng-container *cdkVirtualFor="let item of items ?? []">

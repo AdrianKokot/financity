@@ -96,10 +96,11 @@ export abstract class AbstractSelectComponent<
 
   readonly apiLoading$ = this._api$.pipe(
     map(x => x === null),
+    startWith(true),
     share()
   );
 
-  readonly items$: Observable<(T['id'] | null)[] | null> = merge(
+  readonly items$: Observable<T['id'][] | null> = merge(
     this._api$.pipe(
       filter((x): x is T[] => x !== null),
       map(x => x.map(y => y.id)),

@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500&display=swap');
 @import '@taiga-ui/core/styles/taiga-ui-local';
 
-
 body {
   background-color: var(--tui-base-01)
 }
@@ -37,6 +36,12 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   .no-shadow &, &.no-shadow {
     box-shadow: none !important;
   }
+
+  .no-border &, &.no-border {
+    &:after {
+      border: none !important;
+    }
+  }
 }
 
 [tuiWrapper][data-appearance='flat-outline'] {
@@ -54,7 +59,7 @@ tui-badge[data-tui-host-status=custom]:not(._hoverable) {
   cursor: pointer;
   transition: .3s color;
 
-  &:hover, [data-dropdown-opened=true] & {
+  &:hover, [data-dropdown-opened=true] &, ._hosted_dropdown_focused & {
     color: var(--tui-text-03);
 
     &.text-link {
@@ -169,3 +174,91 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   font-weight: bolder;
 }
 
+.cdk-virtual-scroll-viewport.scrollbar-ellipsis .cdk-virtual-scroll-content-wrapper {
+  max-width: 100%;
+
+  [role="option"] {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
+}
+
+.table-container table {
+  td,
+  th {
+    white-space: nowrap;
+    border: none;
+  }
+
+  tr th {
+    background: var(--tui-base-02);
+  }
+
+  tbody {
+    border-color: transparent;
+
+    tr {
+      td {
+        border-bottom: 1px solid var(--tui-base-03);
+      }
+
+      &:last-child td {
+
+        border-color: transparent;
+      }
+    }
+  }
+
+  td button {
+    @include transition(opacity);
+    opacity: 0;
+  }
+
+  tr:hover td button {
+    opacity: 1;
+  }
+}
+
+.applied-filters-button {
+  position: relative;
+
+  tui-badge {
+    color: var(--tui-text-01-night) !important;
+    background: var(--tui-info-fill) !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    transform: translate(30%, -30%);
+  }
+}
+
+
+.tui-zero-scrollbar {
+  @include scrollbar-hidden;
+
+  [role="listbox"] [role="option"] {
+    white-space: nowrap !important;
+  }
+}
+
+[data-infinite-viewport="true"] {
+  height: calc(var(--viewport-item-size, 0) * min(max(1, var(--viewport-items-count, 0)), var(--viewport-max-items-count, 1)) + var(--viewport-items-margin, 0) * 2);
+  min-height: calc(var(--viewport-item-size, 0) + var(--viewport-items-margin, 0) * 2);
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.sticky-thead {
+  position: sticky;
+  left: 0;
+  z-index: 30
+}

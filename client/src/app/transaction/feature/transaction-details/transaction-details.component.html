@@ -1,0 +1,59 @@
+<div class="tui-form">
+  <label tuiLabel="Wallet" class="tui-form__row">
+    {{ wallet.name }}
+  </label>
+
+  <label tuiLabel="Date" class="tui-form__row">
+    {{ transaction.transactionDate | date }}
+  </label>
+
+  <label tuiLabel="Labels" class="tui-form__row">
+    <div class="d-flex flex-wrap gap-1 mt-1">
+      <tui-badge
+        *ngFor="let label of transaction.labels"
+        [attr.data-appearance-color]="label.appearance.color"
+        status="custom"
+        [value]="label.name"></tui-badge>
+    </div>
+  </label>
+
+  <label tuiLabel="Recipient" class="tui-form__row">
+    {{ transaction.recipient?.name ?? '-' }}
+  </label>
+
+  <label tuiLabel="Category" class="tui-form__row">
+    {{ transaction.category?.name ?? '-' }}
+  </label>
+
+  <label tuiLabel="Amount" class="tui-form__row">
+    <tui-money
+      [currency]="transaction.currencyId"
+      [colored]="true"
+      [value]="
+        transaction.amount *
+        (transaction.transactionType === 'Expense' ? -1 : 1)
+      "></tui-money>
+
+    <ng-container
+      *ngIf="wallet && transaction.currencyId !== wallet.currencyId">
+      <span class="ml-2">(</span>
+      <tui-money
+        [colored]="false"
+        [currency]="wallet.currencyId"
+        [value]="transaction.amount * transaction.exchangeRate"></tui-money>
+      <span>)</span>
+    </ng-container>
+  </label>
+
+  <div class="tui-form__row tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      appearance="outline"
+      class="tui-form__button"
+      (click)="close()"
+      type="button"
+      size="m">
+      Close
+    </button>
+  </div>
+</div>

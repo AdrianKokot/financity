@@ -5,6 +5,7 @@ import {
   FormHandler,
   FormHandlerFunctions,
 } from '@shared/utils/form/form-handler';
+import { FiltersForm } from '@shared/utils/form/filters-form';
 
 function getGroup<T extends {}>() {
   return new FormBuilder().nonNullable.group<T>({} as T);
@@ -31,5 +32,20 @@ export class FormWithHandlerBuilder extends FormBuilder {
       this.nonNullable.group<T>(controls, options),
       functions
     );
+  }
+
+  filters<T extends {}>(
+    controls: T,
+    config: {
+      [K in keyof T]?: string;
+    } = {},
+    options?: AbstractControlOptions | null
+  ) {
+    return new FiltersForm<
+      ReturnType<typeof this.nonNullable.group<T>> extends FormGroup<infer TK>
+        ? TK
+        : never,
+      keyof T & string
+    >(this.nonNullable.group<T>(controls, options), config);
   }
 }

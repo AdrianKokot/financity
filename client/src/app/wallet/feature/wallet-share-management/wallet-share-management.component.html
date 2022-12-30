@@ -1,86 +1,93 @@
-<main>
+<main *tuiLet="dialogs$ | async">
   <div class="w-full d-flex gap-4 mb-4">
     <label class="w-full">
       <tui-input
-        [formControl]="form.controls.search"
-        tuiTextfieldSize="s"
+        [formControl]="filters.controls.search"
         [tuiTextfieldLabelOutside]="true"
-        class="no-shadow">
+        class="no-shadow"
+        tuiTextfieldSize="s">
         Search
         <input tuiTextfield type="text" />
       </tui-input>
     </label>
 
+    <ng-container
+      *tuiLet="(filters.filtersCount$ | async) ?? 0 as filtersCount">
+      <button
+        (click)="filters.reset()"
+        appearance="flat-outline"
+        icon="tuiIconFilter"
+        size="s"
+        class="applied-filters-button"
+        title="Reset filters to default"
+        tuiIconButton
+        type="button">
+        <tui-badge
+          *ngIf="filtersCount > 0"
+          [value]="filtersCount"
+          size="xs"
+          status="primary"></tui-badge>
+      </button>
+    </ng-container>
+
     <button
-      tuiButton
-      type="button"
+      (click)="ui.actions.share$.next(undefined)"
       appearance="primary"
       size="s"
-      class="ml-auto"
-      (click)="openShareDialog()">
+      tuiButton
+      type="button">
       Share
     </button>
   </div>
 
   <div
     class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
-    <table tuiTable class="w-full" [columns]="columns">
-      <thead>
-        <tr tuiThGroup>
-          <th *tuiHead="'name'" [sorter]="null" tuiTh class="column-name">
-            Name
-          </th>
-          <th *tuiHead="'email'" [sorter]="null" tuiTh class="w-full">
-            Email address
-          </th>
-          <th
-            *tuiHead="'actions'"
-            tuiTh
-            [sorter]="null"
-            class="column-actions"></th>
-        </tr>
-      </thead>
-    </table>
-
     <tui-scrollbar>
       <cdk-virtual-scroll-viewport
-        (scrolledIndexChange)="log()"
-        tuiScrollable
-        class="viewport tui-zero-scrollbar"
+        *tuiLet="data.items$ | async as items"
+        #viewport
+        appInfiniteVirtualScroll
+        (pageChange)="data.page($event)"
         [itemSize]="44"
-        [maxBufferPx]="500"
-        [minBufferPx]="400">
-        <table
-          tuiTable
-          [columns]="columns"
-          *ngIf="data$ | async as data"
-          class="w-full">
-          <thead>
+        [fixed]="15.5"
+        class="tui-zero-scrollbar"
+        tuiScrollable>
+        <table tuiTable [columns]="ui.columns" class="w-full">
+          <thead
+            class="sticky-thead"
+            [style.top.px]="-viewport['_renderedContentOffset']">
             <tr tuiThGroup>
-              <th
-                *tuiHead="'name'"
-                [sorter]="null"
-                tuiTh
-                class="column-name"></th>
-              <th *tuiHead="'email'" [sorter]="null" tuiTh class="w-full"></th>
+              <th *tuiHead="'name'" class="w-250px" [sorter]="null" tuiTh>
+                Name
+              </th>
+              <th *tuiHead="'email'" class="w-rest" [sorter]="null" tuiTh>
+                Email address
+              </th>
+
               <th
                 *tuiHead="'actions'"
                 tuiTh
                 [sorter]="null"
-                class="column-actions"></th>
+                class="w-56px"></th>
             </tr>
           </thead>
           <tbody tuiTbody>
-            <tr *cdkVirtualFor="let item of data" tuiTr>
-              <td *tuiCell="'name'" tuiTd>
-                {{ item.name }}
+            <tr
+              *cdkVirtualFor="let item of items ?? []; trackBy: trackById"
+              tuiTr>
+              <td *tuiCell="'name'" tuiTd class="w-250px">
+                <span class="text-ellipsis d-block" [title]="item.name">
+                  {{ item.name }}
+                </span>
               </td>
 
-              <td *tuiCell="'email'" tuiTd class="column-transactionType">
-                {{ item.email }}
+              <td *tuiCell="'email'" tuiTd class="w-rest">
+                <span class="text-ellipsis d-block" [title]="item.email">
+                  {{ item.email }}
+                </span>
               </td>
 
-              <td *tuiCell="'actions'" tuiTd class="column-actions">
+              <td *tuiCell="'actions'" tuiTd class="w-128px">
                 <button
                   tuiIconButton
                   appearance="flat-destructive"
@@ -88,16 +95,28 @@
                   icon="tuiIconTrash"
                   title="Revoke access"
                   appRequireConfirmation
-                  (confirm)="revokeAccess(item)"
-                  [confirmationMessage]="
-                    'Are you sure you want to revoke wallet access from <strong>' +
-                    item.name +
-                    '</strong>?'
-                  "
+                  (confirm)="ui.actions.revoke$.next(item)"
+                  confirmationMessage="Are you sure you want to revoke wallet access from '<strong>{{
+                    item.name
+                  }}</strong>'?"
                   shape="rounded"></button>
               </td>
             </tr>
           </tbody>
+
+          <tfoot *tuiLet="(data.apiLoading$ | async)! as apiLoading">
+            <tr *ngIf="apiLoading || items === null">
+              <td [colSpan]="ui.columns.length" class="py-4">
+                <tui-loader></tui-loader>
+              </td>
+            </tr>
+
+            <tr *ngIf="items && items.length === 0 && !apiLoading">
+              <td [colSpan]="ui.columns.length" class="py-4 text-3 text-center">
+                No records found
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </cdk-virtual-scroll-viewport>
     </tui-scrollbar>

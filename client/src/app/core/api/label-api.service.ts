@@ -51,18 +51,22 @@ export class LabelApiService {
   }
 
   create(payload: CreateLabelPayload): Observable<Label> {
-    return this.http
-      .post<{ id: Label['id'] }>('/api/labels', payload)
-      .pipe(map(({ id }) => ({ ...payload, id })));
+    return this.http.post<{ id: Label['id'] }>('/api/labels', payload).pipe(
+      map(({ id }) => ({ ...payload, id })),
+      tap(() => (this._getListCache = {}))
+    );
   }
 
   update(payload: Pick<Label, 'id' | 'name' | 'appearance'>) {
-    return this.http.put<Label>(`/api/labels/${payload.id}`, payload);
+    return this.http
+      .put<Label>(`/api/labels/${payload.id}`, payload)
+      .pipe(tap(() => (this._getListCache = {})));
   }
 
   delete(id: Label['id']): Observable<boolean> {
-    return this.http
-      .delete(`/api/labels/${id}`, { observe: 'response' })
-      .pipe(map(res => res.status >= 200 && res.status < 300));
+    return this.http.delete(`/api/labels/${id}`, { observe: 'response' }).pipe(
+      map(res => res.status >= 200 && res.status < 300),
+      tap(() => (this._getListCache = {}))
+    );
   }
 }

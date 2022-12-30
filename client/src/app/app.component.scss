@@ -21,13 +21,13 @@ app-navbar + .tui-container.w-full {
     padding-top: 0;
     //
     .container {
-      padding-top: 0px;
+      padding-top: 0;
     }
   }
 }
 
 .container {
-  max-width: 85rem;
+  max-width: 100rem;
 }
 
 app-navbar ~ app-footer {

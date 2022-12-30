@@ -6,8 +6,6 @@ import { WalletApiService } from '../../../core/api/wallet-api.service';
 @Component({
   selector: 'app-wallet-shell',
   templateUrl: './wallet-shell.component.html',
-  styleUrls: ['./wallet-shell.component.scss'],
-  // encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletShellComponent {

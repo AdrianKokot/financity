@@ -1,5 +1,6 @@
 import {
   TUI_DIALOGS_CLOSE,
+  TUI_NOTHING_FOUND_MESSAGE,
   TUI_SANITIZER,
   TUI_SVG_SRC_PROCESSOR,
   TuiAlertModule,
@@ -22,6 +23,8 @@ import { ApiInterceptor } from '@shared/data-access/interceptors/api.interceptor
 import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { AuthService } from './auth/data-access/api/auth.service';
+import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
+import { of, shareReplay } from 'rxjs';
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,7 +47,6 @@ import { AuthService } from './auth/data-access/api/auth.service';
     },
     tuiDialogOptionsProvider({
       dismissible: false,
-      required: true,
     }),
     {
       provide: HTTP_INTERCEPTORS,
@@ -93,6 +95,14 @@ import { AuthService } from './auth/data-access/api/auth.service';
           return src;
         };
       },
+    },
+    {
+      provide: DATE_PIPE_DEFAULT_OPTIONS,
+      useValue: { dateFormat: 'dd/MM/yyyy' },
+    },
+    {
+      provide: TUI_NOTHING_FOUND_MESSAGE,
+      useValue: of('No records found').pipe(shareReplay()),
     },
   ],
   bootstrap: [AppComponent],

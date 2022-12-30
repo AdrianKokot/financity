@@ -1,70 +1,8 @@
-@use '@taiga-ui/core/styles/taiga-ui-local' as *;
-
-.icon-default {
-  background: var(--tui-base-02);
-  color: var(--tui-text-03);
-}
-
 :host {
-  .viewport {
-    min-height: calc(44px * 15.5);
-
-    table thead {
-      th {
-        height: 0 !important;
-      }
-    }
+  .w-rest {
+    --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - (128px + 2px));
+    max-width: max(var(--rest), 250px);
+    width: max(var(--rest), 250px);
+    min-width: max(var(--rest), 250px);
   }
-
-  .column-actions {
-    min-width: 128px;
-    max-width: 128px;
-  }
-
-  td,
-  th {
-    white-space: nowrap;
-    border: none;
-  }
-
-  tr th {
-    background: var(--tui-base-02);
-  }
-
-  tbody {
-    border-color: transparent;
-
-    tr {
-      td {
-        border-bottom: 1px solid var(--tui-base-03);
-      }
-
-      &:last-child td {
-
-        border-color: transparent;
-      }
-
-      &.currently-edited {
-        button {
-          opacity: 1;
-        }
-
-        td {
-          background: var(--tui-base-02);
-          border-bottom: 1px solid var(--tui-primary);
-        }
-      }
-    }
-
-  }
-
-  td button {
-    @include transition(opacity);
-    opacity: 0;
-  }
-
-  tr:hover td button {
-    opacity: 1;
-  }
-
 }
