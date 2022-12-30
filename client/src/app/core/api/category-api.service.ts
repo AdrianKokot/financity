@@ -6,13 +6,15 @@ import {
   CategoryListItem,
   CreateCategoryPayload,
 } from '@shared/data-access/models/category.model';
-import { delay, map, Observable, of, switchMap } from 'rxjs';
+import { delay, map, Observable, of, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryApiService {
   constructor(protected http: HttpClient) {}
+
+  private _getListCache: Record<string, CategoryListItem[]> = {};
 
   getList(
     walletId: Wallet['id'],
@@ -31,7 +33,19 @@ export class CategoryApiService {
       ...pagination.filters,
     });
 
-    return this.http.get<CategoryListItem[]>('/api/categories', { params });
+    const cacheKey = params.toString();
+
+    if (cacheKey in this._getListCache) {
+      return of(this._getListCache[cacheKey]);
+    }
+
+    return this.http
+      .get<CategoryListItem[]>('/api/categories', { params })
+      .pipe(
+        tap(data => {
+          this._getListCache[cacheKey] = data;
+        })
+      );
   }
 
   get(walletId: Category['id']) {

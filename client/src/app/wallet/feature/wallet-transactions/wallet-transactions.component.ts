@@ -13,7 +13,10 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
-import { Transaction } from '@shared/data-access/models/transaction.model';
+import {
+  Transaction,
+  TransactionListItem,
+} from '@shared/data-access/models/transaction.model';
 import { ActivatedRoute } from '@angular/router';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
@@ -29,17 +32,28 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import { DATE_RANGE_FILTER_GROUPS } from '../../utils/date-range-filter-groups.constants';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
+import { TuiDay } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-wallet-transactions',
   templateUrl: './wallet-transactions.component.html',
   styleUrls: ['./wallet-transactions.component.scss'],
-  // encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletTransactionsComponent {
   private readonly _walletId: Wallet['id'] =
     this._activatedRoute.snapshot.params['id'];
+  readonly minDate = new TuiDay(1, 0, 1);
+  readonly maxDate = new TuiDay(9999, 11, 31);
+  readonly columns = [
+    'transactionDate',
+    'category',
+    'labels',
+    'note',
+    'recipient',
+    'amount',
+    'actions',
+  ];
 
   readonly dayRangeItems = DATE_RANGE_FILTER_GROUPS;
 
@@ -120,8 +134,28 @@ export class WalletTransactionsComponent {
     @Inject(Injector) private _injector: Injector,
     private _dialog: TuiDialogService
   ) {
-    this.filters.form.patchValue(this._activatedRoute.snapshot.queryParams);
+    this.filters.form.patchValue(this._getFiltersFromQueryParams());
   }
 
-  trackByIdx = (index: number) => index;
+  private _getFiltersFromQueryParams() {
+    return (
+      Object.keys(
+        this.filters.form.controls
+      ) as (keyof typeof this.filters.form.controls)[]
+    ).reduce((obj, key) => {
+      if (this._activatedRoute.snapshot.queryParamMap.has(key)) {
+        const value = this._activatedRoute.snapshot.queryParamMap.get(key);
+
+        if (this.filters.form.controls[key].value instanceof Array<string>) {
+          obj[key] = [value];
+        } else {
+          obj[key] = value === 'null' ? null : value;
+        }
+      }
+
+      return obj;
+    }, {} as Record<string, unknown>);
+  }
+
+  trackByIdx = (index: number, item: TransactionListItem) => item.id;
 }

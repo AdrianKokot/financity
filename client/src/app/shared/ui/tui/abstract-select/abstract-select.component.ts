@@ -96,6 +96,7 @@ export abstract class AbstractSelectComponent<
 
   readonly apiLoading$ = this._api$.pipe(
     map(x => x === null),
+    startWith(true),
     share()
   );
 

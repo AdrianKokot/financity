@@ -15,12 +15,6 @@ export class FiltersForm<
   },
   TKey extends keyof TControl & string
 > {
-  getFilterKey(key: TKey) {
-    return key in this._config
-      ? (this._config as Record<string, string>)[key]
-      : key;
-  }
-
   readonly filters$ = this.form.valueChanges.pipe(
     startWith(null),
     debounceTime(300),
@@ -28,7 +22,7 @@ export class FiltersForm<
     distinctUntilChangedObject(),
     map(data =>
       (Object.keys(data) as TKey[]).reduce((filters, key) => {
-        const filterKey = this.getFilterKey(key);
+        const filterKey = this._getFilterKey(key);
 
         if (data[key] === null) {
           return filters;
@@ -49,7 +43,10 @@ export class FiltersForm<
         }
 
         if (typeof data[key] === 'string') {
-          filters[filterKey] = data[key].trim();
+          const trimmed = data[key].trim();
+          if (trimmed.length > 0) {
+            filters[filterKey] = trimmed;
+          }
         }
 
         return filters;
@@ -76,6 +73,12 @@ export class FiltersForm<
 
   get controls() {
     return this.form.controls;
+  }
+
+  private _getFilterKey(key: TKey) {
+    return key in this._config
+      ? (this._config as Record<string, string>)[key]
+      : key;
   }
 
   reset() {
