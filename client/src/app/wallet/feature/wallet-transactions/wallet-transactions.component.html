@@ -1,341 +1,332 @@
-<main>
-  <div class="w-full d-flex gap-4 mb-4">
-    <label class="w-full">
-      <tui-input
-        [formControl]="form.controls.search"
-        [tuiTextfieldLabelOutside]="true"
-        class="no-shadow"
-        tuiTextfieldSize="s">
-        Search
-        <input tuiTextfield type="text" />
-      </tui-input>
-    </label>
+<ng-container *tuiLet="wallet$ | async as wallet">
+  <main *tuiLet="items$ | async as items">
+    <div class="w-full d-flex gap-4 mb-4">
+      <label class="w-full">
+        <tui-input
+          [formControl]="filters.form.controls.search"
+          [tuiTextfieldLabelOutside]="true"
+          class="no-shadow"
+          tuiTextfieldSize="s">
+          Search
+          <input tuiTextfield type="text" />
+        </tui-input>
+      </label>
 
-    <label class="ml-auto" style="width: 250px">
-      <tui-input-date-range
-        [formControl]="form.controls.dateRange"
-        [items]="dayRangeItems"
-        [tuiTextfieldCleaner]="true"
-        [tuiTextfieldLabelOutside]="true"
-        class="no-shadow"
-        tuiTextfieldSize="s">
-        Date range
-      </tui-input-date-range>
-    </label>
+      <label class="ml-auto" style="width: 250px">
+        <tui-input-date-range
+          [formControl]="filters.form.controls.transactionDate"
+          [items]="dayRangeItems"
+          [tuiTextfieldCleaner]="true"
+          [tuiTextfieldLabelOutside]="true"
+          class="no-shadow"
+          tuiTextfieldSize="s">
+          Date range
+        </tui-input-date-range>
+      </label>
 
-    <ng-container *tuiLet="(appliedFiltersCount$ | async) ?? 0 as filtersCount">
+      <ng-container
+        *tuiLet="(filters.filtersCount$ | async) ?? 0 as filtersCount">
+        <button
+          (click)="filters.form.reset()"
+          appearance="flat-outline"
+          icon="tuiIconFilter"
+          size="s"
+          style="position: relative"
+          title="Reset filters to default"
+          tuiIconButton
+          type="button">
+          <tui-badge
+            *ngIf="filtersCount > 0"
+            [value]="filtersCount"
+            size="xs"
+            status="primary"
+            style="
+              color: var(--tui-text-01-night);
+              background: var(--tui-info-fill);
+              position: absolute;
+              top: 0;
+              right: 0;
+              z-index: 1;
+              transform: translate(30%, -30%);
+            "></tui-badge>
+        </button>
+      </ng-container>
+
       <button
-        (click)="form.reset()"
-        appearance="flat-outline"
-        icon="tuiIconFilter"
+        (click)="openCreateDialog()"
+        appearance="primary"
         size="s"
-        style="position: relative"
-        title="Reset filters to default"
-        tuiIconButton
+        tuiButton
         type="button">
-        <tui-badge
-          *ngIf="filtersCount > 0"
-          [value]="filtersCount"
-          size="xs"
-          status="primary"
-          style="
-            color: var(--tui-text-01-night);
-            background: var(--tui-info-fill);
-            position: absolute;
-            top: 0;
-            right: 0;
-            z-index: 1;
-            transform: translate(30%, -30%);
-          "></tui-badge>
+        New transaction
       </button>
-    </ng-container>
+    </div>
 
-    <button
-      (click)="openCreateDialog()"
-      appearance="primary"
-      size="s"
-      tuiButton
-      type="button">
-      New transaction
-    </button>
-  </div>
+    <div
+      class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+      <table
+        [columns]="[
+          'transactionDate',
+          'category',
+          'labels',
+          'note',
+          'recipient',
+          'amount',
+          'actions'
+        ]"
+        class="w-full"
+        tuiTable>
+        <thead>
+          <tr tuiThGroup>
+            <th
+              *tuiHead="'transactionDate'"
+              tuiTh
+              [sorter]="null"
+              class="column-date">
+              Date
+            </th>
+            <th
+              *tuiHead="'category'"
+              tuiTh
+              [sorter]="null"
+              class="column-category">
+              <tui-hosted-dropdown [content]="categoriesDropdown">
+                <span
+                  [class.text-link]="
+                    filters.form.controls.categories.value.length > 0
+                  "
+                  class="column-filter-text">
+                  <span>Category</span>
 
-  <div
-    class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
-    <table
-      [columns]="[
-        'transactionDate',
-        'category',
-        'labels',
-        'note',
-        'recipient',
-        'amount',
-        'actions'
-      ]"
-      class="w-full"
-      tuiTable>
-      <thead>
-        <tr tuiThGroup>
-          <th
-            *tuiHead="'transactionDate'"
-            tuiTh
-            [sorter]="null"
-            class="column-date">
-            Date
-          </th>
-          <th
-            *tuiHead="'category'"
-            tuiTh
-            [sorter]="null"
-            class="column-category">
-            <tui-hosted-dropdown [content]="categoriesDropdown">
-              <span
-                [class.text-link]="form.controls.categories.value.length > 0"
-                class="column-filter-text">
-                <span>Category</span>
+                  <tui-svg src="tuiIconSortDown"></tui-svg>
+                </span>
+              </tui-hosted-dropdown>
+            </th>
+            <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
+              <tui-hosted-dropdown [content]="labelsDropdown">
+                <span
+                  [class.text-link]="
+                    filters.form.controls.labels.value.length > 0
+                  "
+                  class="column-filter-text">
+                  <span>Labels</span>
 
-                <tui-svg src="tuiIconSortDown"></tui-svg>
-              </span>
-            </tui-hosted-dropdown>
-          </th>
-          <th *tuiHead="'labels'" tuiTh [sorter]="null" class="column-labels">
-            <tui-hosted-dropdown [content]="labelsDropdown">
-              <span
-                [class.text-link]="form.controls.labels.value.length > 0"
-                class="column-filter-text">
-                <span>Labels</span>
+                  <tui-svg src="tuiIconSortDown"></tui-svg>
+                </span>
+              </tui-hosted-dropdown>
+            </th>
+            <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
+              Note
+            </th>
+            <th
+              *tuiHead="'recipient'"
+              [sorter]="null"
+              class="column-note"
+              tuiTh>
+              <tui-hosted-dropdown [content]="recipientsDropdown">
+                <span
+                  [class.text-link]="
+                    filters.form.controls.recipients.value.length > 0
+                  "
+                  class="column-filter-text">
+                  <span>Recipient</span>
 
-                <tui-svg src="tuiIconSortDown"></tui-svg>
-              </span>
-            </tui-hosted-dropdown>
-          </th>
-          <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
-            Note
-          </th>
-          <th *tuiHead="'recipient'" [sorter]="null" class="column-note" tuiTh>
-            <tui-hosted-dropdown [content]="recipientsDropdown">
-              <span
-                [class.text-link]="form.controls.recipients.value.length > 0"
-                class="column-filter-text">
-                <span>Recipient</span>
+                  <tui-svg src="tuiIconSortDown"></tui-svg>
+                </span>
+              </tui-hosted-dropdown>
+            </th>
+            <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
+              Amount
+            </th>
+            <th
+              *tuiHead="'actions'"
+              tuiTh
+              [sorter]="null"
+              class="column-actions"></th>
+          </tr>
+        </thead>
+      </table>
+      <tui-scrollbar>
+        <cdk-virtual-scroll-viewport
+          appInfiniteVirtualScroll
+          (pageChange)="page$.next($event)"
+          [itemSize]="44"
+          class="viewport tui-zero-scrollbar"
+          tuiScrollable>
+          <table
+            [columns]="[
+              'transactionDate',
+              'category',
+              'labels',
+              'note',
+              'recipient',
+              'amount',
+              'actions'
+            ]"
+            class="w-full"
+            tuiTable>
+            <thead>
+              <tr tuiThGroup>
+                <th
+                  *tuiHead="'transactionDate'"
+                  tuiTh
+                  [sorter]="null"
+                  class="column-date"></th>
+                <th
+                  *tuiHead="'category'"
+                  tuiTh
+                  [sorter]="null"
+                  class="column-category"></th>
+                <th
+                  *tuiHead="'labels'"
+                  tuiTh
+                  [sorter]="null"
+                  class="column-labels"></th>
+                <th
+                  *tuiHead="'note'"
+                  tuiTh
+                  [sorter]="null"
+                  class="column-note"></th>
+                <th
+                  *tuiHead="'recipient'"
+                  [sorter]="null"
+                  class="column-recipient"
+                  tuiTh></th>
+                <th
+                  *tuiHead="'amount'"
+                  tuiTh
+                  [sorter]="null"
+                  class="column-amount"></th>
+                <th
+                  *tuiHead="'actions'"
+                  tuiTh
+                  [sorter]="null"
+                  class="column-actions"></th>
+              </tr>
+            </thead>
 
-                <tui-svg src="tuiIconSortDown"></tui-svg>
-              </span>
-            </tui-hosted-dropdown>
-          </th>
-          <th *tuiHead="'amount'" tuiTh [sorter]="null" class="column-amount">
-            Amount
-          </th>
-          <th
-            *tuiHead="'actions'"
-            tuiTh
-            [sorter]="null"
-            class="column-actions"></th>
-        </tr>
-      </thead>
-    </table>
-    <tui-scrollbar>
-      <cdk-virtual-scroll-viewport
-        (scrolledIndexChange)="log()"
-        [itemSize]="44"
-        class="viewport tui-zero-scrollbar"
-        tuiScrollable>
-        <table
-          [columns]="[
-            'transactionDate',
-            'category',
-            'labels',
-            'note',
-            'recipient',
-            'amount',
-            'actions'
-          ]"
-          class="w-full"
-          tuiTable>
-          <!--
-      [direction]="(direction$ | async) || 1"
-      -->
-          <!--    [tuiSortBy]="sorter$ | async"-->
-          <!--    (tuiSortByChange)="sorter$.next($event!)"-->
-          <!--    (directionChange)="direction$.next($event)"-->
-          <thead>
-            <tr tuiThGroup>
-              <th
-                *tuiHead="'transactionDate'"
-                tuiTh
-                [sorter]="null"
-                class="column-date"></th>
-              <th
-                *tuiHead="'category'"
-                tuiTh
-                [sorter]="null"
-                class="column-category"></th>
-              <th
-                *tuiHead="'labels'"
-                tuiTh
-                [sorter]="null"
-                class="column-labels"></th>
-              <th
-                *tuiHead="'note'"
-                tuiTh
-                [sorter]="null"
-                class="column-note"></th>
-              <th
-                *tuiHead="'recipient'"
-                [sorter]="null"
-                class="column-recipient"
-                tuiTh></th>
-              <th
-                *tuiHead="'amount'"
-                tuiTh
-                [sorter]="null"
-                class="column-amount"></th>
-              <th
-                *tuiHead="'actions'"
-                tuiTh
-                [sorter]="null"
-                class="column-actions"></th>
-              <!--        <th *tuiHead="'age'" tuiTh tuiSortable>Age</th>-->
-            </tr>
-          </thead>
-
-          <ng-container *ngIf="wallet$ | async as wallet">
-            <ng-container *ngIf="data$ | async as data">
-              <tbody *tuiLet="data" tuiTbody>
-                <tr
-                  *cdkVirtualFor="let item of data; trackBy: trackByIdx"
-                  tuiTr>
-                  <td *tuiCell="'transactionDate'" tuiTd>
-                    {{ item.transactionDate | date : 'dd/MM/yyyy' }}
-                  </td>
-                  <td *tuiCell="'category'" tuiTd>
-                    <span
-                      *ngIf="item.category !== null"
-                      class="d-flex align-items-center">
-                      <tui-marker-icon
-                        size="xs"
-                        [attr.data-appearance-color]="
-                          item.category.appearance.color ?? ''
-                        "
-                        [src]="
-                          item.category.appearance.iconName ?? 'fa::question'
-                        "></tui-marker-icon>
-                      <span class="ml-2">
-                        {{ item.category.name ?? '-' }}
-                      </span>
-                    </span>
-                  </td>
-                  <td *tuiCell="'labels'" tuiTd>
-                    <tui-badge
-                      *ngFor="let label of item.labels"
-                      class="mr-1 bg-base-6"
-                      [style.background-color]="
-                        label.appearance.color
-                          ? 'var(--' + label.appearance.color + ')'
-                          : null
+            <tbody tuiTbody>
+              <tr
+                *cdkVirtualFor="let item of items ?? []; trackBy: trackByIdx"
+                tuiTr>
+                <td *tuiCell="'transactionDate'" tuiTd>
+                  {{ item.transactionDate | date : 'dd/MM/yyyy' }}
+                </td>
+                <td *tuiCell="'category'" tuiTd>
+                  <span
+                    *ngIf="item.category !== null"
+                    class="d-flex align-items-center">
+                    <tui-marker-icon
+                      size="xs"
+                      [attr.data-appearance-color]="
+                        item.category.appearance.color ?? ''
                       "
-                      status="custom"
-                      [value]="label.name"></tui-badge>
+                      [src]="
+                        item.category.appearance.iconName ?? 'fa::question'
+                      "></tui-marker-icon>
+                    <span class="ml-2">
+                      {{ item.category.name ?? '-' }}
+                    </span>
+                  </span>
+                </td>
+                <td *tuiCell="'labels'" tuiTd>
+                  <tui-badge
+                    *ngFor="let label of item.labels"
+                    class="mr-1 bg-base-6"
+                    [style.background-color]="
+                      label.appearance.color
+                        ? 'var(--' + label.appearance.color + ')'
+                        : null
+                    "
+                    status="custom"
+                    [value]="label.name"></tui-badge>
+                </td>
+                <td *tuiCell="'note'" tuiTd>
+                  {{ (item.note ?? '').length > 0 ? item.note : '-' }}
+                </td>
+                <td *tuiCell="'recipient'" tuiTd>
+                  {{ item.recipientName ?? '-' }}
+                </td>
 
-                    <!--            <span *ngFor="let label of item.labels">{{ label.name }}</span>-->
-                  </td>
-                  <td *tuiCell="'note'" tuiTd>
-                    {{ (item.note ?? '').length > 0 ? item.note : '-' }}
-                  </td>
-                  <td *tuiCell="'recipient'" tuiTd>
-                    {{ item.recipientName ?? '-' }}
-                  </td>
+                <td *tuiCell="'amount'" tuiTd>
+                  <tui-money
+                    [currency]="item.currencyId"
+                    [colored]="true"
+                    [value]="
+                      item.amount *
+                      (item.transactionType === 'Expense' ? -1 : 1)
+                    "></tui-money>
 
-                  <td *tuiCell="'amount'" tuiTd>
-                    <!--          {{ item.amount  }}-->
+                  <ng-container
+                    *ngIf="wallet && item.currencyId !== wallet.currencyId">
+                    <span class="ml-2">(</span>
                     <tui-money
-                      [currency]="item.currencyId"
-                      [colored]="true"
-                      [value]="
-                        item.amount *
-                        (item.transactionType === 'Expense' ? -1 : 1)
-                      "></tui-money>
+                      [colored]="false"
+                      [currency]="wallet.currencyId"
+                      [value]="item.amount * item.exchangeRate"></tui-money>
+                    <span>)</span>
+                  </ng-container>
+                </td>
 
-                    <ng-container *ngIf="item.currencyId !== wallet.currencyId">
-                      <span class="ml-2">(</span>
-                      <tui-money
-                        [colored]="false"
-                        [currency]="wallet.currencyId"
-                        [value]="item.amount * item.exchangeRate"></tui-money>
-                      <span>)</span>
-                    </ng-container>
-                  </td>
-                  <!--        <td *tuiCell="'dob'" tuiTd>-->
-                  <!--          {{ item.dob }}-->
-                  <!--        </td>-->
-                  <!--        <td *tuiCell="'age'" tuiTd>-->
-                  <!--          {{ getAge(item) }}-->
-                  <!--        </td>-->
-                  <td *tuiCell="'actions'" tuiTd class="column-actions">
-                    <button
-                      tuiIconButton
-                      appearance="flat"
-                      size="s"
-                      icon="fa::pen"
-                      title="Edit"
-                      shape="rounded"
-                      class="mr-1"
-                      (click)="openEditDialog(item.id)"></button>
+                <td *tuiCell="'actions'" tuiTd class="column-actions">
+                  <button
+                    tuiIconButton
+                    appearance="flat"
+                    size="s"
+                    icon="fa::pen"
+                    title="Edit"
+                    shape="rounded"
+                    class="mr-1"
+                    (click)="openEditDialog(item.id)"></button>
 
-                    <button
-                      tuiIconButton
-                      appearance="flat-destructive"
-                      size="s"
-                      icon="tuiIconTrash"
-                      title="Remove"
-                      appRequireConfirmation
-                      (confirm)="deleteTransaction(item.id)"
-                      confirmationMessage="Are you sure you want to delete this transaction? This action is irreversible."
-                      shape="rounded"></button>
-                  </td>
-                </tr>
+                  <button
+                    tuiIconButton
+                    appearance="flat-destructive"
+                    size="s"
+                    icon="tuiIconTrash"
+                    title="Remove"
+                    appRequireConfirmation
+                    (confirm)="deleteTransaction(item.id)"
+                    confirmationMessage="Are you sure you want to delete this transaction? This action is irreversible."
+                    shape="rounded"></button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot *tuiLet="(apiLoading$ | async)! as apiLoading">
+              <tr *ngIf="apiLoading || items === null">
+                <td [colSpan]="5" class="py-4">
+                  <tui-loader></tui-loader>
+                </td>
+              </tr>
 
-                <tr *ngIf="!!(loading$ | async) as loading" [hidden]="!loading">
-                  <td [colSpan]="5" class="py-4">
-                    <tui-loader [showLoader]="loading"></tui-loader>
-                  </td>
-                </tr>
-              </tbody>
-
-              <!--    <tfoot>-->
-              <!--      <tr>-->
-              <!--        <td [colSpan]="columns.length">-->
-              <!--          <tui-table-pagination-->
-              <!--            class="tui-space_top-2"-->
-              <!--            [total]="(total$ | async) || 0"-->
-              <!--            (pageChange)="onPage($event)"-->
-              <!--            (sizeChange)="onSize($event)"></tui-table-pagination>-->
-              <!--        </td>-->
-              <!--      </tr>-->
-            </ng-container>
-            <!--    </tfoot>-->
-          </ng-container>
-        </table>
-      </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
-  </div>
-</main>
+              <tr *ngIf="items && items.length === 0 && !apiLoading">
+                <td [colSpan]="5" class="py-4 text-3 text-center">
+                  No records found
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </cdk-virtual-scroll-viewport>
+      </tui-scrollbar>
+    </div>
+  </main>
+</ng-container>
 
 <ng-template #categoriesDropdown>
   <app-searchable-list
     [getListFunction]="dataApis.getCategories"
-    [control]="form.controls.categories">
+    [control]="filters.form.controls.categories">
   </app-searchable-list>
 </ng-template>
 <ng-template #labelsDropdown>
   <app-searchable-list
     [getListFunction]="dataApis.getLabels"
-    [control]="form.controls.labels">
+    [control]="filters.form.controls.labels">
   </app-searchable-list>
 </ng-template>
 <ng-template #recipientsDropdown>
   <app-searchable-list
     [getListFunction]="dataApis.getRecipients"
-    [control]="form.controls.recipients">
+    [control]="filters.form.controls.recipients">
   </app-searchable-list>
 </ng-template>

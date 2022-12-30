@@ -65,6 +65,7 @@ import { RecipientModule } from '../recipient/recipient.module';
 import { CreateWalletComponent } from './feature/create-wallet/create-wallet.component';
 import { SelectModule } from '@shared/ui/tui/select/select.module';
 import { SearchableListModule } from '@shared/ui/tui/searchable-list/searchable-list.module';
+import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
 
 @NgModule({
   declarations: [
@@ -128,6 +129,7 @@ import { SearchableListModule } from '@shared/ui/tui/searchable-list/searchable-
     TuiAutoFocusModule,
     SearchableListModule,
     TuiActiveZoneModule,
+    InfiniteVirtualScrollModule,
   ],
 })
 export class WalletModule {}

@@ -3,25 +3,19 @@ import {
   Component,
   Inject,
   Injector,
-  ViewChild,
 } from '@angular/core';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
   BehaviorSubject,
-  debounceTime,
   distinctUntilChanged,
-  exhaustMap,
   filter,
   map,
   merge,
+  NEVER,
   scan,
   share,
   shareReplay,
   startWith,
-  Subject,
   switchMap,
-  take,
-  tap,
   withLatestFrom,
 } from 'rxjs';
 import {
@@ -36,63 +30,15 @@ import { TuiAlertService, TuiDialogService } from '@taiga-ui/core';
 import { UpdateTransactionComponent } from '../../../transaction/feature/update-transaction/update-transaction.component';
 import { CreateTransactionComponent } from 'src/app/transaction/feature/create-transaction/create-transaction.component';
 import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
-import { FormBuilder } from '@angular/forms';
-import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
-import { TuiDayRangePeriod } from '@taiga-ui/kit';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { Category } from '@shared/data-access/models/category.model';
 import { CategoryApiService } from '../../../core/api/category-api.service';
 import { Recipient } from '@shared/data-access/models/recipient.model';
 import { Label } from '@shared/data-access/models/label';
-
-const createTransactionDateFilterGroups = () => {
-  //https://github.com/Tinkoff/taiga-ui/blob/fdde12d70356bf5a018eed3c3e6747fff5adc8b0/projects/kit/utils/miscellaneous/create-default-day-range-periods.ts
-
-  const today = TuiDay.currentLocal();
-  const startOfWeek = today.append({ day: -today.dayOfWeek() });
-
-  const endOfWeek = startOfWeek.append({ day: 6 });
-  const startOfMonth = today.append({ day: 1 - today.day });
-  const endOfMonth = startOfMonth.append({ month: 1, day: -1 });
-  const startOfLastMonth = startOfMonth.append({ month: -1 });
-
-  const startOfYear = startOfMonth.append({ month: -startOfMonth.month });
-
-  return [
-    new TuiDayRangePeriod(new TuiDayRange(today, today), 'Today'),
-    new TuiDayRangePeriod(new TuiDayRange(startOfWeek, endOfWeek), 'This week'),
-    new TuiDayRangePeriod(
-      new TuiDayRange(
-        startOfWeek.append({ day: -7 }),
-        endOfWeek.append({ day: -7 })
-      ),
-      'Last week'
-    ),
-    new TuiDayRangePeriod(
-      new TuiDayRange(startOfMonth, endOfMonth),
-      'This month'
-    ),
-    new TuiDayRangePeriod(
-      new TuiDayRange(startOfLastMonth, startOfMonth.append({ day: -1 })),
-      'Last month'
-    ),
-    new TuiDayRangePeriod(
-      new TuiDayRange(today.append({ day: -30 }), today),
-      'Last 30 days'
-    ),
-    new TuiDayRangePeriod(
-      new TuiDayRange(startOfYear, startOfYear.append({ month: 12, day: -1 })),
-      'This year'
-    ),
-    new TuiDayRangePeriod(
-      new TuiDayRange(
-        startOfYear.append({ year: -1 }),
-        startOfYear.append({ day: -1 })
-      ),
-      'Last year'
-    ),
-  ];
-};
+import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
+import { Wallet } from '@shared/data-access/models/wallet.model';
+import { DATE_RANGE_FILTER_GROUPS } from '../../utils/date-range-filter-groups.constants';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -102,95 +48,76 @@ const createTransactionDateFilterGroups = () => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletTransactionsComponent {
-  dayRangeItems = createTransactionDateFilterGroups();
+  readonly dayRangeItems = DATE_RANGE_FILTER_GROUPS;
 
-  form = this._fb.nonNullable.group({
-    dateRange: [this.dayRangeItems[5].range],
-    search: [''],
-    categories: [new Array<Category['id']>()],
-    recipients: [new Array<Recipient['id']>()],
-    labels: [new Array<Label['id']>()],
-  });
-
-  filters$ = this.form.valueChanges.pipe(
-    debounceTime(300),
-    startWith({}),
-    map(() => this.form.getRawValue()),
-    map(({ search, dateRange, categories, recipients, labels }) => {
-      const obj: Record<string, string | string[]> = {};
-
-      if (search) {
-        obj['search'] = search.trim();
-      }
-
-      if (categories.length > 0) {
-        obj['categoryId_in'] = categories;
-      }
-
-      if (recipients.length > 0) {
-        obj['recipientId_in'] = recipients;
-      }
-
-      if (labels.length > 0) {
-        obj['labelId_in'] = labels;
-      }
-
-      if (dateRange && dateRange.from) {
-        obj['transactionDate_gte'] = dateRange.from.toJSON();
-      }
-
-      if (dateRange && dateRange.to) {
-        obj['transactionDate_lte'] = dateRange.to.toJSON();
-      }
-
-      return obj;
-    }),
-    distinctUntilChangedObject(),
-    shareReplay(1)
+  readonly filters = this._fb.filters(
+    {
+      transactionDate: [this.dayRangeItems[5].range],
+      search: [''],
+      categories: [new Array<Category['id']>()],
+      recipients: [new Array<Recipient['id']>()],
+      labels: [new Array<Label['id']>()],
+    },
+    {
+      categories: 'categoryId',
+      recipients: 'recipientId',
+      labels: 'labelId',
+    }
   );
+
+  readonly page$ = new BehaviorSubject<number>(1);
+  private readonly _walletId: Wallet['id'] =
+    this._activatedRoute.snapshot.params['id'];
+  private readonly _api$ = merge(
+    this.page$,
+    this.filters.filters$.pipe(
+      map(() => {
+        this.page$.next(1);
+        return NEVER;
+      })
+    )
+  ).pipe(
+    withLatestFrom(this.filters.filters$, this.page$),
+    map(([, filters, page]) => ({
+      page,
+      filters,
+      pageSize: AUTOCOMPLETE_PAGE_SIZE,
+    })),
+    distinctUntilChangedObject(),
+    switchMap(pagination =>
+      this._transactionApiService
+        .getList(this._walletId, pagination)
+        .pipe(startWith(null))
+    ),
+    shareReplay()
+  );
+
+  readonly apiLoading$ = this._api$.pipe(
+    map(x => x === null),
+    startWith(true),
+    share()
+  );
+
   readonly dataApis = this._walletApiService.getConcreteWalletApi(
     this._activatedRoute.snapshot.params['id']
   );
 
-  categoriesDropdownOpened = false;
-
-  appliedFiltersCount$ = this.filters$.pipe(
-    map(x => Object.keys(x).length - ('transactionDate_gte' in x ? 1 : 0)),
-    distinctUntilChanged(),
-    shareReplay(1)
-  );
-
-  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
-
-  walletId$ = this._activatedRoute.params.pipe(
-    filter((params): params is { id: string } => 'id' in params),
-    map(params => params.id)
-  );
-
-  wallet$ = this.walletId$.pipe(
-    switchMap(walletId => this._walletApiService.get(walletId)),
-    shareReplay(1)
-  );
-
-  page$ = new BehaviorSubject<number>(1);
-  private _pageSize = 20;
-
-  transactions$ = this.page$.pipe(
-    withLatestFrom(this.walletId$, this.filters$),
-    distinctUntilChangedObject(),
-    exhaustMap(([page, walletId, filters]) =>
-      this._transactionApiService
-        .getList(walletId, {
-          page,
-          pageSize: this._pageSize,
-          filters,
-        })
-        .pipe(startWith(null))
+  readonly items$ = merge(
+    this._api$.pipe(
+      filter((x): x is TransactionListItem[] => x !== null),
+      scan((acc: TransactionListItem[], data: TransactionListItem[]) => {
+        if (this.page$.value === 1) {
+          return [...data];
+        }
+        return [...acc, ...data];
+      }, [] as TransactionListItem[])
     ),
-    shareReplay(1)
-  );
+    this._api$.pipe(
+      filter((x): x is null => x === null && this.page$.value === 1)
+    )
+  ).pipe(distinctUntilChanged());
 
-  gotAllResults = false;
+  wallet$ = this._walletApiService.get(this._walletId).pipe(shareReplay());
 
   openCreateDialog(): void {
     this.wallet$
@@ -212,32 +139,28 @@ export class WalletTransactionsComponent {
           );
         })
       )
-      .subscribe(item => {
-        this._newTransaction$.next(item);
+      .subscribe(() => {
+        this.page$.next(0);
+        this.page$.next(1);
       });
   }
 
   openEditDialog(id: Transaction['id']): void {
-    this.walletId$
-      .pipe(
-        take(1),
-        switchMap(walletId =>
-          this._dialog.open<Transaction>(
-            new PolymorpheusComponent(
-              UpdateTransactionComponent,
-              this._injector
-            ),
-            {
-              label: 'Edit transaction',
-              data: {
-                id,
-                walletId,
-              },
-            }
-          )
-        )
+    this._dialog
+      .open<Transaction>(
+        new PolymorpheusComponent(UpdateTransactionComponent, this._injector),
+        {
+          label: 'Edit transaction',
+          data: {
+            id,
+            walletId: this._walletId,
+          },
+        }
       )
-      .subscribe(item => this._modifiedTransaction$.next(item));
+      .subscribe(() => {
+        this.page$.next(0);
+        this.page$.next(1);
+      });
   }
 
   deleteTransaction(id: Transaction['id']): void {
@@ -245,64 +168,22 @@ export class WalletTransactionsComponent {
       .delete(id)
       .pipe(filter(success => success))
       .subscribe(() => {
-        this._deletedTransaction$.next({ id });
+        this.page$.next(0);
+        this.page$.next(1);
       });
   }
 
-  private _modifiedTransaction$ = new Subject<Transaction>();
-  private _deletedTransaction$ = new Subject<Pick<Transaction, 'id'>>();
-  private _newTransaction$ = new Subject<Transaction>();
-
-  readonly request$ = merge(
-    this.transactions$.pipe(
-      filter((x): x is TransactionListItem[] => x !== null),
-      map(items => (acc: TransactionListItem[]) => [...acc, ...items])
-    ),
-    this.filters$.pipe(
-      map(() => () => []),
-      tap(() => this.page$.next(1))
-    )
-  )
-    //   combineLatest([
-    //   this.sorter$,
-    //   this.direction$,
-    //   this.page$,
-    //   this.size$,
-    //   tuiControlValue<number>(this.minAge),
-    // ])
-    .pipe(
-      // zero time debounce for a case when both key and direction change
-      scan(
-        (acc: TransactionListItem[], fn) => fn(acc),
-        [] as TransactionListItem[]
-      ),
-      share()
-    );
-
-  readonly loading$ = this.transactions$.pipe(map(value => !value));
-  readonly data$ = this.request$.pipe(startWith([] as TransactionListItem[]));
-
   constructor(
+    private _fb: FormWithHandlerBuilder,
     private _activatedRoute: ActivatedRoute,
     private _walletApiService: WalletApiService,
     private _categoryService: CategoryApiService,
     private _transactionApiService: TransactionApiService,
     @Inject(TuiAlertService) private readonly _alertService: TuiAlertService,
     @Inject(Injector) private _injector: Injector,
-    private _dialog: TuiDialogService,
-    private _fb: FormBuilder
+    private _dialog: TuiDialogService
   ) {
-    this.form.patchValue(this._activatedRoute.snapshot.queryParams);
-  }
-
-  log() {
-    if (this.gotAllResults) return;
-    const { end } = this.viewport.getRenderedRange();
-    const total = this.viewport.getDataLength();
-
-    if (end === total) {
-      this.page$.next(Math.floor(total / this._pageSize) + 1);
-    }
+    this.filters.form.patchValue(this._activatedRoute.snapshot.queryParams);
   }
 
   trackByIdx = (index: number) => index;
