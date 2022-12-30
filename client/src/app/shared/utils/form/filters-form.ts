@@ -73,4 +73,12 @@ export class FiltersForm<
       [K in TKey]?: string;
     } = {}
   ) {}
+
+  get controls() {
+    return this.form.controls;
+  }
+
+  reset() {
+    this.form.reset();
+  }
 }

@@ -47,7 +47,6 @@ import { of, shareReplay } from 'rxjs';
     },
     tuiDialogOptionsProvider({
       dismissible: false,
-      required: true,
     }),
     {
       provide: HTTP_INTERCEPTORS,
