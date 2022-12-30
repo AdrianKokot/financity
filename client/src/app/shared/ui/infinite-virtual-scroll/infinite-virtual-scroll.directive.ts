@@ -17,10 +17,14 @@ export class InfiniteVirtualScrollDirective {
   @Input()
   showMax = 1;
 
-  @HostBinding('style.--viewport-items-count')
-  @HostBinding('style.--viewport-max-items-count')
-  @Input()
-  fixed = 1;
+  @Input() set fixed(value: number) {
+    this.viewportItemsCount = value;
+    this.showMax = value;
+  }
+
+  get fixed() {
+    return this.viewportItemsCount;
+  }
 
   @HostBinding('style.--viewport-items-margin.px')
   @Input()

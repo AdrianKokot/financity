@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   filter,
+  map,
   merge,
   shareReplay,
   Subject,
@@ -33,6 +34,7 @@ import { DATE_RANGE_FILTER_GROUPS } from '../../utils/date-range-filter-groups.c
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { TuiDay } from '@taiga-ui/cdk';
+import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -43,23 +45,35 @@ import { TuiDay } from '@taiga-ui/cdk';
 export class WalletTransactionsComponent {
   private readonly _walletId: Wallet['id'] =
     this._activatedRoute.snapshot.params['id'];
-  readonly minDate = new TuiDay(1, 0, 1);
-  readonly maxDate = new TuiDay(9999, 11, 31);
-  readonly columns = [
-    'transactionDate',
-    'category',
-    'labels',
-    'note',
-    'recipient',
-    'amount',
-    'actions',
-  ];
 
-  readonly dayRangeItems = DATE_RANGE_FILTER_GROUPS;
+  readonly ui = {
+    transactionDate: {
+      items: DATE_RANGE_FILTER_GROUPS,
+      min: new TuiDay(1, 0, 1),
+      max: new TuiDay(9999, 11, 31),
+    } as const,
+    columns: [
+      'transactionDate',
+      'category',
+      'labels',
+      'note',
+      'recipient',
+      'amount',
+      'actions',
+    ] as const,
+    getRemainingLabelsCount: (index: number, labelsCount: number) =>
+      labelsCount - (index === 0 ? 1 : index + 2),
+    actions: {
+      edit$: new Subject<Transaction['id']>(),
+      delete$: new Subject<Transaction['id']>(),
+      create$: new Subject<void>(),
+      details$: new Subject<TransactionListItem>(),
+    },
+  };
 
   readonly filters = this._fb.filters(
     {
-      transactionDate: [this.dayRangeItems[5].range],
+      transactionDate: [DATE_RANGE_FILTER_GROUPS[5].range],
       search: [''],
       categories: [new Array<Category['id']>()],
       recipients: [new Array<Recipient['id']>()],
@@ -83,13 +97,12 @@ export class WalletTransactionsComponent {
   readonly dataApis = this._walletApiService.getConcreteWalletApi(
     this._activatedRoute.snapshot.params['id']
   );
-  wallet$ = this._walletApiService.get(this._walletId).pipe(shareReplay());
+  readonly wallet$ = this._walletApiService
+    .get(this._walletId)
+    .pipe(shareReplay());
 
-  readonly edit$ = new Subject<Transaction['id']>();
-  readonly delete$ = new Subject<Transaction['id']>();
-  readonly create$ = new Subject<void>();
   readonly dialogs$ = merge(
-    this.edit$.pipe(
+    this.ui.actions.edit$.pipe(
       switchMap(id =>
         this._dialog.open<Transaction>(
           new PolymorpheusComponent(UpdateTransactionComponent, this._injector),
@@ -103,7 +116,7 @@ export class WalletTransactionsComponent {
         )
       )
     ),
-    this.create$.pipe(
+    this.ui.actions.create$.pipe(
       withLatestFrom(this.wallet$),
       switchMap(([, { id, currencyId }]) => {
         return this._dialog.open<Transaction>(
@@ -119,12 +132,29 @@ export class WalletTransactionsComponent {
         );
       })
     ),
-    this.delete$.pipe(
+    this.ui.actions.delete$.pipe(
       switchMap(id =>
         this._transactionApiService.delete(id).pipe(filter(success => success))
       )
+    ),
+    this.ui.actions.details$.pipe(
+      withLatestFrom(this.wallet$),
+      switchMap(([transaction, wallet]) =>
+        this._dialog.open(
+          new PolymorpheusComponent(
+            TransactionDetailsComponent,
+            this._injector
+          ),
+          {
+            label: 'Transaction details',
+            data: { transaction, wallet },
+            dismissible: true,
+          }
+        )
+      ),
+      map(() => false)
     )
-  ).pipe(tap(() => this.data.resetPage()));
+  ).pipe(tap(reset => !!reset && this.data.resetPage()));
 
   constructor(
     private _fb: FormWithHandlerBuilder,
@@ -157,5 +187,5 @@ export class WalletTransactionsComponent {
     }, {} as Record<string, unknown>);
   }
 
-  trackByIdx = (index: number, item: TransactionListItem) => item.id;
+  trackById = (index: number, item: TransactionListItem) => item.id;
 }

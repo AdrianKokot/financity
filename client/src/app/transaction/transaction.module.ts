@@ -13,6 +13,7 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
+  TuiBadgeModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFieldErrorPipeModule,
@@ -26,12 +27,20 @@ import {
   TuiTextAreaModule,
 } from '@taiga-ui/kit';
 import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
-import { TuiCurrencyPipeModule } from '@taiga-ui/addon-commerce';
+import {
+  TuiCurrencyPipeModule,
+  TuiMoneyModule,
+} from '@taiga-ui/addon-commerce';
 import { MultiSelectModule } from '@shared/ui/tui/multi-select/multi-select.module';
 import { SelectModule } from '@shared/ui/tui/select/select.module';
+import { TransactionDetailsComponent } from './feature/transaction-details/transaction-details.component';
 
 @NgModule({
-  declarations: [CreateTransactionComponent, UpdateTransactionComponent],
+  declarations: [
+    CreateTransactionComponent,
+    UpdateTransactionComponent,
+    TransactionDetailsComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -58,7 +67,13 @@ import { SelectModule } from '@shared/ui/tui/select/select.module';
     SelectModule,
     TuiGroupModule,
     TuiLoaderModule,
+    TuiMoneyModule,
+    TuiBadgeModule,
   ],
-  exports: [CreateTransactionComponent, UpdateTransactionComponent],
+  exports: [
+    CreateTransactionComponent,
+    UpdateTransactionComponent,
+    TransactionDetailsComponent,
+  ],
 })
 export class TransactionModule {}

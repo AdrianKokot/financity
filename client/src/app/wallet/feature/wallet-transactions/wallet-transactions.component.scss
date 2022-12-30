@@ -1,11 +1,7 @@
 @use '@taiga-ui/core/styles/taiga-ui-local' as *;
 
 :host {
-  .column-actions {
-    padding-left: 0 !important;
-  }
-
-  @each $w in (80, 100, 200, 250) {
+  @each $w in (128, 100, 200, 250) {
     .w-#{$w}px {
       min-width: #{$w}px;
       max-width: #{$w}px;
@@ -14,10 +10,14 @@
   }
 
   .w-rest {
-    --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - 2px - 1130px);
+    --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - 1180px);
     max-width: max(var(--rest), 250px);
     width: max(var(--rest), 250px);
     min-width: max(var(--rest), 250px);
+  }
+
+  .max-w-150px {
+    max-width: 150px;
   }
 
   .sticky-thead {

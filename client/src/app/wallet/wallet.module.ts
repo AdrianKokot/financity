@@ -33,6 +33,7 @@ import {
   TuiInputModule,
   TuiInputNumberModule,
   TuiIslandModule,
+  TuiItemsWithMoreModule,
   TuiMarkerIconModule,
   TuiMultiSelectModule,
   TuiSelectModule,
@@ -130,6 +131,7 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     SearchableListModule,
     TuiActiveZoneModule,
     InfiniteVirtualScrollModule,
+    TuiItemsWithMoreModule,
   ],
 })
 export class WalletModule {}
