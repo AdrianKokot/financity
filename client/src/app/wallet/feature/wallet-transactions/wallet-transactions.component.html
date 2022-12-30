@@ -32,7 +32,7 @@
             appearance="flat-outline"
             icon="tuiIconFilter"
             size="s"
-            style="position: relative"
+            class="applied-filters-button"
             title="Reset filters to default"
             tuiIconButton
             type="button">
@@ -40,16 +40,7 @@
               *ngIf="filtersCount > 0"
               [value]="filtersCount"
               size="xs"
-              status="primary"
-              style="
-                color: var(--tui-text-01-night);
-                background: var(--tui-info-fill);
-                position: absolute;
-                top: 0;
-                right: 0;
-                z-index: 1;
-                transform: translate(30%, -30%);
-              "></tui-badge>
+              status="primary"></tui-badge>
           </button>
         </ng-container>
 
@@ -65,100 +56,14 @@
 
       <div
         class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
-        <table
-          [columns]="[
-            'transactionDate',
-            'category',
-            'labels',
-            'note',
-            'recipient',
-            'amount',
-            'actions'
-          ]"
-          class="w-full"
-          tuiTable>
-          <thead>
-            <tr tuiThGroup>
-              <th
-                *tuiHead="'transactionDate'"
-                tuiTh
-                [sorter]="null"
-                class="column-date">
-                Date
-              </th>
-              <th
-                *tuiHead="'category'"
-                tuiTh
-                [sorter]="null"
-                class="column-category">
-                <tui-hosted-dropdown [content]="categoriesDropdown">
-                  <span
-                    [class.text-link]="
-                      filters.controls.categories.value.length > 0
-                    "
-                    class="column-filter-text">
-                    <span>Category</span>
-
-                    <tui-svg src="tuiIconSortDown"></tui-svg>
-                  </span>
-                </tui-hosted-dropdown>
-              </th>
-              <th
-                *tuiHead="'labels'"
-                tuiTh
-                [sorter]="null"
-                class="column-labels">
-                <tui-hosted-dropdown [content]="labelsDropdown">
-                  <span
-                    [class.text-link]="filters.controls.labels.value.length > 0"
-                    class="column-filter-text">
-                    <span>Labels</span>
-
-                    <tui-svg src="tuiIconSortDown"></tui-svg>
-                  </span>
-                </tui-hosted-dropdown>
-              </th>
-              <th *tuiHead="'note'" tuiTh [sorter]="null" class="column-note">
-                Note
-              </th>
-              <th
-                *tuiHead="'recipient'"
-                [sorter]="null"
-                class="column-note"
-                tuiTh>
-                <tui-hosted-dropdown [content]="recipientsDropdown">
-                  <span
-                    [class.text-link]="
-                      filters.controls.recipients.value.length > 0
-                    "
-                    class="column-filter-text">
-                    <span>Recipient</span>
-
-                    <tui-svg src="tuiIconSortDown"></tui-svg>
-                  </span>
-                </tui-hosted-dropdown>
-              </th>
-              <th
-                *tuiHead="'amount'"
-                tuiTh
-                [sorter]="null"
-                class="column-amount">
-                Amount
-              </th>
-              <th
-                *tuiHead="'actions'"
-                tuiTh
-                [sorter]="null"
-                class="column-actions"></th>
-            </tr>
-          </thead>
-        </table>
         <tui-scrollbar>
           <cdk-virtual-scroll-viewport
+            #viewport
             appInfiniteVirtualScroll
             (pageChange)="data.page($event)"
             [itemSize]="44"
-            class="viewport tui-zero-scrollbar"
+            [fixed]="15.5"
+            class="tui-zero-scrollbar"
             tuiScrollable>
             <table
               [columns]="[
@@ -172,38 +77,82 @@
               ]"
               class="w-full"
               tuiTable>
-              <thead>
+              <thead
+                style="position: sticky; left: 0; z-index: 30"
+                [style.top.px]="-viewport['_renderedContentOffset']">
                 <tr tuiThGroup>
                   <th
                     *tuiHead="'transactionDate'"
                     tuiTh
                     [sorter]="null"
-                    class="column-date"></th>
+                    class="column-date">
+                    Date
+                  </th>
                   <th
                     *tuiHead="'category'"
                     tuiTh
                     [sorter]="null"
-                    class="column-category"></th>
+                    class="column-category">
+                    <tui-hosted-dropdown [content]="categoriesDropdown">
+                      <span
+                        [class.text-link]="
+                          filters.controls.categories.value.length > 0
+                        "
+                        class="column-filter-text">
+                        <span>Category</span>
+
+                        <tui-svg src="tuiIconSortDown"></tui-svg>
+                      </span>
+                    </tui-hosted-dropdown>
+                  </th>
                   <th
                     *tuiHead="'labels'"
                     tuiTh
                     [sorter]="null"
-                    class="column-labels"></th>
+                    class="column-labels">
+                    <tui-hosted-dropdown [content]="labelsDropdown">
+                      <span
+                        [class.text-link]="
+                          filters.controls.labels.value.length > 0
+                        "
+                        class="column-filter-text">
+                        <span>Labels</span>
+
+                        <tui-svg src="tuiIconSortDown"></tui-svg>
+                      </span>
+                    </tui-hosted-dropdown>
+                  </th>
                   <th
                     *tuiHead="'note'"
                     tuiTh
                     [sorter]="null"
-                    class="column-note"></th>
+                    class="column-note">
+                    Note
+                  </th>
                   <th
                     *tuiHead="'recipient'"
                     [sorter]="null"
-                    class="column-recipient"
-                    tuiTh></th>
+                    class="column-note"
+                    tuiTh>
+                    <tui-hosted-dropdown [content]="recipientsDropdown">
+                      <span
+                        [class.text-link]="
+                          filters.controls.recipients.value.length > 0
+                        "
+                        class="column-filter-text">
+                        <span>Recipient</span>
+
+                        <tui-svg src="tuiIconSortDown"></tui-svg>
+                      </span>
+                    </tui-hosted-dropdown>
+                  </th>
                   <th
                     *tuiHead="'amount'"
                     tuiTh
                     [sorter]="null"
-                    class="column-amount"></th>
+                    class="column-amount">
+                    Amount
+                  </th>
                   <th
                     *tuiHead="'actions'"
                     tuiTh
@@ -299,6 +248,7 @@
                   </td>
                 </tr>
               </tbody>
+
               <tfoot *tuiLet="(data.apiLoading$ | async)! as apiLoading">
                 <tr *ngIf="apiLoading || items === null">
                   <td [colSpan]="5" class="py-4">
