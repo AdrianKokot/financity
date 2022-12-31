@@ -10,6 +10,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { RecipientApiService } from './recipient-api.service';
 import { LabelApiService } from './label-api.service';
 import { CategoryApiService } from './category-api.service';
+import { UserSettingsService } from '../../user-settings/data-access/services/user-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +19,11 @@ export class WalletApiService {
   private _getListCache: Record<string, WalletListItem[]> = {};
 
   constructor(
-    private _http: HttpClient,
-    private _recipient: RecipientApiService,
-    private _label: LabelApiService,
-    private _category: CategoryApiService
+    private readonly _http: HttpClient,
+    private readonly _recipient: RecipientApiService,
+    private readonly _label: LabelApiService,
+    private readonly _category: CategoryApiService,
+    private readonly _user: UserSettingsService
   ) {}
 
   getList(pagination: {
@@ -46,6 +48,15 @@ export class WalletApiService {
     return this._http.get<WalletListItem[]>('/api/wallets', { params }).pipe(
       tap(data => {
         this._getListCache[cacheKey] = data;
+
+        if (
+          pagination.page === 1 &&
+          !(pagination.filters && 'search' in pagination.filters)
+        ) {
+          this._user.updateSettings({
+            showSimplifiedWalletView: data.length < 15,
+          });
+        }
       })
     );
   }

@@ -8,7 +8,7 @@ export interface Wallet {
 export interface WalletListItem extends Wallet {
   currencyId: string;
   currencyName: string;
-  currentState: number;
+  currentState?: number;
 }
 
 export type CreateWalletPayload = Pick<

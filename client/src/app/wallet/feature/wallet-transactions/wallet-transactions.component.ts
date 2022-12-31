@@ -174,12 +174,12 @@ export class WalletTransactionsComponent {
       ) as (keyof typeof this.filters.form.controls)[]
     ).reduce((obj, key) => {
       if (this._activatedRoute.snapshot.queryParamMap.has(key)) {
-        const value = this._activatedRoute.snapshot.queryParamMap.get(key);
+        const value = this._activatedRoute.snapshot.queryParamMap.getAll(key);
 
         if (this.filters.form.controls[key].value instanceof Array<string>) {
-          obj[key] = [value];
+          obj[key] = value;
         } else {
-          obj[key] = value === 'null' ? null : value;
+          obj[key] = value[0] === 'null' ? null : value[0];
         }
       }
 

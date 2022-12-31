@@ -3,7 +3,6 @@ import {
   Component,
   Inject,
   Injector,
-  ViewEncapsulation,
 } from '@angular/core';
 import { map, merge, startWith, Subject, switchMap } from 'rxjs';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
@@ -16,8 +15,6 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 @Component({
   selector: 'app-wallets-list',
   templateUrl: './wallets-list.component.html',
-  styleUrls: ['./wallets-list.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletsListComponent {

@@ -13,7 +13,7 @@
     [class.tui-skeleton]="showSkeleton"
     [currency]="wallet.currencyId"
     [colored]="true"
-    [value]="wallet.currentState">
+    [value]="wallet.currentState ?? 0">
   </tui-money>
 </a>
 

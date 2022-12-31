@@ -274,3 +274,23 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
     background-color: var(--tui-base-02);
   }
 }
+
+.wallets-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: 74px;
+
+  app-wallet-list-item:first-of-type {
+    border-style: dashed !important;
+
+    &:hover {
+      border-color: var(--tui-base-05) !important;
+    }
+
+    &:not(:hover) {
+      border-color: var(--tui-base-04) !important;
+      color: var(--tui-text-03);
+    }
+  }
+}
+

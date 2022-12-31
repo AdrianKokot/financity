@@ -14,6 +14,10 @@ export class UserSettingsService {
     return this._settings$.asObservable();
   }
 
+  get settingsSnapshot() {
+    return this._settings$.value;
+  }
+
   updateSettings(value: Partial<UserSettings>) {
     this._settings$.next({ ...this._settings$.value, ...value });
     this._saveSettingsToStorage();
@@ -26,7 +30,7 @@ export class UserSettingsService {
       return JSON.parse(dataFromMemory);
     }
 
-    return { isDarkModeEnabled: false };
+    return { isDarkModeEnabled: false, showSimplifiedWalletView: true };
   }
 
   private _saveSettingsToStorage(): void {
