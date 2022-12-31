@@ -30,7 +30,11 @@ export class UserSettingsService {
       return JSON.parse(dataFromMemory);
     }
 
-    return { isDarkModeEnabled: false, showSimplifiedWalletView: true };
+    return {
+      isDarkModeEnabled: false,
+      showSimplifiedWalletView: true,
+      showSimplifiedBudgetView: true,
+    };
   }
 
   private _saveSettingsToStorage(): void {

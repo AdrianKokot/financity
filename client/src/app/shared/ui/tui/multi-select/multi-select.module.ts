@@ -24,6 +24,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { EventPluginsModule } from '@tinkoff/ng-event-plugins';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
+import { NgDompurifyModule } from '@tinkoff/ng-dompurify';
 
 @NgModule({
   declarations: [MultiSelectComponent],
@@ -47,6 +48,7 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     InfiniteVirtualScrollModule,
     TuiLoaderModule,
     TuiButtonModule,
+    NgDompurifyModule,
   ],
   exports: [MultiSelectComponent],
 })

@@ -65,8 +65,8 @@ export class FiltersForm<
   );
 
   constructor(
-    public form: FormGroup<TControl>,
-    private _config: {
+    public readonly form: FormGroup<TControl>,
+    private readonly _config: {
       [K in TKey]?: string;
     } = {}
   ) {}

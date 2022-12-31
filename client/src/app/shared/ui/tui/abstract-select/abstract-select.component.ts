@@ -116,7 +116,7 @@ export abstract class AbstractSelectComponent<
     )
   ).pipe(distinctUntilChanged());
 
-  private readonly _allItems$ = this._api$.pipe(
+  protected readonly allItems$ = this._api$.pipe(
     filter((x): x is T[] => x !== null),
     scan(
       (acc: T[], val: T[]) => [
@@ -127,7 +127,7 @@ export abstract class AbstractSelectComponent<
     shareReplay(1)
   );
 
-  stringify$ = this._allItems$.pipe(
+  stringify$ = this.allItems$.pipe(
     filter((x): x is T[] => x !== null),
     map(
       items =>

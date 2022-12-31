@@ -16,20 +16,16 @@ export class CategoryApiService {
 
   private _getListCache: Record<string, CategoryListItem[]> = {};
 
-  getList(
-    walletId: Wallet['id'],
-    pagination: {
-      page: number;
-      pageSize: number;
-      filters?: Record<string, string | string[]>;
-    }
-  ) {
+  getAllList(pagination: {
+    page: number;
+    pageSize: number;
+    filters?: Record<string, string | string[]>;
+  }) {
     const params = new HttpParams().appendAll({
       page: pagination.page,
       pageSize: pagination.pageSize,
       orderBy: 'name',
       direction: 'asc',
-      walletId_eq: walletId,
       ...pagination.filters,
     });
 
@@ -46,6 +42,20 @@ export class CategoryApiService {
           this._getListCache[cacheKey] = data;
         })
       );
+  }
+
+  getList(
+    walletId: Wallet['id'],
+    pagination: {
+      page: number;
+      pageSize: number;
+      filters?: Record<string, string | string[]>;
+    }
+  ) {
+    return this.getAllList({
+      ...pagination,
+      filters: { ...pagination.filters, walletId_eq: walletId },
+    });
   }
 
   get(walletId: Category['id']) {

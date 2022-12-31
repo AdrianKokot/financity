@@ -8,6 +8,7 @@ export interface Category {
   walletId: Wallet['id'];
   appearance: Appearance;
   transactionType: TransactionType;
+  walletName?: string;
 }
 
 export type CategoryListItem = Category;

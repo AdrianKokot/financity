@@ -1,0 +1,12 @@
+.w-rest {
+  --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - (350px + 128px + 2px));
+  max-width: max(var(--rest), 250px);
+  width: max(var(--rest), 250px);
+  min-width: max(var(--rest), 250px);
+}
+
+.w-350px {
+  min-width: 350px;
+  max-width: 350px;
+  width: 350px;
+}
