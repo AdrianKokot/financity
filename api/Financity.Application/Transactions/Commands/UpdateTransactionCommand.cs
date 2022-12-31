@@ -22,10 +22,7 @@ public sealed class UpdateTransactionCommand : ICommand<Unit>
     public static void CreateMap(Profile profile)
     {
         profile.CreateMap<CreateTransactionCommand, Transaction>()
-               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate())
-               .ForMember(x => x.TransactionDate,
-                   x => x.MapFrom(y => DateOnly.FromDateTime(y.TransactionDate.ToUniversalTime()))
-               );
+               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate());
     }
 }
 

@@ -29,5 +29,7 @@ public sealed class GetLabelsQueryHandler : FilteredUserWalletEntitiesQueryHandl
     }
 }
 
+public sealed record LabelAppearance(string Color) : IMapFrom<Appearance>;
+
 public sealed record LabelListItem
-    (Guid Id, string Name, Guid WalletId, Appearance Appearance) : IMapFrom<Label>;
+    (Guid Id, string Name, Guid WalletId, LabelAppearance Appearance) : IMapFrom<Label>;

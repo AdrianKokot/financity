@@ -6,19 +6,7 @@ namespace Financity.Application.Transactions.Queries;
 public sealed record GetExchangeRateQuery(string To = "USD",
                                           string From = "USD") : IQuery<ExchangeRate>
 {
-    private DateTime _date = AppDateTime.Now;
-
-    public DateTime Date
-    {
-        get => _date;
-        set
-        {
-            value = value.ToUniversalTime();
-
-            if (AppDateTime.Now >= value && value >= AppDateTime.Now.AddYears(-10).ToUniversalTime())
-                _date = value.ToUniversalTime();
-        }
-    }
+    public DateTime Date { get; set; } = AppDateTime.Now;
 }
 
 public sealed class GetExchangeRateQueryHandler : IQueryHandler<GetExchangeRateQuery, ExchangeRate>

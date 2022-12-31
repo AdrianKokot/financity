@@ -16,4 +16,4 @@ public sealed class
     }
 }
 
-public sealed record RecipientDetails(Guid Id, string Name, Guid WalletId, string WalletName) : IMapFrom<Recipient>;
+public sealed record RecipientDetails(Guid Id, string Name, Guid WalletId) : IMapFrom<Recipient>;
