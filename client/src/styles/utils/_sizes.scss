@@ -7,10 +7,10 @@ $sizes: (xs, s, m, l);
 }
 
 .h-full {
-  height: 100%;
+  height: 100% !important;
 }
 
-@each $w in (128, 100, 200, 250) {
+@each $w in (56, 128, 100, 200, 250) {
   .w-#{$w}px {
     min-width: #{$w}px;
     max-width: #{$w}px;

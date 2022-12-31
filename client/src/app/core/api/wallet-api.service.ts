@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { GenericApiService } from './generic-api.service';
 import {
   CreateWalletPayload,
   Wallet,
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
 import { User } from '../../auth/data-access/models/user';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { RecipientApiService } from './recipient-api.service';
 import { LabelApiService } from './label-api.service';
@@ -15,37 +14,65 @@ import { CategoryApiService } from './category-api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class WalletApiService extends GenericApiService {
-  getList = this.cachedRequest(this.http.get<WalletListItem[]>('/api/wallets'));
+export class WalletApiService {
+  private _getListCache: Record<string, WalletListItem[]> = {};
 
   constructor(
-    http: HttpClient,
+    private _http: HttpClient,
     private _recipient: RecipientApiService,
     private _label: LabelApiService,
     private _category: CategoryApiService
-  ) {
-    super(http);
+  ) {}
+
+  getList(pagination: {
+    page: number;
+    pageSize: number;
+    filters?: Record<string, string | string[]>;
+  }) {
+    const params = new HttpParams().appendAll({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      orderBy: 'name',
+      direction: 'asc',
+      ...pagination.filters,
+    });
+
+    const cacheKey = params.toString();
+
+    if (cacheKey in this._getListCache) {
+      return of(this._getListCache[cacheKey]);
+    }
+
+    return this._http.get<WalletListItem[]>('/api/wallets', { params }).pipe(
+      tap(data => {
+        this._getListCache[cacheKey] = data;
+      })
+    );
   }
 
   get(walletId: Wallet['id']) {
-    return this.http.get<Wallet>(`/api/wallets/${walletId}`);
+    return this._http.get<Wallet>(`/api/wallets/${walletId}`);
   }
 
   create(payload: CreateWalletPayload) {
-    return this.http
-      .post<{ id: Wallet['id'] }>('/api/wallets', payload)
-      .pipe(map(({ id }) => ({ ...payload, id })));
+    return this._http.post<{ id: Wallet['id'] }>('/api/wallets', payload).pipe(
+      map(({ id }) => ({ ...payload, id })),
+      tap(() => (this._getListCache = {}))
+    );
   }
 
   update(payload: Pick<Wallet, 'id' | 'startingAmount' | 'name'>) {
-    return this.http.put(`/api/wallets/${payload.id}`, payload);
+    return this._http.put(`/api/wallets/${payload.id}`, payload).pipe(
+      tap(() => (this._getListCache = {})),
+      tap(() => (this._getListCache = {}))
+    );
   }
 
   share(payload: {
     walletId: Wallet['id'];
     userEmail: User['email'];
   }): Observable<boolean> {
-    return this.http
+    return this._http
       .post(`/api/wallets/${payload.walletId}/share`, payload, {
         observe: 'response',
       })
@@ -56,7 +83,7 @@ export class WalletApiService extends GenericApiService {
     walletId: Wallet['id'];
     userEmail: User['email'];
   }): Observable<boolean> {
-    return this.http
+    return this._http
       .put(`/api/wallets/${payload.walletId}/share`, payload, {
         observe: 'response',
       })
@@ -79,7 +106,7 @@ export class WalletApiService extends GenericApiService {
       ...pagination.filters,
     });
 
-    return this.http.get<User[]>(`/api/wallets/${walletId}/share`, { params });
+    return this._http.get<User[]>(`/api/wallets/${walletId}/share`, { params });
   }
 
   getConcreteWalletApi(walletId: Wallet['id']) {

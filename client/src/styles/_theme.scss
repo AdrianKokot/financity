@@ -194,7 +194,7 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   }
 
   tr th {
-    background: var(--tui-base-02);
+    background: var(--tui-base-03);
   }
 
   tbody {
@@ -261,4 +261,16 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   position: sticky;
   left: 0;
   z-index: 30
+}
+
+.clickable-tr {
+  cursor: pointer;
+
+  td {
+    transition: background-color var(--tui-duration, 300ms);
+  }
+
+  &:hover td {
+    background-color: var(--tui-base-02);
+  }
 }

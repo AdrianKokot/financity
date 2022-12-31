@@ -1,8 +1,6 @@
-:host {
-  .w-rest {
-    --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - (128px + 2px));
-    max-width: max(var(--rest), 250px);
-    width: max(var(--rest), 250px);
-    min-width: max(var(--rest), 250px);
-  }
+.w-rest {
+  --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - (128px + 2px));
+  max-width: max(var(--rest), 250px);
+  width: max(var(--rest), 250px);
+  min-width: max(var(--rest), 250px);
 }

@@ -3,40 +3,31 @@ import {
   Component,
   Inject,
   Injector,
+  ViewEncapsulation,
 } from '@angular/core';
-import { merge, Subject, switchMap, tap } from 'rxjs';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { CreateWalletComponent } from '../create-wallet/create-wallet.component';
-import { TuiDialogService } from '@taiga-ui/core';
+import { map, merge, startWith, Subject, switchMap } from 'rxjs';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
-import { Wallet } from '@shared/data-access/models/wallet.model';
-import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
+import { CreateWalletComponent } from '../create-wallet/create-wallet.component';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { TuiDialogService } from '@taiga-ui/core';
+import { Wallet } from '@shared/data-access/models/wallet.model';
 
 @Component({
-  selector: 'app-wallets-shell',
-  templateUrl: './wallets-shell.component.html',
-  styleUrls: ['./wallets-shell.component.scss'],
+  selector: 'app-wallets-list',
+  templateUrl: './wallets-list.component.html',
+  styleUrls: ['./wallets-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WalletsShellComponent {
+export class WalletsListComponent {
   readonly ui = {
-    columns: ['name', 'amount', 'actions'] as const,
     actions: {
       create$: new Subject<void>(),
     },
   };
 
-  readonly filters = this._fb.filters({
-    search: [''],
-  });
-
-  readonly data = new ApiDataHandler(
-    this._walletService.getList.bind(this._walletService),
-    this.filters
-  );
-
-  readonly dialogs$ = merge(
+  private readonly _dialogs$ = merge(
     this.ui.actions.create$.pipe(
       switchMap(() =>
         this._dialog.open(new PolymorpheusComponent(CreateWalletComponent), {
@@ -44,7 +35,19 @@ export class WalletsShellComponent {
         })
       )
     )
-  ).pipe(tap(() => this.data.resetPage()));
+  ).pipe(map(() => null));
+
+  readonly items$ = this._dialogs$.pipe(
+    startWith(null),
+    switchMap(() =>
+      this._walletService
+        .getList({
+          page: 1,
+          pageSize: 20,
+        })
+        .pipe(startWith(null))
+    )
+  );
 
   constructor(
     private readonly _fb: FormWithHandlerBuilder,

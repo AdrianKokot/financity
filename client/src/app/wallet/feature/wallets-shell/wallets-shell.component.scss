@@ -1,21 +1,12 @@
-app-wallets-shell .wallets-container {
-  display: grid;
-  //grid-auto-columns: 200px;
-  //grid-auto-flow: column;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-template-rows: 74px;
-
-  app-wallet-list-item:first-of-type {
-    border-style: dashed !important;
-
-    &:hover {
-      border-color: var(--tui-base-05) !important;
-    }
-
-    &:not(:hover) {
-      border-color: var(--tui-base-04) !important;
-      color: var(--tui-text-03);
-    }
-  }
+.tui-text_h4 {
+  height: 56px;
+  line-height: 56px;
+  border-bottom: 1px solid var(--tui-base-02);
 }
 
+.w-rest {
+  --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - (250px + 56px + 2px));
+  max-width: max(var(--rest), 250px);
+  width: max(var(--rest), 250px);
+  min-width: max(var(--rest), 250px);
+}
