@@ -60,7 +60,7 @@ public sealed class CreateTransactionCommandHandler :
 
         DbContext.GetDbSet<Transaction>().Add(entity);
 
-        await DbContext.SaveChangesAsync(cancellationToken);
+        await SaveChanges(cancellationToken);
 
         return Mapper.Map<CreateTransactionCommandResult>(entity);
     }

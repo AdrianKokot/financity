@@ -44,7 +44,7 @@ public sealed class CreateBudgetCommandHandler :
 
         DbContext.GetDbSet<Budget>().Add(entity);
 
-        await DbContext.SaveChangesAsync(cancellationToken);
+        await SaveChanges(cancellationToken);
 
         return Mapper.Map<CreateBudgetCommandResult>(entity);
     }

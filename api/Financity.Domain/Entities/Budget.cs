@@ -16,7 +16,7 @@ public sealed class Budget : Entity, IBelongsToUser
     /// <summary>
     ///     The sum of transactions in current period (this month) for tracked categories
     /// </summary>
-    public decimal CurrentPeriodExpenses => 0;
+    public decimal CurrentPeriodExpenses => 50000;
 
     public ICollection<Category> TrackedCategories { get; set; } = new List<Category>();
 

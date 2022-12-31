@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Categories.Queries;
@@ -30,8 +31,18 @@ public sealed class GetBudgetQueryHandler : UserEntityQueryHandler<GetBudgetQuer
                   ),
             cancellationToken);
     }
+
+    protected override IQueryable<BudgetDetails> Project(IQueryable<Budget> q, GetBudgetQuery query)
+    {
+        return q.ProjectTo<BudgetDetails>(Mapper.ConfigurationProvider);
+    }
+}
+
+public sealed class CategoryListItemWithWalletName : CategoryListItem, IMapFrom<Category>
+{
+    public new static bool MapWalletName => true;
 }
 
 public sealed record BudgetDetails(Guid Id, string Name, decimal Amount, Guid UserId,
-                                   IEnumerable<CategoryListItem> TrackedCategories, string CurrencyId,
+                                   IEnumerable<CategoryListItemWithWalletName> TrackedCategories, string CurrencyId,
                                    string CurrencyName, decimal CurrentPeriodExpenses) : IMapFrom<Budget>;
