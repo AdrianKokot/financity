@@ -42,6 +42,11 @@ public abstract class
         return await expression.Invoke(Set.AsNoTracking()).ToListAsync(cancellationToken);
     }
 
+    protected virtual IQueryable<TMappedEntity> Project(IQueryable<TEntity> q, TQuery query)
+    {
+        return q.ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider);
+    }
+
     protected virtual Task<IEnumerable<TMappedEntity>> FilterAndMapAsync(TQuery query,
                                                                          CancellationToken cancellationToken = default)
     {
@@ -59,9 +64,8 @@ public abstract class
             expr = q => ExecuteSearch(expression.Invoke(q), query.QuerySpecification.Search);
 
         return AccessAsync(q =>
-            expr.Invoke(q)
-                .ApplyQuerySpecification(query.QuerySpecification)
-                .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider), cancellationToken);
+            Project(expr.Invoke(q)
+                        .ApplyQuerySpecification(query.QuerySpecification), query), cancellationToken);
     }
 }
 

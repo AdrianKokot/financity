@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
@@ -28,6 +29,12 @@ public sealed class GetWalletsQueryHandler : FilteredEntitiesQueryHandler<GetWal
             q => q.Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id)).Include(x => x.Transactions),
             cancellationToken
         );
+    }
+
+    protected override IQueryable<Wallet> ExecuteSearch(IQueryable<Wallet> query, string search)
+    {
+        search = search.ToLower(CultureInfo.InvariantCulture);
+        return query.Where(x => x.Name.ToLower().Contains(search));
     }
 }
 
