@@ -1,4 +1,4 @@
-import { Label, LabelListItem } from '@shared/data-access/models/label';
+import { Label } from '@shared/data-access/models/label';
 import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { Category } from '@shared/data-access/models/category.model';
@@ -18,16 +18,16 @@ export interface Transaction {
 }
 
 export interface TransactionDetails extends Transaction {
+  wallet: Wallet;
   labels: Label[];
   category: Category | null;
   recipient: Recipient | null;
 }
 
 export interface TransactionListItem extends Transaction {
-  currencyName: string;
-  labels: LabelListItem[];
-  category: Category | null;
-  recipientName: string | null;
+  recipient: Pick<Recipient, 'id' | 'name'> | null;
+  category: Pick<Category, 'id' | 'name' | 'appearance'> | null;
+  labels: Pick<Label, 'id' | 'name' | 'appearance'>[];
 }
 
 export interface CreateTransactionPayload
