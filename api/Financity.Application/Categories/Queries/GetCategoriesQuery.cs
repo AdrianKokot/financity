@@ -15,6 +15,8 @@ public sealed class GetCategoriesQuery : FilteredEntitiesQuery<CategoryListItem>
     public GetCategoriesQuery(QuerySpecification<CategoryListItem> querySpecification) : base(querySpecification)
     {
     }
+
+    public string? WalletCurrencyId { get; set; }
 }
 
 public sealed class
@@ -22,6 +24,24 @@ public sealed class
 {
     public GetCategoriesQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
+    }
+
+    private static IQueryable<Category> ApplyAdditionalFilters(IQueryable<Category> q, GetCategoriesQuery query)
+    {
+        if (!string.IsNullOrEmpty(query.WalletCurrencyId))
+            q = q.Where(x => x.Wallet.CurrencyId.Equals(query.WalletCurrencyId));
+
+        return q;
+    }
+
+    public override Task<IEnumerable<CategoryListItem>> Handle(GetCategoriesQuery query,
+                                                               CancellationToken cancellationToken)
+    {
+        return FilterAndMapAsync(
+            query,
+            q => ApplyAdditionalFilters(q, query),
+            cancellationToken
+        );
     }
 
     protected override IQueryable<Category> ExecuteSearch(IQueryable<Category> query, string search)

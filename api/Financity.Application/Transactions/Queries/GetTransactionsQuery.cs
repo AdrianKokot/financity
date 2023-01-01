@@ -19,6 +19,7 @@ public sealed class GetTransactionsQuery : FilteredEntitiesQuery<TransactionList
     public HashSet<Guid> LabelIds { get; set; } = new();
     public HashSet<Guid> CategoryIds { get; set; } = new();
     public HashSet<Guid> RecipientIds { get; set; } = new();
+    public string? WalletCurrencyId { get; set; }
 }
 
 public sealed class
@@ -29,13 +30,16 @@ public sealed class
     {
     }
 
-    private static IQueryable<Transaction> ApplyIdsFilters(IQueryable<Transaction> q, GetTransactionsQuery query)
+    private static IQueryable<Transaction> ApplyAdditionalFilters(IQueryable<Transaction> q, GetTransactionsQuery query)
     {
         if (query.LabelIds.Count > 0) q = q.Where(x => x.Labels.Any(l => query.LabelIds.Contains(l.Id)));
 
         if (query.CategoryIds.Count > 0) q = q.Where(x => query.CategoryIds.Contains(x.CategoryId ?? Guid.Empty));
 
         if (query.RecipientIds.Count > 0) q = q.Where(x => query.RecipientIds.Contains(x.RecipientId ?? Guid.Empty));
+
+        if (!string.IsNullOrEmpty(query.WalletCurrencyId))
+            q = q.Where(x => x.Wallet.CurrencyId.Equals(query.WalletCurrencyId));
 
         return q;
     }
@@ -45,7 +49,7 @@ public sealed class
     {
         return FilterAndMapAsync(
             query,
-            q => ApplyIdsFilters(q, query),
+            q => ApplyAdditionalFilters(q, query),
             cancellationToken
         );
     }
