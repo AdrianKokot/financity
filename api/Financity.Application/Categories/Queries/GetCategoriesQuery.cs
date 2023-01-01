@@ -54,7 +54,7 @@ public sealed class
 
     protected override IQueryable<CategoryListItem> Project(IQueryable<Category> q, GetCategoriesQuery query)
     {
-        var shouldAddWalletName = !query.QuerySpecification.Filters.Any(x => x.Key.Equals(nameof(Category.WalletId)));
+        var shouldAddWalletName = query.QuerySpecification.Filters.All(x => !x.Key.Equals(nameof(Category.WalletId)));
 
         return shouldAddWalletName
             ? q.ProjectTo<CategoryListItem>(Mapper.ConfigurationProvider, x => x.WalletName)

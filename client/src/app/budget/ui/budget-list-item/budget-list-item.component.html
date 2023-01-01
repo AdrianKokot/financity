@@ -1,32 +1,32 @@
-<a
-  *ngIf="budget !== null; else ngContent"
-  href="/budgets/{{ budget.id }}"
-  routerLink="/budgets/{{ budget.id }}"
-  class="h-full w-full d-block px-4 py-3"
-  [title]="budget.name">
-  <div
-    class="tui-text_body-m text-clamp-1 mb-1"
-    [class.tui-skeleton]="showSkeleton">
-    {{ budget.name }}
+<tui-hosted-dropdown
+  [content]="dropdown"
+  tuiDropdownAlign="right"
+  *ngIf="budget !== null">
+  <div class="h-full w-full d-block px-4 py-3" [title]="budget.name">
+    <div
+      class="tui-text_body-m text-clamp-1 mb-1"
+      [class.tui-skeleton]="showSkeleton">
+      {{ budget.name }}
+    </div>
+    <div
+      *tuiLet="budget.currentPeriodExpenses > budget.amount as exceeded"
+      class="text-ellipsis d-flex align-items-center"
+      [class.text-negative]="exceeded">
+      <tui-svg src="tuiIconCancel" *ngIf="exceeded"></tui-svg>
+      <tui-money
+        [currency]="null"
+        [colored]="false"
+        [value]="budget.currentPeriodExpenses">
+      </tui-money>
+      <span class="mx-1">/</span>
+      <tui-money
+        [currency]="budget.currencyId"
+        [colored]="false"
+        [value]="budget.amount">
+      </tui-money>
+    </div>
   </div>
-  <div
-    *tuiLet="budget.currentPeriodExpenses > budget.amount as exceeded"
-    class="text-ellipsis d-flex align-items-center"
-    [class.text-negative]="exceeded">
-    <tui-svg src="tuiIconCancel" *ngIf="exceeded"></tui-svg>
-    <tui-money
-      [currency]="null"
-      [colored]="false"
-      [value]="budget.currentPeriodExpenses ?? 0">
-    </tui-money>
-    <span class="mx-1">/</span>
-    <tui-money
-      [currency]="budget.currencyId"
-      [colored]="false"
-      [value]="budget.amount ?? 0">
-    </tui-money>
-  </div>
-</a>
+</tui-hosted-dropdown>
 
 <ng-container *ngIf="showSkeleton">
   <div class="h-full w-full d-block px-4 py-3">
@@ -34,7 +34,37 @@
     <span class="tui-text_body-s tui-skeleton">Skeleton text</span>
   </div>
 </ng-container>
-
-<ng-template #ngContent>
+<ng-container *ngIf="budget === null">
   <ng-content></ng-content>
+</ng-container>
+<ng-template #dropdown>
+  <tui-data-list size="s">
+    <a
+      href="/budgets/{{ budget?.id }}"
+      routerLink="/budgets/{{ budget?.id }}"
+      tuiOption
+      class="text-link">
+      <tui-svg src="fa::info"></tui-svg>
+      <span class="ml-1"> View details </span>
+    </a>
+
+    <button tuiOption (click)="edit.next(undefined)" class="text-link">
+      <tui-svg src="fa::pen"></tui-svg>
+      <span class="ml-1"> Edit </span>
+    </button>
+
+    <button tuiOption (click)="confirmationDiv.click()" class="text-negative">
+      <tui-svg src="tuiIconTrash"></tui-svg>
+      <span class="ml-1"> Delete </span>
+    </button>
+  </tui-data-list>
 </ng-template>
+
+<div
+  #confirmationDiv
+  appRequireConfirmation
+  (confirm)="delete.next(undefined)"
+  confirmationMessage="Are you sure you want to delete budget '<strong>{{
+    budget?.name
+  }}</strong>'? This action is irreversible."
+  class="hidden"></div>

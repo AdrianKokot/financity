@@ -170,7 +170,7 @@
     </ng-template>
 
     <main *ngIf="ui.showSimplifiedView$ | async; else tableView">
-      <div class="wallets-container gap-3">
+      <div class="simplified-grid-container gap-3">
         <app-budget-list-item (click)="ui.actions.create$.next(undefined)">
           <div
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
@@ -186,8 +186,10 @@
         </ng-template>
 
         <app-budget-list-item
-          *ngFor="let wallet of items; else: loading; trackBy: trackById"
-          [budget]="wallet"></app-budget-list-item>
+          *ngFor="let item of items; else: loading; trackBy: trackById"
+          (edit)="ui.actions.edit$.next(item.id)"
+          (delete)="ui.actions.delete$.next(item.id)"
+          [budget]="item"></app-budget-list-item>
       </div>
     </main>
   </section>

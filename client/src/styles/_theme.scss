@@ -275,12 +275,12 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   }
 }
 
-.wallets-container {
+.simplified-grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-template-rows: 74px;
 
-  app-wallet-list-item:first-of-type {
+  app-wallet-list-item:first-of-type, app-budget-list-item:first-of-type {
     border-style: dashed !important;
 
     &:hover {

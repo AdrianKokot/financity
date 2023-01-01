@@ -7,6 +7,7 @@ import { TuiAutoFocusModule, TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import {
   TuiBadgeModule,
   TuiBreadcrumbsModule,
+  TuiDataListDropdownManagerModule,
   TuiFieldErrorPipeModule,
   TuiInputModule,
   TuiInputNumberModule,
@@ -15,8 +16,10 @@ import {
 } from '@taiga-ui/kit';
 import {
   TuiButtonModule,
+  TuiDataListModule,
   TuiErrorModule,
   TuiGroupModule,
+  TuiHostedDropdownModule,
   TuiLabelModule,
   TuiLinkModule,
   TuiLoaderModule,
@@ -79,6 +82,9 @@ import { BudgetListItemComponent } from './ui/budget-list-item/budget-list-item.
     TuiItemsWithMoreModule,
     TuiMarkerIconModule,
     TuiForModule,
+    TuiHostedDropdownModule,
+    TuiDataListModule,
+    TuiDataListDropdownManagerModule,
   ],
 })
 export class BudgetModule {}
