@@ -1,4 +1,8 @@
-<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+<form
+  [formGroup]="form.group"
+  (ngSubmit)="form.submit()"
+  class="tui-form"
+  *tuiLet="formEffects$ | async">
   <label tuiLabel="Name" class="tui-form__row">
     <tui-input
       formControlName="name"
@@ -48,14 +52,20 @@
     </label>
   </div>
 
-  <label tuiLabel="Tracked categories" class="tui-form__row">
+  <label
+    tuiLabel="Tracked categories"
+    class="tui-form__row"
+    *ngIf="form.controls.currencyId.value">
     <app-multi-select
       [control]="form.controls.trackedCategoriesId"
       [getListFunction]="dataApis.getCategories"
       class="mt-1"
       [stringify]="dataApis.getCategoryName"
       [tagStringify]="dataApis.getCategoryTag"
-      [externalFilters]="{ transactionType_eq: 'Expense' }"
+      [externalFilters]="{
+        transactionType_eq: 'Expense',
+        currencyId_eq: form.controls.currencyId.value
+      }"
       label="Choose categories to track">
     </app-multi-select>
 

@@ -45,7 +45,10 @@
       [preloadedResults]="preloadedData.categories"
       [stringify]="dataApis.getCategoryName"
       [tagStringify]="dataApis.getCategoryTag"
-      [externalFilters]="{ transactionType_eq: 'Expense' }"
+      [externalFilters]="{
+        transactionType_eq: 'Expense',
+        currencyId_eq: form.controls.currencyId.value
+      }"
       label="Choose categories to track">
     </app-multi-select>
 

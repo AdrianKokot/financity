@@ -14,40 +14,54 @@ const createTransactionDateFilterGroups = () => {
 
   const startOfYear = startOfMonth.append({ month: -startOfMonth.month });
 
-  return [
-    new TuiDayRangePeriod(new TuiDayRange(today, today), 'Today'),
-    new TuiDayRangePeriod(new TuiDayRange(startOfWeek, endOfWeek), 'This week'),
-    new TuiDayRangePeriod(
+  return {
+    today: new TuiDayRangePeriod(new TuiDayRange(today, today), 'Today'),
+
+    'this week': new TuiDayRangePeriod(
+      new TuiDayRange(startOfWeek, endOfWeek),
+      'This week'
+    ),
+
+    'last week': new TuiDayRangePeriod(
       new TuiDayRange(
         startOfWeek.append({ day: -7 }),
         endOfWeek.append({ day: -7 })
       ),
       'Last week'
     ),
-    new TuiDayRangePeriod(
+
+    'this month': new TuiDayRangePeriod(
       new TuiDayRange(startOfMonth, endOfMonth),
       'This month'
     ),
-    new TuiDayRangePeriod(
+
+    'last month': new TuiDayRangePeriod(
       new TuiDayRange(startOfLastMonth, startOfMonth.append({ day: -1 })),
       'Last month'
     ),
-    new TuiDayRangePeriod(
+
+    'last 30 days': new TuiDayRangePeriod(
       new TuiDayRange(today.append({ day: -30 }), today),
       'Last 30 days'
     ),
-    new TuiDayRangePeriod(
+
+    'this year': new TuiDayRangePeriod(
       new TuiDayRange(startOfYear, startOfYear.append({ month: 12, day: -1 })),
       'This year'
     ),
-    new TuiDayRangePeriod(
+
+    'last year': new TuiDayRangePeriod(
       new TuiDayRange(
         startOfYear.append({ year: -1 }),
         startOfYear.append({ day: -1 })
       ),
       'Last year'
     ),
-  ];
+  };
 };
 
-export const DATE_RANGE_FILTER_GROUPS = createTransactionDateFilterGroups();
+export const DATE_RANGE_FILTER_GROUPS_MAP = createTransactionDateFilterGroups();
+
+export const DATE_RANGE_FILTER_GROUPS = Object.values(
+  DATE_RANGE_FILTER_GROUPS_MAP
+);

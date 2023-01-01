@@ -6,15 +6,19 @@ import { CreateBudgetComponent } from './feature/create-budget/create-budget.com
 import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
 import {
   TuiBadgeModule,
+  TuiBreadcrumbsModule,
   TuiFieldErrorPipeModule,
   TuiInputModule,
   TuiInputNumberModule,
+  TuiItemsWithMoreModule,
+  TuiMarkerIconModule,
 } from '@taiga-ui/kit';
 import {
   TuiButtonModule,
   TuiErrorModule,
   TuiGroupModule,
   TuiLabelModule,
+  TuiLinkModule,
   TuiLoaderModule,
   TuiScrollbarModule,
   TuiSvgModule,
@@ -32,12 +36,14 @@ import { SelectModule } from '@shared/ui/tui/select/select.module';
 import { MultiSelectModule } from '@shared/ui/tui/multi-select/multi-select.module';
 import { RequireConfirmationDirective } from '@shared/utils/directives/require-confirmation.directive';
 import { UpdateBudgetComponent } from './feature/update-budget/update-budget.component';
+import { BudgetShellComponent } from './feature/budget-shell/budget-shell.component';
 
 @NgModule({
   declarations: [
     BudgetsShellComponent,
     CreateBudgetComponent,
     UpdateBudgetComponent,
+    BudgetShellComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +72,10 @@ import { UpdateBudgetComponent } from './feature/update-budget/update-budget.com
     MultiSelectModule,
     RequireConfirmationDirective,
     TuiSvgModule,
+    TuiBreadcrumbsModule,
+    TuiLinkModule,
+    TuiItemsWithMoreModule,
+    TuiMarkerIconModule,
   ],
 })
 export class BudgetModule {}

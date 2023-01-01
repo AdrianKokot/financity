@@ -12,6 +12,7 @@ import {
 import { CategoryApiService } from '../../../core/api/category-api.service';
 import { BudgetApiService } from '../../../core/api/budget-api.service';
 import { Budget } from '@shared/data-access/models/budget.model';
+import { distinctUntilChanged, tap } from 'rxjs';
 
 @Component({
   selector: 'app-create-budget',
@@ -30,6 +31,11 @@ export class CreateBudgetComponent {
       submit: payload => this._dataService.create(payload),
       effect: item => this._context.completeWith(item),
     }
+  );
+
+  readonly formEffects$ = this.form.controls.currencyId.valueChanges.pipe(
+    distinctUntilChanged(),
+    tap(() => this.form.controls.trackedCategoriesId.reset())
   );
 
   readonly dataApis = {
