@@ -41,6 +41,7 @@
 
   <label tuiLabel="Category" class="tui-form__row">
     <app-select
+      *ngIf="this.form.controls.transactionType.value"
       [control]="form.controls.categoryId"
       [preloadedResults]="preloadedData.categories"
       [getListFunction]="dataApis.getCategories"

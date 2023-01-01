@@ -25,10 +25,7 @@ public sealed class CreateTransactionCommand : ICommand<CreateTransactionCommand
     public static void CreateMap(Profile profile)
     {
         profile.CreateMap<CreateTransactionCommand, Transaction>()
-               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate())
-               .ForMember(x => x.TransactionDate,
-                   x => x.MapFrom(y => DateOnly.FromDateTime(y.TransactionDate.ToUniversalTime()))
-               );
+               .ForSourceMember(x => x.LabelIds, x => x.DoNotValidate());
     }
 }
 
@@ -63,7 +60,7 @@ public sealed class CreateTransactionCommandHandler :
 
         DbContext.GetDbSet<Transaction>().Add(entity);
 
-        await DbContext.SaveChangesAsync(cancellationToken);
+        await SaveChanges(cancellationToken);
 
         return Mapper.Map<CreateTransactionCommandResult>(entity);
     }

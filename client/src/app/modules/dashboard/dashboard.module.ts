@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { WalletListComponent } from './components/wallet/wallet-list/wallet-list.component';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
@@ -22,7 +21,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [DashboardComponent, WalletListComponent],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
@@ -40,6 +39,5 @@ import { ReactiveFormsModule } from '@angular/forms';
     TuiButtonModule,
     ReactiveFormsModule,
   ],
-  exports: [WalletListComponent],
 })
 export class DashboardModule {}

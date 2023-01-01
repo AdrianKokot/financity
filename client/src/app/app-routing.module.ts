@@ -26,6 +26,12 @@ const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
+    path: 'budgets',
+    loadChildren: () =>
+      import('./budget/budget.module').then(m => m.BudgetModule),
+    canLoad: [AuthGuard],
+  },
+  {
     path: 'settings',
     loadChildren: () =>
       import('./user-settings/user-settings.module').then(

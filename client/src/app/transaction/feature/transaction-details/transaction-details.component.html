@@ -1,6 +1,9 @@
-<div class="tui-form">
+<div
+  class="tui-form"
+  *tuiLet="wallet$ | async as wallet"
+  [attr.data-skeleton]="wallet === null">
   <label tuiLabel="Wallet" class="tui-form__row">
-    {{ wallet.name }}
+    {{ wallet?.name ?? 'Lorem ipsum dolores' }}
   </label>
 
   <label tuiLabel="Date" class="tui-form__row">
@@ -18,7 +21,7 @@
   </label>
 
   <label tuiLabel="Recipient" class="tui-form__row">
-    {{ transaction.recipientName ?? '-' }}
+    {{ transaction.recipient?.name ?? '-' }}
   </label>
 
   <label tuiLabel="Category" class="tui-form__row">

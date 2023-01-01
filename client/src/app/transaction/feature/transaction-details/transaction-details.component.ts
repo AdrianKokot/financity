@@ -6,6 +6,8 @@ import {
   TransactionListItem,
 } from '@shared/data-access/models/transaction.model';
 import { Wallet } from '@shared/data-access/models/wallet.model';
+import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { of, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-transaction-details',
@@ -13,15 +15,21 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionDetailsComponent {
-  readonly wallet = this._context.data.wallet;
   readonly transaction = this._context.data.transaction;
+  readonly wallet$ =
+    this._context.data.wallet !== undefined
+      ? of(this._context.data.wallet)
+      : this._walletService
+          .get(this.transaction.walletId)
+          .pipe(startWith(null));
 
   constructor(
+    private readonly _walletService: WalletApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
       Transaction,
       {
-        wallet: Wallet;
+        wallet?: Wallet;
         transaction: TransactionListItem;
       }
     >

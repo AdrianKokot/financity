@@ -1,0 +1,101 @@
+<form
+  [formGroup]="form.group"
+  (ngSubmit)="form.submit()"
+  class="tui-form"
+  *tuiLet="formEffects$ | async">
+  <label tuiLabel="Name" class="tui-form__row">
+    <tui-input
+      formControlName="name"
+      tuiTextfieldSize="m"
+      tuiAutoFocus
+      class="mt-1 tui-group__inherit-item"
+      [tuiTextfieldLabelOutside]="true">
+      Example budget
+      <input tuiTextfield type="text" />
+    </tui-input>
+
+    <tui-error
+      formControlName="name"
+      [error]="[] | tuiFieldError | async"></tui-error>
+  </label>
+
+  <div tuiGroup class="tui-form__row" [rounded]="true">
+    <label tuiLabel="Currency" class="max-w-10">
+      <app-select
+        [control]="form.controls.currencyId"
+        [getListFunction]="dataApis.getCurrencies"
+        [stringify]="dataApis.getCurrencyName"
+        class="mt-1 tui-group__inherit-item"
+        label="Choose a currency"></app-select>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="currencyId"></tui-error>
+    </label>
+
+    <label tuiLabel="Budget amount">
+      <tui-input-number
+        [postfix]="form.controls.currencyId.value | tuiCurrency"
+        [tuiTextfieldLabelOutside]="true"
+        class="mt-1 tui-group__inherit-item"
+        formControlName="amount"
+        tuiTextfieldSize="m"
+        [precision]="2"
+        decimal="always"
+        [min]="0.01">
+        Type an amount
+      </tui-input-number>
+
+      <tui-error
+        [error]="[] | tuiFieldError | async"
+        formControlName="amount"></tui-error>
+    </label>
+  </div>
+
+  <label
+    tuiLabel="Tracked categories"
+    class="tui-form__row"
+    *ngIf="form.controls.currencyId.value">
+    <app-multi-select
+      [control]="form.controls.trackedCategoriesId"
+      [getListFunction]="dataApis.getCategories"
+      class="mt-1"
+      [stringify]="dataApis.getCategoryName"
+      [externalFilters]="{
+        transactionType_eq: 'Expense',
+        currencyId_eq: form.controls.currencyId.value
+      }"
+      label="Choose categories to track">
+    </app-multi-select>
+
+    <tui-error
+      [error]="[] | tuiFieldError | async"
+      formControlName="trackedCategoriesId"></tui-error>
+  </label>
+
+  <div
+    class="tui-form__row tui-form__buttons tui-form__buttons_align_end"
+    *tuiLet="
+      (form.submitButtonLoading$ | async) ?? false as submitButtonLoading
+    ">
+    <button
+      tuiButton
+      appearance="outline"
+      class="tui-form__button"
+      (click)="cancel()"
+      type="button"
+      [disabled]="submitButtonLoading"
+      size="m">
+      Cancel
+    </button>
+
+    <button
+      tuiButton
+      type="submit"
+      class="tui-form__button"
+      size="m"
+      [showLoader]="submitButtonLoading">
+      Save
+    </button>
+  </div>
+</form>

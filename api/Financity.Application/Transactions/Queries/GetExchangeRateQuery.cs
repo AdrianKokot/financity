@@ -4,7 +4,10 @@ using Financity.Application.Abstractions.Messaging;
 namespace Financity.Application.Transactions.Queries;
 
 public sealed record GetExchangeRateQuery(string To = "USD",
-                                          string From = "USD") : IQuery<ExchangeRate>;
+                                          string From = "USD") : IQuery<ExchangeRate>
+{
+    public DateTime Date { get; set; } = AppDateTime.Now;
+}
 
 public sealed class GetExchangeRateQueryHandler : IQueryHandler<GetExchangeRateQuery, ExchangeRate>
 {
@@ -18,6 +21,7 @@ public sealed class GetExchangeRateQueryHandler : IQueryHandler<GetExchangeRateQ
     public async Task<ExchangeRate> Handle(GetExchangeRateQuery request, CancellationToken cancellationToken)
     {
         var rate = await _exchangeRateService.GetExchangeRate(request.From, request.To,
+            DateOnly.FromDateTime(request.Date.ToUniversalTime()),
             cancellationToken);
         return new ExchangeRate(request.From, request.To, rate);
     }

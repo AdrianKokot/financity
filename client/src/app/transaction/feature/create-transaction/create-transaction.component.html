@@ -6,7 +6,10 @@
         class="mt-1 tui-group__inherit-item"
         formControlName="transactionType"
         tuiTextfieldSize="m">
-        <tui-data-list-wrapper *tuiDataList [items]="transactionTypes" size="s">
+        <tui-data-list-wrapper
+          *tuiDataList
+          [items]="ui.transactionTypes"
+          size="s">
         </tui-data-list-wrapper>
       </tui-select>
 
@@ -17,13 +20,13 @@
 
     <label tuiLabel="Transaction date">
       <tui-input-date
-        [max]="transactionMaxDate"
+        [max]="ui.transactionDate.max"
+        [min]="ui.transactionDate.min"
         [tuiTextfieldLabelOutside]="true"
         class="mt-1 tui-group__inherit-item"
         formControlName="transactionDate"
         tuiTextfieldSize="m">
         Choose a date
-        <input tuiTextfield />
       </tui-input-date>
 
       <tui-error
@@ -36,8 +39,8 @@
     <label tuiLabel="Currency" class="max-w-10">
       <app-select
         [control]="form.controls.currencyId"
-        [getListFunction]="dataApis.getCurrencies"
-        [stringify]="dataApis.getCurrencyName"
+        [getListFunction]="ui.dataApis.getCurrencies"
+        [stringify]="ui.dataApis.getCurrencyName"
         class="mt-1 tui-group__inherit-item"
         label="Choose a currency"></app-select>
 
@@ -94,8 +97,9 @@
 
   <label tuiLabel="Category" class="tui-form__row">
     <app-select
+      *ngIf="this.form.controls.transactionType.value"
       [control]="form.controls.categoryId"
-      [getListFunction]="dataApis.getCategories"
+      [getListFunction]="ui.dataApis.getCategories"
       [externalFilters]="{
         transactionType_eq: this.form.controls.transactionType.value
       }"
@@ -110,7 +114,7 @@
   <label tuiLabel="Recipient" class="tui-form__row">
     <app-select
       [control]="form.controls.recipientId"
-      [getListFunction]="dataApis.getRecipients"
+      [getListFunction]="ui.dataApis.getRecipients"
       class="mt-1"
       label="Choose a recipient"></app-select>
 
@@ -122,7 +126,7 @@
   <label tuiLabel="Labels" class="tui-form__row">
     <app-multi-select
       [control]="form.controls.labelIds"
-      [getListFunction]="dataApis.getLabels"
+      [getListFunction]="ui.dataApis.getLabels"
       class="mt-1"
       label="Choose labels">
     </app-multi-select>

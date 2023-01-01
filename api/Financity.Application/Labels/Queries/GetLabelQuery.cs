@@ -2,7 +2,6 @@
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries.DetailsQuery;
-using Financity.Domain.Common;
 using Financity.Domain.Entities;
 
 namespace Financity.Application.Labels.Queries;
@@ -17,4 +16,4 @@ public sealed class GetLabelQueryHandler : UserWalletEntityQueryHandler<GetLabel
 }
 
 public sealed record LabelDetails
-    (Guid Id, string Name, Appearance Appearance, Guid WalletId, string WalletName) : IMapFrom<Label>;
+    (Guid Id, string Name, Guid WalletId, LabelAppearance Appearance) : IMapFrom<Label>;

@@ -1,9 +1,12 @@
-<div style="margin-top: 12px; margin-bottom: 8px">
-  <tui-breadcrumbs *ngIf="wallet$ | async as wallet">
+<div class="main-layout-header-box" *tuiLet="wallet$ | async as wallet">
+  <tui-breadcrumbs class="h-full">
     <a href="../" *tuiItem tuiLink routerLink="../"> Wallets </a>
-
-    <a *tuiItem tuiLink class="text-link">
-      {{ wallet.name }}
+    <a
+      *tuiItem
+      tuiLink
+      class="text-link"
+      [class.tui-skeleton]="wallet === null">
+      {{ wallet?.name ?? 'Lorem ipsum dolores' }}
     </a>
   </tui-breadcrumbs>
 </div>

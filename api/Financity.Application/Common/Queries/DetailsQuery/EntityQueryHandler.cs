@@ -29,6 +29,11 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
         return await FilterAndMapAsync(query, q => q, cancellationToken);
     }
 
+    protected virtual IQueryable<TMappedEntity> Project(IQueryable<TEntity> q, TQuery query)
+    {
+        return q.ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider);
+    }
+
     protected virtual async Task<TMappedEntity?> AccessAsync(
         Func<IQueryable<TEntity>, IQueryable<TMappedEntity>> expression, CancellationToken cancellationToken = default)
     {
@@ -41,8 +46,7 @@ public abstract class EntityQueryHandler<TQuery, TEntity, TMappedEntity> : IQuer
                                                                   CancellationToken cancellationToken = default)
     {
         return await AccessAsync(
-            q => expression.Invoke(q).Where(x => x.Id == query.EntityId)
-                           .ProjectTo<TMappedEntity>(Mapper.ConfigurationProvider),
+            q => Project(expression.Invoke(q).Where(x => x.Id == query.EntityId), query),
             cancellationToken
         ) ?? throw new EntityNotFoundException(nameof(TEntity), query.EntityId);
     }

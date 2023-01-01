@@ -194,7 +194,7 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   }
 
   tr th {
-    background: var(--tui-base-02);
+    background: var(--tui-base-03);
   }
 
   tbody {
@@ -261,4 +261,41 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   position: sticky;
   left: 0;
   z-index: 30
+}
+
+.clickable-tr {
+  cursor: pointer;
+
+  td {
+    transition: background-color var(--tui-duration, 300ms);
+  }
+
+  &:hover td {
+    background-color: var(--tui-base-02);
+  }
+}
+
+.simplified-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: 74px;
+
+  app-wallet-list-item:first-of-type, app-budget-list-item:first-of-type {
+    border-style: dashed !important;
+
+    &:hover {
+      border-color: var(--tui-base-05) !important;
+    }
+
+    &:not(:hover) {
+      border-color: var(--tui-base-04) !important;
+      color: var(--tui-text-03);
+    }
+  }
+}
+
+.header-box {
+  height: 56px;
+  line-height: 56px;
+  border-bottom: 1px solid var(--tui-base-02);
 }

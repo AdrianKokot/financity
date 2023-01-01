@@ -8,12 +8,42 @@ import {
   TransactionListItem,
 } from '@shared/data-access/models/transaction.model';
 import { HttpParams } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionApiService extends GenericApiService {
+  private _getListCache: Record<string, TransactionListItem[]> = {};
+
+  getAllList(pagination: {
+    page: number;
+    pageSize: number;
+    filters?: Record<string, string | string[]>;
+  }) {
+    const params = new HttpParams().appendAll({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      orderBy: 'transactionDate',
+      direction: 'desc',
+      ...pagination.filters,
+    });
+
+    const cacheKey = params.toString();
+
+    if (cacheKey in this._getListCache) {
+      return of(this._getListCache[cacheKey]);
+    }
+
+    return this.http
+      .get<TransactionListItem[]>('/api/transactions', { params })
+      .pipe(
+        tap(data => {
+          this._getListCache[cacheKey] = data;
+        })
+      );
+  }
+
   getList(
     walletId: Wallet['id'],
     pagination: {
@@ -22,17 +52,9 @@ export class TransactionApiService extends GenericApiService {
       filters?: Record<string, string | string[]>;
     }
   ) {
-    const params = new HttpParams().appendAll({
-      page: pagination.page,
-      pageSize: pagination.pageSize,
-      orderBy: 'transactionDate',
-      direction: 'desc',
-      walletId_eq: walletId,
-      ...pagination.filters,
-    });
-
-    return this.http.get<TransactionListItem[]>('/api/transactions', {
-      params,
+    return this.getAllList({
+      ...pagination,
+      filters: { ...pagination.filters, walletId_eq: walletId },
     });
   }
 
@@ -58,15 +80,17 @@ export class TransactionApiService extends GenericApiService {
     > &
       Pick<Transaction, 'id'>
   ) {
-    return this.http.put<Transaction>(
-      `/api/transactions/${payload.id}`,
-      payload
-    );
+    return this.http
+      .put<Transaction>(`/api/transactions/${payload.id}`, payload)
+      .pipe(tap(() => (this._getListCache = {})));
   }
 
   delete(id: Transaction['id']): Observable<boolean> {
     return this.http
       .delete(`/api/transactions/${id}`, { observe: 'response' })
-      .pipe(map(res => res.status >= 200 && res.status < 300));
+      .pipe(
+        map(res => res.status >= 200 && res.status < 300),
+        tap(() => (this._getListCache = {}))
+      );
   }
 }

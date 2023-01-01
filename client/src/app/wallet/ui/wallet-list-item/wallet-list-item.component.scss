@@ -1,12 +1,7 @@
-app-wallet-list-item {
+:host {
   cursor: pointer;
-
   border: 1px solid var(--tui-base-03);
   transition: .3s;
-  //
-  //.text-clamp-1 {
-  //  //color: var(--tui-text-01);
-  //}
 
   tui-money:not(._green):not(._red) {
     color: var(--tui-text-02);

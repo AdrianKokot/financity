@@ -1,21 +1,161 @@
-<h1 class="tui-text_h4 mb-4">Wallets</h1>
+<div class="main-layout-header-box"></div>
 
-<div class="wallets-container gap-3">
-  <app-wallet-list-item (click)="openCreateWalletDialog()">
-    <div
-      class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
-      <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
-      <span>Create new</span>
-    </div>
-  </app-wallet-list-item>
+<ng-container *tuiLet="dialogs$ | async" class="py-6">
+  <h1 class="tui-text_h4 header-box">Wallets</h1>
 
-  <ng-template #loading>
-    <app-wallet-list-item
-      *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
-      [showSkeleton]="true"></app-wallet-list-item>
-  </ng-template>
+  <section class="py-6" *tuiLet="data.items$ | async as items">
+    <ng-template #tableView>
+      <main>
+        <div class="w-full d-flex gap-4 mb-4">
+          <label class="w-full">
+            <tui-input
+              [formControl]="filters.controls.search"
+              [tuiTextfieldLabelOutside]="true"
+              class="no-shadow"
+              tuiTextfieldSize="s">
+              Search
+              <input tuiTextfield type="text" />
+            </tui-input>
+          </label>
 
-  <app-wallet-list-item
-    *ngFor="let wallet of wallets$ | async; else: loading"
-    [wallet]="wallet"></app-wallet-list-item>
-</div>
+          <ng-container
+            *tuiLet="(filters.filtersCount$ | async) ?? 0 as filtersCount">
+            <button
+              (click)="filters.reset()"
+              appearance="flat-outline"
+              icon="tuiIconFilter"
+              size="s"
+              class="applied-filters-button"
+              title="Reset filters to default"
+              tuiIconButton
+              type="button">
+              <tui-badge
+                *ngIf="filtersCount > 0"
+                [value]="filtersCount"
+                size="xs"
+                status="primary"></tui-badge>
+            </button>
+          </ng-container>
+
+          <button
+            (click)="ui.actions.create$.next(undefined)"
+            appearance="primary"
+            size="s"
+            tuiButton
+            type="button">
+            New wallet
+          </button>
+        </div>
+
+        <div
+          class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+          <tui-scrollbar>
+            <cdk-virtual-scroll-viewport
+              #viewport
+              appInfiniteVirtualScroll
+              (pageChange)="data.page($event)"
+              [itemSize]="44"
+              [fixed]="15.5"
+              class="tui-zero-scrollbar"
+              tuiScrollable>
+              <table tuiTable [columns]="ui.columns" class="w-full">
+                <thead
+                  class="sticky-thead"
+                  [style.top.px]="-viewport['_renderedContentOffset']">
+                  <tr tuiThGroup>
+                    <th *tuiHead="'name'" class="w-rest" [sorter]="null" tuiTh>
+                      Name
+                    </th>
+
+                    <th
+                      *tuiHead="'amount'"
+                      class="w-250px"
+                      [sorter]="null"
+                      tuiTh>
+                      Current amount
+                    </th>
+
+                    <th
+                      *tuiHead="'actions'"
+                      class="w-56px"
+                      [sorter]="null"
+                      tuiTh></th>
+                  </tr>
+                </thead>
+                <tbody tuiTbody>
+                  <tr
+                    class="clickable-tr"
+                    [routerLink]="[item.id]"
+                    *cdkVirtualFor="let item of items ?? []; trackBy: trackById"
+                    tuiTr>
+                    <td *tuiCell="'name'" tuiTd class="w-rest">
+                      <div class="text-ellipsis">{{ item.name }}</div>
+                    </td>
+                    <td *tuiCell="'amount'" tuiTd class="w-250px">
+                      <div class="text-ellipsis">
+                        <tui-money
+                          [currency]="item.currencyId"
+                          [colored]="true"
+                          [value]="item.currentState ?? 0">
+                        </tui-money>
+                      </div>
+                    </td>
+                    <td *tuiCell="'actions'" tuiTd class="w-56px">
+                      <button
+                        tuiIconButton
+                        [routerLink]="[item.id]"
+                        appearance="flat"
+                        size="s"
+                        icon="tuiIconEyeOpen"
+                        title="View details"
+                        shape="rounded"
+                        class="mr-1"></button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tfoot *tuiLet="(data.apiLoading$ | async)! as apiLoading">
+                  <tr *ngIf="apiLoading || items === null">
+                    <td [colSpan]="ui.columns.length" class="py-4">
+                      <tui-loader></tui-loader>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="items && items.length === 0 && !apiLoading">
+                    <td
+                      [colSpan]="ui.columns.length"
+                      class="py-4 text-3 text-center">
+                      No records found
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </cdk-virtual-scroll-viewport>
+          </tui-scrollbar>
+        </div>
+      </main>
+    </ng-template>
+
+    <main *ngIf="ui.showSimplifiedView$ | async; else tableView">
+      <div class="simplified-grid-container gap-3">
+        <app-wallet-list-item (click)="ui.actions.create$.next(undefined)">
+          <div
+            class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
+            <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
+            <span>Create new</span>
+          </div>
+        </app-wallet-list-item>
+
+        <ng-template #loading>
+          <app-wallet-list-item
+            *ngFor="let i of [1, 2, 3, 4, 5, 6]"
+            [showSkeleton]="true"></app-wallet-list-item>
+        </ng-template>
+
+        <app-wallet-list-item
+          *ngFor="let wallet of items; else: loading; trackBy: trackById"
+          [wallet]="wallet"></app-wallet-list-item>
+      </div>
+    </main>
+  </section>
+</ng-container>

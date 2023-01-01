@@ -15,6 +15,7 @@ public sealed class MappingProfile : Profile
     {
         _mappingMethod = _mappingInterfaces.First().GetMethods().First().Name;
         ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        AddCustomTypeMappings();
     }
 
     private void ApplyMappingsFromAssembly(Assembly assembly)
@@ -45,5 +46,11 @@ public sealed class MappingProfile : Profile
                 if (mappings.TryGetValue(_mapToInterface, out var mapToType)) CreateMap(type, mapToType);
             }
         }
+    }
+
+    private void AddCustomTypeMappings()
+    {
+        CreateMap<DateTime, DateOnly>().ConvertUsing(x => DateOnly.FromDateTime(x.ToUniversalTime()));
+        CreateMap<DateOnly, DateTime>().ConvertUsing(x => x.ToDateTime(TimeOnly.MinValue).ToUniversalTime());
     }
 }

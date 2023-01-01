@@ -2,37 +2,63 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  ViewEncapsulation,
+  Injector,
 } from '@angular/core';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { map, merge, Subject, switchMap, tap } from 'rxjs';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { CreateWalletComponent } from '../create-wallet/create-wallet.component';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import { Wallet } from '@shared/data-access/models/wallet.model';
+import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
+import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 
 @Component({
   selector: 'app-wallets-shell',
   templateUrl: './wallets-shell.component.html',
   styleUrls: ['./wallets-shell.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletsShellComponent {
-  poll$ = new BehaviorSubject(true);
-  wallets$ = this.poll$.pipe(switchMap(() => this._walletApi.getList()));
+  readonly ui = {
+    columns: ['name', 'amount', 'actions'] as const,
+    actions: {
+      create$: new Subject<void>(),
+    },
+    showSimplifiedView$: this._user.settings$.pipe(
+      map(x => x.showSimplifiedWalletView)
+    ),
+  };
+
+  readonly filters = this._fb.filters({
+    search: [''],
+  });
+
+  readonly data = new ApiDataHandler(
+    this._walletService.getList.bind(this._walletService),
+    this.filters
+  );
+
+  readonly dialogs$ = merge(
+    this.ui.actions.create$.pipe(
+      switchMap(() =>
+        this._dialog.open(new PolymorpheusComponent(CreateWalletComponent), {
+          label: 'Create wallet',
+        })
+      )
+    )
+  ).pipe(tap(() => this.data.resetPage()));
 
   constructor(
-    private _walletApi: WalletApiService,
-    @Inject(TuiDialogService) private _dialog: TuiDialogService
+    private readonly _fb: FormWithHandlerBuilder,
+    private readonly _walletService: WalletApiService,
+    @Inject(Injector)
+    private readonly _injector: Injector,
+    @Inject(TuiDialogService)
+    private readonly _dialog: TuiDialogService,
+    private readonly _user: UserSettingsService
   ) {}
 
-  openCreateWalletDialog() {
-    this._dialog
-      .open(new PolymorpheusComponent(CreateWalletComponent), {
-        label: 'Create wallet',
-      })
-      .subscribe(() => {
-        this.poll$.next(true);
-      });
-  }
+  trackById = (index: number, item: { id: Wallet['id'] }) => item.id;
 }

@@ -67,6 +67,7 @@ import { CreateWalletComponent } from './feature/create-wallet/create-wallet.com
 import { SelectModule } from '@shared/ui/tui/select/select.module';
 import { SearchableListModule } from '@shared/ui/tui/searchable-list/searchable-list.module';
 import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
+import { WalletsListComponent } from './feature/wallets-list/wallets-list.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     ShareWalletComponent,
     WalletRecipientsComponent,
     CreateWalletComponent,
+    WalletsListComponent,
   ],
   imports: [
     CommonModule,

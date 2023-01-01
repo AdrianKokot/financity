@@ -3,7 +3,6 @@ import {
   Component,
   HostBinding,
   Input,
-  ViewEncapsulation,
 } from '@angular/core';
 import { WalletListItem } from '@shared/data-access/models/wallet.model';
 
@@ -11,7 +10,6 @@ import { WalletListItem } from '@shared/data-access/models/wallet.model';
   selector: 'app-wallet-list-item',
   templateUrl: './wallet-list-item.component.html',
   styleUrls: ['./wallet-list-item.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletListItemComponent {
