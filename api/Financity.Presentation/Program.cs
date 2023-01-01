@@ -9,6 +9,7 @@ using Financity.Presentation.QueryParams;
 using Financity.Presentation.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -32,7 +33,14 @@ builder.Services
            options.LowercaseUrls = true;
            options.LowercaseQueryStrings = true;
        })
-       .AddCors(options => { options.AddDefaultPolicy(c => { c.AllowAnyOrigin(); }); });
+       .AddCors(options =>
+       {
+           options.AddDefaultPolicy(c =>
+       {
+           c.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://financity.fly.dev")
+            .AllowAnyMethod().WithHeaders(HeaderNames.ContentType);
+       });
+       });
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
@@ -91,6 +99,11 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddHealthChecks();
 
+builder.Services.AddSpaStaticFiles(opt =>
+{
+    opt.RootPath = "wwwroot";
+});
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -106,15 +119,19 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseDefaultFiles();
-
-app.UseStaticFiles();
-
 app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers().RequireAuthorization(AuthPolicy.Api);
 app.MapHealthChecks("/api/healthcheck");
+
+app.UseDefaultFiles();
+app.UseSpaStaticFiles();
+
+app.UseSpa(config =>
+{
+
+});
 
 app.Run();
