@@ -7,12 +7,13 @@ import {
   BudgetListItem,
   CreateBudgetPayload,
 } from '@shared/data-access/models/budget.model';
+import { UserSettingsService } from '../../user-settings/data-access/services/user-settings.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetApiService {
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private _user: UserSettingsService) {}
 
   private _getListCache: Record<string, BudgetListItem[]> = {};
 
@@ -38,6 +39,15 @@ export class BudgetApiService {
     return this.http.get<BudgetListItem[]>('/api/budgets', { params }).pipe(
       tap(data => {
         this._getListCache[cacheKey] = data;
+
+        if (
+          pagination.page === 1 &&
+          !(pagination.filters && 'search' in pagination.filters)
+        ) {
+          this._user.updateSettings({
+            showSimplifiedBudgetView: data.length < 15,
+          });
+        }
       })
     );
   }

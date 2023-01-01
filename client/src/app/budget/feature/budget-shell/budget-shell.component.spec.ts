@@ -8,9 +8,8 @@ describe('BudgetShellComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BudgetShellComponent ]
-    })
-    .compileComponents();
+      declarations: [BudgetShellComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BudgetShellComponent);
     component = fixture.componentInstance;
