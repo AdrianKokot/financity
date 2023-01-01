@@ -299,3 +299,10 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   line-height: 56px;
   border-bottom: 1px solid var(--tui-base-02);
 }
+
+label.label-required .t-label .t-text {
+  &::after {
+    content: ' *';
+    color: var(--tui-text-02);
+  }
+}

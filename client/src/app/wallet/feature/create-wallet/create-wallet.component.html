@@ -1,5 +1,5 @@
 <form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
-  <label tuiLabel="Name" class="tui-form__row">
+  <label tuiLabel="Name" class="tui-form__row label-required">
     <tui-input
       formControlName="name"
       tuiTextfieldSize="m"
@@ -16,7 +16,7 @@
   </label>
 
   <div tuiGroup class="tui-form__row" [rounded]="true">
-    <label tuiLabel="Currency" class="max-w-10">
+    <label tuiLabel="Currency" class="max-w-10 label-required">
       <app-select
         [control]="form.controls.currencyId"
         [getListFunction]="dataApis.getCurrencies"
@@ -29,7 +29,7 @@
         formControlName="currencyId"></tui-error>
     </label>
 
-    <label tuiLabel="Starting amount">
+    <label tuiLabel="Starting amount" class="label-required">
       <tui-input-number
         [postfix]="form.controls.currencyId.value | tuiCurrency"
         [tuiTextfieldLabelOutside]="true"

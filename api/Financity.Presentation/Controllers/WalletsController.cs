@@ -76,4 +76,13 @@ public class WalletsController : BaseController
         await HandleCommandAsync(command, ct);
         return NoContent();
     }
+
+    [HttpPost("{id:guid}/resign")]
+    [SwaggerResponse(StatusCodes.Status204NoContent, Type = typeof(Unit))]
+    public async Task<IActionResult> ResignAccess(ResignWalletAccessCommand command, Guid id, CancellationToken ct)
+    {
+        command.WalletId = id;
+        await HandleCommandAsync(command, ct);
+        return NoContent();
+    }
 }

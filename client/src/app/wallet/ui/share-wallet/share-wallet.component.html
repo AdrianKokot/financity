@@ -1,5 +1,5 @@
 <form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
-  <label [tuiLabel]="'Email address'" class="tui-form__row">
+  <label tuiLabel="Email address" class="tui-form__row label-required">
     <tui-input
       formControlName="userEmail"
       tuiTextfieldSize="m"

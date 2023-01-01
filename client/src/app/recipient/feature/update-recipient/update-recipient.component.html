@@ -3,7 +3,7 @@
   (ngSubmit)="form.submit()"
   class="tui-form"
   [attr.data-skeleton]="initialDataLoading$ | async">
-  <label [tuiLabel]="'Name'" class="tui-form__row">
+  <label [tuiLabel]="'Name'" class="tui-form__row label-required">
     <tui-input
       formControlName="name"
       tuiTextfieldSize="m"

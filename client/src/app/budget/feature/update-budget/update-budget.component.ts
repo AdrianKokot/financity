@@ -26,7 +26,7 @@ export class UpdateBudgetComponent {
       name: ['', [Validators.required, Validators.maxLength(64)]],
       currencyId: ['', [Validators.required]],
       amount: [0, [Validators.required, Validators.min(0.01)]],
-      trackedCategoriesId: [new Array<Category['id']>()],
+      trackedCategoriesId: [new Array<Category['id']>(), [Validators.required]],
     },
     {
       submit: payload => this._dataService.update(payload),

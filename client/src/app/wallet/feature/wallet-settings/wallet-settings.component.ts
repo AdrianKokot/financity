@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
-import { filter, map, switchMap } from 'rxjs';
+import { AuthService } from '../../../auth/data-access/api/auth.service';
+import { filter, merge, Subject, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-wallet-settings',
@@ -19,6 +20,7 @@ export class WalletSettingsComponent {
       name: ['', [Validators.required, Validators.maxLength(64)]],
       startingAmount: [0, [Validators.required]],
       currencyId: [''],
+      ownerId: [''],
     },
     {
       submit: payload => this._dataService.update(payload),
@@ -30,18 +32,42 @@ export class WalletSettingsComponent {
     }
   );
 
-  readonly initialDataLoading$ = this._activatedRoute.params.pipe(
-    filter((params): params is { id: string } => 'id' in params),
-    map(params => params.id),
-    switchMap(walletId =>
-      this._dataService
-        .get(walletId)
-        .pipe(toLoadingState(data => this.form.patchValue(data)))
+  readonly initialDataLoading$ = this._dataService
+    .get(this._activatedRoute.snapshot.params['id'])
+    .pipe(toLoadingState(data => this.form.patchValue(data)));
+
+  readonly user = this._user.user;
+
+  readonly ui = {
+    actions: {
+      delete$: new Subject<void>(),
+      resign$: new Subject<void>(),
+    },
+  };
+
+  readonly dialogs$ = merge(
+    this.ui.actions.delete$.pipe(
+      switchMap(() =>
+        this._dataService
+          .delete(this.form.controls.id.value)
+          .pipe(filter(success => success))
+      )
+    ),
+    this.ui.actions.resign$.pipe(
+      switchMap(() =>
+        this._dataService
+          .resign(this.form.controls.id.value)
+          .pipe(filter(success => success))
+      )
     )
+  ).pipe(
+    tap(reset => reset !== false && this._router.navigateByUrl('/wallets'))
   );
 
   constructor(
+    private readonly _user: AuthService,
     private readonly _activatedRoute: ActivatedRoute,
+    private readonly _router: Router,
     private readonly _dataService: WalletApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(TuiAlertService) private readonly _alertService: TuiAlertService

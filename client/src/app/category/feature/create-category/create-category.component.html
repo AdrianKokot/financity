@@ -3,7 +3,7 @@
     <label
       tuiLabel="Color"
       formGroupName="appearance"
-      class="tui-group__auto-width-item">
+      class="tui-group__auto-width-item label-required">
       <app-appearance-color-selector formControlName="color" class="mt-1">
       </app-appearance-color-selector>
 
@@ -15,7 +15,7 @@
     <label
       tuiLabel="Icon"
       formGroupName="appearance"
-      class="tui-group__auto-width-item">
+      class="tui-group__auto-width-item label-required">
       <app-appearance-icon-selector class="mt-1" formControlName="iconName">
       </app-appearance-icon-selector>
 
@@ -24,7 +24,7 @@
         [error]="[] | tuiFieldError | async"></tui-error>
     </label>
 
-    <label [tuiLabel]="'Name'">
+    <label tuiLabel="Name" class="label-required">
       <tui-input
         formControlName="name"
         tuiTextfieldSize="m"
@@ -40,7 +40,7 @@
     </label>
   </div>
 
-  <label [tuiLabel]="'Transaction type'" class="tui-form__row">
+  <label tuiLabel="Transaction type" class="tui-form__row label-required">
     <tui-select
       formControlName="transactionType"
       [tuiTextfieldLabelOutside]="true"

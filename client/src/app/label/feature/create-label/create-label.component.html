@@ -3,7 +3,7 @@
     <label
       tuiLabel="Color"
       formGroupName="appearance"
-      class="tui-group__auto-width-item">
+      class="tui-group__auto-width-item label-required">
       <app-appearance-color-selector class="mt-1" formControlName="color">
       </app-appearance-color-selector>
 
@@ -12,7 +12,7 @@
         [error]="[] | tuiFieldError | async"></tui-error>
     </label>
 
-    <label [tuiLabel]="'Name'">
+    <label tuiLabel="Name" class="label-required">
       <tui-input
         formControlName="name"
         tuiTextfieldSize="m"
