@@ -101,6 +101,18 @@ export class WalletApiService {
       .pipe(map(response => response.status === 204));
   }
 
+  resign(walletId: Wallet['id']): Observable<boolean> {
+    return this._http
+      .post(
+        `/api/wallets/${walletId}/resign`,
+        { walletId },
+        {
+          observe: 'response',
+        }
+      )
+      .pipe(map(response => response.status === 204));
+  }
+
   getSharedToList(
     walletId: Wallet['id'],
     pagination: {
@@ -127,5 +139,11 @@ export class WalletApiService {
       getRecipients: this._recipient.getList.bind(this._recipient, walletId),
       getCategories: this._category.getList.bind(this._category, walletId),
     };
+  }
+
+  delete(id: Wallet['id']): Observable<boolean> {
+    return this._http
+      .delete(`/api/wallets/${id}`, { observe: 'response' })
+      .pipe(map(res => res.status >= 200 && res.status < 300));
   }
 }

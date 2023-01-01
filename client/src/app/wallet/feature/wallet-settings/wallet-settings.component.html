@@ -1,47 +1,90 @@
-<div class="tui-row">
-  <form
-    [formGroup]="form.group"
-    (ngSubmit)="form.submit()"
-    class="tui-form tui-col_5"
-    [attr.data-skeleton]="initialDataLoading$ | async">
-    <label tuiLabel="Name" class="tui-form__row">
-      <tui-input
-        formControlName="name"
-        tuiTextfieldSize="m"
-        class="mt-1"
-        [tuiTextfieldLabelOutside]="true">
-        Example name
-        <input tuiTextfield type="text" />
-      </tui-input>
+<div
+  class="tui-row"
+  *tuiLet="form.controls.ownerId.value === user?.id as isUserOwner">
+  <div class="tui-col_5">
+    <form
+      *tuiLet="dialogs$ | async"
+      [formGroup]="form.group"
+      (ngSubmit)="form.submit()"
+      class="tui-form"
+      [attr.data-skeleton]="initialDataLoading$ | async">
+      <label tuiLabel="Name" class="tui-form__row">
+        <tui-input
+          formControlName="name"
+          tuiTextfieldSize="m"
+          class="mt-1"
+          [readOnly]="!isUserOwner"
+          [tuiTextfieldLabelOutside]="true">
+          Example name
+          <input tuiTextfield type="text" />
+        </tui-input>
 
-      <tui-error
-        formControlName="name"
-        [error]="[] | tuiFieldError | async"></tui-error>
-    </label>
+        <tui-error
+          formControlName="name"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
 
-    <label tuiLabel="Starting balance" class="tui-form__row">
-      <tui-input-number
-        [postfix]="form.controls.currencyId.value | tuiCurrency"
-        formControlName="startingAmount"
-        tuiTextfieldSize="m"
-        class="mt-1"
-        [tuiTextfieldLabelOutside]="true">
-      </tui-input-number>
+      <label tuiLabel="Starting balance" class="tui-form__row">
+        <tui-input-number
+          [postfix]="form.controls.currencyId.value | tuiCurrency"
+          formControlName="startingAmount"
+          tuiTextfieldSize="m"
+          [readOnly]="!isUserOwner"
+          class="mt-1"
+          [tuiTextfieldLabelOutside]="true">
+        </tui-input-number>
 
-      <tui-error
-        formControlName="startingAmount"
-        [error]="[] | tuiFieldError | async"></tui-error>
-    </label>
+        <tui-error
+          formControlName="startingAmount"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
 
-    <div class="tui-form__row tui-form__buttons tui-form__buttons_align_end">
+      <div class="tui-form__row tui-form__buttons tui-form__buttons_align_end">
+        <button
+          tuiButton
+          [disabled]="!isUserOwner"
+          type="submit"
+          class="tui-form__button"
+          size="m"
+          [showLoader]="(form.submitButtonLoading$ | async) ?? false">
+          Save
+        </button>
+      </div>
+    </form>
+
+    <hr class="my-6" />
+    <div *ngIf="isUserOwner" class="d-flex justify-content-flex-end">
       <button
         tuiButton
-        type="submit"
+        type="button"
         class="tui-form__button"
         size="m"
-        [showLoader]="(form.submitButtonLoading$ | async) ?? false">
-        Save
+        appearance="secondary-destructive"
+        icon="tuiIconTrash"
+        appRequireConfirmation
+        (confirm)="ui.actions.delete$.next(undefined)"
+        confirmationMessage="Are you sure you want to delete wallet <strong>{{
+          form.controls.name.value
+        }}</strong>? This action is irreversible.">
+        Delete
       </button>
     </div>
-  </form>
+
+    <div *ngIf="!isUserOwner" class="d-flex justify-content-flex-end">
+      <button
+        tuiButton
+        type="button"
+        class="tui-form__button"
+        size="m"
+        appearance="secondary-destructive"
+        icon="tuiIconTrash"
+        appRequireConfirmation
+        (confirm)="ui.actions.resign$.next(undefined)"
+        confirmationMessage="Are you sure you want to resign access from wallet <strong>{{
+          form.controls.name.value
+        }}</strong>?">
+        Resign from access
+      </button>
+    </div>
+  </div>
 </div>
