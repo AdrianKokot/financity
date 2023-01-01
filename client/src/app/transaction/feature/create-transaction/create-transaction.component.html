@@ -1,6 +1,6 @@
 <form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
   <div tuiGroup class="tui-form__row" [rounded]="true">
-    <label tuiLabel="Transaction type" class="max-w-10">
+    <label tuiLabel="Transaction type" class="max-w-10 label-required">
       <tui-select
         [tuiTextfieldLabelOutside]="true"
         class="mt-1 tui-group__inherit-item"
@@ -23,7 +23,7 @@
         [max]="ui.transactionDate.max"
         [min]="ui.transactionDate.min"
         [tuiTextfieldLabelOutside]="true"
-        class="mt-1 tui-group__inherit-item"
+        class="mt-1 tui-group__inherit-item label-required"
         formControlName="transactionDate"
         tuiTextfieldSize="m">
         Choose a date
@@ -36,7 +36,7 @@
   </div>
 
   <div tuiGroup class="tui-form__row" [rounded]="true">
-    <label tuiLabel="Currency" class="max-w-10">
+    <label tuiLabel="Currency" class="max-w-10 label-required">
       <app-select
         [control]="form.controls.currencyId"
         [getListFunction]="ui.dataApis.getCurrencies"
@@ -49,7 +49,7 @@
         formControlName="currencyId"></tui-error>
     </label>
 
-    <label tuiLabel="Amount">
+    <label tuiLabel="Amount" class="label-required">
       <tui-input-number
         [postfix]="form.controls.currencyId.value | tuiCurrency"
         [tuiTextfieldLabelOutside]="true"
@@ -73,7 +73,7 @@
       *tuiLet="(exchangeRateLoading$ | async) ?? false as exchangeRateLoading">
       <label
         tuiLabel="Currency exchange rate"
-        class="max-w-10"
+        class="max-w-10 label-required"
         *ngIf="shouldExchangeRateBeSpecified$ | async">
         <tui-loader [showLoader]="exchangeRateLoading" [overlay]="true">
           <tui-input-number

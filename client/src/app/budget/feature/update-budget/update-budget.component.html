@@ -3,7 +3,7 @@
   (ngSubmit)="form.submit()"
   class="tui-form"
   [attr.data-skeleton]="initialDataLoading$ | async">
-  <label tuiLabel="Name" class="tui-form__row">
+  <label tuiLabel="Name" class="tui-form__row label-required">
     <tui-input
       formControlName="name"
       tuiTextfieldSize="m"
@@ -19,7 +19,7 @@
       [error]="[] | tuiFieldError | async"></tui-error>
   </label>
 
-  <label tuiLabel="Budget amount" class="tui-form__row">
+  <label tuiLabel="Budget amount" class="tui-form__row label-required">
     <tui-input-number
       [postfix]="form.controls.currencyId.value | tuiCurrency"
       [tuiTextfieldLabelOutside]="true"
@@ -39,7 +39,7 @@
 
   <label
     tuiLabel="Tracked categories"
-    class="tui-form__row"
+    class="tui-form__row label-required"
     *ngIf="form.controls.currencyId.value">
     <app-multi-select
       [control]="form.controls.trackedCategoriesId"

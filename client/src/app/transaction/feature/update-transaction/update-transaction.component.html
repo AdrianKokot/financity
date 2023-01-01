@@ -3,7 +3,7 @@
   (ngSubmit)="form.submit()"
   class="tui-form"
   [attr.data-skeleton]="initialDataLoading$ | async">
-  <label tuiLabel="Transaction date" class="tui-form__row">
+  <label tuiLabel="Transaction date" class="tui-form__row label-required">
     <tui-input-date
       [max]="transactionMaxDate"
       [tuiTextfieldLabelOutside]="true"
@@ -19,7 +19,7 @@
       formControlName="transactionDate"></tui-error>
   </label>
 
-  <label tuiLabel="Amount" class="tui-form__row">
+  <label tuiLabel="Amount" class="tui-form__row label-required">
     <tui-input-number
       [postfix]="form.controls.currencyId.value | tuiCurrency"
       [tuiTextfieldLabelOutside]="true"
