@@ -1,7 +1,5 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
 FROM node:alpine AS front
 WORKDIR /app
@@ -28,4 +26,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY --from=front /app/dist/financity wwwroot
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
 ENTRYPOINT ["dotnet", "Financity.Presentation.dll"]
