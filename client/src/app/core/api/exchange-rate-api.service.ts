@@ -13,7 +13,7 @@ export class ExchangeRateApiService {
     let params = new HttpParams().appendAll({ from, to });
 
     if (date) {
-      params = params.append('date', date.toISOString());
+      params = params.append('date', date.toJSON());
     }
 
     return this._http

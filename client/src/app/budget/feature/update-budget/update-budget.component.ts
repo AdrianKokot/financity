@@ -37,8 +37,6 @@ export class UpdateBudgetComponent {
   readonly dataApis = {
     getCategories: this._categoryService.getAllList.bind(this._categoryService),
     getCategoryName: (item: CategoryListItem) =>
-      `${item.name} <em class="text-3">(${item.walletName})</em>`,
-    getCategoryTag: (item: CategoryListItem) =>
       `${item.name} (${item.walletName})`,
   };
 

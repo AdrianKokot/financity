@@ -38,9 +38,7 @@ export class UpdateTransactionComponent {
       submit: payload =>
         this._dataService.update({
           ...payload,
-          transactionDate: payload.transactionDate
-            .toUtcNativeDate()
-            .toISOString(),
+          transactionDate: payload.transactionDate.toUtcNativeDate().toJSON(),
         }),
       effect: item => this._context.completeWith(item),
     }
@@ -60,18 +58,20 @@ export class UpdateTransactionComponent {
     .get(this._context.data.id)
     .pipe(
       toLoadingState(data => {
-        this.form.patchValue({
-          ...data,
-          note: data.note ?? '',
-          transactionDate: TuiDay.jsonParse(data.transactionDate),
-          labelIds: data.labels.map(x => x.id),
-        });
-
         this.preloadedData.labels = data.labels;
         if (data.category !== null)
           this.preloadedData.categories = [data.category];
         if (data.recipient !== null)
           this.preloadedData.recipients = [data.recipient];
+
+        this.form.patchValue({
+          ...data,
+          note: data.note ?? '',
+          transactionDate: TuiDay.fromLocalNativeDate(
+            new Date(data.transactionDate)
+          ),
+          labelIds: data.labels.map(x => x.id),
+        });
       })
     );
 

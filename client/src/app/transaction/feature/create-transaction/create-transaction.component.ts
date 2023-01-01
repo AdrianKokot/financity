@@ -56,9 +56,7 @@ export class CreateTransactionComponent {
       submit: payload =>
         this._dataService.create({
           ...payload,
-          transactionDate: payload.transactionDate
-            .toUtcNativeDate()
-            .toISOString(),
+          transactionDate: payload.transactionDate.toUtcNativeDate().toJSON(),
         }),
       effect: item => this._context.completeWith(item),
     }

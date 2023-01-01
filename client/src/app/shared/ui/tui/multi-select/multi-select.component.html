@@ -5,7 +5,7 @@
       (searchChange)="search$.next($event ?? '')"
       *tuiLet="items$ | async as items"
       [expandable]="false"
-      [stringify]="(tagStringify$ | async)!"
+      [stringify]="stringify"
       [tuiTextfieldLabelOutside]="true"
       placeholder="Search"
       tuiTextfieldSize="m">
@@ -25,7 +25,7 @@
         <tui-data-list size="s" tuiMultiSelectGroup>
           <ng-container *cdkVirtualFor="let item of items ?? []">
             <button [value]="item" tuiOption>
-              <div [innerHtml]="stringify(item) | dompurify"></div>
+              {{ stringify(item) }}
             </button>
           </ng-container>
           <ng-container *ngIf="(apiLoading$ | async)!">

@@ -43,8 +43,6 @@ export class CreateBudgetComponent {
     getCurrencies: this._currencyService.getList.bind(this._currencyService),
     getCurrencyName: (item: CurrencyListItem) => item.id,
     getCategoryName: (item: CategoryListItem) =>
-      `${item.name} <em class="text-3">(${item.walletName})</em>`,
-    getCategoryTag: (item: CategoryListItem) =>
       `${item.name} (${item.walletName})`,
   };
 

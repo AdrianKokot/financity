@@ -80,15 +80,17 @@ export class TransactionApiService extends GenericApiService {
     > &
       Pick<Transaction, 'id'>
   ) {
-    return this.http.put<Transaction>(
-      `/api/transactions/${payload.id}`,
-      payload
-    );
+    return this.http
+      .put<Transaction>(`/api/transactions/${payload.id}`, payload)
+      .pipe(tap(() => (this._getListCache = {})));
   }
 
   delete(id: Transaction['id']): Observable<boolean> {
     return this.http
       .delete(`/api/transactions/${id}`, { observe: 'response' })
-      .pipe(map(res => res.status >= 200 && res.status < 300));
+      .pipe(
+        map(res => res.status >= 200 && res.status < 300),
+        tap(() => (this._getListCache = {}))
+      );
   }
 }
