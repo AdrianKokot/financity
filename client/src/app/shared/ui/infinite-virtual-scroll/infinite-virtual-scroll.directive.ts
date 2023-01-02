@@ -2,6 +2,7 @@ import { Directive, HostBinding, Input, Output, Self } from '@angular/core';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { distinctUntilChanged, filter, map } from 'rxjs';
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
+import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[appInfiniteVirtualScroll]',
@@ -47,8 +48,8 @@ export class InfiniteVirtualScrollDirective {
       total: this._viewport.getDataLength(),
     })),
     filter(({ end, total }) => end === total),
-    map(({ total }) => Math.floor(total / this.pageSize) + 1),
-    distinctUntilChanged()
+    distinctUntilChangedObject(),
+    map(({ total }) => Math.floor(total / this.pageSize) + 1)
   );
 
   constructor(@Self() private _viewport: CdkVirtualScrollViewport) {}

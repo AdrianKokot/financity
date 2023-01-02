@@ -41,16 +41,10 @@ const toFormSubmit = <
 ) => {
   return function <TInput>(source: Observable<TInput>) {
     return source.pipe(
-      tap(() =>
-        console.info(`[toFormSubmit::start]: form valid: ${form.valid}`)
-      ),
       tap(() => form.markAllAsTouched()),
       filter(() => form.valid),
       exhaustMap(() =>
         functions.submit(form.getRawValue()).pipe(
-          tap(r =>
-            console.info(`[toFormSubmit::submit]: ${JSON.stringify(r)}`)
-          ),
           startWith(null),
           catchError(err => {
             if (err instanceof HttpErrorResponse) {
@@ -62,18 +56,15 @@ const toFormSubmit = <
       ),
       tap(result => {
         if (result !== null && result !== undefined && functions.effect) {
-          console.info(`[toFormSubmit::effect]: ${JSON.stringify(result)}`);
           functions.effect(result);
         }
       }),
       switchMap(result => {
         if (result !== null && result !== undefined && functions.effect$) {
-          console.info(`[toFormSubmit::effect$]: ${JSON.stringify(result)}`);
           return functions.effect$(result).pipe(
             take(1),
             startWith(null),
-            map(() => result),
-            tap(() => console.info('[toFormSubmit::effect$] emit'))
+            map(() => result)
           );
         }
         return of(result);

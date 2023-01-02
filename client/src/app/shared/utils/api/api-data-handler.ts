@@ -12,10 +12,10 @@ import {
   shareReplay,
   startWith,
   switchMap,
+  tap,
   withLatestFrom,
 } from 'rxjs';
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
-import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
 import { AbstractControl } from '@angular/forms';
 
@@ -27,24 +27,36 @@ export class ApiDataHandler<
   TKey extends keyof TControl & string
 > {
   private readonly _page$ = new BehaviorSubject<number>(1);
+  private readonly _reload$ = new BehaviorSubject<boolean>(true);
 
   private readonly _api$ = merge(
     this._page$,
-    this._filters.filters$.pipe(
-      map(() => {
-        this._page$.next(1);
-        return NEVER;
-      })
+    merge(this._filters.filters$, this._reload$.pipe(filter(x => x))).pipe(
+      tap(() => this._page$.next(1)),
+      switchMap(() => NEVER)
     )
   ).pipe(
     withLatestFrom(this._filters.filters$, this._page$),
     map(([, filters, page]) => ({
-      page,
-      filters,
-      pageSize: AUTOCOMPLETE_PAGE_SIZE,
+      pagination: {
+        page,
+        filters,
+        pageSize: AUTOCOMPLETE_PAGE_SIZE,
+      },
+      reload: this._reload$.value,
     })),
-    distinctUntilChangedObject(),
-    switchMap(pagination => this._getData(pagination).pipe(startWith(null))),
+    distinctUntilChanged((previous, current) =>
+      current.reload
+        ? false
+        : JSON.stringify(previous.pagination) ===
+          JSON.stringify(current.pagination)
+    ),
+    tap(() => {
+      this._reload$.next(false);
+    }),
+    switchMap(({ pagination }) =>
+      this._getData(pagination).pipe(startWith(null))
+    ),
     shareReplay()
   );
 
@@ -83,7 +95,6 @@ export class ApiDataHandler<
   }
 
   resetPage(): void {
-    this._page$.next(0);
-    this._page$.next(1);
+    this._reload$.next(true);
   }
 }
