@@ -19,6 +19,7 @@ import {
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { ApiParams } from '../../../core/api/generic-api.service';
 
 @Component({
   selector: 'app-wallet-categories',
@@ -51,7 +52,8 @@ export class WalletCategoriesComponent {
   );
 
   readonly data = new ApiDataHandler(
-    this._categoryService.getList.bind(this._categoryService, this._walletId),
+    (p: ApiParams) =>
+      this._categoryService.getAll({ ...p, walletId_eq: this._walletId }),
     this.filters
   );
 

@@ -39,7 +39,7 @@ export class CreateBudgetComponent {
   );
 
   readonly dataApis = {
-    getCategories: this._categoryService.getAllList.bind(this._categoryService),
+    getCategories: this._categoryService.getAll.bind(this._categoryService),
     getCurrencies: this._currencyService.getList.bind(this._currencyService),
     getCurrencyName: (item: CurrencyListItem) => item.id,
     getCategoryName: (item: CategoryListItem) =>
@@ -52,7 +52,7 @@ export class CreateBudgetComponent {
     private readonly _fb: FormWithHandlerBuilder,
     private readonly _currencyService: CurrencyApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly _context: TuiDialogContext<Budget>
+    private readonly _context: TuiDialogContext<Pick<Budget, 'id'>>
   ) {}
 
   cancel() {

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CurrencyListItem } from '@shared/data-access/models/currency.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { of, tap } from 'rxjs';
 import { ExchangeRateApiService } from './exchange-rate-api.service';
+import { ApiParams, toHttpParams } from './generic-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,25 +24,19 @@ export class CurrencyApiService {
     return this._exchangeRateService.getExchangeRate(...args);
   }
 
-  getList(
-    pagination: {
-      page: number;
-      pageSize: number;
-      filters?: Record<string, string | string[]>;
-    } = { page: 1, pageSize: 500 }
-  ) {
-    const filters: Record<string, string | string[]> = {};
+  getList(pagination: ApiParams) {
+    const temp = { ...pagination };
 
-    if (pagination.filters && 'name_ct' in pagination.filters) {
-      filters['search'] = pagination.filters['name_ct'];
+    if (temp && 'name_ct' in temp && temp['name_ct']) {
+      temp['search'] = temp['name_ct'];
+      delete temp['name_ct'];
     }
 
-    const params = new HttpParams().appendAll({
-      page: pagination.page,
+    const params = toHttpParams({
+      ...temp,
       pageSize: 500,
       orderBy: 'name',
       direction: 'asc',
-      ...filters,
     });
 
     const cacheKey = params.toString();

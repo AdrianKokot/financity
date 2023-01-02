@@ -35,6 +35,7 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { TuiDay } from '@taiga-ui/cdk';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
+import { ApiParams } from '../../../core/api/generic-api.service';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -87,10 +88,11 @@ export class WalletTransactionsComponent {
   );
 
   readonly data = new ApiDataHandler(
-    this._transactionApiService.getList.bind(
-      this._transactionApiService,
-      this._walletId
-    ),
+    (pagination: ApiParams) =>
+      this._transactionApiService.getAll({
+        ...pagination,
+        walletId_eq: this._walletId,
+      }),
     this.filters
   );
 

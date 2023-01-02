@@ -27,7 +27,10 @@ export class CreateRecipientComponent {
     private _dataService: RecipientApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly _context: TuiDialogContext<Recipient, { walletId: string }>
+    private readonly _context: TuiDialogContext<
+      Pick<Recipient, 'id'>,
+      Pick<Recipient, 'walletId'>
+    >
   ) {
     this.form.patchValue({
       walletId: this._context.data.walletId,

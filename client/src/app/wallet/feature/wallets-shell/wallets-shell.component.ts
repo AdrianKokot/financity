@@ -36,7 +36,7 @@ export class WalletsShellComponent {
   });
 
   readonly data = new ApiDataHandler(
-    this._walletService.getList.bind(this._walletService),
+    this._walletService.getAll.bind(this._walletService),
     this.filters
   );
 

@@ -55,7 +55,7 @@ export class SearchShellComponent {
   );
 
   readonly data = new ApiDataHandler(
-    this._transactionApiService.getAllList.bind(this._transactionApiService),
+    this._transactionApiService.getAll.bind(this._transactionApiService),
     this.filters,
     this.ui.actions.applySearch$
   );

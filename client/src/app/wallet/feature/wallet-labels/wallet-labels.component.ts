@@ -15,6 +15,7 @@ import { Label } from '@shared/data-access/models/label';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { ApiParams } from '../../../core/api/generic-api.service';
 
 @Component({
   selector: 'app-wallet-labels',
@@ -40,7 +41,8 @@ export class WalletLabelsComponent {
   });
 
   readonly data = new ApiDataHandler(
-    this._labelService.getList.bind(this._labelService, this._walletId),
+    (p: ApiParams) =>
+      this._labelService.getAll({ ...p, walletId_eq: this._walletId }),
     this.filters
   );
 

@@ -1,4 +1,3 @@
-import { FiltersForm } from '@shared/utils/form/filters-form';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -17,9 +16,10 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
+import { ApiParams } from '../../../core/api/generic-api.service';
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
 import { AbstractControl } from '@angular/forms';
+import { FiltersForm } from '@shared/utils/form/filters-form';
 
 export class ApiDataHandler<
   T,
@@ -32,11 +32,7 @@ export class ApiDataHandler<
   private readonly _reload$ = new BehaviorSubject<boolean>(true);
 
   constructor(
-    private readonly _getData: (
-      pagination: Parameters<
-        InstanceType<typeof TransactionApiService>['getList']
-      >[1]
-    ) => Observable<T[]>,
+    private readonly _getData: (pagination: ApiParams) => Observable<T[]>,
     private readonly _filters: FiltersForm<TControl, TKey>,
     private readonly _started$: Observable<unknown> = of(true)
   ) {}
@@ -52,8 +48,8 @@ export class ApiDataHandler<
     withLatestFrom(this._filters.filters$, this._page$),
     map(([, filters, page]) => ({
       pagination: {
+        ...filters,
         page,
-        filters,
         pageSize: AUTOCOMPLETE_PAGE_SIZE,
       },
       reload: this._reload$.value,

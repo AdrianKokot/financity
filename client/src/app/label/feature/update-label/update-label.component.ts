@@ -40,7 +40,10 @@ export class UpdateLabelComponent {
     private _dataService: LabelApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly _context: TuiDialogContext<Label, { id: Label['id'] }>
+    private readonly _context: TuiDialogContext<
+      Pick<Label, 'id'>,
+      Pick<Label, 'id'>
+    >
   ) {}
 
   cancel() {
