@@ -1,38 +1,48 @@
-<ng-container *ngIf="control !== null">
-  <ng-container *tuiLet="(stringify$ | async)! as stringify">
-    <tui-multi-select
-      [formControl]="control"
-      (searchChange)="search$.next($event ?? '')"
-      *tuiLet="items$ | async as items"
-      [expandable]="false"
-      [stringify]="stringify"
-      [tuiTextfieldLabelOutside]="true"
-      placeholder="Search"
-      tuiTextfieldSize="m">
-      {{ label }}
+<ng-container *ngIf="stringify$ | async as stringify; else loading">
+  <tui-multi-select
+    [formControl]="control"
+    (searchChange)="search$.next($event ?? '')"
+    *tuiLet="items$ | async as items"
+    [expandable]="false"
+    [stringify]="stringify"
+    [tuiTextfieldLabelOutside]="true"
+    placeholder="Search"
+    tuiTextfieldSize="m">
+    {{ label }}
 
-      <cdk-virtual-scroll-viewport
-        (pageChange)="page$.next($event)"
-        *tuiDataList
-        [itemSize]="34"
-        [showMax]="6"
-        [itemsMargin]="3"
-        [minBufferPx]="200"
-        [viewportItemsCount]="(items ?? []).length"
-        appInfiniteVirtualScroll
-        class="tui-zero-scrollbar"
-        tuiScrollable>
-        <tui-data-list size="s" tuiMultiSelectGroup>
-          <ng-container *cdkVirtualFor="let item of items ?? []">
-            <button [value]="item" tuiOption>
-              {{ stringify(item) }}
-            </button>
-          </ng-container>
-          <ng-container *ngIf="(apiLoading$ | async)!">
-            <tui-loader></tui-loader>
-          </ng-container>
-        </tui-data-list>
-      </cdk-virtual-scroll-viewport>
-    </tui-multi-select>
-  </ng-container>
+    <cdk-virtual-scroll-viewport
+      (pageChange)="page$.next($event)"
+      *tuiDataList
+      [itemSize]="34"
+      [showMax]="6"
+      [itemsMargin]="3"
+      [minBufferPx]="200"
+      [viewportItemsCount]="(items ?? []).length"
+      appInfiniteVirtualScroll
+      class="tui-zero-scrollbar"
+      tuiScrollable>
+      <tui-data-list size="s" tuiMultiSelectGroup>
+        <ng-container *cdkVirtualFor="let item of items ?? []">
+          <button [value]="item" tuiOption>
+            {{ stringify(item) }}
+          </button>
+        </ng-container>
+        <ng-container *ngIf="(apiLoading$ | async)!">
+          <tui-loader></tui-loader>
+        </ng-container>
+      </tui-data-list>
+    </cdk-virtual-scroll-viewport>
+  </tui-multi-select>
 </ng-container>
+
+<ng-template #loading>
+  <tui-loader [overlay]="true">
+    <tui-multi-select
+      placeholder="Search"
+      tuiTextfieldSize="m"
+      [readOnly]="true"
+      [(ngModel)]="loadingValue">
+      {{ label }}
+    </tui-multi-select>
+  </tui-loader>
+</ng-template>

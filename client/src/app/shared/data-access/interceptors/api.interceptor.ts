@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -6,12 +6,14 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { catchError, Observable, switchMap, throwError } from 'rxjs';
+import { catchError, Observable, Subject, takeUntil, throwError } from 'rxjs';
 import { AuthService } from '../../../auth/data-access/api/auth.service';
 import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 
 @Injectable()
-export class ApiInterceptor implements HttpInterceptor {
+export class ApiInterceptor implements HttpInterceptor, OnDestroy {
+  private _destroy$ = new Subject<boolean>();
+
   constructor(
     private readonly _auth: AuthService,
     @Inject(TuiAlertService) private readonly _alert: TuiAlertService
@@ -28,14 +30,15 @@ export class ApiInterceptor implements HttpInterceptor {
             return this._auth.handleUnauthorized();
           }
           if (error.status !== 422) {
-            return this._alert
+            this._alert
               .open(error.error.title ?? error.message, {
                 status: TuiNotification.Error,
                 label: 'Something went wrong',
                 autoClose: true,
                 hasCloseButton: true,
               })
-              .pipe(switchMap(() => throwError(() => error)));
+              .pipe(takeUntil(this._destroy$))
+              .subscribe();
           }
           return throwError(() => error);
         })
@@ -43,5 +46,10 @@ export class ApiInterceptor implements HttpInterceptor {
     }
 
     return next.handle(request);
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next(true);
+    this._destroy$.complete();
   }
 }

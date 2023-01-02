@@ -25,7 +25,22 @@
   </label>
 
   <label tuiLabel="Category" class="tui-form__row">
-    {{ transaction.category?.name ?? '-' }}
+    <span class="d-flex align-items-center">
+      <tui-marker-icon
+        *ngIf="transaction.category !== null"
+        size="xs"
+        [attr.data-appearance-color]="
+          transaction.category.appearance.color ?? ''
+        "
+        [src]="
+          transaction.category.appearance.iconName ?? 'fa::question'
+        "></tui-marker-icon>
+      <span
+        class="ml-2 text-ellipsis d-block"
+        [title]="transaction.category?.name">
+        {{ transaction.category?.name ?? '-' }}
+      </span>
+    </span>
   </label>
 
   <label tuiLabel="Amount" class="tui-form__row">

@@ -21,6 +21,7 @@ import {
   TuiInputDateModule,
   TuiInputNumberModule,
   TuiInputTagModule,
+  TuiMarkerIconModule,
   TuiMultiSelectModule,
   TuiSelectModule,
   TuiStringifyContentPipeModule,
@@ -34,6 +35,7 @@ import {
 import { MultiSelectModule } from '@shared/ui/tui/multi-select/multi-select.module';
 import { SelectModule } from '@shared/ui/tui/select/select.module';
 import { TransactionDetailsComponent } from './feature/transaction-details/transaction-details.component';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 
 @NgModule({
   declarations: [
@@ -69,6 +71,8 @@ import { TransactionDetailsComponent } from './feature/transaction-details/trans
     TuiLoaderModule,
     TuiMoneyModule,
     TuiBadgeModule,
+    TuiMarkerIconModule,
+    PolymorpheusModule,
   ],
   exports: [
     CreateTransactionComponent,

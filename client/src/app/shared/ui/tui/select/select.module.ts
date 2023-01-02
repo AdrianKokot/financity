@@ -21,9 +21,12 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
+import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { NgDompurifyModule } from '@tinkoff/ng-dompurify';
+import { SelectWithTemplateComponent } from '@shared/ui/tui/select/select-with-template.component';
 
 @NgModule({
-  declarations: [SelectComponent],
+  declarations: [SelectComponent, SelectWithTemplateComponent],
   imports: [
     CommonModule,
     TuiComboBoxModule,
@@ -41,7 +44,9 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     TuiDataListWrapperModule,
     ReactiveFormsModule,
     TuiUnfinishedValidatorModule,
+    PolymorpheusModule,
+    NgDompurifyModule,
   ],
-  exports: [SelectComponent],
+  exports: [SelectComponent, SelectWithTemplateComponent],
 })
 export class SelectModule {}

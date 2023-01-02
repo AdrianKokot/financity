@@ -2,6 +2,10 @@
 
 :host {
   display: block;
+
+  &.tui-group__inherit-item tui-multi-select {
+    border-radius: inherit;
+  }
 }
 
 .tui-zero-scrollbar {
