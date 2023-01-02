@@ -31,11 +31,6 @@ public sealed class GetBudgetQueryHandler : UserEntityQueryHandler<GetBudgetQuer
                   ),
             cancellationToken);
     }
-
-    protected override IQueryable<BudgetDetails> Project(IQueryable<Budget> q, GetBudgetQuery query)
-    {
-        return q.ProjectTo<BudgetDetails>(Mapper.ConfigurationProvider);
-    }
 }
 
 public sealed record BudgetDetails(Guid Id, string Name, decimal Amount, Guid UserId,
