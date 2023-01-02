@@ -51,36 +51,6 @@ public sealed class
         return query.Where(x =>
             x.Name.ToLower().Contains(search));
     }
-
-    protected override IQueryable<CategoryListItem> Project(IQueryable<Category> q, GetCategoriesQuery query)
-    {
-        var shouldAddWalletName = query.QuerySpecification.Filters.All(x => !x.Key.Equals(nameof(Category.WalletId)));
-
-        return shouldAddWalletName
-            ? q.ProjectTo<CategoryListItem>(Mapper.ConfigurationProvider, x => x.WalletName)
-            : base.Project(q, query);
-    }
 }
 
-public class CategoryListItem : IMapFrom<Category>
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public Guid WalletId { get; set; }
-    public Appearance Appearance { get; set; }
-    public string TransactionType { get; set; }
-    public string? WalletName { get; set; }
-    public static bool MapWalletName => false;
-
-    public static void CreateMap(Profile profile)
-    {
-        profile.CreateMap<Category, CategoryListItem>()
-               .ForMember(x => x.WalletName, opt =>
-               {
-                   if (!MapWalletName)
-                   {
-                       opt.ExplicitExpansion();
-                   }
-               });
-    }
-}
+public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance, string TransactionType, string WalletName) : IMapFrom<Category>;

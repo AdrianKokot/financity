@@ -5,6 +5,7 @@ import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiMultiSelectModule,
+  TuiUnfinishedValidatorModule,
 } from '@taiga-ui/kit';
 import {
   TuiDataListModule,
@@ -39,6 +40,7 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
     TuiLoaderModule,
     TuiDataListWrapperModule,
     ReactiveFormsModule,
+    TuiUnfinishedValidatorModule,
   ],
   exports: [SelectComponent],
 })

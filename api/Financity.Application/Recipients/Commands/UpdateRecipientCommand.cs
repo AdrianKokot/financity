@@ -29,9 +29,7 @@ public sealed class UpdateRecipientCommandHandler : UpdateEntityCommandHandler<U
         if (entity is null) throw new EntityNotFoundException(nameof(Recipient), request.Id);
 
         entity.Name = request.Name;
-
-        await DbContext.SaveChangesAsync(cancellationToken);
-
+        
         return await base.Handle(request, cancellationToken);
     }
 }

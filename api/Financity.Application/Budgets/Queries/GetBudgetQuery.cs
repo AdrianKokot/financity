@@ -38,11 +38,6 @@ public sealed class GetBudgetQueryHandler : UserEntityQueryHandler<GetBudgetQuer
     }
 }
 
-public sealed class CategoryListItemWithWalletName : CategoryListItem, IMapFrom<Category>
-{
-    public new static bool MapWalletName => true;
-}
-
 public sealed record BudgetDetails(Guid Id, string Name, decimal Amount, Guid UserId,
-                                   IEnumerable<CategoryListItemWithWalletName> TrackedCategories, string CurrencyId,
+                                   IEnumerable<CategoryListItem> TrackedCategories, string CurrencyId,
                                    string CurrencyName, decimal CurrentPeriodExpenses) : IMapFrom<Budget>;

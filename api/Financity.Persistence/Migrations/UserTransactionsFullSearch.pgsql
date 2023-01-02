@@ -205,12 +205,14 @@ create table "Transactions"
     "Note"                      varchar(512) not null,
     "TransactionDate"           date         not null,
     "ExchangeRate"              numeric      not null,
+    "RecipientId"               uuid,
     "RecipientWalletId"         uuid,
     "TransactionTypeId"         varchar(7)   not null
         constraint "FK_Transactions_TransactionTypeId"
             references "TransactionTypes" on delete cascade,
-    "CategoryTransactionTypeId" varchar(7)   not null,
+    "CategoryId"                uuid,
     "CategoryWalletId"          uuid,
+    "CategoryTransactionTypeId" varchar(7) ,
     "CurrencyId"                varchar(16)  not null
         constraint "FK_Transactions_Currencies_CurrencyId"
             references "Currencies"
@@ -219,8 +221,6 @@ create table "Transactions"
         constraint "FK_Transactions_Wallets_WalletId"
             references "Wallets"
             on delete cascade,
-    "CategoryId"                uuid,
-    "RecipientId"               uuid,
     constraint "AK_Transactions_Id_WalletId"
         unique ("Id", "WalletId"),
     constraint "FK_Transactions_Categories_CategoryId_CategoryWalletId"

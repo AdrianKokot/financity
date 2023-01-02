@@ -6,8 +6,10 @@
       *tuiLet="items$ | async as items"
       [strict]="true"
       [stringify]="stringify"
+      [tuiTextfieldCleaner]="true"
       [tuiTextfieldLabelOutside]="true"
-      tuiTextfieldSize="m">
+      tuiTextfieldSize="m"
+      tuiUnfinishedValidator="You must either select value from the list or leave this field empty">
       {{ label }}
 
       <input placeholder="Search" tuiTextfield />
