@@ -9,7 +9,7 @@ import {
   TuiScrollbarModule,
   TuiSvgModule,
 } from '@taiga-ui/core';
-import { RouterLinkActive, RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavbarItemComponent } from './ui/navbar-item/navbar-item.component';
 import { TuiBadgeModule } from '@taiga-ui/kit';
 

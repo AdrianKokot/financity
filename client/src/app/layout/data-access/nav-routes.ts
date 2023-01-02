@@ -26,6 +26,11 @@ export const AppNavRoutes: NavRoute[] = [
     iconName: 'tuiIconChartBar',
     route: '/budgets',
   },
+  {
+    label: 'Search',
+    iconName: 'tuiIconSearch',
+    route: '/search',
+  },
 ];
 
 export const UserRelatedRoutes: NavRoute[] = [

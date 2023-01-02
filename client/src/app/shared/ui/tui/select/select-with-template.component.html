@@ -1,12 +1,13 @@
-<ng-container *ngIf="stringify$ | async as stringify; else loading">
+<ng-container *ngIf="stringifyWithItem$ | async as stringify; else loading">
   <tui-combo-box
     [formControl]="control"
     (searchChange)="search$.next($event ?? '')"
     *tuiLet="items$ | async as items"
     [strict]="true"
-    [stringify]="stringify"
+    [stringify]="stringify.text"
     [tuiTextfieldCleaner]="true"
     [tuiTextfieldLabelOutside]="true"
+    [valueContent]="itemContent"
     tuiTextfieldSize="m"
     tuiUnfinishedValidator="You must either select value from the list or leave this field empty">
     {{ label }}
@@ -27,7 +28,12 @@
       <tui-data-list size="s">
         <ng-container *cdkVirtualFor="let item of items ?? []">
           <button [value]="item" tuiOption tuiTextfieldIcon="tuiIconCheck">
-            {{ stringify(item) }}
+            <span
+              *polymorpheusOutlet="
+                itemTemplate as template;
+                context: { $implicit: stringify.item(item)! }
+              "
+              [innerHtml]="template | dompurify"></span>
           </button>
         </ng-container>
         <ng-container *ngIf="(apiLoading$ | async)!">
@@ -36,6 +42,18 @@
       </tui-data-list>
     </cdk-virtual-scroll-viewport>
   </tui-combo-box>
+
+  <ng-template #itemContent="polymorpheus" polymorpheus let-item>
+    <ng-container *ngIf="stringify.item(item) as data; else loadingText">
+      <span
+        *polymorpheusOutlet="
+          itemTemplate as template;
+          context: { $implicit: data }
+        "
+        [innerHtml]="template | dompurify"></span>
+    </ng-container>
+    <ng-template #loadingText>Loading...</ng-template>
+  </ng-template>
 </ng-container>
 
 <ng-template #loading>

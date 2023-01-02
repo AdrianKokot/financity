@@ -13,4 +13,5 @@ public interface IApplicationDbContext
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null);
+    public Task<int> GenerateDefaultCategories(Guid walletId, CancellationToken ct);
 }

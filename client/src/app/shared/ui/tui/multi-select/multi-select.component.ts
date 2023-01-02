@@ -9,4 +9,6 @@ import { AbstractSelectComponent } from '@shared/ui/tui/abstract-select/abstract
 })
 export class MultiSelectComponent<
   T extends { id: string; name: string }
-> extends AbstractSelectComponent<T> {}
+> extends AbstractSelectComponent<T> {
+  loadingValue = [];
+}

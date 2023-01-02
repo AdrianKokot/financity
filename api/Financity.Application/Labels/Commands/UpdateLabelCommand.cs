@@ -1,4 +1,5 @@
-﻿using Financity.Application.Abstractions.Data;
+﻿using System.Xml.Serialization;
+using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;
@@ -31,8 +32,6 @@ public sealed class UpdateLabelCommandHandler : UpdateEntityCommandHandler<Updat
 
         entity.Name = command.Name;
         entity.Appearance = command.Appearance;
-
-        await DbContext.SaveChangesAsync(cancellationToken);
 
         return await base.Handle(command, cancellationToken);
     }

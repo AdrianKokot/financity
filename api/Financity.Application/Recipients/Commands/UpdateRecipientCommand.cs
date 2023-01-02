@@ -30,8 +30,6 @@ public sealed class UpdateRecipientCommandHandler : UpdateEntityCommandHandler<U
 
         entity.Name = request.Name;
 
-        await DbContext.SaveChangesAsync(cancellationToken);
-
         return await base.Handle(request, cancellationToken);
     }
 }

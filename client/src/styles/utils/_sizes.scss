@@ -17,3 +17,7 @@ $sizes: (xs, s, m, l);
     width: #{$w}px;
   }
 }
+
+.max-w-150px {
+  max-width: 150px;
+}

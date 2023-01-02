@@ -40,16 +40,29 @@
   </label>
 
   <label tuiLabel="Category" class="tui-form__row">
-    <app-select
+    <app-select-with-template
       *ngIf="this.form.controls.transactionType.value"
       [control]="form.controls.categoryId"
       [preloadedResults]="preloadedData.categories"
       [getListFunction]="dataApis.getCategories"
+      [itemTemplate]="categoryTemplate"
       [externalFilters]="{
         transactionType_eq: this.form.controls.transactionType.value
       }"
       class="mt-1"
-      label="Choose a category"></app-select>
+      label="Choose a category"></app-select-with-template>
+
+    <ng-template #categoryTemplate="polymorpheus" polymorpheus="" let-item>
+      <span class="d-flex align-items-center">
+        <tui-marker-icon
+          size="xs"
+          [attr.data-appearance-color]="item.appearance.color ?? ''"
+          [src]="item.appearance.iconName ?? 'fa::question'"></tui-marker-icon>
+        <span class="ml-2 text-ellipsis d-block" [title]="item.name">
+          {{ item.name ?? '-' }}
+        </span>
+      </span>
+    </ng-template>
 
     <tui-error
       [error]="[] | tuiFieldError | async"

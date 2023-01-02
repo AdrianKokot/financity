@@ -1,13 +1,12 @@
 <div
   class="tui-row"
   *tuiLet="form.controls.ownerId.value === user?.id as isUserOwner">
-  <div class="tui-col_5">
+  <div class="tui-col_5" [attr.data-skeleton]="initialDataLoading$ | async">
     <form
       *tuiLet="dialogs$ | async"
       [formGroup]="form.group"
       (ngSubmit)="form.submit()"
-      class="tui-form"
-      [attr.data-skeleton]="initialDataLoading$ | async">
+      class="tui-form">
       <label tuiLabel="Name" class="tui-form__row">
         <tui-input
           formControlName="name"

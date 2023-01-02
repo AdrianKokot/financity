@@ -28,7 +28,7 @@ import { FormControl } from '@angular/forms';
 export abstract class AbstractSelectComponent<
   T extends { id: string; name: string }
 > {
-  @Input() control: FormControl | null = null;
+  @Input() control!: FormControl;
   @Input() label = '';
   @Input() preloadedResults: T[] = [];
 
@@ -127,12 +127,14 @@ export abstract class AbstractSelectComponent<
     shareReplay(1)
   );
 
-  stringify$ = this.allItems$.pipe(
+  protected readonly stringify$ = this.allItems$.pipe(
     filter((x): x is T[] => x !== null),
     map(
       items =>
         new Map<string, string>(
-          items.map(item => [item.id, this.stringify(item)])
+          items.map(item => {
+            return [item.id, this.stringify(item)];
+          })
         )
     ),
     startWith(new Map<string, string>()),

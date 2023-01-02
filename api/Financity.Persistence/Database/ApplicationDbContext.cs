@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using EntityFramework.Exceptions.PostgreSQL;
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Common;
@@ -34,7 +35,12 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
 
     public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null)
     {
-        return FromExpression(() => SearchUserTransactions(userId, searchTerm, walletId));
+        return FromExpression(() => SearchUserTransactions(userId, searchTerm.ToLower(CultureInfo.InvariantCulture), walletId));
+    }
+
+    public async Task<int> GenerateDefaultCategories(Guid walletId, CancellationToken ct)
+    {
+        return await Database.ExecuteSqlRawAsync("CALL \"GenerateDefaultCategories\"({0})", walletId);
     }
 
     public DbSet<T> GetDbSet<T>() where T : class

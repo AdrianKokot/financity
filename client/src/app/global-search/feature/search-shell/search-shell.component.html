@@ -1,0 +1,223 @@
+<div class="main-layout-header-box" *tuiLet="dialogs$ | async"></div>
+
+<ng-container *tuiLet="(searchWasApplied$ | async) === true as showOnlySearch">
+  <h1 class="tui-text_h4 header-box" *ngIf="!showOnlySearch">
+    Found transactions
+  </h1>
+
+  <div [class.py-6]="!showOnlySearch">
+    <div [class.only-search]="showOnlySearch">
+      <form
+        (ngSubmit)="ui.actions.applySearch$.next(undefined)"
+        [formGroup]="filters.form">
+        <div class="tui-form__row" tuiGroup [rounded]="true">
+          <tui-input
+            [tuiTextfieldLabelOutside]="true"
+            [tuiTextfieldSize]="showOnlySearch ? 'm' : 's'"
+            formControlName="search"
+            [class.no-shadow]="!showOnlySearch">
+            Search transactions
+          </tui-input>
+
+          <button
+            tuiButton
+            class="tui-group__auto-width-item"
+            size="m"
+            type="submit"
+            *ngIf="showOnlySearch">
+            Search
+          </button>
+        </div>
+        <div class="tui-form__field-note" [hidden]="!showOnlySearch">
+          Global search uses natural language processing so results may be a
+          little off
+        </div>
+      </form>
+    </div>
+
+    <main *tuiLet="data.items$ | async as items">
+      <ng-container *ngIf="!showOnlySearch">
+        <div
+          class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+          <tui-scrollbar>
+            <cdk-virtual-scroll-viewport
+              #viewport
+              appInfiniteVirtualScroll
+              (pageChange)="data.page($event)"
+              [itemSize]="44"
+              [appendOnly]="true"
+              [fixed]="15.5"
+              class="tui-zero-scrollbar"
+              tuiScrollable>
+              <table tuiTable [columns]="ui.columns" class="w-full">
+                <thead
+                  class="sticky-thead"
+                  [style.top.px]="-viewport['_renderedContentOffset']">
+                  <tr tuiThGroup>
+                    <th
+                      *tuiHead="'transactionDate'"
+                      tuiTh
+                      [sorter]="null"
+                      class="w-100px">
+                      Date
+                    </th>
+                    <th
+                      *tuiHead="'category'"
+                      tuiTh
+                      [sorter]="null"
+                      class="w-250px">
+                      Category
+                    </th>
+                    <th
+                      *tuiHead="'labels'"
+                      tuiTh
+                      [sorter]="null"
+                      class="w-250px">
+                      Labels
+                    </th>
+                    <th *tuiHead="'note'" tuiTh [sorter]="null" class="w-rest">
+                      Note
+                    </th>
+                    <th
+                      *tuiHead="'recipient'"
+                      [sorter]="null"
+                      class="w-250px"
+                      tuiTh>
+                      Recipient
+                    </th>
+                    <th
+                      *tuiHead="'amount'"
+                      tuiTh
+                      [sorter]="null"
+                      class="w-200px">
+                      Amount
+                    </th>
+                    <th
+                      *tuiHead="'actions'"
+                      tuiTh
+                      [sorter]="null"
+                      class="w-56px"></th>
+                  </tr>
+                </thead>
+
+                <tbody tuiTbody>
+                  <tr
+                    *cdkVirtualFor="let item of items ?? []; trackBy: trackById"
+                    tuiTr>
+                    <td *tuiCell="'transactionDate'" tuiTd class="w-100px">
+                      <div
+                        class="text-ellipsis"
+                        *tuiLet="item.transactionDate | date as label"
+                        [title]="label">
+                        {{ label }}
+                      </div>
+                    </td>
+
+                    <td *tuiCell="'category'" tuiTd class="w-250px">
+                      <span
+                        *ngIf="item.category !== null"
+                        class="d-flex align-items-center">
+                        <tui-marker-icon
+                          size="xs"
+                          [attr.data-appearance-color]="
+                            item.category.appearance.color ?? ''
+                          "
+                          [src]="
+                            item.category.appearance.iconName ?? 'fa::question'
+                          "></tui-marker-icon>
+                        <span
+                          class="ml-2 text-ellipsis d-block"
+                          [title]="item.category.name">
+                          {{ item.category.name ?? '-' }}
+                        </span>
+                      </span>
+                    </td>
+
+                    <td *tuiCell="'labels'" tuiTd class="w-250px">
+                      <tui-items-with-more [required]="1">
+                        <ng-container *ngFor="let label of item.labels">
+                          <tui-badge
+                            *tuiItem
+                            class="mr-1 text-ellipsis max-w-150px"
+                            [attr.data-appearance-color]="
+                              label.appearance.color
+                            "
+                            status="custom"
+                            [value]="label.name"></tui-badge>
+                        </ng-container>
+                        <ng-template tuiMore let-index>
+                          <a tuiLink (click)="ui.actions.details$.next(item)">
+                            and
+                            {{
+                              ui.getRemainingLabelsCount(
+                                index,
+                                item.labels.length
+                              )
+                            }}
+                            more
+                          </a>
+                        </ng-template>
+                      </tui-items-with-more>
+                    </td>
+
+                    <td *tuiCell="'note'" tuiTd class="w-rest">
+                      <div class="text-ellipsis" [title]="item.note">
+                        {{ (item.note ?? '').length > 0 ? item.note : '-' }}
+                      </div>
+                    </td>
+
+                    <td *tuiCell="'recipient'" tuiTd class="w-250px">
+                      <div class="text-ellipsis" [title]="item.recipient?.name">
+                        {{ item.recipient?.name ?? '-' }}
+                      </div>
+                    </td>
+
+                    <td *tuiCell="'amount'" tuiTd class="w-200px">
+                      <div class="text-ellipsis">
+                        <tui-money
+                          [currency]="item.currencyId"
+                          [colored]="true"
+                          [value]="
+                            item.amount *
+                            (item.transactionType === 'Expense' ? -1 : 1)
+                          "></tui-money>
+                      </div>
+                    </td>
+
+                    <td *tuiCell="'actions'" tuiTd class="w-56px">
+                      <button
+                        tuiIconButton
+                        appearance="flat"
+                        size="s"
+                        icon="fa::info"
+                        title="View details"
+                        shape="rounded"
+                        class="mr-1"
+                        (click)="ui.actions.details$.next(item)"></button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tfoot *tuiLet="(data.apiLoading$ | async)! as apiLoading">
+                  <tr *ngIf="apiLoading || items === null">
+                    <td [colSpan]="ui.columns.length">
+                      <tui-loader></tui-loader>
+                    </td>
+                  </tr>
+
+                  <tr *ngIf="items && items.length === 0 && !apiLoading">
+                    <td
+                      [colSpan]="ui.columns.length"
+                      class="text-3 text-center">
+                      No records found
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </cdk-virtual-scroll-viewport>
+          </tui-scrollbar>
+        </div>
+      </ng-container>
+    </main>
+  </div>
+</ng-container>
