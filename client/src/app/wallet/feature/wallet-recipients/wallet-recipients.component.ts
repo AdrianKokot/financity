@@ -16,6 +16,7 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { Label } from '@shared/data-access/models/label';
+import { ApiParams } from '../../../core/api/generic-api.service';
 
 @Component({
   selector: 'app-wallet-recipients',
@@ -41,7 +42,8 @@ export class WalletRecipientsComponent {
   });
 
   readonly data = new ApiDataHandler(
-    this._recipientService.getList.bind(this._recipientService, this._walletId),
+    (p: ApiParams) =>
+      this._recipientService.getAll({ ...p, walletId_eq: this._walletId }),
     this.filters
   );
 

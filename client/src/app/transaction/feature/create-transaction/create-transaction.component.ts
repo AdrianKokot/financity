@@ -73,35 +73,36 @@ export class CreateTransactionComponent {
   );
 
   readonly exchangeRateLoading$ = this.shouldExchangeRateBeSpecified$.pipe(
-    switchMap(should =>
-      (should
-        ? this._currencyService
-            .getExchangeRate(
-              this.form.controls.currencyId.value,
-              this._context.data.walletCurrencyId,
-              this.form.controls.transactionDate.value?.toUtcNativeDate()
-            )
-            .pipe(
-              catchError(err => {
-                if (err instanceof HttpErrorResponse) {
-                  handleValidationApiError(
-                    this.form.group,
-                    err,
-                    'exchangeRate'
-                  );
-                }
-                return of(undefined);
-              })
-            )
-        : of(1)
+    switchMap(should => {
+      return (
+        should
+          ? this._currencyService
+              .getExchangeRate(
+                this.form.controls.currencyId.value,
+                this._context.data.walletCurrencyId,
+                this.form.controls.transactionDate.value?.toUtcNativeDate()
+              )
+              .pipe(
+                catchError(err => {
+                  if (err instanceof HttpErrorResponse) {
+                    handleValidationApiError(
+                      this.form.group,
+                      err,
+                      'exchangeRate'
+                    );
+                  }
+                  return of(undefined);
+                })
+              )
+          : of(1)
       ).pipe(
         toLoadingState(
           rate =>
             tuiIsNumber(rate) &&
             this.form.group.controls.exchangeRate.setValue(rate)
         )
-      )
-    )
+      );
+    })
   );
 
   constructor(
@@ -111,7 +112,7 @@ export class CreateTransactionComponent {
     private readonly _walletService: WalletApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
-      Transaction,
+      Pick<Transaction, 'id'>,
       {
         walletId: Wallet['id'];
         transactionType: TransactionType;

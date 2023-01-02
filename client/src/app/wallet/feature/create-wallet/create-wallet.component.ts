@@ -36,7 +36,7 @@ export class CreateWalletComponent {
     private readonly _fb: FormWithHandlerBuilder,
     private readonly _currencyService: CurrencyApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly _context: TuiDialogContext<Wallet>
+    private readonly _context: TuiDialogContext<Pick<Wallet, 'id'>>
   ) {}
 
   cancel() {

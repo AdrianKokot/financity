@@ -35,7 +35,7 @@ export class UpdateBudgetComponent {
   );
 
   readonly dataApis = {
-    getCategories: this._categoryService.getAllList.bind(this._categoryService),
+    getCategories: this._categoryService.getAll.bind(this._categoryService),
     getCategoryName: (item: CategoryListItem) =>
       `${item.name} (${item.walletName})`,
   };
@@ -64,10 +64,8 @@ export class UpdateBudgetComponent {
     private readonly _currencyService: CurrencyApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
-      Budget,
-      {
-        id: Budget['id'];
-      }
+      Pick<Budget, 'id'>,
+      Pick<Budget, 'id'>
     >
   ) {}
 

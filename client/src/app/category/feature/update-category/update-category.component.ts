@@ -50,8 +50,8 @@ export class UpdateCategoryComponent {
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
-      Category,
-      { id: Category['id'] }
+      Pick<Category, 'id'>,
+      Pick<Category, 'id'>
     >
   ) {}
 

@@ -82,7 +82,7 @@ export class UpdateTransactionComponent {
     private readonly _walletService: WalletApiService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
-      Transaction,
+      Pick<Transaction, 'id'>,
       {
         walletId: Wallet['id'];
         id: Transaction['id'];

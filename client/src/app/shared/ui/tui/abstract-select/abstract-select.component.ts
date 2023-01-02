@@ -23,6 +23,7 @@ import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TuiContextWithImplicit, tuiIsString } from '@taiga-ui/cdk';
 import { FormControl } from '@angular/forms';
+import { ApiParams } from '../../../../core/api/generic-api.service';
 
 @Component({ template: '' })
 export abstract class AbstractSelectComponent<
@@ -34,11 +35,8 @@ export abstract class AbstractSelectComponent<
 
   @Input() stringify = (item: T) => item.name;
 
-  @Input() getListFunction: (pagination: {
-    page: number;
-    pageSize: number;
-    filters?: Record<string, string | string[]>;
-  }) => Observable<T[]> = () => EMPTY;
+  @Input() getListFunction: (pagination: ApiParams) => Observable<T[]> = () =>
+    EMPTY;
 
   externalFilters$ = new BehaviorSubject<Record<string, string | string[]>>({});
 
@@ -83,8 +81,8 @@ export abstract class AbstractSelectComponent<
   ).pipe(
     withLatestFrom(this._filters$, this.page$),
     map(([, filters, page]) => ({
+      ...filters,
       page,
-      filters,
       pageSize: AUTOCOMPLETE_PAGE_SIZE,
     })),
     distinctUntilChangedObject(),

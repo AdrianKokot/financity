@@ -34,7 +34,10 @@ export class CreateLabelComponent {
     private _dataService: LabelApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
-    private readonly _context: TuiDialogContext<Label, { walletId: string }>
+    private readonly _context: TuiDialogContext<
+      Pick<Label, 'id'>,
+      Pick<Label, 'walletId'>
+    >
   ) {
     this.form.patchValue({
       walletId: this._context.data.walletId,

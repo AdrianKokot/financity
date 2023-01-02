@@ -38,7 +38,7 @@ export class WalletsListComponent {
     startWith(null),
     switchMap(() =>
       this._walletService
-        .getList({
+        .getAll({
           page: 1,
           pageSize: 20,
         })

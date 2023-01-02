@@ -34,8 +34,8 @@ export class UpdateRecipientComponent {
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
-      Recipient,
-      { id: Recipient['id'] }
+      Pick<Recipient, 'id'>,
+      Pick<Recipient, 'id'>
     >
   ) {}
 

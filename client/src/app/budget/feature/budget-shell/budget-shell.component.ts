@@ -69,7 +69,7 @@ export class BudgetShellComponent {
   );
 
   readonly data = new ApiDataHandler(
-    this._transactionApiService.getAllList.bind(this._transactionApiService),
+    this._transactionApiService.getAll.bind(this._transactionApiService),
     this.filters,
     this.budget$
   );
