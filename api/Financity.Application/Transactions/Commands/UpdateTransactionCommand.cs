@@ -60,8 +60,7 @@ public sealed class UpdateTransactionCommandHandler : UpdateEntityCommandHandler
         {
             entity.Category = await DbContext.GetDbSet<Category>().FirstAsync(x => x.Id == command.CategoryId, ct);
         }
-
-
+        
         entity.TransactionDate = DateOnly.FromDateTime(command.TransactionDate.ToUniversalTime());
 
         entity.Labels = await DbContext.GetDbSet<Label>()

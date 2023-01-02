@@ -58,12 +58,12 @@ export class ApiDataHandler<
       },
       reload: this._reload$.value,
     })),
-    distinctUntilChanged((previous, current) =>
-      current.reload
+    distinctUntilChanged((previous, current) => {
+      return current.reload
         ? false
         : JSON.stringify(previous.pagination) ===
-          JSON.stringify(current.pagination)
-    ),
+            JSON.stringify(current.pagination);
+    }),
     tap(() => {
       this._reload$.next(false);
     }),

@@ -269,15 +269,15 @@ create view "FullSearchTransactions"
              "TransactionDate", "Labels")
 as
 SELECT t."Id",
-       t."Note",
-       t."Amount",
-       c."Name"                                                                   AS "CategoryName",
-       r."Name"                                                                   AS "RecipientName",
-       cr."Id"                                                                    AS "CurrencyId",
-       cr."Name"                                                                  AS "CurrencyName",
+       lower(t."Note")                                                            as "Note",
+       coalesce(cast(t."Amount" as varchar), '')                                  as "Amount",
+       lower(coalesce(c."Name", ''))                                              AS "CategoryName",
+       lower(coalesce(r."Name", ''))                                              AS "RecipientName",
+       lower(cr."Id")                                                             AS "CurrencyId",
+       lower(cr."Name")                                                           AS "CurrencyName",
        t."WalletId",
-       to_char(t."TransactionDate"::timestamp with time zone, 'DD.MM.YYYY'::text) AS "TransactionDate",
-       l."Labels"
+       to_char(t."TransactionDate"::timestamp with time zone, 'DD/MM/YYYY'::text) AS "TransactionDate",
+       lower(coalesce(l."Labels", ''))                                            as "Labels"
 FROM "Transactions" t
          LEFT JOIN "Categories" c ON t."CategoryId" = c."Id"
          LEFT JOIN "Recipients" r ON t."RecipientId" = r."Id"
@@ -288,37 +288,43 @@ FROM "Transactions" t
                              LEFT JOIN "TransactionLabel" xlt ON xl."Id" = xlt."LabelId"
                     GROUP BY xlt."TransactionId") l ON l."TransactionId" = t."Id";
 
-create function "SearchUserTransactions"(userid uuid, searchterm character varying,
-                                         walletid uuid DEFAULT NULL::uuid) returns SETOF "Transactions"
+create or replace function "SearchUserTransactions"(userid uuid, searchterm character varying,
+                                         walletid uuid DEFAULT NULL::uuid) returns setof "Transactions"
     language plpgsql
 as
 $$
 BEGIN
-    RETURN QUERY SELECT *
-                 FROM "Transactions"
-                 WHERE "Transactions"."Id" IN (SELECT FST."Id"
-                                               FROM (SELECT *
-                                                     FROM "FullSearchTransactions"
-                                                     WHERE (walletId is null or "FullSearchTransactions"."WalletId" = walletId)
-                                                       and "FullSearchTransactions"."WalletId" IN
-                                                           (SELECT "UserWallet"."WalletId"
-                                                            FROM "UserWallet"
-                                                            WHERE "UserWallet"."UserId" = userId
-                                                            UNION
-                                                            SELECT "Wallets"."Id"
-                                                            FROM "Wallets"
-                                                            WHERE "Wallets"."OwnerId" = userId)) FST,
-                                                    SIMILARITY(searchTerm,
-                                                               coalesce(FST."Note", '') ||
-                                                               coalesce(cast(FST."Amount" as varchar), '') ||
-                                                               coalesce(FST."TransactionDate", '') ||
-                                                               coalesce(FST."RecipientName", '') ||
-                                                               coalesce(FST."CategoryName", '') ||
-                                                               coalesce(FST."CurrencyName", '') ||
-                                                               coalesce(FST."CurrencyId", '') ||
-                                                               coalesce(FST."Labels", '')) similarity
-                                               WHERE similarity > 0
-                                               ORDER BY similarity DESC NULLS LAST);
+    RETURN QUERY (SELECT *
+FROM "Transactions"
+WHERE "Id" IN (SELECT "Id"
+               FROM (SELECT "Id",
+                            SIMILARITY(searchterm,
+                                       "Note" || "Amount" || "TransactionDate" || "RecipientName" || "CategoryName" ||
+                                       "CurrencyName" || "CurrencyId" || "Labels") similarity,
+                            SIMILARITY(searchterm, "Note")                         note_similarity,
+                            SIMILARITY(searchterm, "Amount")                       amount_similarity,
+                            SIMILARITY(searchterm, "TransactionDate")              transactiondate_similarity,
+                            SIMILARITY(searchterm, "RecipientName")                recipientname_similarity,
+                            SIMILARITY(searchterm, "CategoryName")                 categoryname_similarity,
+                            SIMILARITY(searchterm, "CurrencyName")                 currencyname_similarity,
+                            SIMILARITY(searchterm, "CurrencyId")                   currencyid_similarity,
+                            SIMILARITY(searchterm, "Labels")                       labels_similarity
+                     FROM (SELECT *
+                           FROM "FullSearchTransactions"
+                           WHERE (walletId is null or "FullSearchTransactions"."WalletId" = walletId)
+                             and "FullSearchTransactions"."WalletId" IN
+                                 (SELECT "UserWallet"."WalletId"
+                                  FROM "UserWallet"
+                                  WHERE "UserWallet"."UserId" = userId
+                                  UNION
+                                  SELECT "Wallets"."Id"
+                                  FROM "Wallets"
+                                  WHERE "Wallets"."OwnerId" = userId)) FST) FST
+               where similarity > 0
+                 and (note_similarity + amount_similarity + transactiondate_similarity + recipientname_similarity +
+                      categoryname_similarity + currencyname_similarity + currencyid_similarity + labels_similarity) >
+                     0.2
+               ORDER BY similarity DESC NULLS LAST));
 END
 $$;
 

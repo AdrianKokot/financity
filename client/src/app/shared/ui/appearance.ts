@@ -1,23 +1,3 @@
-// const appearanceColors = [
-//   'slate',
-//   'neutral',
-//   'yellow',
-//   'orange',
-//   'rose',
-//   'purple',
-//   'violet',
-//   'indigo',
-//   'blue',
-//   'cyan',
-//   'emerald',
-//   'lime',
-// ].map(x =>
-//   new Array(4)
-//     .fill(0)
-//     .map((_, i) => (i + 1) * 2 * 100)
-//     .map(i => `${x}-${i}`)
-// );
-
 const appearanceColors = new Array(5)
   .fill(0)
   .map((_, i) => i)
@@ -26,7 +6,7 @@ const appearanceColors = new Array(5)
       .fill(0)
       .map((_, x) => x + 1)
       .map(x => x + i * 4)
-      .map(x => `support-${x < 10 ? '0' + x : x}`)
+      .map(x => `support-${x < 10 ? `0${x}` : x}`)
   );
 
 export const APPEARANCE_COLORS_COUNT = appearanceColors.length;

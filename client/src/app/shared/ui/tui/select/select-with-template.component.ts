@@ -37,10 +37,11 @@ export class SelectWithTemplateComponent<
       text: (id: TuiContextWithImplicit<string> | string) =>
         (tuiIsString(id) ? m.get(id)?.text : m.get(id.$implicit)?.text) ||
         (id === '' ? '' : 'Loading...'),
-      item: (id: TuiContextWithImplicit<string> | string): T | null =>
-        tuiIsString(id)
+      item: (id: TuiContextWithImplicit<string> | string): T | null => {
+        return tuiIsString(id)
           ? m.get(id)?.item || null
-          : m.get(id.$implicit)?.item || null,
+          : m.get(id.$implicit)?.item || null;
+      },
     })),
     shareReplay(1)
   );

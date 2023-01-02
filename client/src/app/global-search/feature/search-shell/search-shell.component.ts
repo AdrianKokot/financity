@@ -3,7 +3,6 @@ import {
   Component,
   Inject,
   Injector,
-  ViewEncapsulation,
 } from '@angular/core';
 import { merge, Subject, switchMap } from 'rxjs';
 import { TransactionListItem } from '@shared/data-access/models/transaction.model';
@@ -21,7 +20,6 @@ import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
   selector: 'app-search-shell',
   templateUrl: './search-shell.component.html',
   styleUrls: ['./search-shell.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchShellComponent {
