@@ -3,41 +3,28 @@ import {
   Component,
   Inject,
   Injector,
+  ViewEncapsulation,
 } from '@angular/core';
-import { map, merge, shareReplay, Subject, switchMap, tap } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { DATE_RANGE_FILTER_GROUPS_MAP } from '../../../wallet/utils/date-range-filter-groups.constants';
+import { merge, Subject, switchMap } from 'rxjs';
 import { TransactionListItem } from '@shared/data-access/models/transaction.model';
-import { Category } from '@shared/data-access/models/category.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { ActivatedRoute } from '@angular/router';
+import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
 import { TuiDialogService } from '@taiga-ui/core';
-import { Budget } from '@shared/data-access/models/budget.model';
-import { BudgetApiService } from '../../../core/api/budget-api.service';
+import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 
 @Component({
-  selector: 'app-budget-shell',
-  templateUrl: './budget-shell.component.html',
-  styleUrls: ['./budget-shell.component.scss'],
+  selector: 'app-search-shell',
+  templateUrl: './search-shell.component.html',
+  styleUrls: ['./search-shell.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BudgetShellComponent {
-  private readonly _budgetId: Budget['id'] =
-    this._activatedRoute.snapshot.params['id'];
-
-  readonly budget$ = this._budgetService.get(this._budgetId).pipe(
-    tap(budget => {
-      this.filters.form.patchValue({
-        categories: budget.trackedCategories.map(x => x.id),
-        currencyId: budget.currencyId,
-      });
-    }),
-    shareReplay(1)
-  );
-
+export class SearchShellComponent {
   readonly ui = {
     columns: [
       'transactionDate',
@@ -52,26 +39,27 @@ export class BudgetShellComponent {
       labelsCount - (index === 0 ? 1 : index + 2),
     actions: {
       details$: new Subject<TransactionListItem>(),
+      applySearch$: new Subject<void>(),
     },
   };
 
   readonly filters = this._fb.filters(
     {
-      transactionDate: [DATE_RANGE_FILTER_GROUPS_MAP['this month'].range],
       search: [''],
-      categories: [new Array<Category['id']>()],
-      currencyId: [''],
     },
     {
-      categories: 'categoryId',
-      currencyId: 'exchangedCurrencyId_eq',
+      search: 'query',
     }
+  );
+
+  readonly searchWasApplied$ = this.ui.actions.applySearch$.pipe(
+    toLoadingState()
   );
 
   readonly data = new ApiDataHandler(
     this._transactionApiService.getAllList.bind(this._transactionApiService),
     this.filters,
-    this.budget$
+    this.ui.actions.applySearch$
   );
 
   readonly dialogs$ = merge(
@@ -88,15 +76,14 @@ export class BudgetShellComponent {
             dismissible: true,
           }
         )
-      ),
-      map(() => false)
+      )
     )
-  ).pipe(tap(reset => reset !== false && this.data.resetPage()));
+  );
 
   constructor(
     private readonly _fb: FormWithHandlerBuilder,
     private readonly _activatedRoute: ActivatedRoute,
-    private readonly _budgetService: BudgetApiService,
+    private readonly _walletApiService: WalletApiService,
     private readonly _transactionApiService: TransactionApiService,
     @Inject(Injector) private readonly _injector: Injector,
     @Inject(TuiDialogService) private readonly _dialog: TuiDialogService

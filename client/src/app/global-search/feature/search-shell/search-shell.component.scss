@@ -1,0 +1,20 @@
+.w-rest {
+  --rest: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - 1108px);
+  max-width: max(var(--rest), 250px);
+  width: max(var(--rest), 250px);
+  min-width: max(var(--rest), 250px);
+}
+
+
+.only-search {
+  form {
+    margin: 20vh auto 0;
+    max-width: 50vw;
+  }
+}
+
+form {
+  height: 56px;
+  margin-top: 0;
+  transition: margin var(--tui-duration, 500ms);
+}

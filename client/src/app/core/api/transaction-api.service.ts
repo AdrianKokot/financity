@@ -21,11 +21,18 @@ export class TransactionApiService extends GenericApiService {
     pageSize: number;
     filters?: Record<string, string | string[]>;
   }) {
+    const additional: Record<string, string | string[]> =
+      pagination.filters && 'query' in pagination.filters
+        ? {}
+        : {
+            orderBy: 'transactionDate',
+            direction: 'desc',
+          };
+
     const params = new HttpParams().appendAll({
       page: pagination.page,
       pageSize: pagination.pageSize,
-      orderBy: 'transactionDate',
-      direction: 'desc',
+      ...additional,
       ...pagination.filters,
     });
 

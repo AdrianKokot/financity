@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable, of, tap } from 'rxjs';
+import { delay, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   Budget,
   BudgetDetails,
@@ -53,7 +53,10 @@ export class BudgetApiService {
   }
 
   get(id: Budget['id']) {
-    return this.http.get<BudgetDetails>(`/api/budgets/${id}`);
+    return of(null).pipe(
+      delay(3000),
+      switchMap(() => this.http.get<BudgetDetails>(`/api/budgets/${id}`))
+    );
   }
 
   create(payload: CreateBudgetPayload): Observable<Budget> {

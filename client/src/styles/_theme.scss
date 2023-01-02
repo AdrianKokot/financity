@@ -323,3 +323,13 @@ tui-loader {
     border-radius: inherit;
   }
 }
+
+
+table tfoot tr {
+  height: 44px !important;
+
+  td {
+    height: 44px !important;
+
+  }
+}

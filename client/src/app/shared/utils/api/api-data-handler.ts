@@ -7,9 +7,11 @@ import {
   merge,
   NEVER,
   Observable,
+  of,
   scan,
   share,
   shareReplay,
+  skipUntil,
   startWith,
   switchMap,
   tap,
@@ -29,6 +31,16 @@ export class ApiDataHandler<
   private readonly _page$ = new BehaviorSubject<number>(1);
   private readonly _reload$ = new BehaviorSubject<boolean>(true);
 
+  constructor(
+    private readonly _getData: (
+      pagination: Parameters<
+        InstanceType<typeof TransactionApiService>['getList']
+      >[1]
+    ) => Observable<T[]>,
+    private readonly _filters: FiltersForm<TControl, TKey>,
+    private readonly _started$: Observable<unknown> = of(true)
+  ) {}
+
   private readonly _api$ = merge(
     this._page$,
     merge(this._filters.filters$, this._reload$.pipe(filter(x => x))).pipe(
@@ -36,6 +48,7 @@ export class ApiDataHandler<
       switchMap(() => NEVER)
     )
   ).pipe(
+    skipUntil(this._started$),
     withLatestFrom(this._filters.filters$, this._page$),
     map(([, filters, page]) => ({
       pagination: {
@@ -80,15 +93,6 @@ export class ApiDataHandler<
       filter((x): x is null => x === null && this._page$.value === 1)
     )
   ).pipe(distinctUntilChanged());
-
-  constructor(
-    private readonly _getData: (
-      pagination: Parameters<
-        InstanceType<typeof TransactionApiService>['getList']
-      >[1]
-    ) => Observable<T[]>,
-    private readonly _filters: FiltersForm<TControl, TKey>
-  ) {}
 
   page(val: number): void {
     this._page$.next(val);
