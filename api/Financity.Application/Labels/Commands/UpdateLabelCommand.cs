@@ -32,7 +32,7 @@ public sealed class UpdateLabelCommandHandler : UpdateEntityCommandHandler<Updat
 
         entity.Name = command.Name;
         entity.Appearance = command.Appearance;
-        
+
         return await base.Handle(command, cancellationToken);
     }
 }

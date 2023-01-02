@@ -37,6 +37,11 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
         return FromExpression(() => SearchUserTransactions(userId, searchTerm, walletId));
     }
 
+    public async Task<int> GenerateDefaultCategories(Guid walletId, CancellationToken ct)
+    {
+        return await Database.ExecuteSqlRawAsync("CALL \"GenerateDefaultCategories\"({0})", walletId);
+    }
+
     public DbSet<T> GetDbSet<T>() where T : class
     {
         return Set<T>();

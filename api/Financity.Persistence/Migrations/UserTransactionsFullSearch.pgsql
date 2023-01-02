@@ -327,15 +327,15 @@ create procedure "GenerateDefaultCategories"(IN walletid uuid)
 as
 $$
 BEGIN
-    INSERT INTO "Categories" ("Name", "Appearance_Color", "Appearance_IconName", "TransactionTypeId", "WalletId")
-    VALUES ('Uncategorized income', 'icon-support-01', 'fa::wallet', 'Income', walletId),
-           ('Salary', 'icon-support-02', 'fa::money-bill', 'Income', walletId),
-           ('Uncategorized expense', 'icon-support-01', 'fa::sack', 'Expense', walletId),
-           ('Food', 'icon-support-03', 'fa::utensils', 'Expense', walletId),
-           ('Commute', 'icon-support-04', 'fa:train', 'Expense', walletId),
-           ('Household chemistry', 'icon-support-05', 'fa::soap', 'Expense', walletId),
-           ('Dining out', 'icon-support-06', 'fa::pizza-slice', 'Expense', walletId),
-           ('Rent', 'icon-support-07', 'fa::building', 'Expense', walletId);
+    INSERT INTO "Categories" ("Id", "Name", "Appearance_Color", "Appearance_IconName", "TransactionTypeId", "WalletId")
+    VALUES (gen_random_uuid(), 'Uncategorized income', 'support-01', 'fa::solid::wallet', 'Income', walletId),
+           (gen_random_uuid(), 'Salary', 'support-02', 'fa::solid::money-bill', 'Income', walletId),
+           (gen_random_uuid(), 'Uncategorized expense', 'support-01', 'fa::solid::sack', 'Expense', walletId),
+           (gen_random_uuid(), 'Food', 'support-03', 'fa::solid::utensils', 'Expense', walletId),
+           (gen_random_uuid(), 'Commute', 'support-04', 'fa::solid::train', 'Expense', walletId),
+           (gen_random_uuid(), 'Household chemistry', 'support-05', 'fa::solid::soap', 'Expense', walletId),
+           (gen_random_uuid(), 'Dining out', 'support-06', 'fa::solid::pizza-slice', 'Expense', walletId),
+           (gen_random_uuid(), 'Rent', 'support-07', 'fa::solid::building', 'Expense', walletId);
 END
 $$;
 
