@@ -24,12 +24,14 @@ const routes: Routes = [
         m => m.DashboardModule
       ),
     canLoad: [AuthGuard],
+    title: 'Financity - Dashboard',
   },
   {
     path: 'budgets',
     loadChildren: () =>
       import('./budget/budget.module').then(m => m.BudgetModule),
     canLoad: [AuthGuard],
+    title: 'Financity - Budgets',
   },
   {
     path: 'settings',
@@ -38,12 +40,14 @@ const routes: Routes = [
         m => m.UserSettingsModule
       ),
     canLoad: [AuthGuard],
+    title: 'Financity - Settings',
   },
   {
     path: 'wallets',
     loadChildren: () =>
       import('./wallet/wallet.module').then(m => m.WalletModule),
     canLoad: [AuthGuard],
+    title: 'Financity - Wallets',
   },
   {
     path: 'search',
@@ -52,6 +56,7 @@ const routes: Routes = [
         m => m.GlobalSearchModule
       ),
     canLoad: [AuthGuard],
+    title: 'Financity - Search',
   },
   {
     path: '**',
@@ -59,6 +64,7 @@ const routes: Routes = [
     data: {
       [RouteData.NAVBAR_VISIBLE]: false,
     },
+    title: 'Financity - Not Found',
   },
 ];
 

@@ -10,6 +10,7 @@ import {
   TuiGroupModule,
   TuiLabelModule,
   TuiLoaderModule,
+  TuiScrollbarModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
@@ -73,6 +74,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     TuiBadgeModule,
     TuiMarkerIconModule,
     PolymorpheusModule,
+    TuiScrollbarModule,
   ],
   exports: [
     CreateTransactionComponent,

@@ -21,14 +21,17 @@ const routes: Routes = [
       {
         path: 'login',
         component: LoginPageComponent,
+        title: 'Financity - Login',
       },
       {
         path: 'register',
         component: RegisterPageComponent,
+        title: 'Financity - Register',
       },
       {
         path: 'reset-password',
         component: ResetPasswordPageComponent,
+        title: 'Financity - Password Reset',
       },
     ],
   },

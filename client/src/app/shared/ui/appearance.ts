@@ -64,6 +64,9 @@ export const APPEARANCE_ICONS = [
   'fa::solid::wallet',
 ];
 
+export const APPEARANCE_ICONS_COLUMNS_COUNT =
+  APPEARANCE_ICONS.length / APPEARANCE_COLOR_VARIANTS_COUNT;
+
 export const getRandomAppearanceIcon = () => {
   return APPEARANCE_ICONS[Math.floor(Math.random() * APPEARANCE_ICONS.length)];
 };
