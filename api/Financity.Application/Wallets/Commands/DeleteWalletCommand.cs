@@ -17,10 +17,9 @@ public sealed class DeleteWalletCommandHandler : ICommandHandler<DeleteWalletCom
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(DeleteWalletCommand request,
-                                   CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteWalletCommand request, CancellationToken ct)
     {
-        var deletedCount = await _dbContext.DeleteFromSetAsync<Wallet>(request.Id, cancellationToken);
+        var deletedCount = await _dbContext.DeleteFromSetAsync<Wallet>(request.Id, ct);
 
         if (deletedCount == 0) throw new EntityNotFoundException(nameof(Wallet), request.Id);
 
