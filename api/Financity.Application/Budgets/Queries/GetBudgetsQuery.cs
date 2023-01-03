@@ -5,7 +5,6 @@ using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Domain.Entities;
-using Financity.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Budgets.Queries;
@@ -29,12 +28,9 @@ public sealed class
     {
         var currentDate = AppDateTime.Now.ToUniversalTime();
         return FilterAndMapAsync(query, q => q
-                                             .Include(x => x.TrackedCategories)
-                                             .ThenInclude(x => x.Transactions.Where(y =>
-                                                 y.TransactionDate.Year == currentDate.Year &&
-                                                 y.TransactionDate.Month == currentDate.Month &&
-                                                 y.TransactionType == TransactionType.Expense)
-                                             ), cancellationToken);
+                                             .Include(x => x.TrackedCategories).ThenInclude(x => x.Wallet)
+                                             .Include(x => x.TrackedCategories).ThenInclude(x => x.Transactions),
+            cancellationToken);
     }
 
     protected override IQueryable<Budget> ExecuteSearch(IQueryable<Budget> query, string search)

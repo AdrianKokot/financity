@@ -85,4 +85,22 @@ public class WalletsController : BaseController
         await HandleCommandAsync(command, ct);
         return NoContent();
     }
+
+    [HttpGet("stats")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletStats))]
+    public Task<IActionResult> GetWalletStats([FromQuery(Name = "transactionDate_gte")] DateTime? from,
+                                              [FromQuery(Name = "transactionDate_lte")]
+                                              DateTime? to,
+                                              [FromQuery(Name = "walletId_in")] HashSet<Guid>? includeWalletsWithId,
+                                              [FromQuery(Name = "currencyId_eq")] string currencyId,
+                                              CancellationToken ct)
+    {
+        return HandleQueryAsync(new GetWalletsStatsQuery
+        {
+            CurrencyId = currencyId,
+            From = DateOnly.FromDateTime(from ?? DateTime.UtcNow),
+            To = DateOnly.FromDateTime(to ?? DateTime.UtcNow),
+            WalletIds = includeWalletsWithId
+        }, ct);
+    }
 }
