@@ -63,8 +63,8 @@ public sealed class
             x.Note.ToLower().Contains(search)
             || (x.Category == null ? string.Empty : x.Category.Name).ToLower().Contains(search)
             || x.Labels.Any(y => y.Name.ToLower().Contains(search))
-            || x.Amount.ToString().Contains(numberSearch)
-            || (x.Amount * x.ExchangeRate).ToString().Contains(numberSearch)
+            || x.Amount.ToString(NumberFormatInfo.InvariantInfo).Contains(numberSearch)
+            || (x.Amount * x.ExchangeRate).ToString(NumberFormatInfo.InvariantInfo).Contains(numberSearch)
             || x.Currency.Name.ToLower().Contains(search)
             || x.CurrencyId.ToLower().Contains(search)
             || (x.Recipient == null ? string.Empty : x.Recipient.Name.ToLower()).Contains(search)
@@ -79,7 +79,14 @@ public sealed record TransactionCategory(Guid Id, string Name, Appearance Appear
 public sealed record TransactionRecipient(Guid Id, string Name) : IMapFrom<Recipient>;
 
 public sealed record TransactionListItem(Guid Id, Guid WalletId, decimal Amount, string Note, Guid? RecipientId,
-                                        TransactionRecipient? Recipient, string TransactionType,
-                                        DateTime TransactionDate, Guid? CategoryId, TransactionCategory? Category,
-                                        ICollection<TransactionLabel> Labels, string CurrencyId,
-                                        decimal ExchangeRate) : IMapFrom<Transaction>;
+                                         TransactionRecipient? Recipient, string TransactionType,
+                                         DateTime TransactionDate, Guid? CategoryId, TransactionCategory? Category,
+                                         ICollection<TransactionLabel> Labels, string CurrencyId,
+                                         decimal ExchangeRate) : IMapFrom<Transaction>
+{
+    public static void CreateMap(Profile profile)
+    {
+        profile.CreateMap<Transaction, TransactionListItem>()
+               .ForMember(x => x.Labels, y => y.MapFrom(x => x.Labels.OrderBy(l => l.Id).Take(5)));
+    }
+}

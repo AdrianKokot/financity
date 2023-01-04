@@ -14,6 +14,7 @@ import { BudgetApiService } from '../../../core/api/budget-api.service';
 import { Budget } from '@shared/data-access/models/budget.model';
 import { CreateBudgetComponent } from '../create-budget/create-budget.component';
 import { UpdateBudgetComponent } from '../update-budget/update-budget.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-budgets-shell',
@@ -44,7 +45,12 @@ export class BudgetsShellComponent {
   );
 
   readonly dialogs$ = merge(
-    this.ui.actions.create$.pipe(
+    merge(
+      this._activatedRoute.queryParamMap.pipe(
+        filter(x => x.get('action') === 'create')
+      ),
+      this.ui.actions.create$
+    ).pipe(
       switchMap(() =>
         this._dialog.open(new PolymorpheusComponent(CreateBudgetComponent), {
           label: 'Create budget',
@@ -78,7 +84,8 @@ export class BudgetsShellComponent {
     private readonly _injector: Injector,
     @Inject(TuiDialogService)
     private readonly _dialog: TuiDialogService,
-    private readonly _user: UserSettingsService
+    private readonly _user: UserSettingsService,
+    private readonly _activatedRoute: ActivatedRoute
   ) {}
 
   trackById = (index: number, item: { id: Budget['id'] }) => item.id;

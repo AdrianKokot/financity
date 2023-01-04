@@ -1,7 +1,5 @@
 ﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
-using Financity.Application.Common.Exceptions;
-using Financity.Domain.Entities;
 using MediatR;
 
 namespace Financity.Application.Wallets.Commands;
@@ -17,12 +15,11 @@ public sealed class DeleteWalletCommandHandler : ICommandHandler<DeleteWalletCom
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(DeleteWalletCommand request,
-                                   CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteWalletCommand request, CancellationToken ct)
     {
-        var deletedCount = await _dbContext.DeleteFromSetAsync<Wallet>(request.Id, cancellationToken);
+        var deletedCount = await _dbContext.DeleteWalletAsync(request.Id, ct);
 
-        if (deletedCount == 0) throw new EntityNotFoundException(nameof(Wallet), request.Id);
+        // if (deletedCount ) throw new EntityNotFoundException(nameof(Wallet), request.Id);
 
         return Unit.Value;
     }

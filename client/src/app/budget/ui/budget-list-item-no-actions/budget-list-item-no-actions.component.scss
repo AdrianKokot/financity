@@ -1,0 +1,10 @@
+:host {
+  cursor: pointer;
+  border: 1px solid var(--tui-base-03);
+  transition: .3s;
+
+  &:hover {
+    border-color: var(--tui-base-04);
+    box-shadow: 0 0.2rem 0.5rem rgba(0 0 0 / 5%);
+  }
+}

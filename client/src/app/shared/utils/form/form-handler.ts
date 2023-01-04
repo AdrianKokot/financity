@@ -37,7 +37,8 @@ const toFormSubmit = <
   TResult
 >(
   form: FormGroup<TControl>,
-  functions: FormHandlerFunctions<TControl, TResult>
+  functions: FormHandlerFunctions<TControl, TResult>,
+  forceErrorKeys?: Extract<keyof TControl, string>
 ) => {
   return function <TInput>(source: Observable<TInput>) {
     return source.pipe(
@@ -48,7 +49,7 @@ const toFormSubmit = <
           startWith(null),
           catchError(err => {
             if (err instanceof HttpErrorResponse) {
-              handleValidationApiError(form, err);
+              handleValidationApiError(form, err, forceErrorKeys);
             }
             return of(undefined);
           })

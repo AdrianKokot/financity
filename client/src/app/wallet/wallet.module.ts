@@ -135,5 +135,6 @@ import { WalletsListComponent } from './feature/wallets-list/wallets-list.compon
     InfiniteVirtualScrollModule,
     TuiItemsWithMoreModule,
   ],
+  exports: [WalletListItemComponent],
 })
 export class WalletModule {}

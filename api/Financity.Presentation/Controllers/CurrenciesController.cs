@@ -15,4 +15,13 @@ public sealed class CurrenciesController : BaseController
     {
         return HandleQueryAsync(new GetCurrenciesQuery(querySpecification), ct);
     }
+
+    [HttpGet("used-by-user")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CurrencyListItem>))]
+    public Task<IActionResult> GetCurrenciesUsedByUserList(
+        [FromQuery] QuerySpecification<CurrencyListItem> querySpecification,
+        CancellationToken ct)
+    {
+        return HandleQueryAsync(new GetCurrenciesUsedByUserQuery(querySpecification), ct);
+    }
 }

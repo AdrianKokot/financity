@@ -16,7 +16,8 @@ public class TransactionsController : BaseController
                                              [FromQuery(Name = "categoryId_in")] HashSet<Guid> includeCategoriesWithId,
                                              [FromQuery(Name = "labelId_in")] HashSet<Guid> includeLabelsWithId,
                                              [FromQuery(Name = "recipientId_in")] HashSet<Guid> includeRecipientsWithId,
-                                             [FromQuery(Name = "exchangedCurrencyId_eq")] string? walletCurrencyId,
+                                             [FromQuery(Name = "exchangedCurrencyId_eq")]
+                                             string? walletCurrencyId,
                                              CancellationToken ct)
     {
         return globalQuery is not null

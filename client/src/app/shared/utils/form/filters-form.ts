@@ -8,6 +8,7 @@ import {
 } from 'rxjs';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TuiDayRange } from '@taiga-ui/cdk';
+import { ApiFilters } from '../../../core/api/generic-api.service';
 
 export class FiltersForm<
   TControl extends {
@@ -50,7 +51,7 @@ export class FiltersForm<
         }
 
         return filters;
-      }, {} as Record<string, string | string[]>)
+      }, {} as ApiFilters)
     ),
     distinctUntilChangedObject(),
     shareReplay()

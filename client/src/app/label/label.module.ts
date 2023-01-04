@@ -12,7 +12,7 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { TuiFieldErrorPipeModule, TuiInputModule } from '@taiga-ui/kit';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
 
 const exportedComponents = [CreateLabelComponent, UpdateLabelComponent];
 
@@ -31,6 +31,7 @@ const exportedComponents = [CreateLabelComponent, UpdateLabelComponent];
     TuiTextfieldControllerModule,
     TuiButtonModule,
     TuiLetModule,
+    TuiAutoFocusModule,
   ],
 })
 export class LabelModule {}

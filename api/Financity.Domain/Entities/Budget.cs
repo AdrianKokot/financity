@@ -1,4 +1,5 @@
 ﻿using Financity.Domain.Common;
+using Financity.Domain.Enums;
 
 namespace Financity.Domain.Entities;
 
@@ -16,7 +17,12 @@ public sealed class Budget : Entity, IBelongsToUser
     /// <summary>
     ///     The sum of transactions in current period (this month) for tracked categories
     /// </summary>
-    public decimal CurrentPeriodExpenses => 50000;
+    public decimal CurrentPeriodExpenses =>
+        TrackedCategories.Where(x => x.TransactionType == TransactionType.Expense && x.Wallet.CurrencyId == CurrencyId)
+                         .Sum(c => c.Transactions
+                                    .Where(t => t.TransactionDate.Year == DateTime.UtcNow.Year &&
+                                                t.TransactionDate.Month == DateTime.UtcNow.Month)
+                                    .Sum(t => t.Amount * t.ExchangeRate));
 
     public ICollection<Category> TrackedCategories { get; set; } = new List<Category>();
 

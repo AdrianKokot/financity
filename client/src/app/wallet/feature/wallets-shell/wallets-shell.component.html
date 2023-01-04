@@ -55,7 +55,6 @@
               appInfiniteVirtualScroll
               (pageChange)="data.page($event)"
               [itemSize]="44"
-              [appendOnly]="true"
               [fixed]="15.5"
               class="tui-zero-scrollbar"
               tuiScrollable>
@@ -117,7 +116,7 @@
 
                 <tfoot *tuiLet="(data.apiLoading$ | async)! as apiLoading">
                   <tr *ngIf="apiLoading || items === null">
-                    <td [colSpan]="ui.columns.length" class="py-4">
+                    <td [colSpan]="ui.columns.length">
                       <tui-loader></tui-loader>
                     </td>
                   </tr>
@@ -125,7 +124,7 @@
                   <tr *ngIf="items && items.length === 0 && !apiLoading">
                     <td
                       [colSpan]="ui.columns.length"
-                      class="py-4 text-3 text-center">
+                      class="text-3 text-center">
                       No records found
                     </td>
                   </tr>
@@ -139,7 +138,9 @@
 
     <main *ngIf="ui.showSimplifiedView$ | async; else tableView">
       <div class="simplified-grid-container gap-3">
-        <app-wallet-list-item (click)="ui.actions.create$.next(undefined)">
+        <app-wallet-list-item
+          (click)="ui.actions.create$.next(undefined)"
+          class="dashed">
           <div
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
             <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>

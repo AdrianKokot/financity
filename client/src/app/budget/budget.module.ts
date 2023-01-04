@@ -41,6 +41,7 @@ import { RequireConfirmationDirective } from '@shared/utils/directives/require-c
 import { UpdateBudgetComponent } from './feature/update-budget/update-budget.component';
 import { BudgetShellComponent } from './feature/budget-shell/budget-shell.component';
 import { BudgetListItemComponent } from './ui/budget-list-item/budget-list-item.component';
+import { BudgetListItemNoActionsComponent } from './ui/budget-list-item-no-actions/budget-list-item-no-actions.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { BudgetListItemComponent } from './ui/budget-list-item/budget-list-item.
     UpdateBudgetComponent,
     BudgetShellComponent,
     BudgetListItemComponent,
+    BudgetListItemNoActionsComponent,
   ],
   imports: [
     CommonModule,
@@ -86,5 +88,6 @@ import { BudgetListItemComponent } from './ui/budget-list-item/budget-list-item.
     TuiDataListModule,
     TuiDataListDropdownManagerModule,
   ],
+  exports: [BudgetListItemNoActionsComponent],
 })
 export class BudgetModule {}

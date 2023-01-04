@@ -1,0 +1,10 @@
+.axes {
+  height: 100%;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+}

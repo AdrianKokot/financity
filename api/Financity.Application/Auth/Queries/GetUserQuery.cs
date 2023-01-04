@@ -29,4 +29,4 @@ public sealed class
     }
 }
 
-public sealed record UserDetails(Guid Id, string Email) : IMapFrom<User>;
+public sealed record UserDetails(Guid Id, string Email, string Name) : IMapFrom<User>;

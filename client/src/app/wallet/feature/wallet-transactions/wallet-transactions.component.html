@@ -63,7 +63,6 @@
         appInfiniteVirtualScroll
         (pageChange)="data.page($event)"
         [itemSize]="44"
-        [appendOnly]="true"
         [fixed]="15.5"
         class="tui-zero-scrollbar"
         tuiScrollable>
@@ -168,22 +167,18 @@
               </td>
 
               <td *tuiCell="'labels'" tuiTd class="w-250px">
-                <tui-items-with-more [required]="1">
+                <tui-items-with-more [required]="1" class="gap-1">
                   <ng-container *ngFor="let label of item.labels">
                     <tui-badge
                       *tuiItem
-                      class="mr-1 text-ellipsis max-w-150px"
+                      class="text-ellipsis max-w-150px"
                       [attr.data-appearance-color]="label.appearance.color"
                       status="custom"
                       [value]="label.name"></tui-badge>
                   </ng-container>
-                  <ng-template tuiMore let-index>
+                  <ng-template tuiMore>
                     <a tuiLink (click)="ui.actions.details$.next(item)">
-                      and
-                      {{
-                        ui.getRemainingLabelsCount(index, item.labels.length)
-                      }}
-                      more
+                      and more
                     </a>
                   </ng-template>
                 </tui-items-with-more>
@@ -260,13 +255,13 @@
 
           <tfoot *tuiLet="(data.apiLoading$ | async)! as apiLoading">
             <tr *ngIf="apiLoading || items === null">
-              <td [colSpan]="ui.columns.length" class="py-4">
+              <td [colSpan]="ui.columns.length">
                 <tui-loader></tui-loader>
               </td>
             </tr>
 
             <tr *ngIf="items && items.length === 0 && !apiLoading">
-              <td [colSpan]="ui.columns.length" class="py-4 text-3 text-center">
+              <td [colSpan]="ui.columns.length" class="text-3 text-center">
                 No records found
               </td>
             </tr>

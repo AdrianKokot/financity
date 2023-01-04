@@ -11,13 +11,15 @@
   </label>
 
   <label tuiLabel="Labels" class="tui-form__row">
-    <div class="d-flex flex-wrap gap-1 mt-1">
-      <tui-badge
-        *ngFor="let label of transaction.labels"
-        [attr.data-appearance-color]="label.appearance.color"
-        status="custom"
-        [value]="label.name"></tui-badge>
-    </div>
+    <tui-scrollbar style="max-height: 200px">
+      <div class="d-flex flex-wrap gap-1 mt-1">
+        <tui-badge
+          *ngFor="let label of transaction.labels"
+          [attr.data-appearance-color]="label.appearance.color"
+          status="custom"
+          [value]="label.name"></tui-badge>
+      </div>
+    </tui-scrollbar>
   </label>
 
   <label tuiLabel="Recipient" class="tui-form__row">

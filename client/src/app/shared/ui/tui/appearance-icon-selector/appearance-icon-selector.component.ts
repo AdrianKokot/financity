@@ -9,8 +9,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import {
-  APPEARANCE_COLORS_COUNT,
   APPEARANCE_ICONS,
+  APPEARANCE_ICONS_COLUMNS_COUNT,
 } from '@shared/ui/appearance';
 import {
   TUI_ARROW,
@@ -46,7 +46,7 @@ import { PaletteItemDirective } from '@shared/ui/tui/palette-item.directive';
 export class AppearanceIconSelectorComponent implements ControlValueAccessor {
   @HostBinding('class') hostClass = 'd-block';
   readonly items = APPEARANCE_ICONS;
-  readonly gridSize = APPEARANCE_COLORS_COUNT;
+  readonly gridSize = APPEARANCE_ICONS_COLUMNS_COUNT;
 
   readonly arrow = TUI_ARROW;
 

@@ -20,6 +20,7 @@ import {
   TuiNotificationModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {
     TuiButtonModule,
     TuiLinkModule,
     TuiNotificationModule,
+    TuiAutoFocusModule,
   ],
 })
 export class AuthModule {}

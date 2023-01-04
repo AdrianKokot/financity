@@ -1,5 +1,4 @@
-﻿using System.Xml.Serialization;
-using Financity.Application.Abstractions.Data;
+﻿using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Application.Common.Commands;
 using Financity.Application.Common.Exceptions;

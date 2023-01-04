@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   TuiButtonModule,
   TuiGroupModule,
+  TuiHintModule,
   TuiLinkModule,
   TuiLoaderModule,
   TuiPrimitiveTextfieldModule,
@@ -47,6 +48,7 @@ import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
     TuiLinkModule,
     TuiMoneyModule,
     TuiLoaderModule,
+    TuiHintModule,
   ],
 })
 export class GlobalSearchModule {}

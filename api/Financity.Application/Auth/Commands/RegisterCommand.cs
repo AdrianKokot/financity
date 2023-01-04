@@ -27,7 +27,8 @@ public sealed class RegisterCommandHandler : ICommandHandler<RegisterCommand, Re
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
-            throw new ValidationException(result.Errors.Select(x => new ValidationFailure(x.Code, x.Description)));
+            throw new ValidationException(result.Errors.Select(x =>
+                new ValidationFailure(nameof(request.Email), x.Description)));
 
         return _mapper.Map<RegisterCommandResult>(user);
     }

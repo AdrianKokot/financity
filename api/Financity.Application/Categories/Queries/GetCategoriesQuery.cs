@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Common.Queries;
@@ -53,4 +52,5 @@ public sealed class
     }
 }
 
-public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance, string TransactionType, string WalletName) : IMapFrom<Category>;
+public sealed record CategoryListItem(Guid Id, string Name, Guid WalletId, Appearance Appearance,
+                                      string TransactionType, string WalletName) : IMapFrom<Category>;

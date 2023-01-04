@@ -23,7 +23,7 @@ public sealed class Transaction : Entity, IBelongsToWallet
     public TransactionType? CategoryTransactionType { get; set; }
     public Category? Category { get; set; }
 
-    public string CurrencyId { get; set; }
+    public string CurrencyId { get; set; } = string.Empty;
     public Currency Currency { get; set; }
 
     public Guid WalletId { get; set; }

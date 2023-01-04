@@ -30,7 +30,8 @@ public sealed class ResignWalletAccessCommandHandler : ICommandHandler<ResignWal
         if (wallet is null)
             throw ValidationExceptionFactory.For(nameof(command.WalletId), "The given wallet doesn't exist");
 
-        var userWithSharedAccess = wallet.UsersWithSharedAccess.FirstOrDefault(x => x.Id == _dbContext.UserService.UserId);
+        var userWithSharedAccess =
+            wallet.UsersWithSharedAccess.FirstOrDefault(x => x.Id == _dbContext.UserService.UserId);
 
         if (userWithSharedAccess is null)
             throw ValidationExceptionFactory.For(nameof(command.WalletId), "The given wallet doesn't exist");

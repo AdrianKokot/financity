@@ -13,7 +13,9 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Financity"))
+            options.UseNpgsql(configuration.GetConnectionString("Financity"), o =>
+                o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+            )
         );
 
         services.AddIdentity<User, IdentityRole<Guid>>(options => { options.SignIn.RequireConfirmedAccount = false; })

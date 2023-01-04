@@ -1,0 +1,44 @@
+<div class="w-full d-flex gap-4 mb-4">
+  <app-select
+    class="no-shadow w-full w-200px"
+    [control]="form.controls.currencyId"
+    [getListFunction]="dataApis.getCurrencies"
+    [stringify]="dataApis.getCurrencyName"
+    label="Currency"
+    size="s"></app-select>
+
+  <app-multi-select
+    *ngIf="form.controls.currencyId.value"
+    class="no-shadow w-full w-250px"
+    [control]="form.controls.wallets"
+    [getListFunction]="dataApis.getWallets"
+    [stringify]="dataApis.getWalletName"
+    label="Choose wallets"
+    [externalFilters]="{ currencyId_eq: form.controls.currencyId.value }"
+    size="s">
+  </app-multi-select>
+</div>
+
+<tui-loader
+  data-overlay-text="Missing data"
+  [class.show-overlay-text]="chartNotAvailable"
+  *tuiLet="chart$ | async as chart"
+  [overlay]="true"
+  class="h-full"
+  [showLoader]="(isChartLoading$ | async) ?? true">
+  <tui-axes
+    *ngIf="xLabels$ | async as xLabels"
+    class="h-full w-full"
+    [verticalLines]="xLabels.length"
+    [horizontalLines]="4"
+    [axisXLabels]="xLabels"
+    [axisYLabels]="(yLabels$ | async) ?? []">
+    <tui-bar-chart
+      tuiHint
+      [tuiHintContent]="hint$ | async"
+      *ngIf="chart && !chartNotAvailable"
+      [max]="chart.max"
+      [value]="chart.data"
+      [collapsed]="false"></tui-bar-chart>
+  </tui-axes>
+</tui-loader>

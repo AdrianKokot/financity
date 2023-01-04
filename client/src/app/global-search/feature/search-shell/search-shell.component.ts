@@ -33,8 +33,6 @@ export class SearchShellComponent {
       'amount',
       'actions',
     ] as const,
-    getRemainingLabelsCount: (index: number, labelsCount: number) =>
-      labelsCount - (index === 0 ? 1 : index + 2),
     actions: {
       details$: new Subject<TransactionListItem>(),
       applySearch$: new Subject<void>(),

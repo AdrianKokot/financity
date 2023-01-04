@@ -1,10 +1,11 @@
 <tui-hosted-dropdown
   [content]="dropdown"
   tuiDropdownAlign="right"
+  class="d-block h-full w-full"
   *ngIf="budget !== null">
   <div class="h-full w-full d-block px-4 py-3" [title]="budget.name">
     <div
-      class="tui-text_body-m text-clamp-1 mb-1"
+      class="tui-text_body-m text-ellipsis mb-1"
       [class.tui-skeleton]="showSkeleton">
       {{ budget.name }}
     </div>

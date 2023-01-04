@@ -205,7 +205,8 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   }
 
   tr th {
-    background: var(--tui-base-03);
+    background: var(--tui-base-02
+    );
   }
 
   tbody {
@@ -290,18 +291,18 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-template-rows: 74px;
+}
 
-  app-wallet-list-item:first-of-type, app-budget-list-item:first-of-type {
-    border-style: dashed !important;
+app-wallet-list-item.dashed, app-budget-list-item.dashed, app-budget-list-item-no-actions.dashed {
+  border-style: dashed !important;
 
-    &:hover {
-      border-color: var(--tui-base-05) !important;
-    }
+  &:hover {
+    border-color: var(--tui-base-05) !important;
+  }
 
-    &:not(:hover) {
-      border-color: var(--tui-base-04) !important;
-      color: var(--tui-text-03);
-    }
+  &:not(:hover) {
+    border-color: var(--tui-base-04) !important;
+    color: var(--tui-text-03);
   }
 }
 
@@ -322,6 +323,25 @@ tui-loader {
   &, & .t-content {
     border-radius: inherit;
   }
+
+  &.show-overlay-text {
+    .t-loader {
+      &::after {
+        content: 'No data found';
+        color: var(--tui-text-02);
+        font: var(--tui-font-text-s);
+      }
+      svg {
+        display: none;
+      }
+    }
+  }
+
+  &:has(.t-content_loading tui-axes) {
+    .t-loader {
+      margin-top: -32px;
+    }
+  }
 }
 
 
@@ -333,3 +353,4 @@ table tfoot tr {
 
   }
 }
+

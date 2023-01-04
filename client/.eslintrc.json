@@ -118,7 +118,7 @@
             ],
             "format": null,
             "filter": {
-              "regex": "[-  ]|_(eq|in|ct)|Authorization",
+              "regex": "[-  ]|_(eq|in|ct|gte|lte)|Authorization",
               "match": true
             }
           }
