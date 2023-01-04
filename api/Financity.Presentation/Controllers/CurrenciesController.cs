@@ -18,8 +18,9 @@ public sealed class CurrenciesController : BaseController
 
     [HttpGet("used-by-user")]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CurrencyListItem>))]
-    public Task<IActionResult> GetCurrenciesUsedByUserList([FromQuery] QuerySpecification<CurrencyListItem> querySpecification,
-                                             CancellationToken ct)
+    public Task<IActionResult> GetCurrenciesUsedByUserList(
+        [FromQuery] QuerySpecification<CurrencyListItem> querySpecification,
+        CancellationToken ct)
     {
         return HandleQueryAsync(new GetCurrenciesUsedByUserQuery(querySpecification), ct);
     }

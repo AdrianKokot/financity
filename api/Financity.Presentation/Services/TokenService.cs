@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Financity.Application.Abstractions.Data;
 using Financity.Domain.Entities;
 using Financity.Presentation.Auth.Configuration;
@@ -31,7 +30,8 @@ public sealed class TokenService : ITokenService
         {
             Issuer = _configuration.ValidIssuer,
             Audience = _configuration.ValidAudience,
-            Expires = AppDateTime.Now.AddHours(_configuration.ExpireAfterHours),
+            Expires = AppDateTime.Now.AddHours(_configuration.ExpireAfterHours).ToUniversalTime(),
+            IssuedAt = AppDateTime.Now.ToUniversalTime(),
             Subject = identity,
             SigningCredentials = _configuration.Credentials
         });
@@ -41,8 +41,6 @@ public sealed class TokenService : ITokenService
 
     private IEnumerable<Claim> GetUserClaims(User user)
     {
-        if (user.Email is null) return ImmutableArray<Claim>.Empty;
-
         return new Claim[]
         {
             new(_options.UserIdClaimType, user.Id.ToString()),

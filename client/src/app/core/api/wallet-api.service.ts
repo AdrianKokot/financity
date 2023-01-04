@@ -16,6 +16,7 @@ import {
   GenericApiService,
   toHttpParams,
 } from './generic-api.service';
+import { Currency } from '@shared/data-access/models/currency.model';
 
 @Injectable({
   providedIn: 'root',
@@ -56,6 +57,25 @@ export class WalletApiService extends GenericApiService<
           }
         })
       );
+  }
+
+  getStats(payload: {
+    walletIds: Wallet['id'][];
+    currencyId: Currency['id'];
+    from: Date;
+    to: Date;
+  }) {
+    return this.http.get<{
+      expenseStats: Record<string, number>;
+      incomeStats: Record<string, number>;
+    }>(`${this.api}/stats`, {
+      params: toHttpParams({
+        walledId_in: payload.walletIds,
+        currencyId_eq: payload.currencyId,
+        transactionDate_gte: payload.from.toJSON(),
+        transactionDate_lte: payload.to.toJSON(),
+      }),
+    });
   }
 
   share(payload: {

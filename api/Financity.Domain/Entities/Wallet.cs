@@ -9,7 +9,7 @@ public sealed class Wallet : Entity
     public Guid OwnerId { get; set; }
     public User Owner { get; set; }
 
-    public string CurrencyId { get; set; }
+    public string CurrencyId { get; set; } = string.Empty;
     public Currency Currency { get; set; }
     public decimal StartingAmount { get; set; }
 

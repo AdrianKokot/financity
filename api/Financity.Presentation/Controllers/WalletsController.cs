@@ -100,7 +100,7 @@ public class WalletsController : BaseController
             CurrencyId = currencyId,
             From = DateOnly.FromDateTime(from ?? DateTime.UtcNow),
             To = DateOnly.FromDateTime(to ?? DateTime.UtcNow),
-            WalletIds = includeWalletsWithId
+            WalletIds = includeWalletsWithId ?? new HashSet<Guid>()
         }, ct);
     }
 }

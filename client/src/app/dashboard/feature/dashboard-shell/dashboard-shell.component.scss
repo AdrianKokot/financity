@@ -1,0 +1,8 @@
+.axes {
+  height: 12.5rem;
+}
+
+:host {
+--tui-chart-0: var(--tui-primary-hover);
+--tui-chart-1: var(--tui-accent-active);
+}

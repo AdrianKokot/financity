@@ -12,6 +12,9 @@
         [formGroup]="filters.form">
         <div class="tui-form__row" tuiGroup [rounded]="true">
           <tui-input
+            tuiHintContent="Global search uses natural language processing so results may include
+          more results than exact search phrase"
+            tuiHint
             [tuiTextfieldLabelOutside]="true"
             [tuiTextfieldSize]="showOnlySearch ? 'm' : 's'"
             formControlName="search"
@@ -27,10 +30,6 @@
             *ngIf="showOnlySearch">
             Search
           </button>
-        </div>
-        <div class="tui-form__field-note" [hidden]="!showOnlySearch">
-          Global search uses natural language processing so results may be a
-          little off
         </div>
       </form>
     </div>

@@ -37,30 +37,42 @@ public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQ
                          .SelectMany(x =>
                              x.Transactions.Where(t =>
                                  t.TransactionDate >= request.From && t.TransactionDate <= request.To))
-                         .GroupBy(x => new { x.TransactionDate.Year, x.TransactionDate.Month })
-                         .ToDictionaryAsync(x => $"{x.Key.Year}-{x.Key.Month}", x => x.Sum(y => y.Amount *
-                             y.ExchangeRate *
-                             (y.TransactionType == TransactionType.Expense
-                                 ? -1
-                                 : 1)), cancellationToken);
+                         .GroupBy(x => new { x.TransactionDate.Year, x.TransactionDate.Month, x.TransactionType })
+                         .ToDictionaryAsync(x => x.Key, x => x.Sum(y => y.Amount * y.ExchangeRate), cancellationToken);
 
-        var startingAmount = await q.SumAsync(x => x.StartingAmount, cancellationToken);
-
-        var reducedValues = new Dictionary<string, decimal>();
-        var orderedKeys = dict.Keys.ToList().Order().ToList();
-
-        if (orderedKeys.Count > 0)
+        var resultDict = new Dictionary<TransactionType, Dictionary<string, decimal>>()
         {
-            reducedValues.Add(orderedKeys[0], dict[orderedKeys[0]] + startingAmount);
+            {TransactionType.Expense, new Dictionary<string, decimal>()},
+            {TransactionType.Income, new Dictionary<string, decimal>()}
+        };
 
-            for (var i = 1; i < orderedKeys.Count; i++)
+        var currDate = request.From;
+
+        while (currDate < request.To)
+        {
+            dict.TryGetValue(new
             {
-                reducedValues.Add(orderedKeys[i], dict[orderedKeys[i]] + dict[orderedKeys[i - 1]]);
-            }
+                currDate.Year,
+                currDate.Month,
+                TransactionType = TransactionType.Expense
+            }, out var expenseValue);
+
+            dict.TryGetValue(new
+            {
+                currDate.Year,
+                currDate.Month,
+                TransactionType = TransactionType.Income
+            }, out var incomeValue);
+
+            var stringKey = $"{currDate.Year}-{currDate.Month:00}";
+            resultDict[TransactionType.Expense].Add(stringKey, expenseValue);
+            resultDict[TransactionType.Income].Add(stringKey, incomeValue);
+
+            currDate = currDate.AddMonths(1);
         }
 
-        return new WalletStats(dict, reducedValues);
+        return new WalletStats(resultDict[TransactionType.Expense], resultDict[TransactionType.Income]);
     }
 }
 
-public sealed record WalletStats(IDictionary<string, decimal> ExpenseStats, IDictionary<string, decimal> ChartData);
+public sealed record WalletStats(IDictionary<string, decimal> ExpenseStats, IDictionary<string, decimal> IncomeStats);

@@ -10,7 +10,7 @@ import {
 } from '@taiga-ui/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TuiFieldErrorPipeModule, TuiInputModule } from '@taiga-ui/kit';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [CreateRecipientComponent, UpdateRecipientComponent],
@@ -24,6 +24,7 @@ import { TuiLetModule } from '@taiga-ui/cdk';
     TuiErrorModule,
     TuiFieldErrorPipeModule,
     TuiButtonModule,
+    TuiAutoFocusModule,
   ],
   exports: [CreateRecipientComponent, UpdateRecipientComponent],
 })
