@@ -9,6 +9,39 @@ const defaultPasswordValidation = {
   requireNonAlphanumeric: true,
 };
 
+export const getPasswordValidationHint = (
+  passwordValidation = defaultPasswordValidation
+): string => {
+  const characterTypes = [];
+
+  if (passwordValidation.requireDigit) {
+    characterTypes.push('digit');
+  }
+
+  if (passwordValidation.requireUppercase) {
+    characterTypes.push('uppercase');
+  }
+
+  if (passwordValidation.requireLowercase) {
+    characterTypes.push('lowercase');
+  }
+
+  if (passwordValidation.requireNonAlphanumeric) {
+    characterTypes.push('non alphanumeric');
+  }
+
+  const str =
+    (characterTypes.length > 0 ? 'characters, including ' : '') +
+    (characterTypes.length > 1
+      ? characterTypes.slice(0, -1).join(', ')
+      : characterTypes[0]) +
+    (characterTypes.length > 1
+      ? ` and ${characterTypes[characterTypes.length - 1]}`
+      : '');
+
+  return `Password must have at least ${passwordValidation.minLength} ${str} characters.`;
+};
+
 export const CustomValidators = {
   password:
     (passwordValidation = defaultPasswordValidation) =>
