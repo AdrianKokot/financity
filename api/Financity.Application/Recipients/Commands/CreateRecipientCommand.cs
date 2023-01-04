@@ -8,7 +8,7 @@ using Financity.Domain.Entities;
 namespace Financity.Application.Recipients.Commands;
 
 public sealed record CreateRecipientCommand(string Name, Guid WalletId) : ICommand<CreateRecipientCommandResult>,
-                                                                           IMapTo<Recipient>;
+                                                                          IMapTo<Recipient>;
 
 public sealed class
     CreateRecipientCommandHandler : CreateEntityCommandHandler<CreateRecipientCommand, CreateRecipientCommandResult,

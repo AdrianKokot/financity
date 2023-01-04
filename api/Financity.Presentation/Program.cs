@@ -2,6 +2,7 @@ using Financity.Application;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Common.Configuration;
 using Financity.Infrastructure;
+using Financity.Persistence.Seed;
 using Financity.Presentation.Auth;
 using Financity.Presentation.Auth.Configuration;
 using Financity.Presentation.Middleware;
@@ -36,10 +37,10 @@ builder.Services
        .AddCors(options =>
        {
            options.AddDefaultPolicy(c =>
-       {
-           c.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://financity.fly.dev")
-            .AllowAnyMethod().WithHeaders(HeaderNames.ContentType);
-       });
+           {
+               c.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://financity.fly.dev")
+                .AllowAnyMethod().WithHeaders(HeaderNames.ContentType);
+           });
        });
 
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -99,10 +100,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddHealthChecks();
 
-builder.Services.AddSpaStaticFiles(opt =>
-{
-    opt.RootPath = "wwwroot";
-});
+builder.Services.AddSpaStaticFiles(opt => { opt.RootPath = "wwwroot"; });
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -129,9 +127,12 @@ app.MapHealthChecks("/api/healthcheck");
 app.UseDefaultFiles();
 app.UseSpaStaticFiles();
 
-app.UseSpa(config =>
-{
+app.UseSpa(config => { });
 
-});
+using (var scope = app.Services.CreateScope())
+{
+    await DataSeeder.RequestExternalApiForCurrencies(scope.ServiceProvider.GetRequiredService<IExchangeRateService>(),
+        scope.ServiceProvider.GetRequiredService<IApplicationDbContext>());
+}
 
 app.Run();

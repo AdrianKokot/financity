@@ -20,7 +20,6 @@ public sealed class GetCurrenciesUsedByUserQuery : FilteredEntitiesQuery<Currenc
 public sealed class
     GetCurrenciesUsedByUserQueryHandler : FilteredEntitiesQueryHandler<GetCurrenciesUsedByUserQuery, Currency,
         CurrencyListItem>
-
 {
     public GetCurrenciesUsedByUserQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext,
         mapper)
@@ -28,7 +27,7 @@ public sealed class
     }
 
     public override async Task<IEnumerable<CurrencyListItem>> Handle(GetCurrenciesUsedByUserQuery query,
-                                                               CancellationToken cancellationToken)
+                                                                     CancellationToken cancellationToken)
     {
         return await DbContext.GetDbSet<Wallet>().AsNoTracking()
                               .Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id))

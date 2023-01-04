@@ -11,7 +11,8 @@ public class CategoriesController : BaseController
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(IEnumerable<CategoryListItem>))]
-    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CategoryListItem> querySpecification, [FromQuery(Name = "currencyId_eq")] string? walletCurrencyId,
+    public Task<IActionResult> GetEntityList([FromQuery] QuerySpecification<CategoryListItem> querySpecification,
+                                             [FromQuery(Name = "currencyId_eq")] string? walletCurrencyId,
                                              CancellationToken ct)
     {
         return HandleQueryAsync(new GetCategoriesQuery(querySpecification)

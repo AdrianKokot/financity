@@ -44,22 +44,14 @@ public sealed class UpdateTransactionCommandHandler : UpdateEntityCommandHandler
         entity.Note = command.Note;
 
         if (command.RecipientId is null)
-        {
             entity.RecipientId = null;
-        }
         else
-        {
             entity.Recipient = await DbContext.GetDbSet<Recipient>().FirstAsync(x => x.Id == command.RecipientId, ct);
-        }
 
         if (command.CategoryId is null)
-        {
             entity.CategoryId = null;
-        }
         else
-        {
             entity.Category = await DbContext.GetDbSet<Category>().FirstAsync(x => x.Id == command.CategoryId, ct);
-        }
 
         entity.TransactionDate = DateOnly.FromDateTime(command.TransactionDate.ToUniversalTime());
 

@@ -35,7 +35,8 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
 
     public IQueryable<Transaction> SearchUserTransactions(Guid userId, string searchTerm, Guid? walletId = null)
     {
-        return FromExpression(() => SearchUserTransactions(userId, searchTerm.ToLower(CultureInfo.InvariantCulture), walletId));
+        return FromExpression(() =>
+            SearchUserTransactions(userId, searchTerm.ToLower(CultureInfo.InvariantCulture), walletId));
     }
 
     public async Task<int> GenerateDefaultCategories(Guid walletId, CancellationToken ct)
@@ -46,6 +47,16 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
     public DbSet<T> GetDbSet<T>() where T : class
     {
         return Set<T>();
+    }
+
+    public Task<int> DeleteWalletAsync(Guid id, CancellationToken ct)
+    {
+        return Database.ExecuteSqlRawAsync(
+            "ALTER TABLE \"Transactions\" DISABLE TRIGGER ALL; DELETE FROM \"Transactions\" WHERE \"WalletId\" = {0}; ALTER TABLE \"Transactions\" ENABLE TRIGGER ALL; " +
+            "ALTER TABLE \"Labels\" DISABLE TRIGGER ALL; DELETE FROM \"Labels\" WHERE \"WalletId\" = {0}; ALTER TABLE \"Labels\" ENABLE TRIGGER ALL; " +
+            "ALTER TABLE \"Recipients\" DISABLE TRIGGER ALL; DELETE FROM \"Recipients\" WHERE \"WalletId\" = {0}; ALTER TABLE \"Recipients\" ENABLE TRIGGER ALL; " +
+            "ALTER TABLE \"Categories\" DISABLE TRIGGER ALL; DELETE FROM \"Categories\" WHERE \"WalletId\" = {0}; ALTER TABLE \"Categories\" ENABLE TRIGGER ALL; " +
+            "DELETE FROM \"Wallets\" WHERE \"Id\" = {0};", id);
     }
 
     public Task<int> DeleteFromSetAsync<T>(Guid entityId, CancellationToken ct) where T : class, IEntity

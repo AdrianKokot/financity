@@ -9,5 +9,5 @@ public sealed class User : IdentityUser<Guid>, IEntity
     public ICollection<Wallet> SharedWallets { get; set; } = new List<Wallet>();
     public ICollection<Wallet> OwnedWallets { get; set; } = new List<Wallet>();
 
-    public new string Email { get; set; } = string.Empty;
+    public override string Email { get; set; }
 }

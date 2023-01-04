@@ -28,10 +28,7 @@ public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQ
         var q = _dbContext.GetDbSet<Wallet>().AsNoTracking()
                           .Where(x => _dbContext.UserService.UserWalletIds.Contains(x.Id));
 
-        if (request.WalletIds.Count > 0)
-        {
-            q = q.Where(x => request.WalletIds.Contains(x.Id));
-        }
+        if (request.WalletIds.Count > 0) q = q.Where(x => request.WalletIds.Contains(x.Id));
 
         var dict = await q
                          .Where(x => x.CurrencyId == request.CurrencyId)
@@ -41,7 +38,7 @@ public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQ
                          .GroupBy(x => new { x.TransactionDate.Year, x.TransactionDate.Month, x.TransactionType })
                          .ToDictionaryAsync(x => x.Key, x => x.Sum(y => y.Amount * y.ExchangeRate), cancellationToken);
 
-        var resultDict = new Dictionary<TransactionType, Dictionary<string, decimal>>()
+        var resultDict = new Dictionary<TransactionType, Dictionary<string, decimal>>
         {
             {TransactionType.Expense, new Dictionary<string, decimal>()},
             {TransactionType.Income, new Dictionary<string, decimal>()}

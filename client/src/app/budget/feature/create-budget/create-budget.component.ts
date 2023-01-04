@@ -40,7 +40,9 @@ export class CreateBudgetComponent {
 
   readonly dataApis = {
     getCategories: this._categoryService.getAll.bind(this._categoryService),
-    getCurrencies: this._currencyService.getList.bind(this._currencyService),
+    getCurrencies: this._currencyService.getUserCurrencies.bind(
+      this._currencyService
+    ),
     getCurrencyName: (item: CurrencyListItem) => item.id,
     getCategoryName: (item: CategoryListItem) =>
       `${item.name} (${item.walletName})`,
