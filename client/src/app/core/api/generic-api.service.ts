@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable, of, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 export type ApiFilters = Record<
   string,
@@ -45,9 +45,9 @@ export abstract class GenericApiService<
 
     const cacheKey = params.toString();
 
-    if (cacheKey in this._getListCache) {
-      return of(this._getListCache[cacheKey]);
-    }
+    // if (cacheKey in this._getListCache) {
+    //   return of(this._getListCache[cacheKey]);
+    // }
 
     return this.http.get<TListItem[]>(this.api, { params }).pipe(
       tap(data => {

@@ -24,6 +24,17 @@ export class CurrencyApiService {
     return this._exchangeRateService.getExchangeRate(...args);
   }
 
+  getUserCurrencies(pagination: ApiParams) {
+    return this.http.get<CurrencyListItem[]>('/api/currencies/used-by-user', {
+      params: toHttpParams({
+        ...pagination,
+        pageSize: 500,
+        orderBy: 'id',
+        direction: 'asc',
+      }),
+    });
+  }
+
   getList(pagination: ApiParams) {
     const temp = { ...pagination };
 
@@ -35,7 +46,7 @@ export class CurrencyApiService {
     const params = toHttpParams({
       ...temp,
       pageSize: 500,
-      orderBy: 'name',
+      orderBy: 'id',
       direction: 'asc',
     });
 

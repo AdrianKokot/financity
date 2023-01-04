@@ -70,7 +70,7 @@ export class WalletApiService extends GenericApiService<
       incomeStats: Record<string, number>;
     }>(`${this.api}/stats`, {
       params: toHttpParams({
-        walledId_in: payload.walletIds,
+        walletId_in: payload.walletIds,
         currencyId_eq: payload.currencyId,
         transactionDate_gte: payload.from.toJSON(),
         transactionDate_lte: payload.to.toJSON(),

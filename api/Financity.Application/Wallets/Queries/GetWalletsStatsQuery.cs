@@ -25,7 +25,8 @@ public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQ
 
     public async Task<WalletStats> Handle(GetWalletsStatsQuery request, CancellationToken cancellationToken)
     {
-        var q = _dbContext.GetDbSet<Wallet>().AsNoTracking();
+        var q = _dbContext.GetDbSet<Wallet>().AsNoTracking()
+                          .Where(x => _dbContext.UserService.UserWalletIds.Contains(x.Id));
 
         if (request.WalletIds.Count > 0)
         {

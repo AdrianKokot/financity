@@ -21,7 +21,7 @@ import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor, OnDestroy {
   private _destroy$ = new Subject<boolean>();
-  private _errorAlert$ = new Subject<string>();
+  private _errorAlert$ = new Subject<{ title?: string; message: string }>();
   private _sessionExpiredAlert = new Subject<string>();
 
   constructor(
@@ -30,10 +30,10 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
   ) {
     merge(
       this._errorAlert$.pipe(
-        exhaustMap(message =>
+        exhaustMap(({ title, message }) =>
           this._alert.open(message, {
             status: TuiNotification.Error,
-            label: 'Something went wrong',
+            label: title ?? 'Something went wrong',
             autoClose: true,
             hasCloseButton: true,
           })
@@ -70,7 +70,10 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
           }
 
           if (error.status !== 422) {
-            this._errorAlert$.next(error.error.title ?? error.message);
+            this._errorAlert$.next({
+              title: error.statusText ?? error.error.title,
+              message: error.message.replace(window.location.origin, ''),
+            });
           }
 
           return throwError(() => error);

@@ -1,0 +1,40 @@
+<a
+  *ngIf="budget !== null; else ngContent"
+  href="/budgets/{{ budget.id }}"
+  routerLink="/budgets/{{ budget.id }}"
+  class="h-full w-full d-block px-4 py-3"
+  [title]="budget.name">
+  <div
+    class="tui-text_body-m text-ellipsis mb-1"
+    [class.tui-skeleton]="showSkeleton">
+    {{ budget.name }}
+  </div>
+  <div
+    *tuiLet="budget.currentPeriodExpenses > budget.amount as exceeded"
+    class="text-ellipsis d-flex align-items-center"
+    [class.text-negative]="exceeded">
+    <tui-svg src="tuiIconCancel" *ngIf="exceeded"></tui-svg>
+    <tui-money
+      [currency]="null"
+      [colored]="false"
+      [value]="budget.currentPeriodExpenses">
+    </tui-money>
+    <span class="mx-1">/</span>
+    <tui-money
+      [currency]="budget.currencyId"
+      [colored]="false"
+      [value]="budget.amount">
+    </tui-money>
+  </div>
+</a>
+
+<ng-container *ngIf="showSkeleton">
+  <div class="h-full w-full d-block px-4 py-3">
+    <div class="tui-text_body-m mb-1 tui-skeleton">Skeleton text</div>
+    <span class="tui-text_body-s tui-skeleton">Skeleton text</span>
+  </div>
+</ng-container>
+
+<ng-template #ngContent>
+  <ng-content></ng-content>
+</ng-template>

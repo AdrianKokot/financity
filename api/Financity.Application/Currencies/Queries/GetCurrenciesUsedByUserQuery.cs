@@ -31,11 +31,12 @@ public sealed class
                                                                CancellationToken cancellationToken)
     {
         return await DbContext.GetDbSet<Wallet>().AsNoTracking()
-                        .Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id))
-                        .Select(x => x.Currency)
-                        .Distinct()
-                        .ApplyQuerySpecification(query.QuerySpecification)
-                        .ProjectTo<CurrencyListItem>(Mapper.ConfigurationProvider)
-                        .ToListAsync(cancellationToken);
+                              .Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id))
+                              .Where(x => x.Transactions.Any())
+                              .Select(x => x.Currency)
+                              .Distinct()
+                              .ApplyQuerySpecification(query.QuerySpecification)
+                              .ProjectTo<CurrencyListItem>(Mapper.ConfigurationProvider)
+                              .ToListAsync(cancellationToken);
     }
 }

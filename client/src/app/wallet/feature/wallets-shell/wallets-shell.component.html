@@ -138,7 +138,9 @@
 
     <main *ngIf="ui.showSimplifiedView$ | async; else tableView">
       <div class="simplified-grid-container gap-3">
-        <app-wallet-list-item (click)="ui.actions.create$.next(undefined)">
+        <app-wallet-list-item
+          (click)="ui.actions.create$.next(undefined)"
+          class="dashed">
           <div
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
             <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>

@@ -24,11 +24,13 @@ import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-ch
 import { TuiContextWithImplicit, tuiIsString } from '@taiga-ui/cdk';
 import { FormControl } from '@angular/forms';
 import { ApiParams } from '../../../../core/api/generic-api.service';
+import { TuiSizeL, TuiSizeS } from '@taiga-ui/core/types';
 
 @Component({ template: '' })
 export abstract class AbstractSelectComponent<
   T extends { id: string; name: string }
 > {
+  @Input() size: TuiSizeL | TuiSizeS = 'm';
   @Input() control!: FormControl;
   @Input() label = '';
   @Input() preloadedResults: T[] = [];
@@ -38,9 +40,9 @@ export abstract class AbstractSelectComponent<
   @Input() getListFunction: (pagination: ApiParams) => Observable<T[]> = () =>
     EMPTY;
 
-  externalFilters$ = new BehaviorSubject<Record<string, string | string[]>>({});
+  externalFilters$ = new BehaviorSubject<ApiParams>({});
 
-  @Input() set externalFilters(value: Record<string, string | string[]>) {
+  @Input() set externalFilters(value: ApiParams) {
     this.externalFilters$.next(value);
   }
 
