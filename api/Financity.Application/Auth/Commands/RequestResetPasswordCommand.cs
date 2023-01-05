@@ -1,9 +1,11 @@
 ﻿using System.Text;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Messaging;
+using Financity.Application.Common.Configuration;
 using Financity.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 
 namespace Financity.Application.Auth.Commands;
 
@@ -12,14 +14,16 @@ public sealed record RequestResetPasswordCommand(string Email) : ICommand<Reques
 public sealed class
     RequestResetPasswordCommandHandler : ICommandHandler<RequestResetPasswordCommand, RequestResetPasswordCommandResult>
 {
+    private readonly IOptions<EmailConfiguration> _emailOptions;
     private readonly IEmailService _emailService;
     private readonly UserManager<User> _userManager;
 
     public RequestResetPasswordCommandHandler(UserManager<User> userManager,
-                                              IEmailService emailService)
+                                              IEmailService emailService, IOptions<EmailConfiguration> emailOptions)
     {
         _userManager = userManager;
         _emailService = emailService;
+        _emailOptions = emailOptions;
     }
 
     public async Task<RequestResetPasswordCommandResult> Handle(RequestResetPasswordCommand command,
@@ -36,7 +40,7 @@ public sealed class
         await _emailService.SendEmailAsync(
             command.Email,
             "Password reset request",
-            new ResetPasswordEmailTemplate(token).ToString(),
+            new ResetPasswordEmailTemplate(token, _emailOptions.Value.AppUrl).ToString(),
             ct
         );
 
@@ -52,15 +56,17 @@ internal class ResetPasswordEmailTemplate
         "Resources/EmailTemplates/password-reset.template.html"));
 
     private readonly string _token;
+    private readonly string _url;
 
-    public ResetPasswordEmailTemplate(string token)
+    public ResetPasswordEmailTemplate(string token, string url)
     {
         _token = token;
+        _url = url;
     }
 
     public override string ToString()
     {
         return FileContent.Replace("{{expiration-time}}", "2 hours")
-                          .Replace("{{action_url}}", $"http://localhost:4200/auth/reset-password?token={_token}");
+                          .Replace("{{action_url}}", $"{_url}/auth/reset-password?token={_token}");
     }
 }

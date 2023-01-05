@@ -5,6 +5,7 @@ import {
   Input,
 } from '@angular/core';
 import { WalletListItem } from '@shared/data-access/models/wallet.model';
+import { UserService } from '../../../auth/data-access/api/user.service';
 
 @Component({
   selector: 'app-wallet-list-item',
@@ -16,4 +17,7 @@ export class WalletListItemComponent {
   @HostBinding('class') hostClass = 'w-full d-block border-radius-m';
   @Input() wallet: WalletListItem | null = null;
   @Input() showSkeleton = false;
+
+  userId = this._user.userSnapshot?.id;
+  constructor(private _user: UserService) {}
 }

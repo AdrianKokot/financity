@@ -1,8 +1,13 @@
 <div class="main-layout-header-box"></div>
 
 <tui-tabs>
+  <a tuiTab href="account" routerLink="account" routerLinkActive>
+    <tui-svg [src]="'tuiIconUser'" class="mr-2"></tui-svg>
+    Account settings
+  </a>
+
   <a tuiTab href="app" routerLink="app" routerLinkActive>
-    <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
+    <tui-svg [src]="'tuiIconSettings'" class="mr-2"></tui-svg>
     App settings
   </a>
 </tui-tabs>

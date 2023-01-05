@@ -31,7 +31,6 @@ public sealed class
     {
         return await DbContext.GetDbSet<Wallet>().AsNoTracking()
                               .Where(x => DbContext.UserService.UserWalletIds.Contains(x.Id))
-                              .Where(x => x.Transactions.Any())
                               .Select(x => x.Currency)
                               .Distinct()
                               .ApplyQuerySpecification(query.QuerySpecification)

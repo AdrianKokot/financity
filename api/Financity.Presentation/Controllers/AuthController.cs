@@ -49,4 +49,20 @@ public class AuthController : BaseController
         await HandleCommandAsync(command);
         return NoContent();
     }
+
+    [HttpPost("change-password")]
+    [SwaggerResponse(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+    {
+        await HandleCommandAsync(command);
+        return NoContent();
+    }
+
+    [HttpPut("user")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(UserDetails))]
+    public async Task<IActionResult> UpdateUser(UpdateUserCommand command)
+    {
+        var result = await HandleCommandAsync(command);
+        return Ok(result);
+    }
 }

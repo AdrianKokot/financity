@@ -3,7 +3,10 @@ import { Validators } from '@angular/forms';
 import { AuthService } from '../../data-access/api/auth.service';
 import { Router } from '@angular/router';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { CustomValidators } from '@shared/utils/form/custom-validators';
+import {
+  CustomValidators,
+  getPasswordValidationHint,
+} from '@shared/utils/form/custom-validators';
 
 @Component({
   selector: 'app-register-page',
@@ -23,9 +26,11 @@ export class RegisterPageComponent {
     {
       submit: payload => this._auth.register(payload),
       effect: succeeded =>
-        succeeded && this._router.navigateByUrl('/dashboard'),
+        succeeded && this._router.navigateByUrl('/auth/login'),
     }
   );
+
+  readonly passwordHint = getPasswordValidationHint();
 
   constructor(
     private readonly _fb: FormWithHandlerBuilder,

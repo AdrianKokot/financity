@@ -4,7 +4,16 @@ import {
   TRANSACTION_TYPES,
   TransactionType,
 } from '@shared/data-access/models/transaction-type.enum';
-import { catchError, filter, map, merge, of, share, switchMap } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  merge,
+  of,
+  share,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { TuiDay, tuiIsNumber } from '@taiga-ui/cdk';
@@ -61,6 +70,11 @@ export class CreateTransactionComponent {
       effect: item => this._context.completeWith(item),
     }
   );
+
+  readonly formEffects$ =
+    this.form.group.controls.transactionType.valueChanges.pipe(
+      tap(() => this.form.group.controls.categoryId.reset())
+    );
 
   readonly shouldExchangeRateBeSpecified$ = merge(
     this.form.controls.currencyId.valueChanges,

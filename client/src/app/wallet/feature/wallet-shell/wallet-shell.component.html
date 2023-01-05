@@ -1,46 +1,49 @@
-<div class="main-layout-header-box" *tuiLet="wallet$ | async as wallet">
-  <tui-breadcrumbs class="h-full">
-    <a href="../" *tuiItem tuiLink routerLink="../"> Wallets </a>
-    <a
-      *tuiItem
-      tuiLink
-      class="text-link"
-      [class.tui-skeleton]="wallet === null">
-      {{ wallet?.name ?? 'Lorem ipsum dolores' }}
-    </a>
-  </tui-breadcrumbs>
-</div>
+<ng-container *tuiLet="wallet$ | async as wallet">
+  <div class="main-layout-header-box">
+    <tui-breadcrumbs class="h-full">
+      <a href="../" *tuiItem tuiLink routerLink="../"> Wallets </a>
+      <a
+        *tuiItem
+        tuiLink
+        class="text-link"
+        [class.tui-skeleton]="wallet === null">
+        {{ wallet?.name ?? 'Lorem ipsum dolores' }}
+      </a>
+    </tui-breadcrumbs>
+  </div>
 
-<tui-tabs>
-  <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
-    <tui-svg src="tuiIconCard" class="mr-2"></tui-svg>
-    Transactions
-  </a>
-  <a tuiTab href="categories" routerLink="categories" routerLinkActive>
-    <tui-svg src="tuiIconFolder" class="mr-2"></tui-svg>
-    Categories
-  </a>
-  <a tuiTab href="labels" routerLink="labels" routerLinkActive>
-    <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
-    Labels
-  </a>
-  <a href="recipients" routerLink="recipients" routerLinkActive tuiTab>
-    <tui-svg class="mr-2" src="fa::address-card"></tui-svg>
-    Recipients
-  </a>
-  <a
-    tuiTab
-    href="access-management"
-    routerLink="access-management"
-    routerLinkActive>
-    <tui-svg src="tuiIconUsers" class="mr-2"></tui-svg>
-    Shared access
-  </a>
-  <a tuiTab href="settings" routerLink="settings" routerLinkActive>
-    <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
-    Settings
-  </a>
-</tui-tabs>
+  <tui-tabs>
+    <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
+      <tui-svg src="tuiIconCard" class="mr-2"></tui-svg>
+      Transactions
+    </a>
+    <a tuiTab href="categories" routerLink="categories" routerLinkActive>
+      <tui-svg src="tuiIconFolder" class="mr-2"></tui-svg>
+      Categories
+    </a>
+    <a tuiTab href="labels" routerLink="labels" routerLinkActive>
+      <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
+      Labels
+    </a>
+    <a href="recipients" routerLink="recipients" routerLinkActive tuiTab>
+      <tui-svg class="mr-2" src="fa::address-card"></tui-svg>
+      Recipients
+    </a>
+    <a
+      *ngIf="wallet?.ownerId === userId"
+      tuiTab
+      href="access-management"
+      routerLink="access-management"
+      routerLinkActive>
+      <tui-svg src="tuiIconUsers" class="mr-2"></tui-svg>
+      Shared access
+    </a>
+    <a tuiTab href="settings" routerLink="settings" routerLinkActive>
+      <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
+      Settings
+    </a>
+  </tui-tabs>
+</ng-container>
 
 <section class="py-6">
   <router-outlet></router-outlet>

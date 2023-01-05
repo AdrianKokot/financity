@@ -89,7 +89,23 @@
                     *cdkVirtualFor="let item of items ?? []; trackBy: trackById"
                     tuiTr>
                     <td *tuiCell="'name'" tuiTd class="w-rest">
-                      <div class="text-ellipsis">{{ item.name }}</div>
+                      <div class="d-flex">
+                        <tui-badge
+                          class="mr-2"
+                          *ngIf="item.ownerId !== ui.userId"
+                          status="primary"
+                          [tuiHint]="
+                            'This wallet is shared to you by ' + item.ownerName
+                          "
+                          size="s"
+                          tuiHintDirection="top"
+                          [hoverable]="true">
+                          <tui-svg [src]="'fa::circle-user'"></tui-svg>
+                        </tui-badge>
+                        <div class="text-ellipsis w-auto">
+                          {{ item.name }}
+                        </div>
+                      </div>
                     </td>
                     <td *tuiCell="'amount'" tuiTd class="w-250px">
                       <div class="text-ellipsis">
@@ -143,7 +159,7 @@
           class="dashed">
           <div
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
-            <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
+            <tui-svg [src]="'tuiIconPlusLarge'" class="mr-2"></tui-svg>
             <span>Create new</span>
           </div>
         </app-wallet-list-item>

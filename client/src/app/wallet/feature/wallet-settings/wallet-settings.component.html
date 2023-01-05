@@ -3,6 +3,11 @@
   *tuiLet="form.controls.ownerId.value === user?.id as isUserOwner">
   <div class="tui-col_5" [attr.data-skeleton]="initialDataLoading$ | async">
     <form
+      [tuiHint]="
+        isUserOwner
+          ? null
+          : 'You cannot change wallet settings because you are not the owner of this wallet'
+      "
       *tuiLet="dialogs$ | async"
       [formGroup]="form.group"
       (ngSubmit)="form.submit()"

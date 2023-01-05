@@ -6,6 +6,7 @@ import {
   TuiAlertModule,
   TuiDialogModule,
   tuiDialogOptionsProvider,
+  tuiFormatNumber,
   TuiRootModule,
   TuiSvgService,
   TuiThemeNightModule,
@@ -25,6 +26,7 @@ import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
 import { AuthService } from './auth/data-access/api/auth.service';
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { of, shareReplay } from 'rxjs';
+import { TUI_DATE_SEPARATOR } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [AppComponent],
@@ -72,6 +74,14 @@ import { of, shareReplay } from 'rxjs';
           `This field must be at least ${requiredLength} characters long`,
         maxlength: ({ requiredLength }: { requiredLength: number }) =>
           `This field may not be longer than ${requiredLength} characters`,
+        min: ({ min }: { min: number }) => {
+          return `This field must be greater or equal to ${tuiFormatNumber(
+            min
+          )}`;
+        },
+        max: ({ max }: { max: number }) => {
+          return `This field must be smaller than ${tuiFormatNumber(max)}`;
+        },
       },
     },
     {
@@ -100,6 +110,7 @@ import { of, shareReplay } from 'rxjs';
       provide: DATE_PIPE_DEFAULT_OPTIONS,
       useValue: { dateFormat: 'dd/MM/yyyy' },
     },
+    { provide: TUI_DATE_SEPARATOR, useValue: '/' },
     {
       provide: TUI_NOTHING_FOUND_MESSAGE,
       useValue: of('No records found').pipe(shareReplay()),

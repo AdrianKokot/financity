@@ -1,4 +1,8 @@
-<form [formGroup]="form.group" (ngSubmit)="form.submit()" class="tui-form">
+<form
+  [formGroup]="form.group"
+  (ngSubmit)="form.submit()"
+  class="tui-form"
+  *tuiLet="formEffects$ | async">
   <div tuiGroup class="tui-form__row" [rounded]="true">
     <label tuiLabel="Transaction type" class="max-w-10 label-required">
       <tui-select
@@ -59,7 +63,7 @@
         tuiAutoFocus
         tuiTextfieldSize="m"
         [precision]="2"
-        decimal="always"
+        decimal="not-zero"
         [min]="0.0">
         Type an amount
       </tui-input-number>
@@ -82,7 +86,7 @@
             formControlName="exchangeRate"
             tuiTextfieldSize="m"
             [precision]="2"
-            decimal="always"
+            decimal="not-zero"
             [min]="0.0">
             Type an amount
           </tui-input-number>

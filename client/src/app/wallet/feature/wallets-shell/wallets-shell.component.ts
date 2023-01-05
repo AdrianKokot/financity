@@ -12,8 +12,8 @@ import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from '../../../auth/data-access/api/user.service';
 
 @Component({
   selector: 'app-wallets-shell',
@@ -30,6 +30,7 @@ export class WalletsShellComponent {
     showSimplifiedView$: this._user.settings$.pipe(
       map(x => x.showSimplifiedWalletView)
     ),
+    userId: this._user.userSnapshot?.id,
   };
 
   readonly filters = this._fb.filters({
@@ -63,7 +64,7 @@ export class WalletsShellComponent {
     private readonly _injector: Injector,
     @Inject(TuiDialogService)
     private readonly _dialog: TuiDialogService,
-    private readonly _user: UserSettingsService,
+    private readonly _user: UserService,
     private readonly _activatedRoute: ActivatedRoute
   ) {}
 

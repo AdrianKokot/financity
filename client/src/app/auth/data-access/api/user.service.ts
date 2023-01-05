@@ -5,6 +5,7 @@ import { shareReplay } from 'rxjs';
 import { CurrencyListItem } from '@shared/data-access/models/currency.model';
 import { toHttpParams } from '../../../core/api/generic-api.service';
 import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +13,16 @@ import { UserSettingsService } from '../../../user-settings/data-access/services
 export class UserService {
   constructor(
     private readonly _http: HttpClient,
-    private readonly _userSettings: UserSettingsService
+    private readonly _userSettings: UserSettingsService,
+    private readonly _auth: AuthService
   ) {}
 
   readonly user$ = this._http.get<User>('/api/auth/user').pipe(shareReplay(1));
   readonly settings$ = this._userSettings.settings$;
+
+  get userSnapshot() {
+    return this._auth.user;
+  }
 
   getUserCurrencies() {
     return this._http.get<CurrencyListItem[]>('/api/currencies/used-by-user', {

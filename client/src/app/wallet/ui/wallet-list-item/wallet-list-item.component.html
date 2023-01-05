@@ -2,9 +2,9 @@
   *ngIf="wallet !== null; else ngContent"
   href="/wallets/{{ wallet.id }}"
   routerLink="/wallets/{{ wallet.id }}"
-  class="h-full w-full d-block px-4 py-3"
-  [title]="wallet.name">
+  class="h-full w-full d-block px-4 py-3">
   <div
+    [title]="wallet.name"
     class="tui-text_body-m text-ellipsis mb-1"
     [class.tui-skeleton]="showSkeleton">
     {{ wallet.name }}
@@ -15,6 +15,16 @@
     [colored]="true"
     [value]="wallet.currentState ?? 0">
   </tui-money>
+
+  <tui-badge
+    *ngIf="wallet.ownerId !== userId"
+    status="primary"
+    [tuiHint]="'This wallet is shared to you by ' + wallet.ownerName"
+    size="s"
+    tuiHintDirection="top"
+    [hoverable]="true">
+    <tui-svg [src]="'fa::circle-user'"></tui-svg>
+  </tui-badge>
 </a>
 
 <ng-container *ngIf="showSkeleton">

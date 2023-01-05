@@ -24,7 +24,7 @@ export class CreateBudgetComponent {
     {
       name: ['', [Validators.required, Validators.maxLength(64)]],
       currencyId: ['', [Validators.required]],
-      amount: [0.01, [Validators.required, Validators.min(0.01)]],
+      amount: [0, [Validators.required, Validators.min(0.01)]],
       trackedCategoriesId: [new Array<Category['id']>(), [Validators.required]],
     },
     {

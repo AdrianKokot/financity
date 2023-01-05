@@ -16,13 +16,19 @@ import {
   TuiFieldErrorPipeModule,
   TuiInputCountModule,
   TuiInputModule,
+  TuiInputPasswordModule,
   TuiTabsModule,
   TuiToggleModule,
 } from '@taiga-ui/kit';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AccountSettingsComponent } from './feature/account-settings/account-settings.component';
 
 @NgModule({
-  declarations: [UserSettingsShellComponent, AppSettingsComponent],
+  declarations: [
+    UserSettingsShellComponent,
+    AppSettingsComponent,
+    AccountSettingsComponent,
+  ],
   imports: [
     CommonModule,
     UserSettingsRoutingModule,
@@ -39,6 +45,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TuiLinkModule,
     TuiToggleModule,
     ReactiveFormsModule,
+    TuiInputPasswordModule,
   ],
 })
 export class UserSettingsModule {}
