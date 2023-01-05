@@ -2,6 +2,7 @@
   [formGroup]="form.group"
   (ngSubmit)="form.submit()"
   class="tui-form"
+  *tuiLet="dialogs$ | async"
   [attr.data-skeleton]="initialDataLoading$ | async">
   <label tuiLabel="Transaction date" class="tui-form__row label-required">
     <tui-input-date
@@ -41,10 +42,12 @@
 
   <label tuiLabel="Category" class="tui-form__row">
     <app-select-with-template
+      [showAddButton]="true"
+      (addClick)="ui.actions.createCategory$.next($event)"
       *ngIf="this.form.controls.transactionType.value"
       [control]="form.controls.categoryId"
-      [preloadedResults]="preloadedData.categories"
-      [getListFunction]="dataApis.getCategories"
+      [preloadedResults]="ui.preloadedResults.categories"
+      [getListFunction]="ui.dataApis.getCategories"
       [itemTemplate]="categoryTemplate"
       [externalFilters]="{
         transactionType_eq: this.form.controls.transactionType.value
@@ -71,9 +74,11 @@
 
   <label tuiLabel="Recipient" class="tui-form__row">
     <app-select
+      [showAddButton]="true"
+      (addClick)="ui.actions.createRecipient$.next($event)"
       [control]="form.controls.recipientId"
-      [preloadedResults]="preloadedData.recipients"
-      [getListFunction]="dataApis.getRecipients"
+      [preloadedResults]="ui.preloadedResults.recipients"
+      [getListFunction]="ui.dataApis.getRecipients"
       class="mt-1"
       label="Choose a recipient"></app-select>
 
@@ -84,9 +89,11 @@
 
   <label tuiLabel="Labels" class="tui-form__row">
     <app-multi-select
+      [showAddButton]="true"
+      (addClick)="ui.actions.createLabel$.next($event)"
       [control]="form.controls.labelIds"
-      [preloadedResults]="preloadedData.labels"
-      [getListFunction]="dataApis.getLabels"
+      [preloadedResults]="ui.preloadedResults.labels"
+      [getListFunction]="ui.dataApis.getLabels"
       class="mt-1"
       label="Choose labels">
     </app-multi-select>

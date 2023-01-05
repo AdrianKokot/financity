@@ -39,6 +39,14 @@
         <ng-container *ngIf="(apiLoading$ | async)!">
           <tui-loader></tui-loader>
         </ng-container>
+        <button
+          *ngIf="showAddButton && items?.length === 0"
+          tuiOption
+          (click)="addClick.emit(search$.value)"
+          class="text-link">
+          <tui-svg [src]="'tuiIconPlus'" class="size-16px"></tui-svg>
+          <span class="ml-2"> Add new </span>
+        </button>
       </tui-data-list>
     </cdk-virtual-scroll-viewport>
   </tui-combo-box>

@@ -5,7 +5,7 @@ import {
   Injector,
 } from '@angular/core';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { merge, Subject, switchMap, tap } from 'rxjs';
+import { finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
   TuiAlertService,
@@ -36,6 +36,7 @@ export class WalletShareManagementComponent {
       revoke$: new Subject<Pick<User, 'email'>>(),
       share$: new Subject<void>(),
     },
+    deleteActionAt$: new Subject<User['email'] | null>(),
   };
 
   readonly filters = this._fb.filters({
@@ -80,11 +81,14 @@ export class WalletShareManagementComponent {
       })
     ),
     this.ui.actions.revoke$.pipe(
+      tap(user => this.ui.deleteActionAt$.next(user.email)),
       switchMap(user =>
-        this._walletService.revoke({
-          userEmail: user.email,
-          walletId: this._walletId,
-        })
+        this._walletService
+          .revoke({
+            userEmail: user.email,
+            walletId: this._walletId,
+          })
+          .pipe(finalize(() => this.ui.deleteActionAt$.next(null)))
       )
     )
   ).pipe(tap(() => this.data.resetPage()));

@@ -4,7 +4,7 @@ import {
   Inject,
   Injector,
 } from '@angular/core';
-import { filter, merge, Subject, switchMap, tap } from 'rxjs';
+import { filter, finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TuiDialogService } from '@taiga-ui/core';
 import { CategoryApiService } from '../../../core/api/category-api.service';
@@ -39,6 +39,7 @@ export class WalletCategoriesComponent {
       delete$: new Subject<Category['id']>(),
       create$: new Subject<void>(),
     },
+    deleteActionAt$: new Subject<Category['id'] | null>(),
   };
 
   readonly filters = this._fb.filters(
@@ -90,8 +91,12 @@ export class WalletCategoriesComponent {
       )
     ),
     this.ui.actions.delete$.pipe(
+      tap(id => this.ui.deleteActionAt$.next(id)),
       switchMap(id =>
-        this._categoryService.delete(id).pipe(filter(success => success))
+        this._categoryService.delete(id).pipe(
+          filter(success => success),
+          finalize(() => this.ui.deleteActionAt$.next(null))
+        )
       )
     )
   ).pipe(tap(() => this.data.resetPage()));

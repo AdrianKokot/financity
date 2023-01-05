@@ -7,6 +7,7 @@ import {
   TuiHostedDropdownModule,
   TuiLoaderModule,
   TuiScrollbarModule,
+  TuiSvgModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
@@ -49,6 +50,7 @@ import { NgDompurifyModule } from '@tinkoff/ng-dompurify';
     TuiLoaderModule,
     TuiButtonModule,
     NgDompurifyModule,
+    TuiSvgModule,
   ],
   exports: [MultiSelectComponent],
 })

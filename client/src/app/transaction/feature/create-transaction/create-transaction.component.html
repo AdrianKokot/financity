@@ -2,7 +2,7 @@
   [formGroup]="form.group"
   (ngSubmit)="form.submit()"
   class="tui-form"
-  *tuiLet="formEffects$ | async">
+  *tuiLet="dialogs$ | async">
   <div tuiGroup class="tui-form__row" [rounded]="true">
     <label tuiLabel="Transaction type" class="max-w-10 label-required">
       <tui-select
@@ -104,12 +104,17 @@
       *ngIf="this.form.controls.transactionType.value"
       [control]="form.controls.categoryId"
       [getListFunction]="ui.dataApis.getCategories"
+      [preloadedResults]="ui.preloadedResults.categories"
       [externalFilters]="{
         transactionType_eq: this.form.controls.transactionType.value
       }"
       [itemTemplate]="categoryTemplate"
       class="mt-1"
-      label="Choose a category"></app-select-with-template>
+      label="Choose a category"
+      [showAddButton]="true"
+      (addClick)="
+        ui.actions.createCategory$.next($event)
+      "></app-select-with-template>
 
     <ng-template #categoryTemplate="polymorpheus" polymorpheus let-item>
       <span class="d-flex align-items-center">
@@ -130,8 +135,11 @@
 
   <label tuiLabel="Recipient" class="tui-form__row">
     <app-select
+      [showAddButton]="true"
+      (addClick)="ui.actions.createRecipient$.next($event)"
       [control]="form.controls.recipientId"
       [getListFunction]="ui.dataApis.getRecipients"
+      [preloadedResults]="ui.preloadedResults.recipients"
       class="mt-1"
       label="Choose a recipient"></app-select>
 
@@ -142,8 +150,11 @@
 
   <label tuiLabel="Labels" class="tui-form__row">
     <app-multi-select
+      [showAddButton]="true"
+      (addClick)="ui.actions.createLabel$.next($event)"
       [control]="form.controls.labelIds"
       [getListFunction]="ui.dataApis.getLabels"
+      [preloadedResults]="ui.preloadedResults.labels"
       class="mt-1"
       label="Choose labels">
     </app-multi-select>

@@ -28,13 +28,11 @@ export class CreateRecipientComponent {
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
-      Pick<Recipient, 'id'>,
-      Pick<Recipient, 'walletId'>
+      Recipient,
+      Pick<Recipient, 'walletId'> & { name?: string }
     >
   ) {
-    this.form.patchValue({
-      walletId: this._context.data.walletId,
-    });
+    this.form.patchValue(this._context.data);
   }
 
   cancel() {

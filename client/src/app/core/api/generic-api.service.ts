@@ -60,10 +60,13 @@ export abstract class GenericApiService<
     return this.http.get<TDetailsItem>(`${this.api}/${id}`);
   }
 
-  create(payload: TCreatePayload): Observable<Pick<T, 'id'>> {
+  create(payload: TCreatePayload): Observable<TCreatePayload & Pick<T, 'id'>> {
     return this.http
-      .post<Pick<T, 'id'>>(this.api, payload)
-      .pipe(tap(() => (this._getListCache = {})));
+      .post<TCreatePayload & Pick<T, 'id'>>(this.api, payload)
+      .pipe(
+        tap(() => (this._getListCache = {})),
+        map(({ id }) => ({ id, ...payload }))
+      );
   }
 
   update(payload: TUpdatePayload & { id: string }) {

@@ -4,7 +4,7 @@ import {
   Inject,
   Injector,
 } from '@angular/core';
-import { filter, merge, Subject, switchMap, tap } from 'rxjs';
+import { filter, finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TuiDialogService } from '@taiga-ui/core';
 import { LabelApiService } from '../../../core/api/label-api.service';
@@ -34,6 +34,7 @@ export class WalletLabelsComponent {
       delete$: new Subject<Label['id']>(),
       create$: new Subject<void>(),
     },
+    deleteActionAt$: new Subject<Label['id'] | null>(),
   };
 
   readonly filters = this._fb.filters({
@@ -74,8 +75,12 @@ export class WalletLabelsComponent {
       )
     ),
     this.ui.actions.delete$.pipe(
+      tap(id => this.ui.deleteActionAt$.next(id)),
       switchMap(id =>
-        this._labelService.delete(id).pipe(filter(success => success))
+        this._labelService.delete(id).pipe(
+          filter(success => success),
+          finalize(() => this.ui.deleteActionAt$.next(null))
+        )
       )
     )
   ).pipe(tap(() => this.data.resetPage()));

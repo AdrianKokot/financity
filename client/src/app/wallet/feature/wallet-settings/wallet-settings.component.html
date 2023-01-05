@@ -57,38 +57,45 @@
     </form>
 
     <hr class="my-6" />
-    <div *ngIf="isUserOwner" class="d-flex justify-content-flex-end">
-      <button
-        tuiButton
-        type="button"
-        class="tui-form__button"
-        size="m"
-        appearance="secondary-destructive"
-        icon="tuiIconTrash"
-        appRequireConfirmation
-        (confirm)="ui.actions.delete$.next(undefined)"
-        confirmationMessage="Are you sure you want to delete wallet <strong>{{
-          form.controls.name.value
-        }}</strong>? This action is irreversible.">
-        Delete
-      </button>
-    </div>
+    <ng-container
+      *tuiLet="
+        (ui.deleteButtonLoading$ | async) ?? false as deleteButtonLoading
+      ">
+      <div *ngIf="isUserOwner" class="d-flex justify-content-flex-end">
+        <button
+          [showLoader]="deleteButtonLoading"
+          tuiButton
+          type="button"
+          class="tui-form__button"
+          size="m"
+          appearance="secondary-destructive"
+          icon="tuiIconTrash"
+          appRequireConfirmation
+          (confirm)="ui.actions.delete$.next(undefined)"
+          confirmationMessage="Are you sure you want to delete wallet <strong>{{
+            form.controls.name.value
+          }}</strong>? This action is irreversible.">
+          Delete
+        </button>
+      </div>
 
-    <div *ngIf="!isUserOwner" class="d-flex justify-content-flex-end">
-      <button
-        tuiButton
-        type="button"
-        class="tui-form__button"
-        size="m"
-        appearance="secondary-destructive"
-        icon="tuiIconTrash"
-        appRequireConfirmation
-        (confirm)="ui.actions.resign$.next(undefined)"
-        confirmationMessage="Are you sure you want to resign access from wallet <strong>{{
-          form.controls.name.value
-        }}</strong>?">
-        Resign from access
-      </button>
-    </div>
+      <div *ngIf="!isUserOwner" class="d-flex justify-content-flex-end">
+        <button
+          [showLoader]="deleteButtonLoading"
+          tuiButton
+          type="button"
+          class="tui-form__button"
+          size="m"
+          appearance="secondary-destructive"
+          icon="tuiIconTrash"
+          appRequireConfirmation
+          (confirm)="ui.actions.resign$.next(undefined)"
+          confirmationMessage="Are you sure you want to resign access from wallet <strong>{{
+            form.controls.name.value
+          }}</strong>?">
+          Resign from access
+        </button>
+      </div>
+    </ng-container>
   </div>
 </div>

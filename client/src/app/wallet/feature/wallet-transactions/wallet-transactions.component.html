@@ -133,7 +133,9 @@
             </tr>
           </thead>
 
-          <tbody tuiTbody>
+          <tbody
+            tuiTbody
+            *tuiLet="ui.deleteActionAt$ | async as currentlyDeletedId">
             <tr
               *cdkVirtualFor="let item of items ?? []; trackBy: trackById"
               tuiTr>
@@ -218,37 +220,50 @@
                 </div>
               </td>
 
-              <td *tuiCell="'actions'" tuiTd class="w-128px">
-                <button
-                  tuiIconButton
-                  appearance="flat"
-                  size="s"
-                  icon="fa::info"
-                  title="View details"
-                  shape="rounded"
-                  class="mr-1"
-                  (click)="ui.actions.details$.next(item)"></button>
+              <td
+                *tuiCell="'actions'"
+                tuiTd
+                class="w-128px"
+                [class.buttons-visible]="currentlyDeletedId === item.id">
+                <tui-loader
+                  [tuiHint]="
+                    currentlyDeletedId === item.id
+                      ? 'This row is during deletion'
+                      : null
+                  "
+                  [showLoader]="currentlyDeletedId === item.id"
+                  [overlay]="true">
+                  <button
+                    tuiIconButton
+                    appearance="flat"
+                    size="s"
+                    icon="fa::info"
+                    title="View details"
+                    shape="rounded"
+                    class="mr-1"
+                    (click)="ui.actions.details$.next(item)"></button>
 
-                <button
-                  tuiIconButton
-                  appearance="flat"
-                  size="s"
-                  icon="fa::pen"
-                  title="Edit"
-                  shape="rounded"
-                  class="mr-1"
-                  (click)="ui.actions.edit$.next(item.id)"></button>
+                  <button
+                    tuiIconButton
+                    appearance="flat"
+                    size="s"
+                    icon="fa::pen"
+                    title="Edit"
+                    shape="rounded"
+                    class="mr-1"
+                    (click)="ui.actions.edit$.next(item.id)"></button>
 
-                <button
-                  tuiIconButton
-                  appearance="flat-destructive"
-                  size="s"
-                  icon="tuiIconTrash"
-                  title="Remove"
-                  appRequireConfirmation
-                  (confirm)="ui.actions.delete$.next(item.id)"
-                  confirmationMessage="Are you sure you want to delete this transaction? This action is irreversible."
-                  shape="rounded"></button>
+                  <button
+                    tuiIconButton
+                    appearance="flat-destructive"
+                    size="s"
+                    icon="tuiIconTrash"
+                    title="Remove"
+                    appRequireConfirmation
+                    (confirm)="ui.actions.delete$.next(item.id)"
+                    confirmationMessage="Are you sure you want to delete this transaction? This action is irreversible."
+                    shape="rounded"></button>
+                </tui-loader>
               </td>
             </tr>
           </tbody>
