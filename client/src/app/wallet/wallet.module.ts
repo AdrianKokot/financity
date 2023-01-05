@@ -8,6 +8,7 @@ import {
   TuiDataListModule,
   TuiErrorModule,
   TuiGroupModule,
+  TuiHintModule,
   TuiHostedDropdownModule,
   TuiLabelModule,
   TuiLinkModule,
@@ -24,6 +25,7 @@ import {
 import { TuiTableModule } from '@taiga-ui/addon-table';
 import {
   TuiActionModule,
+  TuiBadgedContentModule,
   TuiBadgeModule,
   TuiBreadcrumbsModule,
   TuiComboBoxModule,
@@ -134,6 +136,8 @@ import { WalletsListComponent } from './feature/wallets-list/wallets-list.compon
     TuiActiveZoneModule,
     InfiniteVirtualScrollModule,
     TuiItemsWithMoreModule,
+    TuiBadgedContentModule,
+    TuiHintModule,
   ],
   exports: [WalletListItemComponent],
 })

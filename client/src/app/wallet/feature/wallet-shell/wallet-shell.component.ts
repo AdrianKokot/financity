@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { filter, map, shareReplay, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { UserService } from '../../../auth/data-access/api/user.service';
 
 @Component({
   selector: 'app-wallet-shell',
@@ -17,8 +18,11 @@ export class WalletShellComponent {
     shareReplay(1)
   );
 
+  userId = this._user.userSnapshot?.id;
+
   constructor(
-    private _activatedRoute: ActivatedRoute,
-    private _walletService: WalletApiService
+    private readonly _activatedRoute: ActivatedRoute,
+    private readonly _walletService: WalletApiService,
+    private readonly _user: UserService
   ) {}
 }
