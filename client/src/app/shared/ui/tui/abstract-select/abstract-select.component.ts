@@ -15,7 +15,6 @@ import {
   share,
   shareReplay,
   startWith,
-  Subject,
   switchMap,
   withLatestFrom,
 } from 'rxjs';
@@ -33,7 +32,13 @@ export abstract class AbstractSelectComponent<
   @Input() size: TuiSizeL | TuiSizeS = 'm';
   @Input() control!: FormControl;
   @Input() label = '';
-  @Input() preloadedResults: T[] = [];
+  @Input() set preloadedResults(value: T[]) {
+    this._preloadedResults$.next(value);
+  }
+
+  get preloadedResults() {
+    return this._preloadedResults$.value;
+  }
 
   @Input() stringify = (item: T) => item.name;
 
@@ -41,6 +46,7 @@ export abstract class AbstractSelectComponent<
     EMPTY;
 
   externalFilters$ = new BehaviorSubject<ApiParams>({});
+  private _preloadedResults$ = new BehaviorSubject<T[]>([]);
 
   @Input() set externalFilters(value: ApiParams) {
     this.externalFilters$.next(value);
@@ -52,7 +58,7 @@ export abstract class AbstractSelectComponent<
 
   @Input() searchBy = 'name_ct';
 
-  readonly search$ = new Subject<string>();
+  readonly search$ = new BehaviorSubject<string>('');
 
   readonly page$ = new BehaviorSubject<number>(1);
 
@@ -116,14 +122,12 @@ export abstract class AbstractSelectComponent<
     )
   ).pipe(distinctUntilChanged());
 
-  protected readonly allItems$ = this._api$.pipe(
+  protected readonly allItems$ = merge(
+    this._api$,
+    this._preloadedResults$
+  ).pipe(
     filter((x): x is T[] => x !== null),
-    scan(
-      (acc: T[], val: T[]) => [
-        ...new Set([...acc, ...val, ...this.preloadedResults]),
-      ],
-      [] as T[]
-    ),
+    scan((acc: T[], val: T[]) => [...new Set([...acc, ...val])], [] as T[]),
     shareReplay(1)
   );
 

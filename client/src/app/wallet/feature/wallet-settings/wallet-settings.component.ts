@@ -6,7 +6,15 @@ import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 import { AuthService } from '../../../auth/data-access/api/auth.service';
-import { filter, merge, Subject, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  finalize,
+  merge,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 
 @Component({
   selector: 'app-wallet-settings',
@@ -43,21 +51,26 @@ export class WalletSettingsComponent {
       delete$: new Subject<void>(),
       resign$: new Subject<void>(),
     },
+    deleteButtonLoading$: new BehaviorSubject<boolean>(false),
   };
 
   readonly dialogs$ = merge(
     this.ui.actions.delete$.pipe(
+      tap(() => this.ui.deleteButtonLoading$.next(true)),
       switchMap(() =>
-        this._dataService
-          .delete(this.form.controls.id.value)
-          .pipe(filter(success => success))
+        this._dataService.delete(this.form.controls.id.value).pipe(
+          filter(success => success),
+          finalize(() => this.ui.deleteButtonLoading$.next(false))
+        )
       )
     ),
     this.ui.actions.resign$.pipe(
+      tap(() => this.ui.deleteButtonLoading$.next(true)),
       switchMap(() =>
-        this._dataService
-          .resign(this.form.controls.id.value)
-          .pipe(filter(success => success))
+        this._dataService.resign(this.form.controls.id.value).pipe(
+          filter(success => success),
+          finalize(() => this.ui.deleteButtonLoading$.next(false))
+        )
       )
     )
   ).pipe(

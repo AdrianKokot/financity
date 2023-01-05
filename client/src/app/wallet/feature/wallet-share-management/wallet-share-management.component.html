@@ -71,7 +71,9 @@
                 class="w-56px"></th>
             </tr>
           </thead>
-          <tbody tuiTbody>
+          <tbody
+            tuiTbody
+            *tuiLet="ui.deleteActionAt$ | async as currentlyDeletedEmail">
             <tr
               *cdkVirtualFor="let item of items ?? []; trackBy: trackById"
               tuiTr>
@@ -87,11 +89,21 @@
                 </span>
               </td>
 
-              <td *tuiCell="'actions'" tuiTd class="w-56px">
+              <td
+                *tuiCell="'actions'"
+                tuiTd
+                class="w-56px"
+                [class.buttons-visible]="currentlyDeletedEmail === item.email">
                 <button
                   tuiIconButton
                   appearance="flat-destructive"
                   size="s"
+                  [tuiHint]="
+                    currentlyDeletedEmail === item.email
+                      ? 'This row is during deletion'
+                      : null
+                  "
+                  [showLoader]="currentlyDeletedEmail === item.email"
                   icon="tuiIconTrash"
                   title="Revoke access"
                   appRequireConfirmation

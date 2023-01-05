@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   filter,
+  finalize,
   map,
   merge,
   shareReplay,
@@ -68,6 +69,7 @@ export class WalletTransactionsComponent {
       create$: new Subject<void>(),
       details$: new Subject<TransactionListItem>(),
     },
+    deleteActionAt$: new Subject<Transaction['id'] | null>(),
   };
 
   readonly filters = this._fb.filters(
@@ -133,8 +135,12 @@ export class WalletTransactionsComponent {
       })
     ),
     this.ui.actions.delete$.pipe(
+      tap(id => this.ui.deleteActionAt$.next(id)),
       switchMap(id =>
-        this._transactionApiService.delete(id).pipe(filter(success => success))
+        this._transactionApiService.delete(id).pipe(
+          filter(success => success),
+          finalize(() => this.ui.deleteActionAt$.next(null))
+        )
       )
     ),
     this.ui.actions.details$.pipe(

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Injector,
+} from '@angular/core';
 import { Validators } from '@angular/forms';
 import {
   TRANSACTION_TYPES,
@@ -11,11 +16,15 @@ import {
   merge,
   of,
   share,
+  Subject,
   switchMap,
   tap,
 } from 'rxjs';
-import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
-import { TuiDialogContext } from '@taiga-ui/core';
+import {
+  POLYMORPHEUS_CONTEXT,
+  PolymorpheusComponent,
+} from '@tinkoff/ng-polymorpheus';
+import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { TuiDay, tuiIsNumber } from '@taiga-ui/cdk';
 import { TransactionApiService } from '../../../core/api/transaction-api.service';
 import { Transaction } from '@shared/data-access/models/transaction.model';
@@ -23,11 +32,22 @@ import { CurrencyListItem } from '@shared/data-access/models/currency.model';
 import { CurrencyApiService } from '../../../core/api/currency-api.service';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { Label } from '@shared/data-access/models/label';
+import { Label, LabelListItem } from '@shared/data-access/models/label';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { handleValidationApiError } from '@shared/utils/api/api-error-handler';
+import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';
+import {
+  Category,
+  CategoryListItem,
+} from '@shared/data-access/models/category.model';
+import { CreateRecipientComponent } from '../../../recipient/feature/create-recipient/create-recipient.component';
+import {
+  Recipient,
+  RecipientListItem,
+} from '@shared/data-access/models/recipient.model';
+import { CreateLabelComponent } from '../../../label/feature/create-label/create-label.component';
 
 @Component({
   selector: 'app-create-transaction',
@@ -45,6 +65,16 @@ export class CreateTransactionComponent {
       ...this._walletService.getConcreteWalletApi(this._context.data.walletId),
       getCurrencies: this._currencyService.getList.bind(this._currencyService),
       getCurrencyName: (item: CurrencyListItem) => item.id,
+    },
+    actions: {
+      createCategory$: new Subject<string>(),
+      createRecipient$: new Subject<string>(),
+      createLabel$: new Subject<string>(),
+    },
+    preloadedResults: {
+      categories: new Array<CategoryListItem>(),
+      recipients: new Array<RecipientListItem>(),
+      labels: new Array<LabelListItem>(),
     },
   };
 
@@ -71,10 +101,85 @@ export class CreateTransactionComponent {
     }
   );
 
-  readonly formEffects$ =
+  readonly dialogs$ = merge(
     this.form.group.controls.transactionType.valueChanges.pipe(
       tap(() => this.form.group.controls.categoryId.reset())
-    );
+    ),
+    this.ui.actions.createCategory$.pipe(
+      switchMap(name =>
+        this._dialog
+          .open<Category>(
+            new PolymorpheusComponent(CreateCategoryComponent, this._injector),
+            {
+              label: 'Create category',
+              data: {
+                name,
+                walletId: this.form.group.controls.walletId.value,
+                transactionType: this.form.group.controls.transactionType.value,
+              },
+            }
+          )
+          .pipe(
+            tap(item => {
+              if (
+                item.transactionType ===
+                this.form.group.controls.transactionType.value
+              ) {
+                this.form.group.controls.categoryId.setValue(item.id);
+                this.ui.preloadedResults.categories =
+                  this.ui.preloadedResults.categories.concat(item);
+              }
+            })
+          )
+      )
+    ),
+    this.ui.actions.createRecipient$.pipe(
+      switchMap(name =>
+        this._dialog
+          .open<Recipient>(
+            new PolymorpheusComponent(CreateRecipientComponent, this._injector),
+            {
+              label: 'Create recipient',
+              data: {
+                name,
+                walletId: this.form.group.controls.walletId.value,
+              },
+            }
+          )
+          .pipe(
+            tap(item => {
+              this.form.group.controls.recipientId.setValue(item.id);
+              this.ui.preloadedResults.recipients =
+                this.ui.preloadedResults.recipients.concat(item);
+            })
+          )
+      )
+    ),
+    this.ui.actions.createLabel$.pipe(
+      switchMap(name =>
+        this._dialog
+          .open<Label>(
+            new PolymorpheusComponent(CreateLabelComponent, this._injector),
+            {
+              label: 'Create label',
+              data: {
+                name,
+                walletId: this.form.group.controls.walletId.value,
+              },
+            }
+          )
+          .pipe(
+            tap(item => {
+              this.form.group.controls.labelIds.setValue(
+                this.form.group.controls.labelIds.value.concat(item.id)
+              );
+              this.ui.preloadedResults.labels =
+                this.ui.preloadedResults.labels.concat(item);
+            })
+          )
+      )
+    )
+  );
 
   readonly shouldExchangeRateBeSpecified$ = merge(
     this.form.controls.currencyId.valueChanges,
@@ -132,7 +237,9 @@ export class CreateTransactionComponent {
         transactionType: TransactionType;
         walletCurrencyId: Wallet['currencyId'];
       }
-    >
+    >,
+    @Inject(Injector) private readonly _injector: Injector,
+    @Inject(TuiDialogService) private readonly _dialog: TuiDialogService
   ) {
     this.form.patchValue({
       walletId: this._context.data.walletId,

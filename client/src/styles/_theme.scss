@@ -224,7 +224,7 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
     }
   }
 
-  td button {
+  td:not(.buttons-visible) button {
     @include transition(opacity);
     opacity: 0;
   }
@@ -247,7 +247,6 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
     transform: translate(30%, -30%);
   }
 }
-
 
 .tui-zero-scrollbar {
   @include scrollbar-hidden;
@@ -353,4 +352,16 @@ table tfoot tr {
 
   }
 }
+tui-svg.size-16px {
+  height: 16px;
+  width: 16px;
 
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+button.text-link tui-multi-select-option tui-primitive-checkbox {
+  display: none !important;
+}

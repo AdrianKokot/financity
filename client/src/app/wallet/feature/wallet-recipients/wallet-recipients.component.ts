@@ -4,7 +4,7 @@ import {
   Inject,
   Injector,
 } from '@angular/core';
-import { filter, merge, Subject, switchMap, tap } from 'rxjs';
+import { filter, finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CreateRecipientComponent } from '../../../recipient/feature/create-recipient/create-recipient.component';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
@@ -35,6 +35,7 @@ export class WalletRecipientsComponent {
       delete$: new Subject<Recipient['id']>(),
       create$: new Subject<void>(),
     },
+    deleteActionAt$: new Subject<Recipient['id'] | null>(),
   };
 
   readonly filters = this._fb.filters({
@@ -75,8 +76,12 @@ export class WalletRecipientsComponent {
       )
     ),
     this.ui.actions.delete$.pipe(
+      tap(id => this.ui.deleteActionAt$.next(id)),
       switchMap(id =>
-        this._recipientService.delete(id).pipe(filter(success => success))
+        this._recipientService.delete(id).pipe(
+          filter(success => success),
+          finalize(() => this.ui.deleteActionAt$.next(null))
+        )
       )
     )
   ).pipe(tap(() => this.data.resetPage()));

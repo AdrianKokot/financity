@@ -4,6 +4,7 @@ import { SelectComponent } from './select.component';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
+  TuiMarkerIconModule,
   TuiMultiSelectModule,
   TuiUnfinishedValidatorModule,
 } from '@taiga-ui/kit';
@@ -11,6 +12,7 @@ import {
   TuiDataListModule,
   TuiLoaderModule,
   TuiScrollbarModule,
+  TuiSvgModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { TuiLetModule } from '@taiga-ui/cdk';
@@ -46,6 +48,8 @@ import { SelectWithTemplateComponent } from '@shared/ui/tui/select/select-with-t
     TuiUnfinishedValidatorModule,
     PolymorpheusModule,
     NgDompurifyModule,
+    TuiSvgModule,
+    TuiMarkerIconModule,
   ],
   exports: [SelectComponent, SelectWithTemplateComponent],
 })
