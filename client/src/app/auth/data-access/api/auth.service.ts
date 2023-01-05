@@ -117,4 +117,23 @@ export class AuthService {
       })
       .pipe(map(res => res.status === 204));
   }
+
+  getUserDetails() {
+    return this._http.get<User>(`${this._basePath}/user`);
+  }
+
+  changePassword(payload: {
+    password: string;
+    newPassword: string;
+  }): Observable<boolean> {
+    return this._http
+      .post(`${this._basePath}/change-password`, payload, {
+        observe: 'response',
+      })
+      .pipe(map(res => res.status === 204));
+  }
+
+  updateUser(payload: Pick<User, 'name'>) {
+    return this._http.put<User>(`${this._basePath}/user`, payload);
+  }
 }

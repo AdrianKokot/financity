@@ -14,8 +14,8 @@ public sealed record RequestResetPasswordCommand(string Email) : ICommand<Reques
 public sealed class
     RequestResetPasswordCommandHandler : ICommandHandler<RequestResetPasswordCommand, RequestResetPasswordCommandResult>
 {
-    private readonly IEmailService _emailService;
     private readonly IOptions<EmailConfiguration> _emailOptions;
+    private readonly IEmailService _emailService;
     private readonly UserManager<User> _userManager;
 
     public RequestResetPasswordCommandHandler(UserManager<User> userManager,

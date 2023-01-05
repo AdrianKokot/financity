@@ -1,0 +1,84 @@
+<div class="tui-row">
+  <div class="tui-col_5" [attr.data-skeleton]="initialDataLoading$ | async">
+    <form
+      [formGroup]="userForm.group"
+      (ngSubmit)="userForm.submit()"
+      class="tui-form">
+      <label tuiLabel="Name" class="tui-form__row">
+        <tui-input
+          formControlName="name"
+          tuiTextfieldSize="m"
+          class="mt-1"
+          [tuiTextfieldLabelOutside]="true">
+          Your name
+          <input tuiTextfield type="text" />
+        </tui-input>
+
+        <tui-error
+          formControlName="name"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+
+      <div class="tui-form__row tui-form__buttons tui-form__buttons_align_end">
+        <button
+          tuiButton
+          type="submit"
+          class="tui-form__button"
+          size="m"
+          [showLoader]="(userForm.submitButtonLoading$ | async) ?? false">
+          Save
+        </button>
+      </div>
+    </form>
+
+    <hr class="my-6" />
+
+    <form
+      [formGroup]="passwordChangeForm.group"
+      (ngSubmit)="passwordChangeForm.submit()"
+      class="tui-form">
+      <label tuiLabel="Curent password" class="tui-form__row">
+        <tui-input-password
+          formControlName="password"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          class="mt-1">
+          ••••••••
+          <input tuiTextfield type="password" />
+        </tui-input-password>
+
+        <tui-error
+          formControlName="password"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+
+      <label tuiLabel="New password" class="tui-form__row">
+        <tui-input-password
+          formControlName="newPassword"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          class="mt-1">
+          ••••••••
+          <input tuiTextfield type="password" />
+        </tui-input-password>
+
+        <tui-error
+          formControlName="newPassword"
+          [error]="[] | tuiFieldError | async"></tui-error>
+      </label>
+
+      <div class="tui-form__row tui-form__buttons tui-form__buttons_align_end">
+        <button
+          tuiButton
+          type="submit"
+          class="tui-form__button"
+          size="m"
+          [showLoader]="
+            (passwordChangeForm.submitButtonLoading$ | async) ?? false
+          ">
+          Change password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
