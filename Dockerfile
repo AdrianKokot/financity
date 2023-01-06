@@ -23,6 +23,8 @@ FROM build AS publish
 RUN dotnet publish "Financity.Presentation.csproj" -c Release -o /app/publish
 
 FROM base AS final
+WORKDIR /src
+COPY "api/Financity.Presentation/Resources" .
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY --from=front /app/dist/financity wwwroot

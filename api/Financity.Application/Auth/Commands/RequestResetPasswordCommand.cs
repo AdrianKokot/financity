@@ -40,7 +40,7 @@ public sealed class
         await _emailService.SendEmailAsync(
             command.Email,
             "Password reset request",
-            new ResetPasswordEmailTemplate(token, _emailOptions.Value.AppUrl ?? "Default value").ToString(),
+            new ResetPasswordEmailTemplate(token, _emailOptions.Value.AppUrl).ToString(),
             ct
         );
 
