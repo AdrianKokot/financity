@@ -28,6 +28,7 @@ COPY "api/Financity.Presentation/Resources" .
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY --from=front /app/dist/financity wwwroot
+COPY ["api/Financity.Presentation/Resources", "Resources"]
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
 ENTRYPOINT ["dotnet", "Financity.Presentation.dll"]
