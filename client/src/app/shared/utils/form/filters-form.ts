@@ -34,8 +34,6 @@ export class FiltersForm<
             filters[`${filterKey}_gte`] = data[key].from.toJSON();
 
           if (data[key].to) filters[`${filterKey}_lte`] = data[key].to.toJSON();
-
-          return filters;
         }
 
         if (
@@ -43,8 +41,6 @@ export class FiltersForm<
           data[key].length > 0
         ) {
           filters[`${filterKey}_in`] = data[key];
-
-          return filters;
         }
 
         if (typeof data[key] === 'string') {
@@ -52,8 +48,6 @@ export class FiltersForm<
           if (trimmed.length > 0) {
             filters[filterKey] = trimmed;
           }
-
-          return filters;
         }
 
         if (
@@ -63,17 +57,6 @@ export class FiltersForm<
         ) {
           filters['orderBy'] = data[key].orderBy;
           filters['direction'] = data[key].direction;
-
-          return filters;
-        }
-
-        if (typeof data[key] === 'object') {
-          filterKey
-            .split(',')
-            .filter(k => !!data[key][k])
-            .forEach(k => (filters[k] = data[key][k]));
-
-          return filters;
         }
 
         return filters;
