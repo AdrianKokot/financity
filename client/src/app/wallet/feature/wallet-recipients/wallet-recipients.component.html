@@ -36,7 +36,7 @@
       size="s"
       tuiButton
       type="button">
-      New recipient
+      New transaction party
     </button>
   </div>
 
@@ -58,7 +58,10 @@
             [style.top.px]="-viewport['_renderedContentOffset']">
             <tr tuiThGroup>
               <th *tuiHead="'name'" class="w-rest" [sorter]="null" tuiTh>
-                Recipient
+                <span
+                  title="Sander or recipient, depending on transaction type (income / expense)">
+                  Transaction party
+                </span>
               </th>
 
               <th
@@ -125,9 +128,9 @@
                     title="Remove"
                     appRequireConfirmation
                     (confirm)="ui.actions.delete$.next(item.id)"
-                    confirmationMessage="Are you sure you want to delete recipient '<strong>{{
+                    confirmationMessage="Are you sure you want to delete transaction party '<strong>{{
                       item.name
-                    }}</strong>'? All transactions assigned to this recipient will lose that information. This action is irreversible."
+                    }}</strong>'? All transactions assigned to this transaction party will lose that information. This action is irreversible."
                     shape="rounded"></button>
                 </tui-loader>
               </td>

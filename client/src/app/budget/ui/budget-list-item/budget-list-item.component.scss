@@ -1,7 +1,7 @@
 :host {
   cursor: pointer;
   border: 1px solid var(--tui-base-03);
-  transition: .3s;
+  transition: border-color .3s, box-shadow .3s;
 
   &:hover {
     border-color: var(--tui-base-04);

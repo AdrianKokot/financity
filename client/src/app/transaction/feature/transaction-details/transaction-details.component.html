@@ -3,13 +3,12 @@
   *tuiLet="wallet$ | async as wallet"
   [attr.data-skeleton]="wallet === null">
   <label tuiLabel="Wallet" class="tui-form__row">
-    <!--    <div class="d-flex">-->
     <ng-container *ngIf="wallet !== null">
       <tui-badge
         class="mr-1"
         *ngIf="wallet.ownerId !== userId"
         status="primary"
-        [tuiHint]="'This wallet is shared to you by ' + wallet.ownerName"
+        [tuiHint]="'Shared to you by ' + wallet.ownerName"
         size="s"
         tuiHintDirection="top"
         [hoverable]="true">
@@ -19,7 +18,6 @@
     <span>
       {{ wallet?.name ?? 'Lorem ipsum dolores' }}
     </span>
-    <!--    </div>-->
   </label>
 
   <label tuiLabel="Date" class="tui-form__row">
@@ -38,7 +36,13 @@
     </tui-scrollbar>
   </label>
 
-  <label tuiLabel="Recipient" class="tui-form__row">
+  <label
+    [tuiLabel]="
+      transaction.transactionType === transactionType.Income
+        ? 'Sender'
+        : 'Recipient'
+    "
+    class="tui-form__row">
     {{ transaction.recipient?.name ?? '-' }}
   </label>
 
@@ -47,15 +51,14 @@
       <tui-marker-icon
         *ngIf="transaction.category !== null"
         size="xs"
+        class="mr-2"
         [attr.data-appearance-color]="
           transaction.category.appearance.color ?? ''
         "
         [src]="
           transaction.category.appearance.iconName ?? 'fa::question'
         "></tui-marker-icon>
-      <span
-        class="ml-2 text-ellipsis d-block"
-        [title]="transaction.category?.name">
+      <span class="text-ellipsis d-block" [title]="transaction.category?.name">
         {{ transaction.category?.name ?? '-' }}
       </span>
     </span>

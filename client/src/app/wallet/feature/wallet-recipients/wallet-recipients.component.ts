@@ -54,7 +54,7 @@ export class WalletRecipientsComponent {
         this._dialog.open(
           new PolymorpheusComponent(UpdateRecipientComponent, this._injector),
           {
-            label: 'Edit recipient',
+            label: 'Edit transaction party',
             data: {
               id,
             },
@@ -67,7 +67,7 @@ export class WalletRecipientsComponent {
         this._dialog.open(
           new PolymorpheusComponent(CreateRecipientComponent, this._injector),
           {
-            label: 'Create recipient',
+            label: 'Create transaction party',
             data: {
               walletId: this._walletId,
             },

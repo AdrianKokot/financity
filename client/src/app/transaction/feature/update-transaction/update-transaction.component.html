@@ -72,7 +72,13 @@
       formControlName="categoryId"></tui-error>
   </label>
 
-  <label tuiLabel="Recipient" class="tui-form__row">
+  <label
+    [tuiLabel]="
+      form.controls.transactionType.value === ui.transactionType.Income
+        ? 'Sender'
+        : 'Recipient'
+    "
+    class="tui-form__row">
     <app-select
       [showAddButton]="true"
       (addClick)="ui.actions.createRecipient$.next($event)"
@@ -80,7 +86,7 @@
       [preloadedResults]="ui.preloadedResults.recipients"
       [getListFunction]="ui.dataApis.getRecipients"
       class="mt-1"
-      label="Choose a recipient"></app-select>
+      label="Choose a transaction party"></app-select>
 
     <tui-error
       [error]="[] | tuiFieldError | async"

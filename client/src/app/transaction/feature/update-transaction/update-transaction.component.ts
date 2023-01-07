@@ -31,6 +31,7 @@ import { merge, Subject, switchMap, tap } from 'rxjs';
 import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';
 import { CreateRecipientComponent } from '../../../recipient/feature/create-recipient/create-recipient.component';
 import { CreateLabelComponent } from '../../../label/feature/create-label/create-label.component';
+import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
 
 @Component({
   selector: 'app-update-transaction',
@@ -64,6 +65,7 @@ export class UpdateTransactionComponent {
   );
 
   readonly ui = {
+    transactionType: TransactionType,
     dataApis: this._walletService.getConcreteWalletApi(
       this._context.data.walletId
     ),

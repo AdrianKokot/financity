@@ -61,6 +61,7 @@ export class CreateTransactionComponent {
       min: new TuiDay(1900, 0, 1),
     } as const,
     transactionTypes: TRANSACTION_TYPES,
+    transactionType: TransactionType,
     dataApis: {
       ...this._walletService.getConcreteWalletApi(this._context.data.walletId),
       getCurrencies: this._currencyService.getList.bind(this._currencyService),

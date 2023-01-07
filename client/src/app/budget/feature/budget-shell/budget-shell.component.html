@@ -90,7 +90,10 @@
                     [sorter]="null"
                     class="w-250px"
                     tuiTh>
-                    Recipient
+                    <span
+                      title="Sander or recipient, depending on transaction type (income / expense)">
+                      Transaction party
+                    </span>
                   </th>
                   <th *tuiHead="'amount'" tuiTh [sorter]="null" class="w-200px">
                     Amount

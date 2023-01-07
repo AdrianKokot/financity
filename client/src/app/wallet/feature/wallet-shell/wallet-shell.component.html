@@ -25,9 +25,13 @@
       <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
       Labels
     </a>
-    <a href="recipients" routerLink="recipients" routerLinkActive tuiTab>
+    <a
+      href="transaction-parties"
+      routerLink="transaction-parties"
+      routerLinkActive
+      tuiTab>
       <tui-svg class="mr-2" src="fa::address-card"></tui-svg>
-      Recipients
+      Transaction party
     </a>
     <a
       *ngIf="wallet?.ownerId === userId"
