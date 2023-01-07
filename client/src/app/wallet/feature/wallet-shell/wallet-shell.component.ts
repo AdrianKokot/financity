@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { filter, map, shareReplay, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { UserService } from '../../../auth/data-access/api/user.service';
 
 @Component({

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { forkJoin, map, shareReplay } from 'rxjs';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { BudgetApiService } from '../../../core/api/budget-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
+import { BudgetApiService } from '@shared/data-access/api/budget-api.service';
 
 @Component({
   selector: 'app-dashboard-shell',

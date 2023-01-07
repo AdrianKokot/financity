@@ -229,7 +229,7 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
     opacity: 0;
   }
 
-  tr:hover td button {
+  tr:hover td button, tr:focus-within td button    {
     opacity: 1;
   }
 }

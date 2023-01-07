@@ -20,13 +20,16 @@ import {
   TransactionListItem,
 } from '@shared/data-access/models/transaction.model';
 import { ActivatedRoute } from '@angular/router';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
+import { TransactionApiService } from '@shared/data-access/api/transaction-api.service';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogService } from '@taiga-ui/core';
 import { UpdateTransactionComponent } from '../../../transaction/feature/update-transaction/update-transaction.component';
 import { CreateTransactionComponent } from 'src/app/transaction/feature/create-transaction/create-transaction.component';
-import { TransactionType } from '@shared/data-access/models/transaction-type.enum';
+import {
+  TRANSACTION_TYPES,
+  TransactionType,
+} from '@shared/data-access/models/transaction-type.enum';
 import { Category } from '@shared/data-access/models/category.model';
 import { Recipient } from '@shared/data-access/models/recipient.model';
 import { Label } from '@shared/data-access/models/label';
@@ -36,7 +39,10 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { TuiDay } from '@taiga-ui/cdk';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
-import { ApiParams } from '../../../core/api/generic-api.service';
+import {
+  ApiParams,
+  ApiSort,
+} from '@shared/data-access/api/generic-api.service';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -54,6 +60,8 @@ export class WalletTransactionsComponent {
       min: new TuiDay(1, 0, 1),
       max: new TuiDay(9999, 11, 31),
     } as const,
+    transactionTypes: TRANSACTION_TYPES,
+    transactionType: TransactionType,
     columns: [
       'transactionDate',
       'category',
@@ -63,6 +71,12 @@ export class WalletTransactionsComponent {
       'amount',
       'actions',
     ] as const,
+    sort: [
+      { orderBy: 'transactionDate', direction: 'desc', label: 'Newest' },
+      { orderBy: 'transactionDate', direction: 'asc', label: 'Oldest' },
+      { orderBy: 'amount', direction: 'desc', label: 'Biggest amount' },
+      { orderBy: 'amount', direction: 'asc', label: 'Smallest amount' },
+    ] as (ApiSort & { label: string })[],
     actions: {
       edit$: new Subject<Transaction['id']>(),
       delete$: new Subject<Transaction['id']>(),
@@ -75,6 +89,8 @@ export class WalletTransactionsComponent {
   readonly filters = this._fb.filters(
     {
       transactionDate: [DATE_RANGE_FILTER_GROUPS[5].range],
+      transactionType: [''],
+      sort: [this.ui.sort[0]],
       search: [''],
       categories: [new Array<Category['id']>()],
       recipients: [new Array<Recipient['id']>()],
@@ -84,6 +100,7 @@ export class WalletTransactionsComponent {
       categories: 'categoryId',
       recipients: 'recipientId',
       labels: 'labelId',
+      transactionType: 'transactionType_eq',
     }
   );
 

@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { Label } from '@shared/data-access/models/label';
-import { LabelApiService } from '../../../core/api/label-api.service';
+import { LabelApiService } from '@shared/data-access/api/label-api.service';
 import { getRandomAppearanceColor } from '@shared/ui/appearance';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';

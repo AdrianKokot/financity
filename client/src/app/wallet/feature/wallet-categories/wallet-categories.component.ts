@@ -7,7 +7,7 @@ import {
 import { filter, finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TuiDialogService } from '@taiga-ui/core';
-import { CategoryApiService } from '../../../core/api/category-api.service';
+import { CategoryApiService } from '@shared/data-access/api/category-api.service';
 import { Category } from '@shared/data-access/models/category.model';
 import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
@@ -19,7 +19,8 @@ import {
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { ApiParams } from '../../../core/api/generic-api.service';
+import { ApiParams } from '@shared/data-access/api/generic-api.service';
+import { DEFAULT_APP_SORT_SELECT_ITEMS } from '@shared/ui/tui/sort-select/sort-select.component';
 
 @Component({
   selector: 'app-wallet-categories',
@@ -45,6 +46,7 @@ export class WalletCategoriesComponent {
   readonly filters = this._fb.filters(
     {
       search: [''],
+      sort: [DEFAULT_APP_SORT_SELECT_ITEMS[0]],
       transactionType: ['' as TransactionType | ''],
     },
     {

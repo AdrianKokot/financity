@@ -13,10 +13,10 @@ import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { TransactionApiService } from '@shared/data-access/api/transaction-api.service';
 import { TuiDialogService } from '@taiga-ui/core';
 import { Budget } from '@shared/data-access/models/budget.model';
-import { BudgetApiService } from '../../../core/api/budget-api.service';
+import { BudgetApiService } from '@shared/data-access/api/budget-api.service';
 
 @Component({
   selector: 'app-budget-shell',

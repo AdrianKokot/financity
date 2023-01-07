@@ -37,7 +37,7 @@ const routes: Routes = [
             component: WalletCategoriesComponent,
           },
           {
-            path: 'recipients',
+            path: 'transaction-parties',
             component: WalletRecipientsComponent,
           },
           {

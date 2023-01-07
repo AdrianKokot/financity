@@ -10,7 +10,7 @@ $sizes: (xs, s, m, l);
   height: 100% !important;
 }
 
-@each $w in (56, 128, 100, 200, 250) {
+@each $w in (56, 128, 100, 160, 200, 250) {
   .w-#{$w}px {
     min-width: #{$w}px;
     max-width: #{$w}px;

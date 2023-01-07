@@ -1,8 +1,8 @@
 <main *tuiLet="dialogs$ | async">
-  <div class="w-full d-flex gap-4 mb-4">
+  <div class="w-full d-flex gap-4 mb-4" [formGroup]="filters.form">
     <label class="w-full">
       <tui-input
-        [formControl]="filters.controls.search"
+        formControlName="search"
         [tuiTextfieldLabelOutside]="true"
         class="no-shadow"
         tuiTextfieldSize="s">
@@ -15,7 +15,7 @@
       <tui-input-date-range
         [min]="ui.transactionDate.min"
         [max]="ui.transactionDate.max"
-        [formControl]="filters.controls.transactionDate"
+        formControlName="transactionDate"
         [items]="ui.transactionDate.items"
         [tuiTextfieldCleaner]="true"
         [tuiTextfieldLabelOutside]="true"
@@ -25,24 +25,16 @@
       </tui-input-date-range>
     </label>
 
-    <ng-container
-      *tuiLet="(filters.filtersCount$ | async) ?? 0 as filtersCount">
-      <button
-        (click)="filters.reset()"
-        appearance="flat-outline"
-        icon="tuiIconFilter"
-        size="s"
-        class="applied-filters-button"
-        title="Reset filters to default"
-        tuiIconButton
-        type="button">
-        <tui-badge
-          *ngIf="filtersCount > 0"
-          [value]="filtersCount"
-          size="xs"
-          status="primary"></tui-badge>
-      </button>
-    </ng-container>
+    <label class="w-160px">
+      <app-sort-select
+        formControlName="sort"
+        [items]="ui.sort"></app-sort-select>
+    </label>
+
+    <app-filters-reset
+      [filtersCount]="filters.filtersCount$ | async"
+      (resetFilters)="filters.reset()">
+    </app-filters-reset>
 
     <button
       (click)="ui.actions.create$.next(undefined)"
@@ -116,14 +108,29 @@
                       filters.controls.recipients.value.length > 0
                     "
                     class="column-filter-text">
-                    <span>Recipient</span>
+                    <span
+                      title="Sander or recipient, depending on transaction type (income / expense)">
+                      Transaction party
+                    </span>
 
                     <tui-svg [src]="'tuiIconChevronDown'"></tui-svg>
                   </span>
                 </tui-hosted-dropdown>
               </th>
               <th *tuiHead="'amount'" tuiTh [sorter]="null" class="w-200px">
-                Amount
+                <app-dropdown-select
+                  [allowDeselect]="true"
+                  [emptyValue]="''"
+                  [items]="ui.transactionTypes"
+                  [formControl]="filters.controls.transactionType">
+                  <span
+                    class="column-filter-text"
+                    [class.text-link]="filters.controls.transactionType.value">
+                    <span>Amount</span>
+
+                    <tui-svg [src]="'tuiIconChevronDown'"></tui-svg>
+                  </span>
+                </app-dropdown-select>
               </th>
               <th
                 *tuiHead="'actions'"
@@ -205,7 +212,9 @@
                     [colored]="true"
                     [value]="
                       item.amount *
-                      (item.transactionType === 'Expense' ? -1 : 1)
+                      (item.transactionType === ui.transactionType.Expense
+                        ? -1
+                        : 1)
                     "></tui-money>
 
                   <ng-container

@@ -101,12 +101,12 @@
 
   <label tuiLabel="Category" class="tui-form__row">
     <app-select-with-template
-      *ngIf="this.form.controls.transactionType.value"
+      *ngIf="form.controls.transactionType.value"
       [control]="form.controls.categoryId"
       [getListFunction]="ui.dataApis.getCategories"
       [preloadedResults]="ui.preloadedResults.categories"
       [externalFilters]="{
-        transactionType_eq: this.form.controls.transactionType.value
+        transactionType_eq: form.controls.transactionType.value
       }"
       [itemTemplate]="categoryTemplate"
       class="mt-1"
@@ -133,7 +133,13 @@
       formControlName="categoryId"></tui-error>
   </label>
 
-  <label tuiLabel="Recipient" class="tui-form__row">
+  <label
+    [tuiLabel]="
+      form.controls.transactionType.value === ui.transactionType.Income
+        ? 'Sender'
+        : 'Recipient'
+    "
+    class="tui-form__row">
     <app-select
       [showAddButton]="true"
       (addClick)="ui.actions.createRecipient$.next($event)"
@@ -141,7 +147,7 @@
       [getListFunction]="ui.dataApis.getRecipients"
       [preloadedResults]="ui.preloadedResults.recipients"
       class="mt-1"
-      label="Choose a recipient"></app-select>
+      label="Choose a transaction party"></app-select>
 
     <tui-error
       [error]="[] | tuiFieldError | async"

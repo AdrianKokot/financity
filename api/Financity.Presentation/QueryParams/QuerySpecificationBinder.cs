@@ -18,7 +18,7 @@ public static class QueryKeys
     public const string SearchQueryParamKey = "search";
 
     public static readonly HashSet<Type> AllowedFilterKeyTypes =
-        new() { typeof(Guid), typeof(string), typeof(DateTime), typeof(DateOnly) };
+        new() { typeof(Guid), typeof(string), typeof(DateTime), typeof(DateOnly), typeof(decimal) };
 }
 
 public static class QueryParamFilters

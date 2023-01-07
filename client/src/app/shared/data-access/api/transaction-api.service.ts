@@ -33,13 +33,13 @@ export class TransactionApiService extends GenericApiService<
 
   override getAll(pagination: ApiParams) {
     return super.getAll({
-      ...pagination,
       ...('query' in pagination
         ? {}
         : {
             orderBy: 'transactionDate',
             direction: 'desc',
           }),
+      ...pagination,
     });
   }
 }

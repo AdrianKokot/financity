@@ -8,7 +8,7 @@ import { map, merge, startWith, Subject, switchMap } from 'rxjs';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { CreateWalletComponent } from '../create-wallet/create-wallet.component';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { TuiDialogService } from '@taiga-ui/core';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 

@@ -16,7 +16,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs';
-import { ApiParams } from '../../../core/api/generic-api.service';
+import { ApiParams } from '../../data-access/api/generic-api.service';
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
 import { AbstractControl } from '@angular/forms';
 import { FiltersForm } from '@shared/utils/form/filters-form';

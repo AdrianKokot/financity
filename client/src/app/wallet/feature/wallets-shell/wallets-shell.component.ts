@@ -5,7 +5,7 @@ import {
   Injector,
 } from '@angular/core';
 import { filter, map, merge, Subject, switchMap, tap } from 'rxjs';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { CreateWalletComponent } from '../create-wallet/create-wallet.component';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
@@ -14,6 +14,7 @@ import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../../auth/data-access/api/user.service';
+import { DEFAULT_APP_SORT_SELECT_ITEMS } from '@shared/ui/tui/sort-select/sort-select.component';
 
 @Component({
   selector: 'app-wallets-shell',
@@ -35,6 +36,7 @@ export class WalletsShellComponent {
 
   readonly filters = this._fb.filters({
     search: [''],
+    sort: [DEFAULT_APP_SORT_SELECT_ITEMS[0]],
   });
 
   readonly data = new ApiDataHandler(

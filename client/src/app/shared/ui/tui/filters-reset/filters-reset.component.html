@@ -1,0 +1,16 @@
+<button
+  [showLoader]="filtersCount === null"
+  (click)="resetFilters.next()"
+  appearance="flat-outline"
+  icon="tuiIconFilter"
+  size="s"
+  class="applied-filters-button"
+  title="Reset filters to default"
+  tuiIconButton
+  type="button">
+  <tui-badge
+    *ngIf="filtersCount && filtersCount > 0"
+    [value]="filtersCount"
+    size="xs"
+    status="primary"></tui-badge>
+</button>

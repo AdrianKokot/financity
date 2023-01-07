@@ -7,11 +7,11 @@ export interface Wallet {
   currencyId: Currency['id'];
   startingAmount: number;
   ownerId: User['id'];
+  ownerName: User['name'];
 }
 
 export interface WalletListItem extends Wallet {
   currentState?: number;
-  ownerName: User['name'];
 }
 
 export type CreateWalletPayload = Pick<

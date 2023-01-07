@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { RecipientApiService } from '../../../core/api/recipient-api.service';
+import { RecipientApiService } from '@shared/data-access/api/recipient-api.service';
 import { Recipient } from '@shared/data-access/models/recipient.model';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 

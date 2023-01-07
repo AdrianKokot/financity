@@ -7,7 +7,6 @@ import {
 import { filter, finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TuiDialogService } from '@taiga-ui/core';
-import { LabelApiService } from '../../../core/api/label-api.service';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { UpdateLabelComponent } from '../../../label/feature/update-label/update-label.component';
 import { CreateLabelComponent } from '../../../label/feature/create-label/create-label.component';
@@ -15,7 +14,9 @@ import { Label } from '@shared/data-access/models/label';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { ApiParams } from '../../../core/api/generic-api.service';
+import { DEFAULT_APP_SORT_SELECT_ITEMS } from '@shared/ui/tui/sort-select/sort-select.component';
+import { ApiParams } from '@shared/data-access/api/generic-api.service';
+import { LabelApiService } from '@shared/data-access/api/label-api.service';
 
 @Component({
   selector: 'app-wallet-labels',
@@ -39,6 +40,7 @@ export class WalletLabelsComponent {
 
   readonly filters = this._fb.filters({
     search: [''],
+    sort: [DEFAULT_APP_SORT_SELECT_ITEMS[0]],
   });
 
   readonly data = new ApiDataHandler(

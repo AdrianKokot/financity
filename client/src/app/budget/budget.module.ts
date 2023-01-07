@@ -42,6 +42,8 @@ import { UpdateBudgetComponent } from './feature/update-budget/update-budget.com
 import { BudgetShellComponent } from './feature/budget-shell/budget-shell.component';
 import { BudgetListItemComponent } from './ui/budget-list-item/budget-list-item.component';
 import { BudgetListItemNoActionsComponent } from './ui/budget-list-item-no-actions/budget-list-item-no-actions.component';
+import { FiltersResetComponent } from '@shared/ui/tui/filters-reset/filters-reset.component';
+import { SortSelectComponent } from '@shared/ui/tui/sort-select/sort-select.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +89,8 @@ import { BudgetListItemNoActionsComponent } from './ui/budget-list-item-no-actio
     TuiHostedDropdownModule,
     TuiDataListModule,
     TuiDataListDropdownManagerModule,
+    FiltersResetComponent,
+    SortSelectComponent,
   ],
   exports: [BudgetListItemNoActionsComponent],
 })

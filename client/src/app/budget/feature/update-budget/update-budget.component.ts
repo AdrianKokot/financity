@@ -6,11 +6,11 @@ import {
 } from '@shared/data-access/models/category.model';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { CurrencyApiService } from '../../../core/api/currency-api.service';
+import { CurrencyApiService } from '@shared/data-access/api/currency-api.service';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { BudgetApiService } from '../../../core/api/budget-api.service';
-import { CategoryApiService } from '../../../core/api/category-api.service';
+import { BudgetApiService } from '@shared/data-access/api/budget-api.service';
+import { CategoryApiService } from '@shared/data-access/api/category-api.service';
 import { Budget } from '@shared/data-access/models/budget.model';
 
 @Component({

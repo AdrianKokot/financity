@@ -9,7 +9,7 @@ import {
   getRandomAppearanceIcon,
 } from '@shared/ui/appearance';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { CategoryApiService } from '../../../core/api/category-api.service';
+import { CategoryApiService } from '@shared/data-access/api/category-api.service';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 
 @Component({

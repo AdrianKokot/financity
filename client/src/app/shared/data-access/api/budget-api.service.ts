@@ -7,7 +7,7 @@ import {
   BudgetListItem,
   CreateBudgetPayload,
 } from '@shared/data-access/models/budget.model';
-import { UserSettingsService } from '../../user-settings/data-access/services/user-settings.service';
+import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 import { ApiParams, GenericApiService } from './generic-api.service';
 
 @Injectable({
@@ -28,9 +28,9 @@ export class BudgetApiService extends GenericApiService<
   override getAll(pagination: ApiParams) {
     return super
       .getAll({
-        ...pagination,
         orderBy: 'name',
         direction: 'asc',
+        ...pagination,
       })
       .pipe(
         tap(data => {

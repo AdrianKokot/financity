@@ -12,7 +12,7 @@ import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
 import { TuiDialogService } from '@taiga-ui/core';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { TransactionApiService } from '@shared/data-access/api/transaction-api.service';
 
 @Component({
   selector: 'app-dashboard-transactions',
