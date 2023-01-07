@@ -3,7 +3,23 @@
   *tuiLet="wallet$ | async as wallet"
   [attr.data-skeleton]="wallet === null">
   <label tuiLabel="Wallet" class="tui-form__row">
-    {{ wallet?.name ?? 'Lorem ipsum dolores' }}
+    <!--    <div class="d-flex">-->
+    <ng-container *ngIf="wallet !== null">
+      <tui-badge
+        class="mr-1"
+        *ngIf="wallet.ownerId !== userId"
+        status="primary"
+        [tuiHint]="'This wallet is shared to you by ' + wallet.ownerName"
+        size="s"
+        tuiHintDirection="top"
+        [hoverable]="true">
+        <tui-svg [src]="'fa::circle-user'"></tui-svg>
+      </tui-badge>
+    </ng-container>
+    <span>
+      {{ wallet?.name ?? 'Lorem ipsum dolores' }}
+    </span>
+    <!--    </div>-->
   </label>
 
   <label tuiLabel="Date" class="tui-form__row">

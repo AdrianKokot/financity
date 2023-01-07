@@ -8,6 +8,7 @@ import {
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { WalletApiService } from '../../../core/api/wallet-api.service';
 import { of, startWith } from 'rxjs';
+import { UserService } from '../../../auth/data-access/api/user.service';
 
 @Component({
   selector: 'app-transaction-details',
@@ -23,8 +24,11 @@ export class TransactionDetailsComponent {
           .get(this.transaction.walletId)
           .pipe(startWith(null));
 
+  readonly userId = this._userService.userSnapshot?.id;
+
   constructor(
     private readonly _walletService: WalletApiService,
+    private readonly _userService: UserService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
       Transaction,
