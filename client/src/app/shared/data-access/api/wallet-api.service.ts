@@ -4,13 +4,13 @@ import {
   Wallet,
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
-import { User } from '../../auth/data-access/models/user';
+import { User } from '../../../auth/data-access/models/user';
 import { map, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { RecipientApiService } from './recipient-api.service';
 import { LabelApiService } from './label-api.service';
 import { CategoryApiService } from './category-api.service';
-import { UserSettingsService } from '../../user-settings/data-access/services/user-settings.service';
+import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 import {
   ApiParams,
   GenericApiService,
@@ -41,9 +41,9 @@ export class WalletApiService extends GenericApiService<
   override getAll(pagination: ApiParams) {
     return super
       .getAll({
-        ...pagination,
         orderBy: 'name',
         direction: 'asc',
+        ...pagination,
       })
       .pipe(
         tap(data => {

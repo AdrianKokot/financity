@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 import { AuthService } from '../../../auth/data-access/api/auth.service';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { CustomValidators } from '@shared/utils/form/custom-validators';
 import { of, tap } from 'rxjs';

@@ -1,31 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  CreateRecipientPayload,
-  Recipient,
-  RecipientListItem,
-} from '@shared/data-access/models/recipient.model';
+  Category,
+  CategoryListItem,
+  CreateCategoryPayload,
+} from '@shared/data-access/models/category.model';
 import { ApiParams, GenericApiService } from './generic-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RecipientApiService extends GenericApiService<
-  Recipient,
-  RecipientListItem,
-  Recipient,
-  CreateRecipientPayload,
-  Pick<Recipient, 'id' | 'name'>
+export class CategoryApiService extends GenericApiService<
+  Category,
+  CategoryListItem,
+  Category,
+  CreateCategoryPayload,
+  Pick<Category, 'id' | 'name' | 'appearance'>
 > {
   constructor(http: HttpClient) {
-    super(http, '/api/recipients');
+    super(http, '/api/categories');
   }
 
   override getAll(pagination: ApiParams) {
     return super.getAll({
-      ...pagination,
       orderBy: 'name',
       direction: 'asc',
+      ...pagination,
     });
   }
 }

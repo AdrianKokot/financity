@@ -26,15 +26,15 @@ import {
 } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext, TuiDialogService } from '@taiga-ui/core';
 import { TuiDay, tuiIsNumber } from '@taiga-ui/cdk';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { TransactionApiService } from '@shared/data-access/api/transaction-api.service';
 import { Transaction } from '@shared/data-access/models/transaction.model';
 import { CurrencyListItem } from '@shared/data-access/models/currency.model';
-import { CurrencyApiService } from '../../../core/api/currency-api.service';
+import { CurrencyApiService } from '@shared/data-access/api/currency-api.service';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { Label, LabelListItem } from '@shared/data-access/models/label';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { handleValidationApiError } from '@shared/utils/api/api-error-handler';
 import { CreateCategoryComponent } from '../../../category/feature/create-category/create-category.component';

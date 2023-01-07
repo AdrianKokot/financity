@@ -4,8 +4,8 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
 import { CurrencyListItem } from '@shared/data-access/models/currency.model';
-import { CurrencyApiService } from '../../../core/api/currency-api.service';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { CurrencyApiService } from '@shared/data-access/api/currency-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 
 @Component({

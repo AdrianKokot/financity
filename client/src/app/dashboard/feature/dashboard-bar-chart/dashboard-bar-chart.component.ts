@@ -9,8 +9,8 @@ import {
   Wallet,
   WalletListItem,
 } from '@shared/data-access/models/wallet.model';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { CurrencyApiService } from '../../../core/api/currency-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
+import { CurrencyApiService } from '@shared/data-access/api/currency-api.service';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import {
   debounceTime,
@@ -34,10 +34,10 @@ import {
 import { TUI_MONTHS, TuiDialogService, tuiFormatNumber } from '@taiga-ui/core';
 import { tuiFormatCurrency } from '@taiga-ui/addon-commerce';
 import { UserService } from '../../../auth/data-access/api/user.service';
-import { BudgetApiService } from '../../../core/api/budget-api.service';
+import { BudgetApiService } from '@shared/data-access/api/budget-api.service';
 import { ActivatedRoute } from '@angular/router';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
-import { ApiParams } from '../../../core/api/generic-api.service';
+import { TransactionApiService } from '@shared/data-access/api/transaction-api.service';
+import { ApiParams } from '@shared/data-access/api/generic-api.service';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 
 @Component({

@@ -8,7 +8,7 @@ import {
 } from 'rxjs';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TuiDayRange } from '@taiga-ui/cdk';
-import { ApiFilters } from '../../../core/api/generic-api.service';
+import { ApiFilters } from '../../data-access/api/generic-api.service';
 
 export class FiltersForm<
   TControl extends {
@@ -34,6 +34,8 @@ export class FiltersForm<
             filters[`${filterKey}_gte`] = data[key].from.toJSON();
 
           if (data[key].to) filters[`${filterKey}_lte`] = data[key].to.toJSON();
+
+          return filters;
         }
 
         if (
@@ -41,6 +43,8 @@ export class FiltersForm<
           data[key].length > 0
         ) {
           filters[`${filterKey}_in`] = data[key];
+
+          return filters;
         }
 
         if (typeof data[key] === 'string') {
@@ -48,6 +52,28 @@ export class FiltersForm<
           if (trimmed.length > 0) {
             filters[filterKey] = trimmed;
           }
+
+          return filters;
+        }
+
+        if (
+          typeof data[key] === 'object' &&
+          'orderBy' in data[key] &&
+          'direction' in data[key]
+        ) {
+          filters['orderBy'] = data[key].orderBy;
+          filters['direction'] = data[key].direction;
+
+          return filters;
+        }
+
+        if (typeof data[key] === 'object') {
+          filterKey
+            .split(',')
+            .filter(k => !!data[key][k])
+            .forEach(k => (filters[k] = data[key][k]));
+
+          return filters;
         }
 
         return filters;
@@ -59,7 +85,12 @@ export class FiltersForm<
 
   readonly filtersCount$ = this.filters$.pipe(
     map(
-      filters => new Set(Object.keys(filters).map(x => x.split('_')[0])).size
+      filters =>
+        new Set(
+          Object.keys(filters)
+            .filter(x => !x.startsWith('orderBy') && !x.startsWith('direction'))
+            .map(x => x.split('_')[0])
+        ).size
     ),
     distinctUntilChanged(),
     shareReplay()

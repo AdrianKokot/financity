@@ -22,7 +22,7 @@ import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 import { TuiContextWithImplicit, tuiIsString } from '@taiga-ui/cdk';
 import { FormControl } from '@angular/forms';
-import { ApiParams } from '../../../../core/api/generic-api.service';
+import { ApiParams } from '@shared/data-access/api/generic-api.service';
 import { TuiSizeL, TuiSizeS } from '@taiga-ui/core/types';
 
 @Component({ template: '' })

@@ -6,10 +6,10 @@
   <section class="py-6" *tuiLet="data.items$ | async as items">
     <ng-template #tableView>
       <main>
-        <div class="w-full d-flex gap-4 mb-4">
+        <div class="w-full d-flex gap-4 mb-4" [formGroup]="filters.form">
           <label class="w-full">
             <tui-input
-              [formControl]="filters.form.controls.search"
+              formControlName="search"
               [tuiTextfieldLabelOutside]="true"
               class="no-shadow"
               tuiTextfieldSize="s">
@@ -18,24 +18,14 @@
             </tui-input>
           </label>
 
-          <ng-container
-            *tuiLet="(filters.filtersCount$ | async) ?? 0 as filtersCount">
-            <button
-              (click)="filters.reset()"
-              appearance="flat-outline"
-              icon="tuiIconFilter"
-              size="s"
-              class="applied-filters-button"
-              title="Reset filters to default"
-              tuiIconButton
-              type="button">
-              <tui-badge
-                *ngIf="filtersCount > 0"
-                [value]="filtersCount"
-                size="xs"
-                status="primary"></tui-badge>
-            </button>
-          </ng-container>
+          <label class="w-160px">
+            <app-sort-select formControlName="sort"></app-sort-select>
+          </label>
+
+          <app-filters-reset
+            [filtersCount]="filters.filtersCount$ | async"
+            (resetFilters)="filters.reset()">
+          </app-filters-reset>
 
           <button
             (click)="ui.actions.create$.next(undefined)"

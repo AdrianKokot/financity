@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { POLYMORPHEUS_CONTEXT } from '@tinkoff/ng-polymorpheus';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { LabelApiService } from '../../../core/api/label-api.service';
+import { LabelApiService } from '@shared/data-access/api/label-api.service';
 import { Label } from '@shared/data-access/models/label';
 import { getRandomAppearanceColor } from '@shared/ui/appearance';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';

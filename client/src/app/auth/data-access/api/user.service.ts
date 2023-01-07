@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import { shareReplay } from 'rxjs';
 import { CurrencyListItem } from '@shared/data-access/models/currency.model';
-import { toHttpParams } from '../../../core/api/generic-api.service';
+import { toHttpParams } from '@shared/data-access/api/generic-api.service';
 import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 import { AuthService } from './auth.service';
 

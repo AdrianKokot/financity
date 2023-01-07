@@ -16,10 +16,10 @@
 
   <section class="py-6">
     <main *tuiLet="dialogs$ | async">
-      <div class="w-full d-flex gap-4 mb-4">
+      <div class="w-full d-flex gap-4 mb-4" [formGroup]="filters.form">
         <label class="w-full">
           <tui-input
-            [formControl]="filters.controls.search"
+            formControlName="search"
             [tuiTextfieldLabelOutside]="true"
             class="no-shadow"
             tuiTextfieldSize="s">
@@ -28,24 +28,13 @@
           </tui-input>
         </label>
 
-        <ng-container
-          *tuiLet="((filters.filtersCount$ | async) ?? 0) - 3 as filtersCount">
-          <button
-            (click)="filters.form.controls.search.reset()"
-            appearance="flat-outline"
-            icon="tuiIconFilter"
-            size="s"
-            class="applied-filters-button"
-            title="Reset filters to default"
-            tuiIconButton
-            type="button">
-            <tui-badge
-              *ngIf="filtersCount > 0"
-              [value]="filtersCount"
-              size="xs"
-              status="primary"></tui-badge>
-          </button>
-        </ng-container>
+        <app-filters-reset
+          *tuiLet="filters.filtersCount$ | async as filtersCount"
+          [filtersCount]="
+            filtersCount !== null ? filtersCount - 3 : filtersCount
+          "
+          (resetFilters)="filters.form.controls.search.reset()">
+        </app-filters-reset>
       </div>
 
       <div

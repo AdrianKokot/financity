@@ -6,12 +6,17 @@ export type ApiFilters = Record<
   string | string[] | null | number | number[] | undefined
 >;
 
-export interface ApiParams extends ApiFilters {
-  page?: number;
-  pageSize?: number;
+export interface ApiSort {
   orderBy?: string;
   direction?: 'asc' | 'desc';
 }
+
+export interface ApiPagination {
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ApiParams extends ApiFilters, ApiSort, ApiPagination {}
 
 export const toHttpParams = (pagination: ApiParams) => {
   const reducedFilters = (

@@ -6,7 +6,7 @@ import {
   TransactionListItem,
 } from '@shared/data-access/models/transaction.model';
 import { Wallet } from '@shared/data-access/models/wallet.model';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { of, startWith } from 'rxjs';
 import { UserService } from '../../../auth/data-access/api/user.service';
 import { TransactionType } from '@shared/data-access/models/transaction-type.enum';

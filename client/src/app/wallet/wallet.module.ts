@@ -70,6 +70,8 @@ import { SelectModule } from '@shared/ui/tui/select/select.module';
 import { SearchableListModule } from '@shared/ui/tui/searchable-list/searchable-list.module';
 import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/infinite-virtual-scroll.module';
 import { WalletsListComponent } from './feature/wallets-list/wallets-list.component';
+import { SortSelectComponent } from '@shared/ui/tui/sort-select/sort-select.component';
+import { FiltersResetComponent } from '@shared/ui/tui/filters-reset/filters-reset.component';
 
 @NgModule({
   declarations: [
@@ -138,6 +140,8 @@ import { WalletsListComponent } from './feature/wallets-list/wallets-list.compon
     TuiItemsWithMoreModule,
     TuiBadgedContentModule,
     TuiHintModule,
+    SortSelectComponent,
+    FiltersResetComponent,
   ],
   exports: [WalletListItemComponent],
 })

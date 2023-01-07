@@ -4,7 +4,7 @@ import {
   Inject,
   Injector,
 } from '@angular/core';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { finalize, merge, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -19,6 +19,7 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import { Label } from '@shared/data-access/models/label';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
+import { DEFAULT_APP_SORT_SELECT_ITEMS } from '@shared/ui/tui/sort-select/sort-select.component';
 
 @Component({
   selector: 'app-wallet-share-management',
@@ -41,6 +42,7 @@ export class WalletShareManagementComponent {
 
   readonly filters = this._fb.filters({
     search: [''],
+    sort: [DEFAULT_APP_SORT_SELECT_ITEMS[0]],
   });
 
   readonly data = new ApiDataHandler(

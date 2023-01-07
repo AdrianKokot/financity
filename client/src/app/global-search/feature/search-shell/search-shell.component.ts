@@ -11,8 +11,8 @@ import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ActivatedRoute } from '@angular/router';
-import { WalletApiService } from '../../../core/api/wallet-api.service';
-import { TransactionApiService } from '../../../core/api/transaction-api.service';
+import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
+import { TransactionApiService } from '@shared/data-access/api/transaction-api.service';
 import { TuiDialogService } from '@taiga-ui/core';
 import { toLoadingState } from '@shared/utils/rxjs/to-loading-state';
 

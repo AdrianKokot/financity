@@ -10,11 +10,12 @@ import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { TuiDialogService } from '@taiga-ui/core';
 import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
-import { BudgetApiService } from '../../../core/api/budget-api.service';
+import { BudgetApiService } from '@shared/data-access/api/budget-api.service';
 import { Budget } from '@shared/data-access/models/budget.model';
 import { CreateBudgetComponent } from '../create-budget/create-budget.component';
 import { UpdateBudgetComponent } from '../update-budget/update-budget.component';
 import { ActivatedRoute } from '@angular/router';
+import { DEFAULT_APP_SORT_SELECT_ITEMS } from '@shared/ui/tui/sort-select/sort-select.component';
 
 @Component({
   selector: 'app-budgets-shell',
@@ -37,6 +38,7 @@ export class BudgetsShellComponent {
 
   readonly filters = this._fb.filters({
     search: [''],
+    sort: [DEFAULT_APP_SORT_SELECT_ITEMS[0]],
   });
 
   readonly data = new ApiDataHandler(
