@@ -40,6 +40,7 @@
         (pageChange)="data.page($event)"
         [itemSize]="44"
         [fixed]="15.5"
+        [appendOnly]="data.appendOnly$ | async"
         class="tui-zero-scrollbar"
         tuiScrollable>
         <table tuiTable [columns]="ui.columns" class="w-full">

@@ -1,5 +1,6 @@
 import {
   BehaviorSubject,
+  delay,
   distinctUntilChanged,
   filter,
   map,
@@ -67,6 +68,16 @@ export class ApiDataHandler<
       this._getData(pagination).pipe(startWith(null))
     ),
     shareReplay()
+  );
+
+  readonly appendOnly$ = merge(
+    this._filters.filters$,
+    this._reload$.pipe(filter(x => x))
+  ).pipe(
+    switchMap(() => of(true).pipe(delay(1), startWith(false))),
+    distinctUntilChanged(),
+    startWith(true),
+    shareReplay(1)
   );
 
   readonly apiLoading$ = this._api$.pipe(

@@ -365,3 +365,5 @@ tui-svg.size-16px {
 button.text-link tui-multi-select-option tui-primitive-checkbox {
   display: none !important;
 }
+
+td.w-250px tui-items-with-more.gap-1 .t-item {max-width: calc(100% - 60px)}
