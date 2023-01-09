@@ -8,7 +8,6 @@ import { map, merge, shareReplay, Subject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { DATE_RANGE_FILTER_GROUPS_MAP } from '../../../wallet/utils/date-range-filter-groups.constants';
 import { TransactionListItem } from '@shared/data-access/models/transaction.model';
-import { Category } from '@shared/data-access/models/category.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
@@ -28,15 +27,9 @@ export class BudgetShellComponent {
   private readonly _budgetId: Budget['id'] =
     this._activatedRoute.snapshot.params['id'];
 
-  readonly budget$ = this._budgetService.get(this._budgetId).pipe(
-    tap(budget => {
-      this.filters.form.patchValue({
-        categories: budget.trackedCategories.map(x => x.id),
-        currencyId: budget.currencyId,
-      });
-    }),
-    shareReplay(1)
-  );
+  readonly budget$ = this._budgetService
+    .get(this._budgetId)
+    .pipe(shareReplay(1));
 
   readonly ui = {
     columns: [
@@ -57,19 +50,16 @@ export class BudgetShellComponent {
     {
       transactionDate: [DATE_RANGE_FILTER_GROUPS_MAP['this month'].range],
       search: [''],
-      categories: [new Array<Category['id']>()],
-      currencyId: [''],
+      budgetId: [this._budgetId],
     },
     {
-      categories: 'categoryId',
-      currencyId: 'exchangedCurrencyId_eq',
+      budgetId: 'budgetId_eq',
     }
   );
 
   readonly data = new ApiDataHandler(
     this._transactionApiService.getAll.bind(this._transactionApiService),
-    this.filters,
-    this.budget$
+    this.filters
   );
 
   readonly dialogs$ = merge(

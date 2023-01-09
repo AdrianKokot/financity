@@ -7,6 +7,7 @@ using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Application.Labels.Queries;
 using Financity.Domain.Common;
 using Financity.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Transactions.Queries;
 
@@ -19,6 +20,7 @@ public sealed class GetTransactionsQuery : FilteredEntitiesQuery<TransactionList
     public HashSet<Guid> LabelIds { get; set; } = new();
     public HashSet<Guid> CategoryIds { get; set; } = new();
     public HashSet<Guid> RecipientIds { get; set; } = new();
+    public Guid? BudgetId { get; set; }
     public string? WalletCurrencyId { get; set; }
 }
 
@@ -30,13 +32,24 @@ public sealed class
     {
     }
 
-    private static IQueryable<Transaction> ApplyAdditionalFilters(IQueryable<Transaction> q, GetTransactionsQuery query)
+    private IQueryable<Transaction> ApplyAdditionalFilters(IQueryable<Transaction> q, GetTransactionsQuery query)
     {
         if (query.LabelIds.Count > 0) q = q.Where(x => x.Labels.Any(l => query.LabelIds.Contains(l.Id)));
 
         if (query.CategoryIds.Count > 0) q = q.Where(x => query.CategoryIds.Contains(x.CategoryId ?? Guid.Empty));
 
         if (query.RecipientIds.Count > 0) q = q.Where(x => query.RecipientIds.Contains(x.RecipientId ?? Guid.Empty));
+
+        if (query.BudgetId is not null)
+        {
+            var categoryIds = DbContext.GetDbSet<Budget>()
+                                       .AsNoTracking()
+                                       .Where(x => x.Id == query.BudgetId && x.UserId == DbContext.UserService.UserId)
+                                       .SelectMany(b => b.TrackedCategories.Select(c => c.Id))
+                                       .ToHashSet();
+
+            q = q.Where(x => categoryIds.Contains(x.CategoryId ?? Guid.Empty));
+        }
 
         if (!string.IsNullOrEmpty(query.WalletCurrencyId))
             q = q.Where(x => x.Wallet.CurrencyId.Equals(query.WalletCurrencyId));

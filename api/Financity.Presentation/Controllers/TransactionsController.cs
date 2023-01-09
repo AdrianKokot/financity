@@ -18,6 +18,7 @@ public class TransactionsController : BaseController
                                              [FromQuery(Name = "recipientId_in")] HashSet<Guid> includeRecipientsWithId,
                                              [FromQuery(Name = "exchangedCurrencyId_eq")]
                                              string? walletCurrencyId,
+                                             [FromQuery(Name = "budgetId_eq")] Guid? budgetId,
                                              CancellationToken ct)
     {
         return globalQuery is not null
@@ -27,7 +28,8 @@ public class TransactionsController : BaseController
                 CategoryIds = includeCategoriesWithId,
                 LabelIds = includeLabelsWithId,
                 RecipientIds = includeRecipientsWithId,
-                WalletCurrencyId = walletCurrencyId
+                WalletCurrencyId = walletCurrencyId,
+                BudgetId = budgetId
             }, ct);
     }
 
