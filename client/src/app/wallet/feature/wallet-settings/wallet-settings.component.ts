@@ -44,7 +44,7 @@ export class WalletSettingsComponent {
     .get(this._activatedRoute.snapshot.params['id'])
     .pipe(toLoadingState(data => this.form.patchValue(data)));
 
-  readonly user = this._user.user;
+  readonly user = this._user.userSnapshot;
 
   readonly ui = {
     actions: {

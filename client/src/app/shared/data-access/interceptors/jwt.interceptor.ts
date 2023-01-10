@@ -16,7 +16,7 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (this._auth.isAuthenticated && request.url.startsWith('/api')) {
+    if (this._auth.token !== null && request.url.startsWith('/api')) {
       return next.handle(
         request.clone({
           setHeaders: {

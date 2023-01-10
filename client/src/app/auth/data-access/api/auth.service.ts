@@ -1,6 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, filter, map, Observable, of, share, Subject, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  from,
+  map,
+  merge,
+  NEVER,
+  Observable,
+  of,
+  share,
+  shareReplay,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../models/user';
 import { ClaimTypes } from '../models/claim-types';
@@ -10,48 +25,46 @@ import { ClaimTypes } from '../models/claim-types';
 })
 export class AuthService {
   private readonly _basePath = '/api/auth';
-  private readonly _isAuthenticated$ = new Subject<boolean>();
+  private readonly _logout$ = new Subject<void>();
+  private readonly _updatedUser$ = new BehaviorSubject<User | null>(null);
+  private _userSnapshot: User | null = null;
+
+  readonly user$ = merge(
+    this._logout$.pipe(
+      tap(() => (this.token = null)),
+      map(() => null)
+    ),
+    this._updatedUser$.pipe(
+      switchMap(user =>
+        user === null
+          ? this._http
+              .get<User>(`${this._basePath}/user`)
+              .pipe(catchError(() => of(null)))
+          : of(user)
+      )
+    )
+  ).pipe(
+    tap(user => (this._userSnapshot = user)),
+    shareReplay(1)
+  );
 
   constructor(
     private readonly _http: HttpClient,
     private readonly _router: Router
   ) {}
 
-  loggedOut$ = this._isAuthenticated$.pipe(
-    filter(x => !x),
+  readonly loggedOut$ = this.user$.pipe(
+    filter(x => x === null),
     share()
   );
 
-  get isAuthenticated(): boolean {
-    return this.token !== null;
-  }
+  readonly isAuthenticated$ = this.user$.pipe(
+    map(x => x !== null),
+    share()
+  );
 
-  private _user: User | null = null;
-
-  get user(): User | null {
-    const token = this.token;
-    if (!this.isAuthenticated || token === null) return null;
-
-    if (this._user !== null) {
-      return this._user;
-    }
-
-    const payload = JSON.parse(
-      decodeURIComponent(
-        window
-          .atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
-          .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      )
-    );
-
-    this._user = (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
-      (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
-      <User>{}
-    );
-
-    return this._user;
+  get userSnapshot(): User | null {
+    return this._userSnapshot;
   }
 
   get token(): string | null {
@@ -61,22 +74,22 @@ export class AuthService {
   set token(value: string | null) {
     if (value === null) {
       localStorage.removeItem('token');
-      this._isAuthenticated$.next(false);
     } else {
       localStorage.setItem('token', value);
-      this._isAuthenticated$.next(true);
     }
   }
 
   logout(): Observable<void> {
-    this.token = null;
+    this._logout$.next(undefined);
     return of(undefined);
   }
 
   handleUnauthorized(): Observable<never> {
     this.logout();
-    this._router.navigateByUrl('/auth/login');
-    return EMPTY;
+
+    return from(this._router.navigate(['/auth/login'])).pipe(
+      switchMap(() => NEVER)
+    );
   }
 
   login(payload: { email: string; password: string }) {
@@ -85,7 +98,13 @@ export class AuthService {
         observe: 'response',
       })
       .pipe(
-        tap(response => (this.token = response.body?.token ?? null)),
+        tap(response => {
+          this.token = response.body?.token ?? null;
+
+          const user = this._getUserFromToken();
+          this._userSnapshot = user;
+          this._updatedUser$.next(user);
+        }),
         map(res => res.status === 200)
       );
   }
@@ -118,10 +137,6 @@ export class AuthService {
       .pipe(map(res => res.status === 204));
   }
 
-  getUserDetails() {
-    return this._http.get<User>(`${this._basePath}/user`);
-  }
-
   changePassword(payload: {
     password: string;
     newPassword: string;
@@ -134,6 +149,29 @@ export class AuthService {
   }
 
   updateUser(payload: Pick<User, 'name'>) {
-    return this._http.put<User>(`${this._basePath}/user`, payload);
+    return this._http
+      .put<User>(`${this._basePath}/user`, payload)
+      .pipe(tap(user => this._updatedUser$.next(user)));
+  }
+
+  private _getUserFromToken() {
+    if (this.token === null) {
+      return null;
+    }
+
+    const payload = JSON.parse(
+      decodeURIComponent(
+        window
+          .atob(this.token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      )
+    );
+
+    return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
+      (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
+      <User>{}
+    );
   }
 }
