@@ -6,8 +6,9 @@ import { AuthService } from '../../../auth/data-access/api/auth.service';
 import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { CustomValidators } from '@shared/utils/form/custom-validators';
-import { of, tap } from 'rxjs';
+import { filter, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { User } from '../../../auth/data-access/models/user';
 
 @Component({
   selector: 'app-account-settings',
@@ -51,9 +52,10 @@ export class AccountSettingsComponent {
     }
   );
 
-  readonly initialDataLoading$ = this._authService
-    .getUserDetails()
-    .pipe(toLoadingState(data => this.userForm.patchValue(data)));
+  readonly initialDataLoading$ = this._authService.user$.pipe(
+    filter((x): x is User => x !== null),
+    toLoadingState(data => this.userForm.patchValue(data))
+  );
 
   constructor(
     private readonly _authService: AuthService,

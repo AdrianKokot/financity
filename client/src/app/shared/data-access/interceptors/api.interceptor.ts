@@ -62,9 +62,11 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
       return next.handle(request).pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
-            this._sessionExpiredAlert.next(
-              'Your session expired, please login again.'
-            );
+            if (!request.url.includes('/api/auth/user')) {
+              this._sessionExpiredAlert.next(
+                'Your session expired, please login again.'
+              );
+            }
 
             return this._auth.handleUnauthorized();
           }

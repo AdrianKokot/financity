@@ -8,11 +8,10 @@ import {
   tuiDialogOptionsProvider,
   tuiFormatNumber,
   TuiRootModule,
-  TuiSvgService,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Inject, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -118,10 +117,4 @@ import { TUI_DATE_SEPARATOR } from '@taiga-ui/cdk';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-  constructor(@Inject(TuiSvgService) svgService: TuiSvgService) {
-    svgService.define({
-      appHomeIcon: 'assets/icons/home-24px.svg#home-24px',
-    });
-  }
-}
+export class AppModule {}
