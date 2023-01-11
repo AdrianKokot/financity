@@ -67,7 +67,6 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
                 'Your session expired, please login again.'
               );
             }
-
             return this._auth.handleUnauthorized();
           }
 

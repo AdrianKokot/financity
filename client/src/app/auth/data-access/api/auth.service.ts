@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   BehaviorSubject,
-  catchError,
   filter,
   from,
   map,
@@ -36,11 +35,7 @@ export class AuthService {
     ),
     this._updatedUser$.pipe(
       switchMap(user =>
-        user === null
-          ? this._http
-              .get<User>(`${this._basePath}/user`)
-              .pipe(catchError(() => of(null)))
-          : of(user)
+        user === null ? of(this._getUserFromToken()) : of(user)
       )
     )
   ).pipe(
@@ -169,9 +164,19 @@ export class AuthService {
       )
     );
 
-    return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
-      (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
-      <User>{}
-    );
+    const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
+
+    if (
+      currUnixTimestamp >= payload.nbf &&
+      currUnixTimestamp <= payload.exp - 10800
+    ) {
+      return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
+        (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
+        <User>{}
+      );
+    }
+
+    this.handleUnauthorized();
+    return null;
   }
 }
