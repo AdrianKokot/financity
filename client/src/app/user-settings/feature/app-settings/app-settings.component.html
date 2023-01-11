@@ -1,12 +1,20 @@
 <div class="tui-row">
   <div class="tui-col_6">
-    <form [formGroup]="form">
-      <label class="d-flex align-items-center text-2">
+    <form [formGroup]="form" class="tui-form">
+      <label class="d-flex align-items-center mb-2">
         <span>Dark mode</span>
         <tui-toggle
           size="m"
           class="ml-2"
           formControlName="isDarkModeEnabled"></tui-toggle>
+      </label>
+
+      <label class="d-flex align-items-center">
+        <span>More performant scrolling</span>
+        <tui-toggle
+          size="m"
+          class="ml-2"
+          formControlName="disableAppendOnly"></tui-toggle>
       </label>
     </form>
   </div>

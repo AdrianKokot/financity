@@ -7,15 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class UserSettingsService {
   private _settings$ = new BehaviorSubject<UserSettings>(
-    this._getSettingsFromStorage()
+    UserSettingsService.getSettingsSnapshot()
   );
 
   get settings$() {
     return this._settings$.asObservable();
-  }
-
-  get settingsSnapshot() {
-    return this._settings$.value;
   }
 
   updateSettings(value: Partial<UserSettings>) {
@@ -23,7 +19,7 @@ export class UserSettingsService {
     this._saveSettingsToStorage();
   }
 
-  private _getSettingsFromStorage(): UserSettings {
+  static getSettingsSnapshot(): UserSettings {
     const dataFromMemory = window.localStorage.getItem('userSettings');
 
     if (dataFromMemory !== null) {
@@ -34,6 +30,7 @@ export class UserSettingsService {
       isDarkModeEnabled: false,
       showSimplifiedWalletView: true,
       showSimplifiedBudgetView: true,
+      disableAppendOnly: false,
     };
   }
 
