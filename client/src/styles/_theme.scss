@@ -197,40 +197,47 @@ tui-input-number[data-transaction-type] .t-value-decoration .t-ghost {
   }
 }
 
-.table-container table {
-  td,
-  th {
-    white-space: nowrap;
-    border: none;
-  }
+.table-container {
+  background-color: var(--tui-base-01);
+  border-radius: var(--tui-radius-l);
+  border: 1px solid var(--tui-base-03);
+  overflow: hidden;
 
-  tr th {
-    background: var(--tui-base-02
-    );
-  }
+  table {
+    td,
+    th {
+      white-space: nowrap;
+      border: none;
+    }
 
-  tbody {
-    border-color: transparent;
+    tr th {
+      background: var(--tui-base-02
+      );
+    }
 
-    tr {
-      td {
-        border-bottom: 1px solid var(--tui-base-03);
-      }
+    tbody {
+      border-color: transparent;
 
-      &:last-child td {
+      tr {
+        td {
+          border-bottom: 1px solid var(--tui-base-03);
+        }
 
-        border-color: transparent;
+        &:last-child td {
+
+          border-color: transparent;
+        }
       }
     }
-  }
 
-  td:not(.buttons-visible) button {
-    @include transition(opacity);
-    opacity: 0;
-  }
+    td:not(.buttons-visible) button {
+      @include transition(opacity);
+      opacity: 0;
+    }
 
-  tr:hover td button, tr:focus-within td button    {
-    opacity: 1;
+    tr:hover td button, tr:focus-within td button {
+      opacity: 1;
+    }
   }
 }
 

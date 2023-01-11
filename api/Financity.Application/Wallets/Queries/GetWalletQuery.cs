@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
+using Financity.Application.Common.Exceptions;
 using Financity.Application.Common.Queries.DetailsQuery;
 using Financity.Domain.Entities;
 
@@ -12,6 +13,16 @@ public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, W
 {
     public GetWalletQueryHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
+    }
+
+    public override Task<WalletDetails> Handle(GetWalletQuery query, CancellationToken cancellationToken)
+    {
+        if (DbContext.UserService.UserWalletIds.Contains(query.EntityId))
+        {
+            return base.Handle(query, cancellationToken);
+        }
+
+        throw new EntityNotFoundException(nameof(Wallet), query.EntityId);
     }
 }
 

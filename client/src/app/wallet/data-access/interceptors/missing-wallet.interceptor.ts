@@ -10,7 +10,6 @@ import {
   catchError,
   exhaustMap,
   from,
-  merge,
   NEVER,
   Observable,
   Subject,
@@ -18,23 +17,21 @@ import {
   takeUntil,
   throwError,
 } from 'rxjs';
-import { AuthService } from '../../../auth/data-access/api/auth.service';
 import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class ApiInterceptor implements HttpInterceptor, OnDestroy {
+export class MissingWalletInterceptor implements HttpInterceptor, OnDestroy {
   private _destroy$ = new Subject<boolean>();
   private _errorAlert$ = new Subject<{ title?: string; message: string }>();
-  private _sessionExpiredAlert = new Subject<string>();
 
   constructor(
-    private readonly _auth: AuthService,
     private readonly _router: Router,
     @Inject(TuiAlertService) private readonly _alert: TuiAlertService
   ) {
-    merge(
-      this._errorAlert$.pipe(
+    this._errorAlert$
+      .pipe(
+        takeUntil(this._destroy$),
         exhaustMap(({ title, message }) =>
           this._alert.open(message, {
             status: TuiNotification.Error,
@@ -43,19 +40,7 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
             hasCloseButton: true,
           })
         )
-      ),
-      this._sessionExpiredAlert.pipe(
-        exhaustMap(message =>
-          this._alert.open(message, {
-            status: TuiNotification.Warning,
-            label: 'Session expired',
-            autoClose: true,
-            hasCloseButton: true,
-          })
-        )
       )
-    )
-      .pipe(takeUntil(this._destroy$))
       .subscribe();
   }
 
@@ -66,34 +51,14 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
     if (request.url.includes('/api/')) {
       return next.handle(request).pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            if (!request.url.includes('/api/auth/user')) {
-              this._sessionExpiredAlert.next(
-                'Your session expired, please login again.'
-              );
-            }
-            return this._auth.handleUnauthorized();
-          }
-
-          if (error.status === 404) {
-            return from(this._router.navigate(['/not-found'])).pipe(
+          if (error.status === 422 && 'walletId' in error.error.errors) {
+            this._errorAlert$.next({
+              title: "Wallet doesn't exist",
+              message: "The given wallet doesn't exist.",
+            });
+            return from(this._router.navigate(['/wallets'])).pipe(
               switchMap(() => NEVER)
             );
-          }
-
-          if (error.status === 400) {
-            this._errorAlert$.next({
-              title: 'Invalid operation',
-              message: "The action you've tried to perform is invalid.",
-            });
-            return NEVER;
-          }
-
-          if (error.status !== 422) {
-            this._errorAlert$.next({
-              title: error.error.title,
-              message: error.message.replace(window.location.origin, ''),
-            });
           }
 
           return throwError(() => error);

@@ -16,6 +16,7 @@ import { UserSettingsService } from '../../data-access/services/user-settings.se
 export class AppSettingsComponent implements OnInit, OnDestroy {
   form = this._fb.nonNullable.group({
     isDarkModeEnabled: [false, [Validators.required]],
+    disableAppendOnly: [false, [Validators.required]],
   });
 
   private _destroyed$ = new Subject<boolean>();

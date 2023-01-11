@@ -5,8 +5,8 @@
     Found transactions
   </h1>
 
-  <div [class.py-6]="!showOnlySearch">
-    <div [class.only-search]="showOnlySearch">
+  <div [class.pt-6]="!showOnlySearch">
+    <div [class.only-search]="showOnlySearch" class="mb-4">
       <form
         (ngSubmit)="ui.actions.applySearch$.next(undefined)"
         [formGroup]="filters.form">
@@ -37,8 +37,7 @@
 
     <main *tuiLet="data.items$ | async as items">
       <ng-container *ngIf="!showOnlySearch">
-        <div
-          class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+        <div class="table-container">
           <tui-scrollbar>
             <cdk-virtual-scroll-viewport
               #viewport

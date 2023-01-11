@@ -3,7 +3,7 @@
 <ng-container *tuiLet="dialogs$ | async" class="py-6">
   <h1 class="tui-text_h4 header-box">Budgets</h1>
 
-  <section class="py-6" *tuiLet="data.items$ | async as items">
+  <section class="pt-6" *tuiLet="data.items$ | async as items">
     <ng-template #tableView>
       <main>
         <div class="w-full d-flex gap-4 mb-4" [formGroup]="filters.form">
@@ -37,8 +37,7 @@
           </button>
         </div>
 
-        <div
-          class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+        <div class="table-container">
           <tui-scrollbar>
             <cdk-virtual-scroll-viewport
               #viewport

@@ -21,6 +21,7 @@ import { ApiParams } from '../../data-access/api/generic-api.service';
 import { AUTOCOMPLETE_PAGE_SIZE } from '@shared/data-access/constants/pagination.contants';
 import { AbstractControl } from '@angular/forms';
 import { FiltersForm } from '@shared/utils/form/filters-form';
+import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 
 export class ApiDataHandler<
   T,
@@ -77,6 +78,12 @@ export class ApiDataHandler<
     switchMap(() => of(true).pipe(delay(1), startWith(false))),
     distinctUntilChanged(),
     startWith(true),
+    map(allow =>
+      UserSettingsService.getSettingsSnapshot().disableAppendOnly
+        ? false
+        : allow
+    ),
+    distinctUntilChanged(),
     shareReplay(1)
   );
 

@@ -14,7 +14,7 @@
 
   <h1 class="tui-text_h4 header-box">Budget related transactions</h1>
 
-  <section class="py-6">
+  <section class="pt-6">
     <main *tuiLet="dialogs$ | async">
       <div class="w-full d-flex gap-4 mb-4" [formGroup]="filters.form">
         <label class="w-full">
@@ -37,8 +37,7 @@
         </app-filters-reset>
       </div>
 
-      <div
-        class="bg-base table-container border-radius-l border-base-3 border-width-s overflow-hidden">
+      <div class="table-container">
         <tui-scrollbar>
           <cdk-virtual-scroll-viewport
             *tuiLet="data.items$ | async as items"

@@ -1,17 +1,13 @@
-@each $value in (flex, block, inline-block, grid) {
+@each $value in (flex, block, grid) {
   .d-#{$value} {
     display: $value;
   }
 }
 
 @each $key, $value in (
-    (justify-content, space-between),
     (justify-content, center),
-    (justify-content, flex-start),
     (justify-content, flex-end),
-    (align-items, center),
-    (align-items, flex-start),
-    (align-items, flex-end),
+    (align-items, center)
 ) {
   .#{$key}-#{$value} {
     #{$key}: $value;

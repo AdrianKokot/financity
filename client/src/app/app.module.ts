@@ -26,6 +26,7 @@ import { AuthService } from './auth/data-access/api/auth.service';
 import { DATE_PIPE_DEFAULT_OPTIONS } from '@angular/common';
 import { of, shareReplay } from 'rxjs';
 import { TUI_DATE_SEPARATOR } from '@taiga-ui/cdk';
+import { MissingWalletInterceptor } from './wallet/data-access/interceptors/missing-wallet.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -57,6 +58,11 @@ import { TUI_DATE_SEPARATOR } from '@taiga-ui/cdk';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MissingWalletInterceptor,
       multi: true,
     },
     {
