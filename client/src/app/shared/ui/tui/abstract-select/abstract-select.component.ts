@@ -46,7 +46,7 @@ export abstract class AbstractSelectComponent<
     EMPTY;
 
   externalFilters$ = new BehaviorSubject<ApiParams>({});
-  private _preloadedResults$ = new BehaviorSubject<T[]>([]);
+  private readonly _preloadedResults$ = new BehaviorSubject<T[]>([]);
 
   @Input() set externalFilters(value: ApiParams) {
     this.externalFilters$.next(value);

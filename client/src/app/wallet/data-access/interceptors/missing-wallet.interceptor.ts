@@ -22,8 +22,11 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class MissingWalletInterceptor implements HttpInterceptor, OnDestroy {
-  private _destroy$ = new Subject<boolean>();
-  private _errorAlert$ = new Subject<{ title?: string; message: string }>();
+  private readonly _destroy$ = new Subject<boolean>();
+  private readonly _errorAlert$ = new Subject<{
+    title?: string;
+    message: string;
+  }>();
 
   constructor(
     private readonly _router: Router,

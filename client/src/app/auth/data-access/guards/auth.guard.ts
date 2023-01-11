@@ -13,7 +13,10 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  constructor(private _auth: AuthService, private _router: Router) {}
+  constructor(
+    private readonly _auth: AuthService,
+    private readonly _router: Router
+  ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
     return this._auth.isAuthenticated$.pipe(

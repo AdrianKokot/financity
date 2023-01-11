@@ -11,7 +11,7 @@ import { ApiParams, toHttpParams } from './generic-api.service';
 export class CurrencyApiService {
   constructor(
     protected http: HttpClient,
-    private _exchangeRateService: ExchangeRateApiService
+    private readonly _exchangeRateService: ExchangeRateApiService
   ) {}
 
   private _getListCache: Record<string, CurrencyListItem[]> = {};

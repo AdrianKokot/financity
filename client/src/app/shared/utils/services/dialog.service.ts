@@ -7,8 +7,8 @@ import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 })
 export class DialogService {
   constructor(
-    @Inject(Injector) private _injector: Injector,
-    private _dialog: TuiDialogService
+    @Inject(Injector) private readonly _injector: Injector,
+    private readonly _dialog: TuiDialogService
   ) {}
 
   public open<T>(component: Type<T>) {

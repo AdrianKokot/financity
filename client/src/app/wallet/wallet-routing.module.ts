@@ -8,6 +8,7 @@ import { WalletLabelsComponent } from './feature/wallet-labels/wallet-labels.com
 import { WalletCategoriesComponent } from './feature/wallet-categories/wallet-categories.component';
 import { WalletShareManagementComponent } from './feature/wallet-share-management/wallet-share-management.component';
 import { WalletRecipientsComponent } from './feature/wallet-recipients/wallet-recipients.component';
+import { WalletStatsComponent } from './feature/wallet-stats/wallet-stats.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,10 @@ const routes: Routes = [
           {
             path: 'access-management',
             component: WalletShareManagementComponent,
+          },
+          {
+            path: 'stats',
+            component: WalletStatsComponent,
           },
         ],
       },

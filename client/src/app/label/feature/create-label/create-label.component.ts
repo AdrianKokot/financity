@@ -31,7 +31,7 @@ export class CreateLabelComponent {
   );
 
   constructor(
-    private _dataService: LabelApiService,
+    private readonly _dataService: LabelApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<

@@ -7,7 +7,10 @@ import { map, Observable, take } from 'rxjs';
   providedIn: 'root',
 })
 export class LogoutGuard implements CanActivate {
-  constructor(private _auth: AuthService, private _router: Router) {}
+  constructor(
+    private readonly _auth: AuthService,
+    private readonly _router: Router
+  ) {}
 
   canActivate(): Observable<UrlTree> {
     return this._auth.logout().pipe(

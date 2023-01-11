@@ -37,12 +37,10 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import { DATE_RANGE_FILTER_GROUPS } from '../../utils/date-range-filter-groups.constants';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
-import { TuiDay } from '@taiga-ui/cdk';
+import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
-import {
-  ApiParams,
-  ApiSort,
-} from '@shared/data-access/api/generic-api.service';
+import { ApiParams } from '@shared/data-access/api/generic-api.service';
+import { SortSelectItem } from '@shared/ui/tui/sort-select/sort-select.component';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -76,7 +74,7 @@ export class WalletTransactionsComponent {
       { orderBy: 'transactionDate', direction: 'asc', label: 'Oldest' },
       { orderBy: 'amount', direction: 'desc', label: 'Biggest amount' },
       { orderBy: 'amount', direction: 'asc', label: 'Smallest amount' },
-    ] as (ApiSort & { label: string })[],
+    ] as SortSelectItem[],
     actions: {
       edit$: new Subject<Transaction['id']>(),
       delete$: new Subject<Transaction['id']>(),
@@ -191,16 +189,30 @@ export class WalletTransactionsComponent {
   }
 
   private _getFiltersFromQueryParams() {
+    const paramMap = this._activatedRoute.snapshot.queryParamMap;
+
     return (
       Object.keys(
         this.filters.form.controls
       ) as (keyof typeof this.filters.form.controls)[]
     ).reduce((obj, key) => {
-      if (this._activatedRoute.snapshot.queryParamMap.has(key)) {
-        const value = this._activatedRoute.snapshot.queryParamMap.getAll(key);
+      if (paramMap.has(key)) {
+        const value = paramMap.getAll(key);
 
         if (this.filters.form.controls[key].value instanceof Array<string>) {
           obj[key] = value;
+        } else if (
+          this.filters.form.controls[key].value instanceof TuiDayRange &&
+          value[0] !== 'null'
+        ) {
+          try {
+            const days = value.map(x => TuiDay.jsonParse(x));
+
+            obj[key] = new TuiDayRange(
+              days[0],
+              days.length > 1 ? days[1] : days[0]
+            );
+          } catch (e) {}
         } else {
           obj[key] = value[0] === 'null' ? null : value[0];
         }

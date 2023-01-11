@@ -10,6 +10,7 @@ import {
   TuiGroupModule,
   TuiHintModule,
   TuiLabelModule,
+  TuiLinkModule,
   TuiLoaderModule,
   TuiScrollbarModule,
   TuiSvgModule,
@@ -39,6 +40,7 @@ import { MultiSelectModule } from '@shared/ui/tui/multi-select/multi-select.modu
 import { SelectModule } from '@shared/ui/tui/select/select.module';
 import { TransactionDetailsComponent } from './feature/transaction-details/transaction-details.component';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { RouterLink } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -79,6 +81,8 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     TuiScrollbarModule,
     TuiSvgModule,
     TuiHintModule,
+    TuiLinkModule,
+    RouterLink,
   ],
   exports: [
     CreateTransactionComponent,

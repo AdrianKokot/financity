@@ -19,11 +19,11 @@ export class AppSettingsComponent implements OnInit, OnDestroy {
     disableAppendOnly: [false, [Validators.required]],
   });
 
-  private _destroyed$ = new Subject<boolean>();
+  private readonly _destroyed$ = new Subject<boolean>();
 
   constructor(
-    private _fb: FormBuilder,
-    private _settings: UserSettingsService
+    private readonly _fb: FormBuilder,
+    private readonly _settings: UserSettingsService
   ) {}
 
   ngOnDestroy(): void {

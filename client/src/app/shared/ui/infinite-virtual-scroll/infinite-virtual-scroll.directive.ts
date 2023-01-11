@@ -41,7 +41,7 @@ export class InfiniteVirtualScrollDirective {
 
   @HostBinding('class') hostClass = 'tui-zero-scrollbar';
 
-  @Output() pageChange = this._viewport.scrolledIndexChange.pipe(
+  @Output() readonly pageChange = this._viewport.scrolledIndexChange.pipe(
     distinctUntilChanged(),
     map(() => ({
       end: this._viewport.getRenderedRange().end,
@@ -52,5 +52,5 @@ export class InfiniteVirtualScrollDirective {
     map(({ total }) => Math.floor(total / this.pageSize) + 1)
   );
 
-  constructor(@Self() private _viewport: CdkVirtualScrollViewport) {}
+  constructor(@Self() private readonly _viewport: CdkVirtualScrollViewport) {}
 }

@@ -24,7 +24,7 @@ export class CreateRecipientComponent {
   );
 
   constructor(
-    private _dataService: RecipientApiService,
+    private readonly _dataService: RecipientApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<

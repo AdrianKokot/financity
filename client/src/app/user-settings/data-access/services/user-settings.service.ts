@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class UserSettingsService {
-  private _settings$ = new BehaviorSubject<UserSettings>(
+  private readonly _settings$ = new BehaviorSubject<UserSettings>(
     UserSettingsService.getSettingsSnapshot()
   );
 

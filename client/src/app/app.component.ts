@@ -16,15 +16,15 @@ import { UserSettingsService } from './user-settings/data-access/services/user-s
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  isNavbarVisible$ = this._route.data$.pipe(
+  readonly isNavbarVisible$ = this._route.data$.pipe(
     distinctUntilKeyChanged(RouteData.NAVBAR_VISIBLE),
     map(x => x[RouteData.NAVBAR_VISIBLE] ?? true)
   );
 
-  settings$ = this._settings.settings$;
+  readonly settings$ = this._settings.settings$;
 
   constructor(
-    private _route: RouteDataService,
-    private _settings: UserSettingsService
+    private readonly _route: RouteDataService,
+    private readonly _settings: UserSettingsService
   ) {}
 }

@@ -72,6 +72,7 @@ import { InfiniteVirtualScrollModule } from '@shared/ui/infinite-virtual-scroll/
 import { WalletsListComponent } from './feature/wallets-list/wallets-list.component';
 import { SortSelectComponent } from '@shared/ui/tui/sort-select/sort-select.component';
 import { FiltersResetComponent } from '@shared/ui/tui/filters-reset/filters-reset.component';
+import { WalletStatsComponent } from './feature/wallet-stats/wallet-stats.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { FiltersResetComponent } from '@shared/ui/tui/filters-reset/filters-rese
     WalletRecipientsComponent,
     CreateWalletComponent,
     WalletsListComponent,
+    WalletStatsComponent,
   ],
   imports: [
     CommonModule,

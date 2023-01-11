@@ -49,8 +49,8 @@ export class AppearanceColorSelectorComponent implements ControlValueAccessor {
   value: string | null = null;
 
   constructor(
-    @Self() private _ngControl: NgControl,
-    private _detector: ChangeDetectorRef
+    @Self() private readonly _ngControl: NgControl,
+    private readonly _detector: ChangeDetectorRef
   ) {
     this._ngControl.valueAccessor = this;
   }
