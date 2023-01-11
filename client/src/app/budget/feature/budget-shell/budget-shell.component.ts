@@ -59,7 +59,8 @@ export class BudgetShellComponent {
 
   readonly data = new ApiDataHandler(
     this._transactionApiService.getAll.bind(this._transactionApiService),
-    this.filters
+    this.filters,
+    this.budget$
   );
 
   readonly dialogs$ = merge(
