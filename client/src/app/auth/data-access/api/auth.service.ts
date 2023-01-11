@@ -166,10 +166,7 @@ export class AuthService {
 
     const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
 
-    if (
-      currUnixTimestamp >= payload.nbf &&
-      currUnixTimestamp <= payload.exp - 10800
-    ) {
+    if (currUnixTimestamp >= payload.nbf && currUnixTimestamp <= payload.exp) {
       return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
         (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
         <User>{}

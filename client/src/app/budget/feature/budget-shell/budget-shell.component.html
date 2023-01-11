@@ -31,7 +31,7 @@
         <app-filters-reset
           *tuiLet="filters.filtersCount$ | async as filtersCount"
           [filtersCount]="
-            filtersCount !== null ? filtersCount - 3 : filtersCount
+            filtersCount !== null ? filtersCount - 2 : filtersCount
           "
           (resetFilters)="filters.form.controls.search.reset()">
         </app-filters-reset>
@@ -111,7 +111,7 @@
 
                   <td *tuiCell="'category'" tuiTd class="w-250px">
                     <span
-                      *ngIf="item.category !== null"
+                      *ngIf="item.category !== null; else dash"
                       class="d-flex align-items-center">
                       <tui-marker-icon
                         size="xs"
@@ -130,7 +130,10 @@
                   </td>
 
                   <td *tuiCell="'labels'" tuiTd class="w-250px">
-                    <tui-items-with-more [required]="1" class="gap-1">
+                    <tui-items-with-more
+                      [required]="1"
+                      class="gap-1"
+                      *ngIf="item.labels.length > 0; else dash">
                       <ng-container *ngFor="let label of item.labels">
                         <tui-badge
                           *tuiItem
@@ -148,13 +151,15 @@
                   </td>
 
                   <td *tuiCell="'note'" tuiTd class="w-rest">
-                    <div class="text-ellipsis" [title]="item.note">
+                    <div class="text-ellipsis" [title]="item.note ?? ''">
                       {{ (item.note ?? '').length > 0 ? item.note : '-' }}
                     </div>
                   </td>
 
                   <td *tuiCell="'recipient'" tuiTd class="w-250px">
-                    <div class="text-ellipsis" [title]="item.recipient?.name">
+                    <div
+                      class="text-ellipsis"
+                      [title]="item.recipient?.name ?? ''">
                       {{ item.recipient?.name ?? '-' }}
                     </div>
                   </td>
@@ -214,3 +219,4 @@
     </main>
   </section>
 </ng-container>
+<ng-template #dash>-</ng-template>

@@ -25,7 +25,9 @@
   </label>
 
   <label tuiLabel="Labels" class="tui-form__row">
-    <tui-scrollbar style="max-height: 200px">
+    <tui-scrollbar
+      style="max-height: 200px"
+      *ngIf="transaction.labels.length > 0; else dash">
       <div class="d-flex flex-wrap gap-1 mt-1">
         <tui-badge
           *ngFor="let label of transaction.labels"
@@ -96,3 +98,5 @@
     </button>
   </div>
 </div>
+
+<ng-template #dash>-</ng-template>
