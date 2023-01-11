@@ -42,15 +42,3 @@
 }
 
 @include spacing-class("margin", auto, auto);
-
-.mt-full {
-  margin-top: 100%;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.max-w-xs {
-  max-width: 22rem;
-}

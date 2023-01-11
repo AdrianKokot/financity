@@ -1,4 +1,4 @@
-$alignments: left, right, center, justify;
+$alignments: (center);
 
 @each $alignment in $alignments {
   .text-#{$alignment} {
@@ -6,7 +6,7 @@ $alignments: left, right, center, justify;
   }
 }
 
-$styles: normal, bolder;
+$styles: (bolder);
 
 @each $style in $styles {
   .text-#{$style} {

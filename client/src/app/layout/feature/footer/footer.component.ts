@@ -13,6 +13,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
-  @HostBinding('class') hostClasses =
-    'd-block mt-auto py-4 text-center bg-base';
+  @HostBinding('class') hostClasses = 'd-block mt-auto py-4 text-center';
 }

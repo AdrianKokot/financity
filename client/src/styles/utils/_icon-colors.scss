@@ -46,16 +46,13 @@ $appearanceColor: (
 }
 
 @each $name, $hex in $appearanceColor {
-  :root {
-    --#{$name}: #{$hex};
-  }
   [data-appearance-color="#{$name}"] {
-    background-color: var(--#{$name}) !important;
+    background-color: var(--tui-#{$name}) !important;
     color: getTextColor($hex) !important;
   }
 
   body tui-theme-night + tui-root [data-appearance-color="#{$name}"] {
-    background-color: var(--#{$name}) !important;
+    background-color: var(--tui-#{$name}) !important;
     color: getTextColor($hex, true) !important;
   }
 }
