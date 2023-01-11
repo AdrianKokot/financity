@@ -35,6 +35,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
 
     private async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
+        Console.WriteLine(exception.ToString());
         var response = CreateProblemDetails(httpContext, exception);
 
         httpContext.Response.ContentType = "application/problem+json";
@@ -70,6 +71,7 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
             AccessDeniedException => StatusCodes.Status403Forbidden,
             FormatException => StatusCodes.Status400BadRequest,
             EntityAlreadyExistsException => StatusCodes.Status422UnprocessableEntity,
+            InvalidOperationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
     }

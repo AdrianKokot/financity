@@ -9,14 +9,18 @@ import {
 import {
   catchError,
   exhaustMap,
+  from,
   merge,
+  NEVER,
   Observable,
   Subject,
+  switchMap,
   takeUntil,
   throwError,
 } from 'rxjs';
 import { AuthService } from '../../../auth/data-access/api/auth.service';
 import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor, OnDestroy {
@@ -26,6 +30,7 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
 
   constructor(
     private readonly _auth: AuthService,
+    private readonly _router: Router,
     @Inject(TuiAlertService) private readonly _alert: TuiAlertService
   ) {
     merge(
@@ -68,6 +73,20 @@ export class ApiInterceptor implements HttpInterceptor, OnDestroy {
               );
             }
             return this._auth.handleUnauthorized();
+          }
+
+          if (error.status === 404) {
+            return from(this._router.navigate(['/not-found'])).pipe(
+              switchMap(() => NEVER)
+            );
+          }
+
+          if (error.status === 400) {
+            this._errorAlert$.next({
+              title: 'Invalid operation',
+              message: 'Action you tried to perform is in wrong format.',
+            });
+            return NEVER;
           }
 
           if (error.status !== 422) {
