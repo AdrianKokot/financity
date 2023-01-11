@@ -1,7 +1,9 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel;
+using System.Globalization;
 using AutoMapper;
 using Financity.Application.Abstractions.Data;
 using Financity.Application.Abstractions.Mappings;
+using Financity.Application.Common.Extensions;
 using Financity.Application.Common.Queries;
 using Financity.Application.Common.Queries.FilteredQuery;
 using Financity.Application.Labels.Queries;
@@ -60,11 +62,26 @@ public sealed class
     public override Task<IEnumerable<TransactionListItem>> Handle(GetTransactionsQuery query,
                                                                   CancellationToken cancellationToken)
     {
-        return FilterAndMapAsync(
-            query,
-            q => ApplyAdditionalFilters(q, query),
-            cancellationToken
-        );
+        Func<IQueryable<Transaction>, IQueryable<Transaction>> expression = q => ApplyAdditionalFilters(q, query);
+
+        var expr = expression.Invoke;
+
+        if (!string.IsNullOrEmpty(query.QuerySpecification.Search))
+            expr = q => ExecuteSearch(expression.Invoke(q), query.QuerySpecification.Search);
+
+        return AccessAsync(q =>
+        {
+            var toProject = expr.Invoke(q).ApplyQuerySpecification(query.QuerySpecification);
+
+            if (query.QuerySpecification.Sort.OrderBy == nameof(Transaction.Amount))
+            {
+                toProject = query.QuerySpecification.Sort.Direction == ListSortDirection.Descending
+                    ? toProject.OrderByDescending(x => x.Amount * x.ExchangeRate)
+                    : toProject.OrderBy(x => x.Amount * x.ExchangeRate);
+            }
+
+            return Project(toProject, query);
+        }, cancellationToken);
     }
 
     protected override IQueryable<Transaction> ExecuteSearch(IQueryable<Transaction> query, string search)
