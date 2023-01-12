@@ -13,7 +13,7 @@
       *tuiLet="budget.currentPeriodExpenses > budget.amount as exceeded"
       class="text-ellipsis d-flex align-items-center"
       [class.text-negative]="exceeded">
-      <tui-svg src="tuiIconCancel" *ngIf="exceeded"></tui-svg>
+      <tui-svg [src]="'tuiIconCancel'" *ngIf="exceeded"></tui-svg>
       <tui-money
         [currency]="null"
         [colored]="false"
@@ -45,7 +45,7 @@
       routerLink="/budgets/{{ budget?.id }}"
       tuiOption
       class="text-link">
-      <tui-svg src="fa::info"></tui-svg>
+      <tui-svg src="tuiIconInfo"></tui-svg>
       <span class="ml-1"> View details </span>
     </a>
 
@@ -55,7 +55,7 @@
     </button>
 
     <button tuiOption (click)="confirmationDiv.click()" class="text-negative">
-      <tui-svg src="tuiIconTrash"></tui-svg>
+      <tui-svg [src]="'tuiIconTrash'"></tui-svg>
       <span class="ml-1"> Delete </span>
     </button>
   </tui-data-list>

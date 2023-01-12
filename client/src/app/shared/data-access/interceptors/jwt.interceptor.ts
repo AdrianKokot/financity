@@ -10,7 +10,7 @@ import { AuthService } from '../../../auth/data-access/api/auth.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private _auth: AuthService) {}
+  constructor(private readonly _auth: AuthService) {}
 
   intercept(
     request: HttpRequest<unknown>,

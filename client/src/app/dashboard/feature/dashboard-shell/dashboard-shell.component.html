@@ -37,7 +37,7 @@
             routerLink="/wallets"
             [queryParams]="{ action: 'create' }"
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
-            <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
+            <tui-svg [src]="'tuiIconPlusLarge'" class="mr-2"></tui-svg>
             <span>Create new wallet</span>
           </a>
         </app-wallet-list-item>
@@ -75,7 +75,7 @@
             routerLink="/budgets"
             [queryParams]="{ action: 'create' }"
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
-            <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
+            <tui-svg [src]="'tuiIconPlusLarge'" class="mr-2"></tui-svg>
             <span>Create new budget</span>
           </a>
         </app-wallet-list-item>

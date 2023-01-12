@@ -7,4 +7,6 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
+  --tui-chart-0: var(--tui-link-hover);
+  --tui-chart-1: var(--tui-success-fill);
 }

@@ -23,7 +23,7 @@ export class ShareWalletComponent {
   );
 
   constructor(
-    private _dataService: WalletApiService,
+    private readonly _dataService: WalletApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<boolean, { walletId: string }>

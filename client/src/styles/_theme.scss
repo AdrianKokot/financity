@@ -337,6 +337,7 @@ tui-loader {
         color: var(--tui-text-02);
         font: var(--tui-font-text-s);
       }
+
       svg {
         display: none;
       }
@@ -359,6 +360,7 @@ table tfoot tr {
 
   }
 }
+
 tui-svg.size-16px {
   height: 16px;
   width: 16px;
@@ -373,4 +375,10 @@ button.text-link tui-multi-select-option tui-primitive-checkbox {
   display: none !important;
 }
 
-td.w-250px tui-items-with-more.gap-1 .t-item {max-width: calc(100% - 60px)}
+td.w-250px tui-items-with-more.gap-1 .t-item {
+  max-width: calc(100% - 60px)
+}
+
+tui-tabs a {
+  padding-right: 0.25rem !important;
+}

@@ -1,0 +1,61 @@
+
+app-wallet-stats {
+  --labels-width: min(13rem, max(8rem, calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) / 5)));
+  --tui-chart-0: var(--tui-link-hover);
+  --chart-width: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - var(--labels-width));
+  --chart-height: calc(15.5 * 44px - 2rem);
+
+  .axes {
+    width: calc(var(--chart-width) + 10rem);
+    height: calc(var(--chart-height) + 2rem);
+
+    tui-bar-chart {
+      height: var(--chart-width);
+      width: var(--chart-height);
+      min-width: var(--chart-height);
+      max-width: var(--chart-height);
+
+      transform-origin: bottom left;
+      transform: rotate(90deg) translate(-100%, 0);
+    }
+
+    .t-labels-y {
+      justify-content: space-around !important;
+      flex-direction: column !important;
+      width: var(--labels-width);
+
+      .t-label-y {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+      }
+
+      &:first-child, &:last-child {
+        margin: 0 !important;
+      }
+    }
+
+    .t-labels-x{
+      &::before {
+        content: '0';
+        width: 8px;
+        text-align: right;
+        margin-left: -8px;
+        margin-top: 0.5625rem;
+        border-right: 1px solid transparent;
+
+
+      }
+
+      .t-label-x {
+        text-align: right;
+
+        &:last-child {
+          border-right: 1px solid var(--tui-base-03);
+          margin-right: -1px;
+        }
+      }
+    }
+  }
+}

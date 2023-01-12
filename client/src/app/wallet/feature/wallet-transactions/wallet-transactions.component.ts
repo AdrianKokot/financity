@@ -39,10 +39,9 @@ import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { TuiDay } from '@taiga-ui/cdk';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
-import {
-  ApiParams,
-  ApiSort,
-} from '@shared/data-access/api/generic-api.service';
+import { ApiParams } from '@shared/data-access/api/generic-api.service';
+import { SortSelectItem } from '@shared/ui/tui/sort-select/sort-select.component';
+import { getFiltersFromParamMap } from '../../utils/filters-from-param-map';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -76,7 +75,7 @@ export class WalletTransactionsComponent {
       { orderBy: 'transactionDate', direction: 'asc', label: 'Oldest' },
       { orderBy: 'amount', direction: 'desc', label: 'Biggest amount' },
       { orderBy: 'amount', direction: 'asc', label: 'Smallest amount' },
-    ] as (ApiSort & { label: string })[],
+    ] as SortSelectItem[],
     actions: {
       edit$: new Subject<Transaction['id']>(),
       delete$: new Subject<Transaction['id']>(),
@@ -187,27 +186,12 @@ export class WalletTransactionsComponent {
     @Inject(Injector) private readonly _injector: Injector,
     @Inject(TuiDialogService) private readonly _dialog: TuiDialogService
   ) {
-    this.filters.form.patchValue(this._getFiltersFromQueryParams());
-  }
-
-  private _getFiltersFromQueryParams() {
-    return (
-      Object.keys(
-        this.filters.form.controls
-      ) as (keyof typeof this.filters.form.controls)[]
-    ).reduce((obj, key) => {
-      if (this._activatedRoute.snapshot.queryParamMap.has(key)) {
-        const value = this._activatedRoute.snapshot.queryParamMap.getAll(key);
-
-        if (this.filters.form.controls[key].value instanceof Array<string>) {
-          obj[key] = value;
-        } else {
-          obj[key] = value[0] === 'null' ? null : value[0];
-        }
-      }
-
-      return obj;
-    }, {} as Record<string, unknown>);
+    this.filters.form.patchValue(
+      getFiltersFromParamMap(
+        this.filters.form,
+        this._activatedRoute.snapshot.queryParamMap
+      )
+    );
   }
 
   trackById = (index: number, item: TransactionListItem) => item.id;

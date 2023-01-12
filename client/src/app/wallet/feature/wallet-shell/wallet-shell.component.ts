@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { filter, map, shareReplay, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { UserService } from '../../../auth/data-access/api/user.service';
@@ -11,14 +10,10 @@ import { UserService } from '../../../auth/data-access/api/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletShellComponent {
-  wallet$ = this._activatedRoute.params.pipe(
-    filter((params): params is { id: string } => 'id' in params),
-    map(params => params.id),
-    switchMap(id => this._walletService.get(id)),
-    shareReplay(1)
+  readonly wallet$ = this._walletService.get(
+    this._activatedRoute.snapshot.params['id']
   );
-
-  userId = this._user.userSnapshot?.id;
+  readonly userId = this._user.userSnapshot?.id;
 
   constructor(
     private readonly _activatedRoute: ActivatedRoute,

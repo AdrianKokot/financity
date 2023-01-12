@@ -82,7 +82,7 @@ export class FormHandler<
   },
   TResult
 > {
-  private _submit$ = new Subject<void>();
+  private readonly _submit$ = new Subject<void>();
   public readonly submitButtonLoading$ = this._submit$.pipe(
     toFormSubmit(this.group, this._functions)
   );

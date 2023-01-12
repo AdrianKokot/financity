@@ -128,7 +128,7 @@ export class DashboardBarChartComponent {
   readonly isChartLoading$ = this.chart$.pipe(map(chart => chart === null));
 
   constructor(
-    private _user: UserService,
+    private readonly _user: UserService,
     private readonly _walletService: WalletApiService,
     private readonly _budgetService: BudgetApiService,
     @Inject(TUI_MONTHS)

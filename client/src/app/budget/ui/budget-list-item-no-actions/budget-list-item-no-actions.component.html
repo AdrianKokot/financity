@@ -13,7 +13,7 @@
     *tuiLet="budget.currentPeriodExpenses > budget.amount as exceeded"
     class="text-ellipsis d-flex align-items-center"
     [class.text-negative]="exceeded">
-    <tui-svg src="tuiIconCancel" *ngIf="exceeded"></tui-svg>
+    <tui-svg [src]="'tuiIconCancel'" *ngIf="exceeded"></tui-svg>
     <tui-money
       [currency]="null"
       [colored]="false"

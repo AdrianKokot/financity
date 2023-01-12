@@ -21,7 +21,7 @@ export class BudgetApiService extends GenericApiService<
   Pick<CreateBudgetPayload, 'name' | 'amount' | 'trackedCategoriesId'> &
     Pick<Budget, 'id'>
 > {
-  constructor(http: HttpClient, private _user: UserSettingsService) {
+  constructor(http: HttpClient, private readonly _user: UserSettingsService) {
     super(http, '/api/budgets');
   }
 

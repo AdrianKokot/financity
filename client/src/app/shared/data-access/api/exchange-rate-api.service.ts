@@ -8,7 +8,7 @@ import { toHttpParams } from './generic-api.service';
   providedIn: 'root',
 })
 export class ExchangeRateApiService {
-  constructor(private _http: HttpClient) {}
+  constructor(private readonly _http: HttpClient) {}
 
   private _getListCache: Record<string, { rate: number }> = {};
 

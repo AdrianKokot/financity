@@ -24,9 +24,12 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor, OnDestroy {
-  private _destroy$ = new Subject<boolean>();
-  private _errorAlert$ = new Subject<{ title?: string; message: string }>();
-  private _sessionExpiredAlert = new Subject<string>();
+  private readonly _destroy$ = new Subject<boolean>();
+  private readonly _errorAlert$ = new Subject<{
+    title?: string;
+    message: string;
+  }>();
+  private readonly _sessionExpiredAlert = new Subject<string>();
 
   constructor(
     private readonly _auth: AuthService,

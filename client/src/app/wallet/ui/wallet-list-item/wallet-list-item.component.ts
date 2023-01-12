@@ -19,5 +19,5 @@ export class WalletListItemComponent {
   @Input() showSkeleton = false;
 
   userId = this._user.userSnapshot?.id;
-  constructor(private _user: UserService) {}
+  constructor(private readonly _user: UserService) {}
 }

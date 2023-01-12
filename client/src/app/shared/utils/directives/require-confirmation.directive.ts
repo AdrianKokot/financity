@@ -20,9 +20,9 @@ export class RequireConfirmationDirective implements OnDestroy {
   @Input() confirmationMessage = 'Are you sure?';
   @Input() confirmationTitle = 'Are you sure?';
 
-  private _destroyed$ = new Subject<void>();
+  private readonly _destroyed$ = new Subject<void>();
 
-  constructor(private _dialog: TuiDialogService) {}
+  constructor(private readonly _dialog: TuiDialogService) {}
 
   @HostListener('click')
   onHostClick() {

@@ -3,6 +3,8 @@ import {
   CreateWalletPayload,
   Wallet,
   WalletListItem,
+  WalletsStats,
+  WalletStats,
 } from '@shared/data-access/models/wallet.model';
 import { User } from '../../../auth/data-access/models/user';
 import { map, Observable, tap } from 'rxjs';
@@ -65,16 +67,19 @@ export class WalletApiService extends GenericApiService<
     from: Date;
     to: Date;
   }) {
-    return this.http.get<{
-      expenseStats: Record<string, number>;
-      incomeStats: Record<string, number>;
-    }>(`${this.api}/stats`, {
+    return this.http.get<WalletsStats>(`${this.api}/stats`, {
       params: toHttpParams({
         walletId_in: payload.walletIds,
         currencyId_eq: payload.currencyId,
         transactionDate_gte: payload.from.toJSON(),
         transactionDate_lte: payload.to.toJSON(),
       }),
+    });
+  }
+
+  getWalletStats(id: Wallet['id'], apiParams: ApiParams) {
+    return this.http.get<WalletStats>(`${this.api}/${id}/stats`, {
+      params: toHttpParams(apiParams),
     });
   }
 

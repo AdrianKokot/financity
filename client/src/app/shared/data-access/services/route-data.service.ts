@@ -6,7 +6,7 @@ import { filter, map, shareReplay } from 'rxjs';
   providedIn: 'root',
 })
 export class RouteDataService {
-  constructor(private _router: Router) {}
+  constructor(private readonly _router: Router) {}
 
   data$ = this._router.events.pipe(
     filter((event): event is ActivationEnd => event instanceof ActivationEnd),

@@ -13,37 +13,45 @@
   </div>
 
   <tui-tabs>
-    <a tuiTab href="transactions" routerLink="transactions" routerLinkActive>
-      <tui-svg src="tuiIconCard" class="mr-2"></tui-svg>
+    <a tuiTab href="./tansactions" routerLink="transactions" routerLinkActive>
+      <tui-svg [src]="'tuiIconCard'" class="mr-2"></tui-svg>
       Transactions
     </a>
-    <a tuiTab href="categories" routerLink="categories" routerLinkActive>
-      <tui-svg src="tuiIconFolder" class="mr-2"></tui-svg>
+    <a tuiTab href="./categories" routerLink="categories" routerLinkActive>
+      <tui-svg [src]="'tuiIconFolder'" class="mr-2"></tui-svg>
       Categories
     </a>
-    <a tuiTab href="labels" routerLink="labels" routerLinkActive>
-      <tui-svg src="tuiIconCopy" class="mr-2"></tui-svg>
+    <a tuiTab href="./labels" routerLink="labels" routerLinkActive>
+      <tui-svg [src]="'tuiIconCopy'" class="mr-2"></tui-svg>
       Labels
     </a>
     <a
-      href="transaction-parties"
+      href="./transaction-parties"
       routerLink="transaction-parties"
       routerLinkActive
       tuiTab>
-      <tui-svg class="mr-2" src="fa::address-card"></tui-svg>
+      <tui-svg class="mr-2" [src]="'fa::address-card'"></tui-svg>
       Transaction party
     </a>
     <a
       *ngIf="wallet?.ownerId === userId"
       tuiTab
-      href="access-management"
+      href="./access-management"
       routerLink="access-management"
       routerLinkActive>
-      <tui-svg src="tuiIconUsers" class="mr-2"></tui-svg>
+      <tui-svg [src]="'tuiIconUsers'" class="mr-2"></tui-svg>
       Shared access
     </a>
-    <a tuiTab href="settings" routerLink="settings" routerLinkActive>
-      <tui-svg src="tuiIconSettings" class="mr-2"></tui-svg>
+    <a
+      tuiTab
+      href="./expense-overview"
+      routerLink="expense-overview"
+      routerLinkActive>
+      <tui-svg [src]="'tuiIconChartBar'" class="mr-2"></tui-svg>
+      Expense overview
+    </a>
+    <a tuiTab href="./settings" routerLink="settings" routerLinkActive>
+      <tui-svg [src]="'tuiIconSettings'" class="mr-2"></tui-svg>
       Settings
     </a>
   </tui-tabs>

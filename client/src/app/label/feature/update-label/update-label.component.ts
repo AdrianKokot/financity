@@ -37,7 +37,7 @@ export class UpdateLabelComponent {
     .pipe(toLoadingState(data => this.form.patchValue(data)));
 
   constructor(
-    private _dataService: LabelApiService,
+    private readonly _dataService: LabelApiService,
     private readonly _fb: FormWithHandlerBuilder,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<

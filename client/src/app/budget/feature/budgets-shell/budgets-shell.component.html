@@ -86,7 +86,9 @@
                         "
                         class="text-ellipsis d-flex align-items-center"
                         [class.text-negative]="exceeded">
-                        <tui-svg src="tuiIconCancel" *ngIf="exceeded"></tui-svg>
+                        <tui-svg
+                          [src]="'tuiIconCancel'"
+                          *ngIf="exceeded"></tui-svg>
                         <tui-money
                           [currency]="null"
                           [colored]="false"
@@ -106,7 +108,7 @@
                         [routerLink]="[item.id]"
                         appearance="flat"
                         size="s"
-                        icon="tuiIconEyeOpen"
+                        icon="tuiIconSearch"
                         title="View details"
                         shape="rounded"
                         class="mr-1"></button>
@@ -166,7 +168,7 @@
           class="dashed">
           <div
             class="w-full h-full d-flex justify-content-center align-items-center text-center tui-text_body-m">
-            <tui-svg src="tuiIconPlusLarge" class="mr-2"></tui-svg>
+            <tui-svg [src]="'tuiIconPlusLarge'" class="mr-2"></tui-svg>
             <span>Create new</span>
           </div>
         </app-budget-list-item>
