@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Financity.Application.Wallets.Queries;
 
-public sealed class GetWalletsStatsQuery : IQuery<WalletStats>
+public sealed class GetWalletsStatsQuery : IQuery<WalletsStats>
 {
     public HashSet<Guid> WalletIds { get; set; } = new();
     public DateOnly From { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(-1));
@@ -14,7 +14,7 @@ public sealed class GetWalletsStatsQuery : IQuery<WalletStats>
     public string CurrencyId { get; set; } = string.Empty;
 }
 
-public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQuery, WalletStats>
+public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQuery, WalletsStats>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -23,7 +23,7 @@ public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQ
         _dbContext = dbContext;
     }
 
-    public async Task<WalletStats> Handle(GetWalletsStatsQuery request, CancellationToken cancellationToken)
+    public async Task<WalletsStats> Handle(GetWalletsStatsQuery request, CancellationToken cancellationToken)
     {
         var q = _dbContext.GetDbSet<Wallet>().AsNoTracking()
                           .Where(x => _dbContext.UserService.UserWalletIds.Contains(x.Id));
@@ -69,8 +69,8 @@ public sealed class GetWalletsStatsQueryHandler : IQueryHandler<GetWalletsStatsQ
             currDate = currDate.AddMonths(1);
         }
 
-        return new WalletStats(resultDict[TransactionType.Expense], resultDict[TransactionType.Income]);
+        return new WalletsStats(resultDict[TransactionType.Expense], resultDict[TransactionType.Income]);
     }
 }
 
-public sealed record WalletStats(IDictionary<string, decimal> ExpenseStats, IDictionary<string, decimal> IncomeStats);
+public sealed record WalletsStats(IDictionary<string, decimal> ExpenseStats, IDictionary<string, decimal> IncomeStats);

@@ -87,13 +87,13 @@ public class WalletsController : BaseController
     }
 
     [HttpGet("stats")]
-    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletStats))]
-    public Task<IActionResult> GetWalletStats([FromQuery(Name = "transactionDate_gte")] DateTime? from,
-                                              [FromQuery(Name = "transactionDate_lte")]
-                                              DateTime? to,
-                                              [FromQuery(Name = "walletId_in")] HashSet<Guid>? includeWalletsWithId,
-                                              [FromQuery(Name = "currencyId_eq")] string currencyId,
-                                              CancellationToken ct)
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletsStats))]
+    public Task<IActionResult> GetWalletsStats([FromQuery(Name = "transactionDate_gte")] DateTime? from,
+                                               [FromQuery(Name = "transactionDate_lte")]
+                                               DateTime? to,
+                                               [FromQuery(Name = "walletId_in")] HashSet<Guid>? includeWalletsWithId,
+                                               [FromQuery(Name = "currencyId_eq")] string currencyId,
+                                               CancellationToken ct)
     {
         return HandleQueryAsync(new GetWalletsStatsQuery
         {
@@ -101,6 +101,20 @@ public class WalletsController : BaseController
             From = DateOnly.FromDateTime(from ?? DateTime.UtcNow),
             To = DateOnly.FromDateTime(to ?? DateTime.UtcNow),
             WalletIds = includeWalletsWithId ?? new HashSet<Guid>()
+        }, ct);
+    }
+
+    [HttpGet("{id:guid}/stats")]
+    [SwaggerResponse(StatusCodes.Status200OK, Type = typeof(WalletStats))]
+    public Task<IActionResult> GetWalletStats([FromQuery(Name = "transactionDate_gte")] DateTime? from,
+                                              [FromQuery(Name = "transactionDate_lte")]
+                                              DateTime? to, Guid id, CancellationToken ct)
+    {
+        return HandleQueryAsync(new GetWalletStatsQuery
+        {
+            From = DateOnly.FromDateTime(from ?? DateTime.UtcNow),
+            To = DateOnly.FromDateTime(to ?? DateTime.UtcNow),
+            WalletId = id
         }, ct);
     }
 }

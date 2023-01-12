@@ -1,5 +1,7 @@
 import {
   TUI_DIALOGS_CLOSE,
+  TUI_HINT_DEFAULT_OPTIONS,
+  TUI_HINT_OPTIONS,
   TUI_NOTHING_FOUND_MESSAGE,
   TUI_SANITIZER,
   TUI_SVG_SRC_PROCESSOR,
@@ -119,6 +121,10 @@ import { MissingWalletInterceptor } from './wallet/data-access/interceptors/miss
     {
       provide: TUI_NOTHING_FOUND_MESSAGE,
       useValue: of('No records found').pipe(shareReplay()),
+    },
+    {
+      provide: TUI_HINT_OPTIONS,
+      useValue: { ...TUI_HINT_DEFAULT_OPTIONS, appearance: 'onDark' },
     },
   ],
   bootstrap: [AppComponent],

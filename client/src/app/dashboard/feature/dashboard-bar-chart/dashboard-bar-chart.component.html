@@ -35,6 +35,7 @@
     [axisYLabels]="(yLabels$ | async) ?? []">
     <tui-bar-chart
       tuiHint
+      [size]="null"
       [tuiHintContent]="hint$ | async"
       *ngIf="chart && !chartNotAvailable"
       [max]="chart.max"

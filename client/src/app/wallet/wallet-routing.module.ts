@@ -28,30 +28,37 @@ const routes: Routes = [
           {
             path: 'transactions',
             component: WalletTransactionsComponent,
+            title: 'Financity - Wallet transactions',
           },
           {
             path: 'labels',
             component: WalletLabelsComponent,
+            title: 'Financity - Wallet labels',
           },
           {
             path: 'categories',
             component: WalletCategoriesComponent,
+            title: 'Financity - Wallet categories',
           },
           {
             path: 'transaction-parties',
             component: WalletRecipientsComponent,
+            title: 'Financity - Wallet transaction parties',
           },
           {
             path: 'settings',
             component: WalletSettingsComponent,
+            title: 'Financity - Wallet settings',
           },
           {
             path: 'access-management',
             component: WalletShareManagementComponent,
+            title: 'Financity - Wallet share management',
           },
           {
-            path: 'stats',
+            path: 'expense-overview',
             component: WalletStatsComponent,
+            title: 'Financity - Wallet expense overview',
           },
         ],
       },

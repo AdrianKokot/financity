@@ -37,10 +37,11 @@ import { Wallet } from '@shared/data-access/models/wallet.model';
 import { DATE_RANGE_FILTER_GROUPS } from '../../utils/date-range-filter-groups.constants';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
-import { TuiDay, TuiDayRange } from '@taiga-ui/cdk';
+import { TuiDay } from '@taiga-ui/cdk';
 import { TransactionDetailsComponent } from '../../../transaction/feature/transaction-details/transaction-details.component';
 import { ApiParams } from '@shared/data-access/api/generic-api.service';
 import { SortSelectItem } from '@shared/ui/tui/sort-select/sort-select.component';
+import { getFiltersFromParamMap } from '../../utils/filters-from-param-map';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -185,41 +186,12 @@ export class WalletTransactionsComponent {
     @Inject(Injector) private readonly _injector: Injector,
     @Inject(TuiDialogService) private readonly _dialog: TuiDialogService
   ) {
-    this.filters.form.patchValue(this._getFiltersFromQueryParams());
-  }
-
-  private _getFiltersFromQueryParams() {
-    const paramMap = this._activatedRoute.snapshot.queryParamMap;
-
-    return (
-      Object.keys(
-        this.filters.form.controls
-      ) as (keyof typeof this.filters.form.controls)[]
-    ).reduce((obj, key) => {
-      if (paramMap.has(key)) {
-        const value = paramMap.getAll(key);
-
-        if (this.filters.form.controls[key].value instanceof Array<string>) {
-          obj[key] = value;
-        } else if (
-          this.filters.form.controls[key].value instanceof TuiDayRange &&
-          value[0] !== 'null'
-        ) {
-          try {
-            const days = value.map(x => TuiDay.jsonParse(x));
-
-            obj[key] = new TuiDayRange(
-              days[0],
-              days.length > 1 ? days[1] : days[0]
-            );
-          } catch (e) {}
-        } else {
-          obj[key] = value[0] === 'null' ? null : value[0];
-        }
-      }
-
-      return obj;
-    }, {} as Record<string, unknown>);
+    this.filters.form.patchValue(
+      getFiltersFromParamMap(
+        this.filters.form,
+        this._activatedRoute.snapshot.queryParamMap
+      )
+    );
   }
 
   trackById = (index: number, item: TransactionListItem) => item.id;
