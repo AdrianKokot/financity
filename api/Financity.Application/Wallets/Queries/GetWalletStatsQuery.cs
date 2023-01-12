@@ -29,7 +29,7 @@ public sealed class GetWalletStatsQueryHandler : IQueryHandler<GetWalletStatsQue
                                         .AsNoTracking()
                                         .Where(x => _dbContext.UserService.UserWalletIds.Contains(x.Id) &&
                                                     x.Id == request.WalletId);
-        
+
         var expensesByCategory = await walletQueryable
                                        .SelectMany(x => x.Transactions.Where(t =>
                                            t.TransactionType == TransactionType.Expense &&
