@@ -35,7 +35,6 @@ public sealed class
             return new RequestResetPasswordCommandResult();
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
         await _emailService.SendEmailAsync(
             command.Email,
@@ -67,6 +66,6 @@ internal class ResetPasswordEmailTemplate
     public override string ToString()
     {
         return FileContent.Replace("{{expiration-time}}", "2 hours")
-                          .Replace("{{action_url}}", $"{_url}/auth/reset-password?token={_token}");
+                          .Replace("{{action_url}}", $"{_url}/auth/reset-password?token={WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(_token))}");
     }
 }

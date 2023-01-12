@@ -69,11 +69,11 @@ export class ResetPasswordPageComponent {
   }
 
   initToken(): void {
-    const resetToken = this._route.snapshot.queryParamMap.get('token');
-
-    if (resetToken !== null) {
+    if (this._route.snapshot.queryParamMap.has('token')) {
       this.form.controls.token.enable();
-      this.form.controls.token.setValue(resetToken);
+      this.form.controls.token.setValue(
+        window.location.search.replace('?token=', '')
+      );
       this.form.controls.password.enable();
       this.form.controls.password.setValidators([
         Validators.required,
