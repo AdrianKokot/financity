@@ -71,7 +71,7 @@ export class ApiDataHandler<
     shareReplay()
   );
 
-  readonly appendOnly$ = merge(
+  readonly appendOnly$: Observable<boolean> = merge(
     this._filters.filters$,
     this._reload$.pipe(filter(x => x))
   ).pipe(

@@ -2,11 +2,12 @@
 app-wallet-stats {
   --labels-width: min(13rem, max(8rem, calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) / 5)));
   --tui-chart-0: var(--tui-link-hover);
-  --chart-width: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - var(--labels-width));
-  --chart-height: calc(15.5 * 44px - 2rem);
+  --chart-width: calc(min(100rem, calc(100vw - var(--app-sidebar-width) - 3rem)) - 2rem - 2 * var(--labels-width));
+  --row-count: 0;
 
   .axes {
-    width: calc(var(--chart-width) + 10rem);
+    --chart-height: min(calc(15.5 * 44px - 2rem), calc(var(--row-count) * 32px));
+    width: calc(var(--chart-width) + var(--labels-width));
     height: calc(var(--chart-height) + 2rem);
 
     tui-bar-chart {
@@ -36,7 +37,7 @@ app-wallet-stats {
       }
     }
 
-    .t-labels-x{
+    .t-labels-x {
       &::before {
         content: '0';
         width: 8px;
@@ -57,5 +58,10 @@ app-wallet-stats {
         }
       }
     }
+  }
+
+  tui-loader {
+    min-height: calc(15.5 * 44px);
+    display: flex; align-items: center;
   }
 }
