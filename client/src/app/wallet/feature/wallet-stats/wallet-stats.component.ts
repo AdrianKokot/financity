@@ -5,13 +5,13 @@ import {
 } from '@angular/core';
 import { Wallet } from '@shared/data-access/models/wallet.model';
 import { DATE_RANGE_FILTER_GROUPS } from '../../utils/date-range-filter-groups.constants';
-import { TuiDay, TuiDayLike } from '@taiga-ui/cdk';
+import { TuiDay } from '@taiga-ui/cdk';
 import { FormWithHandlerBuilder } from '@shared/utils/services/form-with-handler-builder.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WalletApiService } from '@shared/data-access/api/wallet-api.service';
 import { tuiFormatNumber } from '@taiga-ui/core';
 import { getFiltersFromParamMap } from '../../utils/filters-from-param-map';
-import { filter, map, startWith, switchMap } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs';
 import { tuiFormatCurrency } from '@taiga-ui/addon-commerce';
 import { distinctUntilChangedObject } from '@shared/utils/rxjs/distinct-until-changed-object';
 
@@ -29,7 +29,6 @@ export class WalletStatsComponent {
   readonly ui = {
     transactionDate: {
       items: DATE_RANGE_FILTER_GROUPS,
-      maxLength: { month: 12 } as TuiDayLike,
       min: new TuiDay(1, 0, 1),
       max: new TuiDay(9999, 11, 31),
     } as const,
@@ -43,9 +42,6 @@ export class WalletStatsComponent {
   private readonly _showOnlyRows = 20;
 
   readonly stats$ = this.filters.filters$.pipe(
-    filter(
-      x => 'transactionDate_lte' in x && x['transactionDate_lte'] !== null
-    ),
     distinctUntilChangedObject(),
     switchMap(payload =>
       this._walletApiService.getWalletStats(this._walletId, payload).pipe(

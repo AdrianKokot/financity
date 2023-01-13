@@ -17,10 +17,7 @@ public sealed class GetWalletQueryHandler : EntityQueryHandler<GetWalletQuery, W
 
     public override Task<WalletDetails> Handle(GetWalletQuery query, CancellationToken cancellationToken)
     {
-        if (DbContext.UserService.UserWalletIds.Contains(query.EntityId))
-        {
-            return base.Handle(query, cancellationToken);
-        }
+        if (DbContext.UserService.UserWalletIds.Contains(query.EntityId)) return base.Handle(query, cancellationToken);
 
         throw new EntityNotFoundException(nameof(Wallet), query.EntityId);
     }

@@ -66,6 +66,7 @@ internal class ResetPasswordEmailTemplate
     public override string ToString()
     {
         return FileContent.Replace("{{expiration-time}}", "2 hours")
-                          .Replace("{{action_url}}", $"{_url}/auth/reset-password?token={WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(_token))}");
+                          .Replace("{{action_url}}",
+                              $"{_url}/auth/reset-password?token={WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(_token))}");
     }
 }

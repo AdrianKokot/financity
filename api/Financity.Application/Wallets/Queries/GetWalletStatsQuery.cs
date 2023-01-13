@@ -10,8 +10,8 @@ namespace Financity.Application.Wallets.Queries;
 public sealed class GetWalletStatsQuery : IQuery<WalletStats>
 {
     public Guid WalletId { get; set; } = Guid.Empty;
-    public DateOnly From { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(-1));
-    public DateOnly To { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+    public DateOnly? From { get; set; }
+    public DateOnly? To { get; set; }
 }
 
 public sealed class GetWalletStatsQueryHandler : IQueryHandler<GetWalletStatsQuery, WalletStats>
@@ -30,11 +30,13 @@ public sealed class GetWalletStatsQueryHandler : IQueryHandler<GetWalletStatsQue
                                         .Where(x => _dbContext.UserService.UserWalletIds.Contains(x.Id) &&
                                                     x.Id == request.WalletId);
 
+
+
         var expensesByCategory = await walletQueryable
                                        .SelectMany(x => x.Transactions.Where(t =>
                                            t.TransactionType == TransactionType.Expense &&
-                                           t.TransactionDate >= request.From &&
-                                           t.TransactionDate <= request.To))
+                                           (request.From == null || t.TransactionDate >= request.From) &&
+                                           (request.To == null || t.TransactionDate <= request.To)))
                                        .GroupBy(t => new
                                        {
                                            Id = t.CategoryId,
