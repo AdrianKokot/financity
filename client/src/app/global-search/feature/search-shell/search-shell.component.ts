@@ -4,7 +4,7 @@ import {
   Inject,
   Injector,
 } from '@angular/core';
-import { merge, Subject, switchMap } from 'rxjs';
+import { merge, share, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 import { TransactionListItem } from '@shared/data-access/models/transaction.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
@@ -48,14 +48,16 @@ export class SearchShellComponent {
     }
   );
 
-  readonly searchWasApplied$ = this.ui.actions.applySearch$.pipe(
-    toLoadingState()
+  private readonly _searchApply$ = this.ui.actions.applySearch$.pipe(
+    withLatestFrom(this.filters.form.valueChanges),
+    share()
   );
+  readonly searchWasApplied$ = this._searchApply$.pipe(toLoadingState());
 
   readonly data = new ApiDataHandler(
     this._transactionApiService.getAll.bind(this._transactionApiService),
     this.filters,
-    this.ui.actions.applySearch$
+    this._searchApply$
   );
 
   readonly dialogs$ = merge(
