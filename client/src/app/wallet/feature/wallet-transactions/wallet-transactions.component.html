@@ -301,8 +301,12 @@
 
 <ng-template #categoriesDropdown>
   <app-searchable-list
+    *tuiLet="filters.controls.transactionType.value as transactionType"
     [getListFunction]="dataApis.getCategories"
-    [control]="filters.controls.categories">
+    [control]="filters.controls.categories"
+    [externalFilters]="
+      transactionType !== '' ? { transactionType_eq: transactionType } : {}
+    ">
   </app-searchable-list>
 </ng-template>
 <ng-template #labelsDropdown>

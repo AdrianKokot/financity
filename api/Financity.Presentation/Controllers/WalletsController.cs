@@ -112,8 +112,8 @@ public class WalletsController : BaseController
     {
         return HandleQueryAsync(new GetWalletStatsQuery
         {
-            From = DateOnly.FromDateTime(from ?? DateTime.UtcNow),
-            To = DateOnly.FromDateTime(to ?? DateTime.UtcNow),
+            From = from != null ? DateOnly.FromDateTime((DateTime)from) : null,
+            To = to != null ? DateOnly.FromDateTime((DateTime)to) : null,
             WalletId = id
         }, ct);
     }

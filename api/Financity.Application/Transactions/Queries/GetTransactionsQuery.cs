@@ -74,11 +74,9 @@ public sealed class
             var toProject = expr.Invoke(q).ApplyQuerySpecification(query.QuerySpecification);
 
             if (query.QuerySpecification.Sort.OrderBy == nameof(Transaction.Amount))
-            {
                 toProject = query.QuerySpecification.Sort.Direction == ListSortDirection.Descending
                     ? toProject.OrderByDescending(x => x.Amount * x.ExchangeRate)
                     : toProject.OrderBy(x => x.Amount * x.ExchangeRate);
-            }
 
             return Project(toProject, query);
         }, cancellationToken);

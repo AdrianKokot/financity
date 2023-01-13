@@ -382,3 +382,16 @@ td.w-250px tui-items-with-more.gap-1 .t-item {
 tui-tabs a {
   padding-right: 0.25rem !important;
 }
+
+tui-bar-chart > .t-wrapper.t-wrapper_hoverable {
+  .t-bar {
+    opacity: 0.6;
+    transition: opacity .3s;
+  }
+
+  &:hover {
+    .t-bar {
+      opacity: 1;
+    }
+  }
+}

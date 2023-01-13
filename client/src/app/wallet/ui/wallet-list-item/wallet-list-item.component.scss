@@ -1,7 +1,7 @@
 :host {
   cursor: pointer;
   border: 1px solid var(--tui-base-03);
-  transition: border-color .3s, box-shadow .3s;
+  transition: border-color .3s, box-shadow .3s, color .3s;
 
   tui-money:not(._green):not(._red) {
     color: var(--tui-text-02);

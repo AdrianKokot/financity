@@ -2,7 +2,10 @@
   <main *tuiLet="chartData === null as isLoading">
     <div class="w-full d-flex gap-4 mb-4" [formGroup]="filters.form">
       <label>
-        <span class="text-2" [class.tui-skeleton]="isLoading">
+        <span
+          class="text-2"
+          [class.tui-skeleton]="isLoading"
+          *tuiLet="filters.filters$ | async as filters">
           Total expenses in selected period:
         </span>
         <strong *ngIf="chartData !== null" class="text-negative">
@@ -13,7 +16,6 @@
 
       <label class="w-250px ml-auto">
         <tui-input-date-range
-          [maxLength]="ui.transactionDate.maxLength"
           [min]="ui.transactionDate.min"
           [max]="ui.transactionDate.max"
           formControlName="transactionDate"
@@ -27,24 +29,25 @@
       </label>
     </div>
 
-    <hr />
+    <hr class="mb-4" />
 
     <tui-loader [showLoader]="isLoading ?? true" [overlay]="true">
       <tui-axes
+        *ngIf="chartData !== null && chartData.total > 0"
+        [style.--row-count]="chartData.yLabels.length"
         class="axes"
         [verticalLines]="5"
-        [axisYLabels]="chartData?.yLabels ?? []"
-        [axisXLabels]="chartData?.xLabels ?? []">
+        [axisYLabels]="chartData.yLabels"
+        [axisXLabels]="chartData.xLabels">
         <tui-bar-chart
           (click)="click($event, chartData.ids)"
-          *ngIf="chartData !== null"
           [max]="chartData.max"
           [tuiHintContent]="hint"
           [value]="chartData.values"
           [size]="null"></tui-bar-chart>
 
         <ng-template #hint polymorpheus="" let-index>
-          <div *ngIf="chartData !== null">
+          <div>
             <p>
               <strong>{{ chartData.yLabels[index] }}</strong>
             </p>
@@ -55,7 +58,7 @@
               }}
               {{ chartData.currencyId | tuiCurrency }}
             </span>
-            <em style="color: var(--tui-text-02-night)">
+            <em class="text-2">
               ({{
                 chartData.percentages[index]
                   | tuiFormatNumber : { decimalLimit: 2 }
@@ -64,6 +67,12 @@
           </div>
         </ng-template>
       </tui-axes>
+
+      <ng-container *ngIf="chartData !== null && chartData.total === 0">
+        <div class="text-center text-2">
+          You have no expenses for selected period.
+        </div>
+      </ng-container>
     </tui-loader>
   </main>
 </ng-container>
