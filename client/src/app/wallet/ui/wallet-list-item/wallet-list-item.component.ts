@@ -18,6 +18,6 @@ export class WalletListItemComponent {
   @Input() wallet: WalletListItem | null = null;
   @Input() showSkeleton = false;
 
-  userId = this._user.userSnapshot?.id;
+  userId = this._user.userId;
   constructor(private readonly _user: UserService) {}
 }

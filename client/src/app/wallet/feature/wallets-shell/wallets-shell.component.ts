@@ -31,7 +31,7 @@ export class WalletsShellComponent {
     showSimplifiedView$: this._user.settings$.pipe(
       map(x => x.showSimplifiedWalletView)
     ),
-    userId: this._user.userSnapshot?.id,
+    userId: this._user.userId,
   };
 
   readonly filters = this._fb.filters({

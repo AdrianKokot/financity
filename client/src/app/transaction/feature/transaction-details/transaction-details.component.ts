@@ -25,12 +25,12 @@ export class TransactionDetailsComponent {
           .get(this.transaction.walletId)
           .pipe(startWith(null));
 
-  readonly userId = this._userService.userSnapshot?.id;
+  readonly userId = this._user.userId;
   readonly transactionType = TransactionType;
 
   constructor(
     private readonly _walletService: WalletApiService,
-    private readonly _userService: UserService,
+    private readonly _user: UserService,
     @Inject(POLYMORPHEUS_CONTEXT)
     private readonly _context: TuiDialogContext<
       Transaction,

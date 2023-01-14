@@ -7,7 +7,6 @@ import {
   UrlTree,
 } from '@angular/router';
 import { AuthService } from '../api/auth.service';
-import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,12 +17,10 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     private readonly _router: Router
   ) {}
 
-  canActivate(): Observable<boolean | UrlTree> {
-    return this._auth.isAuthenticated$.pipe(
-      map(isAuthenticated =>
-        isAuthenticated ? true : this._router.createUrlTree(['/auth/login'])
-      )
-    );
+  canActivate(): boolean | UrlTree {
+    return this._auth.hasValidToken()
+      ? true
+      : this._router.createUrlTree(['/auth/login']);
   }
 
   canActivateChild(): ReturnType<typeof this.canActivate> {
