@@ -61,19 +61,20 @@ export class WalletStatsComponent {
                 if (i < this._showOnlyRows) {
                   obj.values.push(x.value);
                   obj.labels.push(x.label);
-                  obj.ids.push(x.id ?? '00000000-0000-0000-0000-00000000000');
                   obj.percentages.push(x.percentage);
+                  obj.ids.push(x.id);
                 } else {
                   obj.values[obj.values.length - 1] += x.value;
                   obj.labels[obj.labels.length - 1] = 'Other categories';
                   obj.percentages[obj.percentages.length - 1] =
                     (obj.values[obj.values.length - 1] / total) * 100;
+                  obj.ids[obj.ids.length - 1] = null;
                 }
 
                 return obj;
               },
               {
-                ids: new Array<string>(),
+                ids: new Array<string | null>(),
                 labels: new Array<string>(),
                 values: new Array<number>(),
                 percentages: new Array<number>(),
@@ -106,7 +107,7 @@ export class WalletStatsComponent {
     )
   );
 
-  click(event: MouseEvent, ids: string[]) {
+  click(event: MouseEvent, ids: (string | null)[]) {
     if (!(event.target instanceof HTMLElement)) {
       return;
     }
@@ -126,16 +127,18 @@ export class WalletStatsComponent {
       wrapper
     );
 
-    this._router.navigate(['../transactions'], {
-      relativeTo: this._activatedRoute,
-      queryParams: {
-        categories: [ids[idx]],
-        transactionDate: [
-          this.filters.form.controls.transactionDate.value.from.toJSON(),
-          this.filters.form.controls.transactionDate.value.to.toJSON(),
-        ],
-      },
-    });
+    if (ids[idx] !== null) {
+      this._router.navigate(['../transactions'], {
+        relativeTo: this._activatedRoute,
+        queryParams: {
+          categories: [ids[idx]],
+          transactionDate: [
+            this.filters.form.controls.transactionDate.value.from.toJSON(),
+            this.filters.form.controls.transactionDate.value.to.toJSON(),
+          ],
+        },
+      });
+    }
   }
 
   constructor(
