@@ -29,6 +29,7 @@ import {
   TuiMultiSelectModule,
   TuiSelectModule,
   TuiStringifyContentPipeModule,
+  TuiTagModule,
   TuiTextAreaModule,
 } from '@taiga-ui/kit';
 import { TuiAutoFocusModule, TuiLetModule } from '@taiga-ui/cdk';
@@ -83,6 +84,7 @@ import { RouterLink } from '@angular/router';
     TuiHintModule,
     TuiLinkModule,
     RouterLink,
+    TuiTagModule,
   ],
   exports: [
     CreateTransactionComponent,

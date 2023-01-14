@@ -14,6 +14,7 @@ import { TransactionType } from '@shared/data-access/models/transaction-type.enu
 @Component({
   selector: 'app-transaction-details',
   templateUrl: './transaction-details.component.html',
+  styleUrls: ['./transaction-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionDetailsComponent {
@@ -24,6 +25,8 @@ export class TransactionDetailsComponent {
       : this._walletService
           .get(this.transaction.walletId)
           .pipe(startWith(null));
+
+  readonly showLinks = this._context.data.showLinks ?? false;
 
   readonly userId = this._user.userId;
   readonly transactionType = TransactionType;
@@ -37,6 +40,7 @@ export class TransactionDetailsComponent {
       {
         wallet?: Wallet;
         transaction: TransactionListItem;
+        showLinks?: boolean;
       }
     >
   ) {}

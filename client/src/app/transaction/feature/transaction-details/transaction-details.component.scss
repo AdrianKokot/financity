@@ -1,0 +1,7 @@
+a.tui-tag {
+  border-radius: var(--tui-radius-m);
+}
+
+a:not(.tui-tag):not(:hover) {
+  color: inherit !important;
+}

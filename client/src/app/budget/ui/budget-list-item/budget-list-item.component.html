@@ -40,17 +40,13 @@
 </ng-container>
 <ng-template #dropdown>
   <tui-data-list size="s">
-    <a
-      href="/budgets/{{ budget?.id }}"
-      routerLink="/budgets/{{ budget?.id }}"
-      tuiOption
-      class="text-link">
-      <tui-svg src="tuiIconInfo"></tui-svg>
+    <a routerLink="/budgets/{{ budget?.id }}" tuiOption class="text-link">
+      <tui-svg [src]="'tuiIconInfo'"></tui-svg>
       <span class="ml-1"> View details </span>
     </a>
 
     <button tuiOption (click)="edit.next(undefined)" class="text-link">
-      <tui-svg src="fa::pen"></tui-svg>
+      <tui-svg [src]="'fa::pen'"></tui-svg>
       <span class="ml-1"> Edit </span>
     </button>
 

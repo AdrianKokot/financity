@@ -36,25 +36,8 @@ export class AuthService {
       : this._getUserFromToken();
   }
 
-  private set _userSnapshot(value: User | null) {
-    if (value === null) {
-      localStorage.removeItem('user');
-    } else {
-      localStorage.setItem('user', JSON.stringify(value));
-    }
-  }
-
   get token(): string | null {
     return 'token' in localStorage ? localStorage.getItem('token') : null;
-  }
-
-  set token(value: string | null) {
-    if (value === null) {
-      localStorage.removeItem('token');
-      this._userSnapshot = null;
-    } else {
-      localStorage.setItem('token', value);
-    }
   }
 
   constructor(
@@ -75,7 +58,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    this.token = null;
+    this._saveToken(null);
     this._logout$.next(undefined);
     return of(undefined);
   }
@@ -95,9 +78,8 @@ export class AuthService {
       })
       .pipe(
         tap(response => {
-          this.token = response.body?.token ?? null;
-
-          this._userSnapshot = this._getUserFromToken();
+          this._saveToken(response.body?.token ?? null);
+          this._saveUserSnapshot(this._getUserFromToken());
         }),
         map(res => res.status === 200)
       );
@@ -138,7 +120,7 @@ export class AuthService {
   updateUser(payload: Pick<User, 'name'>) {
     return this._http
       .put<User>(`${this._basePath}/user`, payload)
-      .pipe(tap(user => (this._userSnapshot = user)));
+      .pipe(tap(user => this._saveUserSnapshot(user)));
   }
 
   private _getUserFromToken() {
@@ -159,5 +141,22 @@ export class AuthService {
 
     this.handleUnauthorized();
     return null;
+  }
+
+  private _saveUserSnapshot(value: User | null) {
+    if (value === null) {
+      localStorage.removeItem('user');
+    } else {
+      localStorage.setItem('user', JSON.stringify(value));
+    }
+  }
+
+  private _saveToken(value: string | null) {
+    if (value === null) {
+      localStorage.removeItem('token');
+      this._saveUserSnapshot(null);
+    } else {
+      localStorage.setItem('token', value);
+    }
   }
 }

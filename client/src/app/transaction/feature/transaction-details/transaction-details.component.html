@@ -16,14 +16,34 @@
           <tui-svg [src]="'fa::circle-user'"></tui-svg>
         </tui-badge>
       </ng-container>
-      <span>
-        {{ wallet?.name ?? 'Lorem ipsum dolores' }}
-      </span>
+      <a
+        *ngIf="showLinks; else walletText"
+        tuiLink
+        [routerLink]="['/wallets', wallet?.id]"
+        title="See this wallet">
+        <ng-container [ngTemplateOutlet]="walletText"></ng-container>
+      </a>
     </div>
+
+    <ng-template #walletText>
+      {{ wallet?.name ?? 'Lorem ipsum dolores' }}
+    </ng-template>
   </label>
 
   <label tuiLabel="Date" class="tui-form__row">
-    {{ transaction.transactionDate | date }}
+    <a
+      *ngIf="showLinks; else dateText"
+      tuiLink
+      [routerLink]="['/wallets', wallet?.id, 'transactions']"
+      [queryParams]="{
+        transactionDate: transaction.transactionDate | date : 'YYYY-MM-dd'
+      }"
+      title="See all transactions in that day for this wallet">
+      <ng-container [ngTemplateOutlet]="dateText"></ng-container>
+    </a>
+    <ng-template #dateText>
+      {{ transaction.transactionDate | date }}
+    </ng-template>
   </label>
 
   <label tuiLabel="Labels" class="tui-form__row">
@@ -31,11 +51,29 @@
       style="max-height: 200px"
       *ngIf="transaction.labels.length > 0; else dash">
       <div class="d-flex flex-wrap gap-1 mt-1">
-        <tui-badge
-          *ngFor="let label of transaction.labels"
-          [attr.data-appearance-color]="label.appearance.color"
-          status="custom"
-          [value]="label.name"></tui-badge>
+        <ng-container *ngIf="showLinks; else labelsWithoutLink">
+          <a
+            *ngFor="let label of transaction.labels"
+            tuiTag
+            class="tui-tag"
+            [attr.data-appearance-color]="label.appearance.color"
+            status="custom"
+            [hoverable]="true"
+            [value]="label.name"
+            title="See all transactions with this label"
+            [routerLink]="['/wallets', wallet?.id, 'transactions']"
+            [queryParams]="{ transactionDate: 'null', labels: [label.id] }">
+          </a>
+        </ng-container>
+
+        <ng-template #labelsWithoutLink>
+          <tui-badge
+            *ngFor="let label of transaction.labels"
+            [attr.data-appearance-color]="label.appearance.color"
+            status="custom"
+            [value]="label.name">
+          </tui-badge>
+        </ng-template>
       </div>
     </tui-scrollbar>
   </label>
@@ -47,7 +85,24 @@
         : 'Recipient'
     "
     class="tui-form__row">
-    {{ transaction.recipient?.name ?? '-' }}
+    <a
+      *ngIf="showLinks && transaction.recipientId !== null; else recipientText"
+      tuiLink
+      [routerLink]="['/wallets', wallet?.id, 'transactions']"
+      [queryParams]="{
+        recipients: [transaction.recipientId],
+        transactionDate: 'null'
+      }"
+      title="See all transactions {{
+        transaction.transactionType === transactionType.Income
+          ? 'from this sender'
+          : 'to this recipient'
+      }}">
+      <ng-container [ngTemplateOutlet]="recipientText"></ng-container>
+    </a>
+    <ng-template #recipientText>
+      {{ transaction.recipient?.name ?? '-' }}
+    </ng-template>
   </label>
 
   <label tuiLabel="Category" class="tui-form__row">
@@ -62,10 +117,22 @@
         [src]="
           transaction.category.appearance.iconName ?? 'fa::question'
         "></tui-marker-icon>
-      <span class="text-ellipsis d-block" [title]="transaction.category?.name">
-        {{ transaction.category?.name ?? '-' }}
-      </span>
+      <a
+        *ngIf="showLinks && transaction.categoryId !== null; else categoryText"
+        tuiLink
+        [routerLink]="['/wallets', wallet?.id, 'transactions']"
+        [queryParams]="{
+          categories: [transaction.categoryId],
+          transactionDate: 'null'
+        }"
+        title="See all transactions in this category">
+        <ng-container [ngTemplateOutlet]="categoryText"></ng-container>
+      </a>
     </span>
+
+    <ng-template #categoryText>
+      {{ transaction.category?.name ?? '-' }}
+    </ng-template>
   </label>
 
   <label tuiLabel="Amount" class="tui-form__row">
