@@ -13,10 +13,9 @@ export class UserService {
     private readonly _auth: AuthService
   ) {}
 
-  readonly user$ = this._auth.user$;
   readonly settings$ = this._userSettings.settings$;
 
-  get userSnapshot() {
-    return this._auth.userSnapshot;
+  get userId() {
+    return this._auth.userSnapshot?.id;
   }
 }

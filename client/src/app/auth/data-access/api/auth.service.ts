@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  BehaviorSubject,
-  filter,
   from,
   map,
-  merge,
   NEVER,
   Observable,
   of,
   share,
-  shareReplay,
   Subject,
   switchMap,
   tap,
 } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from '../models/user';
+import {
+  ChangePasswordPayload,
+  LoginPayload,
+  RegisterPayload,
+  ResetPasswordPayload,
+  User,
+} from '../models/user';
 import { ClaimTypes } from '../models/claim-types';
+import { decodeJwt } from '../../utils/decode-jwt';
 
 @Injectable({
   providedIn: 'root',
@@ -25,56 +28,37 @@ import { ClaimTypes } from '../models/claim-types';
 export class AuthService {
   private readonly _basePath = '/api/auth';
   private readonly _logout$ = new Subject<void>();
-  private readonly _updatedUser$ = new BehaviorSubject<User | null>(null);
-  private _userSnapshot: User | null = null;
+  readonly loggedOut$ = this._logout$.pipe(share());
 
-  readonly user$ = merge(
-    this._logout$.pipe(
-      tap(() => (this.token = null)),
-      map(() => null)
-    ),
-    this._updatedUser$.pipe(
-      switchMap(user =>
-        user === null ? of(this._getUserFromToken()) : of(user)
-      )
-    )
-  ).pipe(
-    tap(user => (this._userSnapshot = user)),
-    shareReplay(1)
-  );
-
-  constructor(
-    private readonly _http: HttpClient,
-    private readonly _router: Router
-  ) {}
-
-  readonly loggedOut$ = this.user$.pipe(
-    filter(x => x === null),
-    share()
-  );
-
-  readonly isAuthenticated$ = this.user$.pipe(
-    map(x => x !== null),
-    share()
-  );
-
-  get userSnapshot(): User | null {
-    return this._userSnapshot;
+  get userSnapshot() {
+    return 'user' in localStorage
+      ? JSON.parse(localStorage.getItem('user') ?? '{}')
+      : this._getUserFromToken();
   }
 
   get token(): string | null {
     return 'token' in localStorage ? localStorage.getItem('token') : null;
   }
 
-  set token(value: string | null) {
-    if (value === null) {
-      localStorage.removeItem('token');
-    } else {
-      localStorage.setItem('token', value);
+  constructor(
+    private readonly _http: HttpClient,
+    private readonly _router: Router
+  ) {}
+
+  hasValidToken() {
+    if (this.token === null) {
+      return false;
     }
+
+    const payload = decodeJwt(this.token);
+
+    const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
+
+    return currUnixTimestamp >= payload.nbf && currUnixTimestamp <= payload.exp;
   }
 
   logout(): Observable<void> {
+    this._saveToken(null);
     this._logout$.next(undefined);
     return of(undefined);
   }
@@ -87,24 +71,21 @@ export class AuthService {
     );
   }
 
-  login(payload: { email: string; password: string }) {
+  login(payload: LoginPayload) {
     return this._http
       .post<{ token: string }>(`${this._basePath}/login`, payload, {
         observe: 'response',
       })
       .pipe(
         tap(response => {
-          this.token = response.body?.token ?? null;
-
-          const user = this._getUserFromToken();
-          this._userSnapshot = user;
-          this._updatedUser$.next(user);
+          this._saveToken(response.body?.token ?? null);
+          this._saveUserSnapshot(this._getUserFromToken());
         }),
         map(res => res.status === 200)
       );
   }
 
-  register(payload: { email: string; password: string }) {
+  register(payload: RegisterPayload) {
     return this._http
       .post(`${this._basePath}/register`, payload, {
         observe: 'response',
@@ -112,7 +93,7 @@ export class AuthService {
       .pipe(map(res => res.status === 200));
   }
 
-  requestPasswordReset(payload: { email: string }): Observable<boolean> {
+  requestPasswordReset(payload: Pick<User, 'email'>): Observable<boolean> {
     return this._http
       .post(`${this._basePath}/request-reset-password`, payload, {
         observe: 'response',
@@ -120,11 +101,7 @@ export class AuthService {
       .pipe(map(res => res.status === 202));
   }
 
-  resetPassword(payload: {
-    email: string;
-    password: string;
-    token: string;
-  }): Observable<boolean> {
+  resetPassword(payload: ResetPasswordPayload): Observable<boolean> {
     return this._http
       .post(`${this._basePath}/reset-password`, payload, {
         observe: 'response',
@@ -132,10 +109,7 @@ export class AuthService {
       .pipe(map(res => res.status === 204));
   }
 
-  changePassword(payload: {
-    password: string;
-    newPassword: string;
-  }): Observable<boolean> {
+  changePassword(payload: ChangePasswordPayload): Observable<boolean> {
     return this._http
       .post(`${this._basePath}/change-password`, payload, {
         observe: 'response',
@@ -146,7 +120,7 @@ export class AuthService {
   updateUser(payload: Pick<User, 'name'>) {
     return this._http
       .put<User>(`${this._basePath}/user`, payload)
-      .pipe(tap(user => this._updatedUser$.next(user)));
+      .pipe(tap(user => this._saveUserSnapshot(user)));
   }
 
   private _getUserFromToken() {
@@ -154,15 +128,7 @@ export class AuthService {
       return null;
     }
 
-    const payload = JSON.parse(
-      decodeURIComponent(
-        window
-          .atob(this.token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))
-          .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      )
-    );
+    const payload = decodeJwt(this.token);
 
     const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
 
@@ -175,5 +141,22 @@ export class AuthService {
 
     this.handleUnauthorized();
     return null;
+  }
+
+  private _saveUserSnapshot(value: User | null) {
+    if (value === null) {
+      localStorage.removeItem('user');
+    } else {
+      localStorage.setItem('user', JSON.stringify(value));
+    }
+  }
+
+  private _saveToken(value: string | null) {
+    if (value === null) {
+      localStorage.removeItem('token');
+      this._saveUserSnapshot(null);
+    } else {
+      localStorage.setItem('token', value);
+    }
   }
 }

@@ -7,7 +7,6 @@ import {
   UrlTree,
 } from '@angular/router';
 import { AuthService } from '../api/auth.service';
-import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,12 +17,10 @@ export class GuestGuard implements CanActivate, CanActivateChild, CanLoad {
     private readonly _router: Router
   ) {}
 
-  canActivate(): Observable<boolean | UrlTree> {
-    return this._auth.isAuthenticated$.pipe(
-      map(isAuthenticated =>
-        isAuthenticated ? this._router.createUrlTree(['/']) : true
-      )
-    );
+  canActivate(): boolean | UrlTree {
+    return this._auth.hasValidToken()
+      ? this._router.createUrlTree(['/'])
+      : true;
   }
 
   canActivateChild(): ReturnType<typeof this.canActivate> {

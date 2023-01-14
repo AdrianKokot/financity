@@ -13,7 +13,7 @@ export class WalletShellComponent {
   readonly wallet$ = this._walletService.get(
     this._activatedRoute.snapshot.params['id']
   );
-  readonly userId = this._user.userSnapshot?.id;
+  readonly userId = this._user.userId;
 
   constructor(
     private readonly _activatedRoute: ActivatedRoute,

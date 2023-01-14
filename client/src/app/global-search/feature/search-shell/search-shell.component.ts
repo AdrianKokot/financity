@@ -4,7 +4,7 @@ import {
   Inject,
   Injector,
 } from '@angular/core';
-import { merge, share, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { merge, share, Subject, switchMap, withLatestFrom } from 'rxjs';
 import { TransactionListItem } from '@shared/data-access/models/transaction.model';
 import { ApiDataHandler } from '@shared/utils/api/api-data-handler';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';

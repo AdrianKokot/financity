@@ -1,5 +1,4 @@
 ﻿using Financity.Application.Abstractions.Data;
-using Financity.Application.Abstractions.Mappings;
 using Financity.Application.Abstractions.Messaging;
 using Financity.Domain.Entities;
 using Financity.Domain.Enums;
@@ -29,8 +28,6 @@ public sealed class GetWalletStatsQueryHandler : IQueryHandler<GetWalletStatsQue
                                         .AsNoTracking()
                                         .Where(x => _dbContext.UserService.UserWalletIds.Contains(x.Id) &&
                                                     x.Id == request.WalletId);
-
-
 
         var expensesByCategory = await walletQueryable
                                        .SelectMany(x => x.Transactions.Where(t =>

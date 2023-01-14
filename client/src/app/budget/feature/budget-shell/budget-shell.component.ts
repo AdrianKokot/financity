@@ -73,7 +73,7 @@ export class BudgetShellComponent {
           ),
           {
             label: 'Transaction details',
-            data: { transaction },
+            data: { transaction, showLinks: true },
             dismissible: true,
           }
         )
