@@ -50,10 +50,6 @@ export abstract class GenericApiService<
 
     const cacheKey = params.toString();
 
-    // if (cacheKey in this._getListCache) {
-    //   return of(this._getListCache[cacheKey]);
-    // }
-
     return this.http.get<TListItem[]>(this.api, { params }).pipe(
       tap(data => {
         this._getListCache[cacheKey] = data;

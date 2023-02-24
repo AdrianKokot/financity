@@ -17,7 +17,7 @@ export class GuestGuard implements CanActivate, CanActivateChild, CanLoad {
     private readonly _router: Router
   ) {}
 
-  canActivate(): boolean | UrlTree {
+  canActivate(): true | UrlTree {
     return this._auth.hasValidToken()
       ? this._router.createUrlTree(['/'])
       : true;
