@@ -20,11 +20,5 @@ jobs:
 
       - name: Build
         run: |
-          yarn
-          yarn build
-
-      - name: Check lint
-        run: yarn lint
-
-      - name: Run tests
-        run: yarn test:ci
+          cd ./client
+          yarn && yarn build && yarn lint && yarn test:ci
