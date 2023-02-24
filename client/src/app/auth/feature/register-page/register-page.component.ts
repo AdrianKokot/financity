@@ -25,8 +25,7 @@ export class RegisterPageComponent {
     },
     {
       submit: payload => this._auth.register(payload),
-      effect: succeeded =>
-        succeeded && this._router.navigateByUrl('/auth/login'),
+      effect: succeeded => succeeded && this._router.navigate(['/auth/login']),
     }
   );
 

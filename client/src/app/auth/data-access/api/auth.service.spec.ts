@@ -9,6 +9,7 @@ import { LoginPayload, RegisterPayload, User } from '../models/user';
 import { JwtHelper } from '../../utils/decode-jwt';
 import { JwtToken } from '../models/token';
 import { ClaimTypes } from '../models/claim-types';
+import { Router } from '@angular/router';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -26,6 +27,10 @@ describe('AuthService', () => {
       imports: [HttpClientTestingModule],
     });
     service = TestBed.inject(AuthService);
+
+    spyOn(TestBed.inject(Router), 'navigate').and.returnValue(
+      new Promise(resolve => resolve(true))
+    );
   });
 
   it('should be created', () => {
@@ -88,7 +93,7 @@ describe('AuthService', () => {
               method: 'POST',
               url: apiPaths.login,
             })
-            .flush({ token: 'token 123 321' }, { status: 200, statusText: '' });
+            .flush({ token: 'token' }, { status: 200, statusText: '' });
         };
 
         it('should reflect login result in user snapshot', done => {
@@ -107,6 +112,7 @@ describe('AuthService', () => {
           };
 
           spyOn(JwtHelper, 'decode').and.returnValue(fakeToken);
+          spyOn(localStorage, 'setItem').and.callThrough();
 
           service.login(payload).subscribe(() => {
             expect(service.userSnapshot).toEqual({
@@ -114,6 +120,8 @@ describe('AuthService', () => {
               id: fakeToken[ClaimTypes.id],
               name: fakeToken[ClaimTypes.name],
             });
+
+            expect(localStorage.setItem).toHaveBeenCalledWith('token', 'token');
 
             expect(service.token).not.toBeNull();
 
