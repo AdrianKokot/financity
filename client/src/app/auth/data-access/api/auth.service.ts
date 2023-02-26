@@ -31,8 +31,10 @@ export class AuthService {
   readonly loggedOut$ = this._logout$.pipe(share());
 
   get userSnapshot(): User | null {
-    return 'user' in localStorage
-      ? JSON.parse(localStorage.getItem('user') ?? '{}')
+    const localStorageUser = localStorage.getItem('user');
+
+    return localStorageUser !== null
+      ? JSON.parse(localStorageUser)
       : this._getUserFromToken();
   }
 

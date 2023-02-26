@@ -8,12 +8,19 @@ describe('UserService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: AuthService, useValue: {} }],
+      providers: [
+        { provide: AuthService, useValue: { userSnapshot: { id: 'TEST_ID' } } },
+      ],
     });
+
     service = TestBed.inject(UserService);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should return proper user id', () => {
+    expect(service.userId).toBe('TEST_ID');
   });
 });
