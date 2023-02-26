@@ -20,7 +20,7 @@ import {
   User,
 } from '../models/user';
 import { ClaimTypes } from '../models/claim-types';
-import { JwtHelper } from '../../utils/decode-jwt';
+import { JwtHelper } from '../../utils/jwt-helper';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +51,10 @@ export class AuthService {
     }
 
     const payload = JwtHelper.decode(this.token);
+
+    if (payload === null) {
+      return false;
+    }
 
     const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
 
@@ -129,6 +133,10 @@ export class AuthService {
     }
 
     const payload = JwtHelper.decode(this.token);
+
+    if (payload === null) {
+      return null;
+    }
 
     const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
 

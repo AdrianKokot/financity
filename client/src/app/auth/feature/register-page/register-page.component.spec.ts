@@ -23,6 +23,7 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CustomValidators } from '@shared/utils/form/custom-validators';
 import { Router } from '@angular/router';
+import { fillInput } from '../../../../test/helpers/form';
 
 describe('RegisterPageComponent', () => {
   let component: RegisterPageComponent;
@@ -61,7 +62,7 @@ describe('RegisterPageComponent', () => {
     fixture.detectChanges();
 
     spyOn(TestBed.inject(Router), 'navigate').and.returnValue(
-      new Promise(resolve => resolve(true))
+      Promise.resolve(true)
     );
   });
 
@@ -81,10 +82,6 @@ describe('RegisterPageComponent', () => {
       passwordInput: DebugElement,
       submitButton: DebugElement,
       httpController: HttpTestingController;
-
-    const fillInput = (input: DebugElement, value: string) => {
-      input.triggerEventHandler('input', { target: { value } });
-    };
 
     beforeEach(() => {
       httpController = TestBed.inject(HttpTestingController);

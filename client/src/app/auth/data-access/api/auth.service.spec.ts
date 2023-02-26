@@ -6,7 +6,7 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { LoginPayload, RegisterPayload, User } from '../models/user';
-import { JwtHelper } from '../../utils/decode-jwt';
+import { JwtHelper } from '../../utils/jwt-helper';
 import { JwtToken } from '../models/token';
 import { ClaimTypes } from '../models/claim-types';
 import { Router } from '@angular/router';
@@ -29,7 +29,7 @@ describe('AuthService', () => {
     service = TestBed.inject(AuthService);
 
     spyOn(TestBed.inject(Router), 'navigate').and.returnValue(
-      new Promise(resolve => resolve(true))
+      Promise.resolve(true)
     );
   });
 

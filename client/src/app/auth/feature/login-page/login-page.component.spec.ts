@@ -61,7 +61,7 @@ describe('LoginFormComponent', () => {
     fixture.detectChanges();
 
     spyOn(TestBed.inject(Router), 'navigate').and.returnValue(
-      new Promise(resolve => resolve(true))
+      Promise.resolve(true)
     );
   });
 
