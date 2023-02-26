@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { UserSettingsService } from '../../../user-settings/data-access/services/user-settings.service';
 import { AuthService } from './auth.service';
 
@@ -8,7 +7,6 @@ import { AuthService } from './auth.service';
 })
 export class UserService {
   constructor(
-    private readonly _http: HttpClient,
     private readonly _userSettings: UserSettingsService,
     private readonly _auth: AuthService
   ) {}

@@ -20,7 +20,7 @@ import {
   User,
 } from '../models/user';
 import { ClaimTypes } from '../models/claim-types';
-import { decodeJwt } from '../../utils/decode-jwt';
+import { JwtHelper } from '../../utils/jwt-helper';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +30,11 @@ export class AuthService {
   private readonly _logout$ = new Subject<void>();
   readonly loggedOut$ = this._logout$.pipe(share());
 
-  get userSnapshot() {
-    return 'user' in localStorage
-      ? JSON.parse(localStorage.getItem('user') ?? '{}')
+  get userSnapshot(): User | null {
+    const localStorageUser = localStorage.getItem('user');
+
+    return localStorageUser !== null
+      ? JSON.parse(localStorageUser)
       : this._getUserFromToken();
   }
 
@@ -50,7 +52,11 @@ export class AuthService {
       return false;
     }
 
-    const payload = decodeJwt(this.token);
+    const payload = JwtHelper.decode(this.token);
+
+    if (payload === null) {
+      return false;
+    }
 
     const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
 
@@ -128,7 +134,11 @@ export class AuthService {
       return null;
     }
 
-    const payload = decodeJwt(this.token);
+    const payload = JwtHelper.decode(this.token);
+
+    if (payload === null) {
+      return null;
+    }
 
     const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
 

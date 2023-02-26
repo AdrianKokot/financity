@@ -20,8 +20,7 @@ export class LoginPageComponent {
     },
     {
       submit: payload => this._auth.login(payload),
-      effect: succeeded =>
-        succeeded && this._router.navigateByUrl('/dashboard'),
+      effect: succeeded => succeeded && this._router.navigate(['/dashboard']),
     }
   );
 

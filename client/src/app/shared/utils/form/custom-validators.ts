@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { TuiValidationError } from '@taiga-ui/cdk';
 
 const defaultPasswordValidation = {
@@ -45,7 +45,7 @@ export const getPasswordValidationHint = (
 export const CustomValidators = {
   password:
     (passwordValidation = defaultPasswordValidation) =>
-    (control: AbstractControl<string>): ValidationErrors | null => {
+    (control: AbstractControl<string>): TuiValidationError | null => {
       const value = control.value;
 
       if (value.length < passwordValidation.minLength) {
