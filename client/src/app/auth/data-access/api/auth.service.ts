@@ -39,7 +39,22 @@ export class AuthService {
   }
 
   get token(): string | null {
-    return 'token' in localStorage ? localStorage.getItem('token') : null;
+    return (
+      this._memoizedToken ??
+      ('token' in localStorage ? localStorage.getItem('token') : null)
+    );
+  }
+
+  private _memoizedToken: null | string = null;
+
+  private set _token(value: string | null) {
+    if (value === null) {
+      localStorage.removeItem('token');
+      this._saveUserSnapshot(null);
+    } else {
+      localStorage.setItem('token', value);
+    }
+    this._memoizedToken = value;
   }
 
   constructor(
@@ -64,7 +79,7 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
-    this._saveToken(null);
+    this._token = null;
     this._logout$.next(undefined);
     return of(undefined);
   }
@@ -84,7 +99,7 @@ export class AuthService {
       })
       .pipe(
         tap(response => {
-          this._saveToken(response.body?.token ?? null);
+          this._token = response.body?.token ?? null;
           this._saveUserSnapshot(this._getUserFromToken());
         }),
         map(res => res.status === 200)
@@ -158,15 +173,6 @@ export class AuthService {
       localStorage.removeItem('user');
     } else {
       localStorage.setItem('user', JSON.stringify(value));
-    }
-  }
-
-  private _saveToken(value: string | null) {
-    if (value === null) {
-      localStorage.removeItem('token');
-      this._saveUserSnapshot(null);
-    } else {
-      localStorage.setItem('token', value);
     }
   }
 }
