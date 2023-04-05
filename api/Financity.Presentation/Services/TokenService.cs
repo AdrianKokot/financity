@@ -25,13 +25,14 @@ public sealed class TokenService : ITokenService
         var handler = new JsonWebTokenHandler();
 
         var identity = new ClaimsIdentity(GetUserClaims(user));
+        var time = AppDateTime.Now.ToUniversalTime();
 
         var token = handler.CreateToken(new SecurityTokenDescriptor
         {
             Issuer = _configuration.ValidIssuer,
             Audience = _configuration.ValidAudience,
-            Expires = AppDateTime.Now.AddHours(_configuration.ExpireAfterHours).ToUniversalTime(),
-            IssuedAt = AppDateTime.Now.ToUniversalTime(),
+            Expires = time.AddHours(_configuration.ExpireAfterHours).ToUniversalTime(),
+            IssuedAt = time,
             Subject = identity,
             SigningCredentials = _configuration.Credentials
         });

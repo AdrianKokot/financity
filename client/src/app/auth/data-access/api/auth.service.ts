@@ -47,16 +47,6 @@ export class AuthService {
 
   private _memoizedToken: null | string = null;
 
-  private set _token(value: string | null) {
-    if (value === null) {
-      localStorage.removeItem('token');
-      this._saveUserSnapshot(null);
-    } else {
-      localStorage.setItem('token', value);
-    }
-    this._memoizedToken = value;
-  }
-
   constructor(
     private readonly _http: HttpClient,
     private readonly _router: Router
@@ -73,13 +63,13 @@ export class AuthService {
       return false;
     }
 
-    const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
+    const currUnixTimestamp = this._getUnixTimestamp();
 
     return currUnixTimestamp >= payload.nbf && currUnixTimestamp <= payload.exp;
   }
 
   logout(): Observable<void> {
-    this._token = null;
+    this._saveToken(null);
     this._logout$.next(undefined);
     return of(undefined);
   }
@@ -99,7 +89,7 @@ export class AuthService {
       })
       .pipe(
         tap(response => {
-          this._token = response.body?.token ?? null;
+          this._saveToken(response.body?.token ?? null);
           this._saveUserSnapshot(this._getUserFromToken());
         }),
         map(res => res.status === 200)
@@ -155,7 +145,7 @@ export class AuthService {
       return null;
     }
 
-    const currUnixTimestamp = (new Date().getTime() / 1000) | 0;
+    const currUnixTimestamp = this._getUnixTimestamp();
 
     if (currUnixTimestamp >= payload.nbf && currUnixTimestamp <= payload.exp) {
       return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
@@ -174,5 +164,19 @@ export class AuthService {
     } else {
       localStorage.setItem('user', JSON.stringify(value));
     }
+  }
+
+  private _saveToken(value: string | null) {
+    if (value === null) {
+      localStorage.removeItem('token');
+      this._saveUserSnapshot(null);
+    } else {
+      localStorage.setItem('token', value);
+    }
+    this._memoizedToken = value;
+  }
+
+  private _getUnixTimestamp() {
+    return Math.ceil((new Date().getTime() + 1000) / 1000);
   }
 }
