@@ -30,6 +30,11 @@ import { of, shareReplay } from 'rxjs';
 import { TUI_DATE_SEPARATOR } from '@taiga-ui/cdk';
 import { MissingWalletInterceptor } from './wallet/data-access/interceptors/missing-wallet.interceptor';
 
+const largeIconsToIgnore = new Set([
+  'tuiIconCheckLarge',
+  'tuiIconCalendarLarge',
+]);
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -107,7 +112,7 @@ import { MissingWalletInterceptor } from './wallet/data-access/interceptors/miss
           return `assets/icons/fa/${src.replace('fa::', '')}.svg`;
         }
 
-        if (src.includes('Large')) {
+        if (largeIconsToIgnore.has(src)) {
           src = src.replace('Large', '');
         }
 
