@@ -23,7 +23,7 @@ export const AppNavRoutes: NavRoute[] = [
   },
   {
     label: 'Budgets',
-    iconName: 'tuiIconChartBar',
+    iconName: 'tuiIconBarChart',
     route: '/budgets',
   },
   {

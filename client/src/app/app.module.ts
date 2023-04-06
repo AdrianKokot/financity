@@ -4,12 +4,12 @@ import {
   TUI_HINT_OPTIONS,
   TUI_NOTHING_FOUND_MESSAGE,
   TUI_SANITIZER,
-  TUI_SVG_SRC_PROCESSOR,
   TuiAlertModule,
   TuiDialogModule,
   tuiDialogOptionsProvider,
   tuiFormatNumber,
   TuiRootModule,
+  tuiSvgOptionsProvider,
   TuiThemeNightModule,
 } from '@taiga-ui/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -91,28 +91,29 @@ import { MissingWalletInterceptor } from './wallet/data-access/interceptors/miss
         },
       },
     },
-    {
-      provide: TUI_SVG_SRC_PROCESSOR,
-      useFactory: () => {
-        return (src: string | null): string => {
-          if (src === null) {
-            return '';
-          }
-
-          if (src.startsWith('fa::')) {
-            if (src.startsWith('fa::solid::')) {
-              return `assets/icons/fa/solid/${src.replace(
-                'fa::solid::',
-                ''
-              )}.svg`;
-            }
-            return `assets/icons/fa/${src.replace('fa::', '')}.svg`;
-          }
-
+    tuiSvgOptionsProvider({
+      srcProcessor: src => {
+        if (typeof src !== 'string') {
           return src;
-        };
+        }
+
+        if (src.startsWith('fa::')) {
+          if (src.startsWith('fa::solid::')) {
+            return `assets/icons/fa/solid/${src.replace(
+              'fa::solid::',
+              ''
+            )}.svg`;
+          }
+          return `assets/icons/fa/${src.replace('fa::', '')}.svg`;
+        }
+
+        if (src.includes('Large')) {
+          src = src.replace('Large', '');
+        }
+
+        return src;
       },
-    },
+    }),
     {
       provide: DATE_PIPE_DEFAULT_OPTIONS,
       useValue: { dateFormat: 'dd/MM/yyyy' },
