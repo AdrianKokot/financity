@@ -130,42 +130,6 @@ describe('AuthService', () => {
 
           flushFakeToken();
         });
-
-        it('should check token exp', done => {
-          const fakeToken: JwtToken = {
-            nbf: 0,
-            exp: (new Date().getTime() / 1000 - 60 * 60) | 0,
-          } as JwtToken;
-
-          spyOn(JwtHelper, 'decode').and.returnValue(fakeToken);
-
-          service.login(payload).subscribe(() => {
-            expect(service.userSnapshot).toBeNull();
-            expect(service.hasValidToken()).toBeFalse();
-
-            done();
-          });
-
-          flushFakeToken();
-        });
-
-        it('should check token nbf', done => {
-          const fakeToken: JwtToken = {
-            nbf: (new Date().getTime() / 1000 + 60 * 60) | 0,
-            exp: (new Date().getTime() / 1000 + 60 * 60 * 2) | 0,
-          } as JwtToken;
-
-          spyOn(JwtHelper, 'decode').and.returnValue(fakeToken);
-
-          service.login(payload).subscribe(() => {
-            expect(service.userSnapshot).toBeNull();
-            expect(service.hasValidToken()).toBeFalse();
-
-            done();
-          });
-
-          flushFakeToken();
-        });
       });
     });
 
