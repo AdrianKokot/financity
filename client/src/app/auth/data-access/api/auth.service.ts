@@ -63,9 +63,7 @@ export class AuthService {
       return false;
     }
 
-    const currUnixTimestamp = this._getUnixTimestamp();
-
-    return currUnixTimestamp >= payload.nbf && currUnixTimestamp <= payload.exp;
+    return Object.values(ClaimTypes).every(key => key in payload);
   }
 
   logout(): Observable<void> {
@@ -145,17 +143,10 @@ export class AuthService {
       return null;
     }
 
-    const currUnixTimestamp = this._getUnixTimestamp();
-
-    if (currUnixTimestamp >= payload.nbf && currUnixTimestamp <= payload.exp) {
-      return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
-        (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
-        <User>{}
-      );
-    }
-
-    this.handleUnauthorized();
-    return null;
+    return (Object.keys(ClaimTypes) as (keyof User)[]).reduce(
+      (user, key) => ({ ...user, [key]: payload[ClaimTypes[key]] }),
+      <User>{}
+    );
   }
 
   private _saveUserSnapshot(value: User | null) {
